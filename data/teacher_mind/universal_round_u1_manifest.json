@@ -1,0 +1,183 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build Universal Round U.1 as the first early-universal-design layer for MathTeach, connecting motivation, belonging, psychological safety, productive error use, equity-aware design, scarcity-aware design, and UDL before disorder-specific support systems.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "universal_round_u1",
+    "mathematics_teaching_foundations",
+    "specific_support_logic"
+  ],
+  "collection_principles": [
+    "Treat equity, inclusion, and neurodiversity-aware design as early architecture constraints rather than late optional features.",
+    "Prefer official frameworks and highly cited primary or synthesis sources that can be translated into concrete tutor behavior.",
+    "Keep the tutor non-therapeutic and non-diagnostic while still using psychologically informed design constraints.",
+    "Translate all U.1 evidence into system rules for pacing, tone, feedback, representation, and friction reduction."
+  ],
+  "domains": [
+    {
+      "slug": "motivation_systems",
+      "name": "Motivation Systems",
+      "goal": "Model autonomy, competence, relatedness, and motivational quality as part of tutoring design."
+    },
+    {
+      "slug": "belonging_psychological_safety",
+      "name": "Belonging and Psychological Safety",
+      "goal": "Help the tutor create conditions where learners can ask, err, and persist without shame."
+    },
+    {
+      "slug": "learning_from_errors",
+      "name": "Learning from Errors",
+      "goal": "Treat errorful learning and corrective feedback as core parts of instruction."
+    },
+    {
+      "slug": "equity_scarcity_constraints",
+      "name": "Equity and Scarcity Constraints",
+      "goal": "Design for low-friction learning under conditions of stress, limited resources, and stereotype threat."
+    },
+    {
+      "slug": "udl_multimodal_accessibility",
+      "name": "UDL and Multimodal Accessibility",
+      "goal": "Reduce barriers early through multiple means of representation, engagement, and expression."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "ryan-deci-self-determination-theory",
+      "domain": "motivation_systems",
+      "title": "Self-Determination Theory and the Facilitation of Intrinsic Motivation, Social Development, and Well-Being",
+      "organization": "American Psychologist",
+      "date_label": "2000",
+      "source_kind": "landmark_theory_paper",
+      "why_it_matters": "Core source for autonomy, competence, and relatedness as psychologically basic conditions for high-quality motivation.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ryan-deci-self-determination-theory/",
+      "access_routes": [
+        {
+          "provider": "SelfDeterminationTheory.org",
+          "url": "https://selfdeterminationtheory.org/SDT/documents/2000_RyanDeci_SDT.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "walton-cohen-question-of-belonging",
+      "domain": "belonging_psychological_safety",
+      "title": "A Question of Belonging: Race, Social Fit, and Achievement",
+      "organization": "Journal of Personality and Social Psychology",
+      "date_label": "2007",
+      "source_kind": "highly_cited_primary_study",
+      "why_it_matters": "Foundational evidence that belonging uncertainty can alter achievement and persistence, with direct implications for tutor tone and framing.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/walton-cohen-question-of-belonging/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/17201544/"
+        }
+      ]
+    },
+    {
+      "slug": "edmondson-psychological-safety-learning-behavior",
+      "domain": "belonging_psychological_safety",
+      "title": "Psychological Safety and Learning Behavior in Work Teams",
+      "organization": "Administrative Science Quarterly",
+      "date_label": "1999",
+      "source_kind": "landmark_primary_study",
+      "why_it_matters": "Canonical source for treating safety as a condition for risk-taking, learning behavior, and error visibility.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/edmondson-psychological-safety-learning-behavior/",
+      "access_routes": [
+        {
+          "provider": "Harvard DASH",
+          "url": "https://dash.harvard.edu/entities/publication/13a7b031-0fdd-45ec-a7e0-2b80e2bc679f"
+        }
+      ]
+    },
+    {
+      "slug": "metcalfe-learning-from-errors",
+      "domain": "learning_from_errors",
+      "title": "Learning from Errors",
+      "organization": "Annual Review of Psychology",
+      "date_label": "2017",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Strong synthesis on when and why errorful learning with corrective feedback helps retention and understanding.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/metcalfe-learning-from-errors/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27648988/"
+        }
+      ]
+    },
+    {
+      "slug": "mani-mullainathan-shafir-zhao-poverty-cognition",
+      "domain": "equity_scarcity_constraints",
+      "title": "Poverty Impedes Cognitive Function",
+      "organization": "Science",
+      "date_label": "2013",
+      "source_kind": "highly_cited_primary_study",
+      "why_it_matters": "Critical evidence that scarcity can consume cognitive bandwidth, which directly matters for low-friction tutor design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/mani-mullainathan-shafir-zhao-poverty-cognition/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/23990553/"
+        },
+        {
+          "provider": "Princeton",
+          "url": "https://collaborate.princeton.edu/en/publications/poverty-impedes-cognitive-function/"
+        }
+      ]
+    },
+    {
+      "slug": "steele-aronson-stereotype-threat",
+      "domain": "equity_scarcity_constraints",
+      "title": "Stereotype Threat and the Intellectual Test Performance of African Americans",
+      "organization": "Journal of Personality and Social Psychology",
+      "date_label": "1995",
+      "source_kind": "landmark_primary_study",
+      "why_it_matters": "Foundational evidence that evaluative framing and identity threat can change performance, with direct implications for tutor wording and framing.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/steele-aronson-stereotype-threat/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/7473032/"
+        }
+      ]
+    },
+    {
+      "slug": "unesco-gem-inclusion-and-education",
+      "domain": "equity_scarcity_constraints",
+      "title": "Inclusion and Education: All Means All",
+      "organization": "UNESCO Global Education Monitoring Report",
+      "date_label": "2020",
+      "source_kind": "international_policy_report",
+      "why_it_matters": "Major inclusion framework for treating exclusion by poverty, disability, language, and background as structural educational design issues.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/unesco-gem-inclusion-and-education/",
+      "access_routes": [
+        {
+          "provider": "UNESCO GEM Report",
+          "url": "https://www.unesco.org/gem-report/en/publication/inclusion-and-education"
+        }
+      ]
+    },
+    {
+      "slug": "cast-udl-guidelines-3",
+      "domain": "udl_multimodal_accessibility",
+      "title": "CAST Universal Design for Learning Guidelines 3.0",
+      "organization": "CAST",
+      "date_label": "2024",
+      "source_kind": "professional_framework",
+      "why_it_matters": "Primary framework for reducing barriers through multiple means of engagement, representation, and action and expression.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cast-udl-guidelines-3/",
+      "access_routes": [
+        {
+          "provider": "CAST",
+          "url": "https://udlguidelines.cast.org/"
+        },
+        {
+          "provider": "CAST research evidence",
+          "url": "https://udlguidelines.cast.org/more/research-evidence/overarching/"
+        }
+      ]
+    }
+  ]
+}

@@ -71,6 +71,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/teacher-mind-foundation-stack.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-foundation-stack.md): Reihenfolge des Tutor-Aufbaus: erst psychologische und paedagogische Grundlagen, dann Support- und Accessibility-Schichten
 - [docs/teacher-mind-foundations-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-foundations-review-triage-2026-04-01.md): Prioritaetskorrektur nach dem ersten umfassenden Review der psychologisch-paedagogischen Grundausbildung
 - [docs/universal-tutor-system-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/universal-tutor-system-review-triage-2026-04-01.md): Prioritaetskorrektur fuer Universalitaet, Inklusion, Neurodiversitaet, Equity und lokale Systemarchitektur
+- [docs/universal-round-u1-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u1-program.md): Erste universelle Designrunde fuer Motivation, Belonging, Errors, Equity/Scarcity und UDL
 - [docs/psychological-foundations-program.md](/Users/jonasweiss/MathTeach/docs/psychological-foundations-program.md): Erster Teacher-Mind-Korpus fuer Lernen, Gedaechtnis, Abruf, Motivation und Anti-Myth-Guardrails
 - [docs/pedagogical-foundations-program.md](/Users/jonasweiss/MathTeach/docs/pedagogical-foundations-program.md): Allgemeine Tutor-Grundausbildung fuer Erklaeraufbau, Scaffolding, Worked Examples, Feedback und Lernprogression
 - [docs/learner-support-profiles.md](/Users/jonasweiss/MathTeach/docs/learner-support-profiles.md): Erste nicht-diagnostische Support-Profile fuer Lernbarrieren und Unterstuetzungsbedarfe
@@ -85,6 +86,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [data/teacher_mind/evidence_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/evidence_manifest.json): Startmanifest fuer die lokale Teacher-Mind-Evidenzbasis
 - [data/teacher_mind/psychological_foundations_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/psychological_foundations_manifest.json): Startmanifest fuer die erste psychologische Grundausbildung des Tutors
 - [data/teacher_mind/pedagogical_foundations_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/pedagogical_foundations_manifest.json): Startmanifest fuer die allgemeine paedagogische Grundausbildung des Tutors
+- [data/teacher_mind/universal_round_u1_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/universal_round_u1_manifest.json): Startmanifest fuer die erste universelle Designrunde des Tutors
 - [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [sql/002_math_corpus_collection.sql](/Users/jonasweiss/MathTeach/sql/002_math_corpus_collection.sql): Quellenkatalog, Collection-Queue und Ingestion-Tabellen
 - [sql/003_math_history_program.sql](/Users/jonasweiss/MathTeach/sql/003_math_history_program.sql): Epochen, Werke und Story-Tabellen fuer Beweise und Gleichungen

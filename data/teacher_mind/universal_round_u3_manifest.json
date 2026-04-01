@@ -1,0 +1,224 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build Universal Round U.3 as the third universal-design layer for MathTeach, grounding neurodiversity-aware core design, trauma-informed but non-therapeutic safety, developmental and lifespan sequencing, and a stronger myth and anti-pattern catalog before disorder-specific support rules.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "universal_round_u1",
+    "universal_round_u2",
+    "universal_round_u3",
+    "mathematics_teaching_foundations",
+    "specific_support_logic"
+  ],
+  "collection_principles": [
+    "Treat neurodiversity-aware design as an early architectural default rather than a late accommodation layer.",
+    "Use trauma-informed principles only in bounded, non-therapeutic ways that improve safety, predictability, and dignity in tutoring.",
+    "Translate developmental and lifespan evidence into sequencing rules, not rigid stage stereotypes.",
+    "Maintain a strong myth and anti-pattern catalog so unsupported claims do not enter teacher policy."
+  ],
+  "domains": [
+    {
+      "slug": "neurodiversity_aware_core_design",
+      "name": "Neurodiversity-Aware Core Design",
+      "goal": "Make structure, pacing, representation, and friction reduction accessible by default before specific support profiles are activated."
+    },
+    {
+      "slug": "trauma_informed_non_therapeutic_safety",
+      "name": "Trauma-Informed but Non-Therapeutic Safety",
+      "goal": "Build predictability, transparency, and non-shaming correction into tutoring without drifting into therapy."
+    },
+    {
+      "slug": "developmental_lifespan_sequencing",
+      "name": "Developmental and Lifespan Sequencing",
+      "goal": "Help the tutor vary sequencing, abstraction, and pacing across children, adolescents, students, and adults."
+    },
+    {
+      "slug": "myth_anti_pattern_catalog",
+      "name": "Myth and Anti-Pattern Catalog",
+      "goal": "Prevent learning-styles logic, neuromyths, deficit thinking, and badly timed minimal-guidance patterns from becoming defaults."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "cdc-adhd-classroom-support",
+      "domain": "neurodiversity_aware_core_design",
+      "title": "ADHD in the Classroom: Helping Children Succeed in School",
+      "organization": "CDC",
+      "date_label": "2024",
+      "source_kind": "official_public_health_guidance",
+      "why_it_matters": "Official, practical anchor for early design implications around structure, feedback, transition cues, breaks, and reduced distraction.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cdc-adhd-classroom-support/",
+      "access_routes": [
+        {
+          "provider": "CDC",
+          "url": "https://www.cdc.gov/adhd/treatment/classroom.html"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-learning-disabilities-overview",
+      "domain": "neurodiversity_aware_core_design",
+      "title": "Learning Disabilities",
+      "organization": "NICHD",
+      "date_label": "current overview",
+      "source_kind": "official_research_overview",
+      "why_it_matters": "Official overview for non-diagnostic, dignity-preserving framing of dyslexia, dysgraphia, and dyscalculia-relevant learning barriers.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-learning-disabilities-overview/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/health/topics/learningdisabilities"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-reading-and-reading-disorders",
+      "domain": "neurodiversity_aware_core_design",
+      "title": "Reading and Reading Disorders",
+      "organization": "NICHD",
+      "date_label": "current overview",
+      "source_kind": "official_research_overview",
+      "why_it_matters": "Useful core-design anchor for reading load, symbol-to-language load, and text-access issues that affect mathematics tutoring too.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-reading-and-reading-disorders/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/health/topics/reading"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-dyscalculia-overview",
+      "domain": "neurodiversity_aware_core_design",
+      "title": "Infographic: Does your child struggle with Math? Dyscalculia could be the reason.",
+      "organization": "NICHD",
+      "date_label": "2017",
+      "source_kind": "official_public_information",
+      "why_it_matters": "Early public-facing anchor for non-stigmatizing math-learning-disability framing and first-pass design awareness.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-dyscalculia-overview/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/newsroom/digital-media/infographics/MathLearningDisability-txtalt"
+        }
+      ]
+    },
+    {
+      "slug": "cast-udl-guidelines-3",
+      "domain": "neurodiversity_aware_core_design",
+      "title": "CAST Universal Design for Learning Guidelines 3.0",
+      "organization": "CAST",
+      "date_label": "2024",
+      "source_kind": "professional_framework",
+      "why_it_matters": "Core design bridge for multiple means of representation, engagement, and action before special-case rules are added.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cast-udl-guidelines-3/",
+      "access_routes": [
+        {
+          "provider": "CAST",
+          "url": "https://udlguidelines.cast.org/"
+        }
+      ]
+    },
+    {
+      "slug": "samhsa-trauma-informed-guidance",
+      "domain": "trauma_informed_non_therapeutic_safety",
+      "title": "SAMHSA's Concept of Trauma and Guidance for a Trauma-Informed Approach",
+      "organization": "SAMHSA",
+      "date_label": "2014",
+      "source_kind": "official_guidance_document",
+      "why_it_matters": "Official anchor for bounded safety principles such as transparency, trustworthiness, choice, collaboration, and empowerment without turning the tutor into therapy.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/samhsa-trauma-informed-guidance/",
+      "access_routes": [
+        {
+          "provider": "SAMHSA Library",
+          "url": "https://library.samhsa.gov/product/samhsas-concept-trauma-and-guidance-trauma-informed-approach/sma14-4884"
+        }
+      ]
+    },
+    {
+      "slug": "national-academies-how-people-learn-ii",
+      "domain": "developmental_lifespan_sequencing",
+      "title": "How People Learn II: Learners, Contexts, and Cultures",
+      "organization": "National Academies of Sciences, Engineering, and Medicine",
+      "date_label": "2018",
+      "source_kind": "consensus_study_report",
+      "why_it_matters": "Strong synthesis for developmental sensitivity, learner context, variation across learners, and the need to treat learning as context-embedded across stages.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/national-academies-how-people-learn-ii/",
+      "access_routes": [
+        {
+          "provider": "National Academies Press",
+          "url": "https://nap.nationalacademies.org/catalog/24783/how-people-learn-ii-learners-contexts-and-cultures"
+        }
+      ]
+    },
+    {
+      "slug": "knowles-the-adult-learner",
+      "domain": "developmental_lifespan_sequencing",
+      "title": "The Adult Learner",
+      "organization": "Routledge",
+      "date_label": "classic andragogy line; current editions continue",
+      "source_kind": "foundational_book",
+      "why_it_matters": "Brings the upper end of the lifespan explicitly into sequencing logic so adult learners are not treated as delayed schoolchildren.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/knowles-the-adult-learner/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "url": "https://books.google.com/books/about/The_Adult_Learner.html?id=mTFiCcjqKr8C"
+        }
+      ]
+    },
+    {
+      "slug": "pashler-learning-styles-concepts-and-evidence",
+      "domain": "myth_anti_pattern_catalog",
+      "title": "Learning Styles: Concepts and Evidence",
+      "organization": "Psychological Science in the Public Interest",
+      "date_label": "2008",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Core guardrail against converting learner preference claims into unsupported instructional policy.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/pashler-learning-styles-concepts-and-evidence/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26162104/"
+        }
+      ]
+    },
+    {
+      "slug": "kirschner-sweller-clark-minimal-guidance",
+      "domain": "myth_anti_pattern_catalog",
+      "title": "Why Minimal Guidance During Instruction Does Not Work",
+      "organization": "Educational Psychologist",
+      "date_label": "2006",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Foundational anti-pattern source against pushing novices into under-guided discovery before they have enough structure.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/kirschner-sweller-clark-minimal-guidance/",
+      "access_routes": [
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.1207/s15326985ep4102_1"
+        }
+      ]
+    },
+    {
+      "slug": "howard-jones-neuroscience-and-education-myths",
+      "domain": "myth_anti_pattern_catalog",
+      "title": "Neuroscience and Education: Myths and Messages",
+      "organization": "Nature Reviews Neuroscience",
+      "date_label": "2014",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Important guardrail against neuromyths being used as false justification for weak instructional or learner-model assumptions.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/howard-jones-neuroscience-and-education-myths/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/25315391/"
+        },
+        {
+          "provider": "Nature",
+          "url": "https://www.nature.com/articles/nrn3817"
+        }
+      ]
+    }
+  ]
+}

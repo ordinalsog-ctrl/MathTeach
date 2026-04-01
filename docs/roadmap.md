@@ -6,6 +6,8 @@
 - Modellentscheidung
 - API-Skelett
 - Datenmodell
+- Trennung von Knowledge Core und Teacher Mind
+- erstes SQL-Schema fuer beide Schichten
 
 ## Phase 1: MVP Tutor
 
@@ -13,6 +15,7 @@
 - kleine kuratierte Mathematikbasis
 - Hybrid Retrieval fuer wenige Themen
 - tutorische Antwort mit Quellenfeldern
+- Lehrerfigur nur als Vermittlungsschicht, nie als Faktenquelle
 - Basis-Evals fuer Korrektheit und Verstaendlichkeit
 
 ## Phase 2: Mathematik-Korpus

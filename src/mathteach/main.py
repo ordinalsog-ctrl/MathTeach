@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from mathteach.config import get_settings
 from mathteach.models import SessionRequest
+from mathteach.services.foundation import build_foundation
 from mathteach.services.planner import build_stack, build_teaching_plan
 
 settings = get_settings()
@@ -16,6 +17,11 @@ def health() -> dict[str, str]:
 @app.get("/api/v1/stack")
 def stack():
     return build_stack(settings)
+
+
+@app.get("/api/v1/foundation")
+def foundation():
+    return build_foundation()
 
 
 @app.post("/api/v1/tutoring/plan")

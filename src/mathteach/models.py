@@ -60,3 +60,19 @@ class StackResponse(BaseModel):
     primary_choice: str
     assignments: list[ModelAssignment]
     architecture_summary: str
+
+
+class FoundationLayer(BaseModel):
+    name: str
+    mission: str
+    stores: list[str]
+    invariants: list[str]
+
+
+class FoundationResponse(BaseModel):
+    architecture_name: str
+    separation_principle: str
+    knowledge_core: FoundationLayer
+    teacher_mind: FoundationLayer
+    handoff_contract: list[str]
+    first_build_order: list[str]

@@ -21,6 +21,15 @@ def test_stack_endpoint() -> None:
     assert payload["primary_choice"] == "gpt-5.4"
 
 
+def test_foundation_endpoint() -> None:
+    response = client.get("/api/v1/foundation")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["knowledge_core"]["name"] == "Knowledge Core"
+    assert payload["teacher_mind"]["name"] == "Teacher Mind"
+
+
 def test_tutoring_plan_endpoint() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

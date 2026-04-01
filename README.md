@@ -2,6 +2,15 @@
 
 MathTeach ist die Grundlage fuer einen globalen Mathe-Lehrer-Agenten: fachlich tief in Mathematik, historisch praezise, didaktisch anpassungsfaehig und in der Lage, vom Grundschulkind bis zum Professor sinnvoll zu erklaeren.
 
+## Kernprinzip
+
+MathTeach trennt zwei Systeme bewusst voneinander:
+
+- `Knowledge Core`: sachlich, nuechtern, zitierbar, historisch verankert
+- `Teacher Mind`: paedagogisch, psychologisch, adaptiv, motivierend
+
+Der Lehrer darf nie die Mathematik "umbiegen". Er darf nur entscheiden, wie dieselbe Mathematik fuer eine bestimmte Person am besten vermittelt wird.
+
 ## Produktthese
 
 Ein wirklich starker Mathe-Agent braucht nicht nur ein grosses Modell. Er braucht:
@@ -34,9 +43,12 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 ## Repository-Inhalt
 
 - [docs/architecture.md](/Users/jonasweiss/MathTeach/docs/architecture.md): Zielarchitektur und Komponenten
+- [docs/data-foundation.md](/Users/jonasweiss/MathTeach/docs/data-foundation.md): Trennung von Knowledge Core und Teacher Mind
 - [docs/knowledge-system.md](/Users/jonasweiss/MathTeach/docs/knowledge-system.md): Mathematik-Korpus, Graphmodell und Retrieval
 - [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md): MVP- und Ausbauphasen
+- [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py): FastAPI-Startpunkt
+- [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
 
 ## Schnellstart
@@ -52,6 +64,7 @@ Danach:
 
 - `GET /health`
 - `GET /api/v1/stack`
+- `GET /api/v1/foundation`
 - `POST /api/v1/tutoring/plan`
 
 ## Naechste Produktstufe
@@ -60,6 +73,7 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 
 - Produkt- und Systemrichtung sind festgelegt.
 - Das Modell- und Datenkonzept ist dokumentiert.
+- Das Datenfundament ist jetzt explizit zweigeteilt in fachlichen Wissenskern und paedagogische Lehrerfigur.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
-Der naechste grosse Schritt ist der Aufbau des Mathematik-Korpus mit Zitationspflicht, Ontologie und Evaluationssuite.
+Der naechste grosse Schritt ist der Aufbau des Mathematik-Korpus mit Zitationspflicht, Ontologie, Ingestion-Pipeline und Evaluationssuite.

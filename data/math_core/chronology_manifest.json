@@ -262,30 +262,42 @@
         "Gauss",
         "Fourier",
         "Cauchy",
+        "Weierstrass",
         "Galois",
         "Riemann",
         "Dedekind",
+        "Peano",
         "Cantor",
+        "Zermelo",
+        "Hausdorff",
         "Poincare",
         "Hilbert",
+        "Wilhelm Ackermann",
         "Emmy Noether",
         "Lebesgue",
         "Kolmogorov",
+        "Godel",
         "Turing"
       ],
       "canonical_works": [
         "Gauss: Disquisitiones Arithmeticae",
         "Fourier: Theorie analytique de la chaleur",
         "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+        "Weierstrass: Mathematische Werke",
         "Galois: Memoire sur les conditions de resolubilite des equations par radicaux",
         "Riemann: Ueber die Hypothesen welche der Geometrie zu Grunde liegen",
         "Dedekind: Was sind und was sollen die Zahlen?",
+        "Peano: Arithmetices principia, nova methodo exposita",
         "Cantor: Beitrage zur Begrundung der transfiniten Mengenlehre",
+        "Zermelo: Untersuchungen ueber die Grundlagen der Mengenlehre I",
+        "Hausdorff: Grundzuege der Mengenlehre",
         "Poincare: Analysis Situs",
         "Hilbert: Grundlagen der Geometrie",
+        "Hilbert and Ackermann: Grundzuege der theoretischen Logik",
         "Emmy Noether: Idealtheorie in Ringbereichen",
         "Lebesgue: Integrale, longueur, aire",
         "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
+        "Godel: Ueber formal unentscheidbare Saetze der Principia Mathematica und verwandter Systeme I",
         "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem"
       ],
       "proof_threads": [
@@ -329,6 +341,7 @@
           "required_artifacts": [
             "number construction",
             "cardinality and transfinite ideas",
+            "axiomatic set theory and choice",
             "axiomatic foundation",
             "consistency and paradox context"
           ]
@@ -362,6 +375,7 @@
           "required_artifacts": [
             "algorithmic model",
             "decision-problem context",
+            "incompleteness consequence",
             "computability criterion",
             "bridge to computer science"
           ]

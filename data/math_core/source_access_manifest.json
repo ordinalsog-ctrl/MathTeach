@@ -1228,6 +1228,193 @@
           "notes": "Biographical route describing Gregory's quadrature work and its historical role."
         }
       ]
+    },
+    {
+      "slug": "weierstrass-mathematische-werke",
+      "era": "modern-mathematics",
+      "title": "Weierstrass: Mathematische Werke",
+      "date_label": "1894 onward collected edition of nineteenth-century analysis work",
+      "figures": [
+        "Karl Weierstrass"
+      ],
+      "source_kind": "collected_works_with_open_scan",
+      "significance": "Major access route to the work that reshaped rigorous analysis, convergence, and analytic function theory.",
+      "proof_or_equation_value": "Important for the later teachable lineage of epsilon-delta rigor, convergence criteria, and analytic function methods.",
+      "rights_class": "public_domain_collected_edition_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/weierstrass-mathematische-werke/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Weierstrass/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Weierstrass and the lecture and publication tradition behind modern analysis."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL23317939M/Mathematische_Werke_von_Karl_Weierstrass.",
+          "availability": "open",
+          "notes": "Public-domain collected works route with downloadable scan access."
+        }
+      ]
+    },
+    {
+      "slug": "peano-arithmetices-principia",
+      "era": "modern-mathematics",
+      "title": "Peano: Arithmetices principia, nova methodo exposita",
+      "date_label": "1889",
+      "figures": [
+        "Giuseppe Peano"
+      ],
+      "source_kind": "primary_work_with_open_text",
+      "significance": "Seminal foundation text for arithmetic axiomatization and formal symbolic language.",
+      "proof_or_equation_value": "Important for explicit arithmetic axioms, formal notation, and the later foundations of mathematical logic.",
+      "rights_class": "open_text_and_public_domain_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/peano-arithmetices-principia/",
+      "access_routes": [
+        {
+          "provider": "EuDML",
+          "access_type": "open_html",
+          "url": "https://eudml.org/doc/203509",
+          "availability": "open",
+          "notes": "Full-text route for the 1889 book with chapter-level access."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Peano/",
+          "availability": "open",
+          "notes": "Biographical route for Peano's foundations work and symbolic logic role."
+        }
+      ]
+    },
+    {
+      "slug": "zermelo-grundlagen-mengenlehre",
+      "era": "modern-mathematics",
+      "title": "Zermelo: Untersuchungen ueber die Grundlagen der Mengenlehre I",
+      "date_label": "1908",
+      "figures": [
+        "Ernst Zermelo"
+      ],
+      "source_kind": "primary_article_with_open_text_route",
+      "significance": "Foundational article for axiomatic set theory and the modern handling of choice and paradox-sensitive foundations.",
+      "proof_or_equation_value": "Important for explicit axioms, set-theoretic formalization, and the foundations line after Cantor and Dedekind.",
+      "rights_class": "open_text_article_route",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/zermelo-grundlagen-mengenlehre/",
+      "access_routes": [
+        {
+          "provider": "EuDML",
+          "access_type": "open_html",
+          "url": "https://eudml.org/doc/158344",
+          "availability": "open",
+          "notes": "Open route to the 1908 Mathematische Annalen article."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Zermelo/",
+          "availability": "open",
+          "notes": "Biographical route covering Zermelo's foundations work and axiomatic set theory."
+        }
+      ]
+    },
+    {
+      "slug": "hausdorff-grundzuege-der-mengenlehre",
+      "era": "modern-mathematics",
+      "title": "Hausdorff: Grundzuege der Mengenlehre",
+      "date_label": "1914",
+      "figures": [
+        "Felix Hausdorff"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Landmark synthesis of set theory, topology, and metric-space thinking in the early twentieth century.",
+      "proof_or_equation_value": "Important for the teachable transition from set theory to topological and metric structure.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/hausdorff-grundzuege-der-mengenlehre/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL25477375M/Grundz%C3%BCge_der_Mengenlehre",
+          "availability": "open",
+          "notes": "Public-domain scan route for the 1914 edition."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Hausdorff/",
+          "availability": "open",
+          "notes": "Biographical route explaining the book's role in topology and set theory."
+        }
+      ]
+    },
+    {
+      "slug": "hilbert-ackermann-theoretische-logik",
+      "era": "modern-mathematics",
+      "title": "Hilbert and Ackermann: Grundzuege der theoretischen Logik",
+      "date_label": "1928",
+      "figures": [
+        "David Hilbert",
+        "Wilhelm Ackermann"
+      ],
+      "source_kind": "primary_work_with_open_preview_and_review_routes",
+      "significance": "Important bridge from axiomatic ambitions in geometry and arithmetic to formal logic and proof theory.",
+      "proof_or_equation_value": "Important for symbolic logic, decision problems, and the foundations background against which later incompleteness results were read.",
+      "rights_class": "mixed_open_preview_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/hilbert-ackermann-theoretische-logik/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/Grundz%C3%BCge_der_theoretischen_logik.html?id=DlCP9FtlR4cC",
+          "availability": "open",
+          "notes": "Full-view route for the 1928 edition."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Extras/Hilbert_books/",
+          "availability": "open",
+          "notes": "Review hub covering Hilbert's books, including the logic text written with Ackermann."
+        }
+      ]
+    },
+    {
+      "slug": "godel-undecidable-propositions",
+      "era": "modern-mathematics",
+      "title": "Godel: Ueber formal unentscheidbare Saetze der Principia Mathematica und verwandter Systeme I",
+      "date_label": "1931",
+      "figures": [
+        "Kurt Godel"
+      ],
+      "source_kind": "primary_article_with_translation_route",
+      "significance": "Foundational twentieth-century result showing essential limits of axiomatic formal systems.",
+      "proof_or_equation_value": "Important for incompleteness, formal provability, and the conceptual background of computability and metamathematics.",
+      "rights_class": "mixed_translation_and_biographical_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/godel-undecidable-propositions/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL58970942M/on_formally_undecidable_propositions_of_principia_mathematica_and_related_systems",
+          "availability": "borrow_or_locate",
+          "notes": "Internet Archive-backed route to the standard English translation of the 1931 paper."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Godel/",
+          "availability": "open",
+          "notes": "Biographical route summarizing the incompleteness theorems and their place in foundations."
+        }
+      ]
     }
   ]
 }

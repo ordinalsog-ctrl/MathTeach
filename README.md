@@ -47,6 +47,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
 - [docs/modern-math-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-review-triage-2026-04-01.md): Priorisierung nach dem ersten externen Review der modernen Epoche
+- [docs/modern-math-post-round-m1-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-post-round-m1-audit-2026-04-01.md): Folgeaudit nach Runde M.1 der modernen Epoche
 - [docs/literature-gap-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01.md): Vergleich unseres Stands mit kanonischer Literatur fuer Antike bis Fruehe Neuzeit
 - [docs/literature-gap-audit-2026-04-01-post-round-a.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-a.md): Folgeaudit nach der ersten Brueckenwerk-Runde
 - [docs/literature-gap-audit-2026-04-01-post-round-b.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-b.md): Folgeaudit nach Runde B

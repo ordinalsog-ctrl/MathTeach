@@ -1,0 +1,174 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Establish the first local pedagogical foundations corpus for the Teacher Mind so tutoring rests on serious explanation design, guidance, feedback, and instructional sequencing before mathematics-specific specialization.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "mathematics_teaching_foundations",
+    "support_and_accessibility_layers"
+  ],
+  "collection_principles": [
+    "Prefer institutional practice guides and major synthesis papers before many narrow instructional studies.",
+    "Translate pedagogical evidence into concrete tutoring moves such as modeling, guided practice, fading, feedback, and progression design.",
+    "Treat pedagogy as a discipline of explanation quality and learner support, not just content delivery.",
+    "Include guardrails against popular but weak or mistimed instructional patterns."
+  ],
+  "core_questions": [
+    "How should a tutor sequence an explanation so understanding can form step by step?",
+    "When should a tutor model, guide, prompt, and then fade support?",
+    "What role do worked examples and self-explanations play in building competence?",
+    "What makes feedback learning-improving rather than merely evaluative?",
+    "How much guidance should novices receive before independent problem solving is expected?"
+  ],
+  "domains": [
+    {
+      "slug": "explanation_design",
+      "name": "Explanation Design",
+      "goal": "Ground the structure and sequencing of explanations."
+    },
+    {
+      "slug": "guidance_scaffolding",
+      "name": "Guidance and Scaffolding",
+      "goal": "Guide how strongly the tutor should lead and when support should be reduced."
+    },
+    {
+      "slug": "worked_examples",
+      "name": "Worked Examples and Fading",
+      "goal": "Support model-first instruction for novices and progressive fading toward independent control."
+    },
+    {
+      "slug": "feedback_formative_assessment",
+      "name": "Feedback and Formative Assessment",
+      "goal": "Improve the tutor's feedback style, understanding checks, and instructional adaptation."
+    },
+    {
+      "slug": "instructional_progression",
+      "name": "Instructional Progression",
+      "goal": "Guide movement from concrete support toward abstract and formal mastery."
+    },
+    {
+      "slug": "anti_pattern_guardrails",
+      "name": "Anti-Pattern Guardrails",
+      "goal": "Prevent the Teacher Mind from defaulting to under-guided or poorly sequenced instruction."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "ies-organizing-instruction-and-study",
+      "domain": "explanation_design",
+      "title": "Organizing Instruction and Study to Improve Student Learning",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2007",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Core guide for spacing, interleaving worked examples with problem solving, combining graphics with words, and connecting abstract and concrete representations.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-organizing-instruction-and-study/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/PracticeGuide/1"
+        }
+      ]
+    },
+    {
+      "slug": "ies-using-student-achievement-data",
+      "domain": "feedback_formative_assessment",
+      "title": "Using Student Achievement Data to Support Instructional Decision Making",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2009",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Important baseline for ongoing cycles of instructional improvement, student goal-setting, and adapting teaching to evidence of learning.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-using-student-achievement-data/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/PracticeGuide/12"
+        }
+      ]
+    },
+    {
+      "slug": "rosenshine-principles-of-instruction",
+      "domain": "guidance_scaffolding",
+      "title": "Principles of Instruction: Research-Based Strategies That All Teachers Should Know",
+      "organization": "American Educator / AFT",
+      "date_label": "2012",
+      "source_kind": "professional_synthesis",
+      "why_it_matters": "Widely used synthesis of explicit instruction, small steps, guided practice, questioning, checks for understanding, and gradual release of difficulty.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/rosenshine-principles-of-instruction/",
+      "access_routes": [
+        {
+          "provider": "AFT",
+          "url": "https://www.aft.org/sites/default/files/Rosenshine.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "hattie-timperley-power-of-feedback",
+      "domain": "feedback_formative_assessment",
+      "title": "The Power of Feedback",
+      "organization": "Review of Educational Research",
+      "date_label": "2007",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Major review clarifying that feedback can help or harm, and that task, process, and self-regulation feedback differ sharply from praise-level responses.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/hattie-timperley-power-of-feedback/",
+      "access_routes": [
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.3102/003465430298487"
+        }
+      ]
+    },
+    {
+      "slug": "shute-focus-on-formative-feedback",
+      "domain": "feedback_formative_assessment",
+      "title": "Focus on Formative Feedback",
+      "organization": "Review of Educational Research",
+      "date_label": "2008",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Important synthesis for feedback that is specific, supportive, timely, and oriented toward changing learner thinking or behavior.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/shute-focus-on-formative-feedback/",
+      "access_routes": [
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.3102/0034654307313795"
+        }
+      ]
+    },
+    {
+      "slug": "chi-self-explanations-worked-examples",
+      "domain": "worked_examples",
+      "title": "Self-Explanations: How Students Study and Use Examples in Learning to Solve Problems",
+      "organization": "Cognitive Science",
+      "date_label": "1989",
+      "source_kind": "landmark_study",
+      "why_it_matters": "Foundational source for how learners use worked examples and why self-explanation strengthens transfer beyond copying steps.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/chi-self-explanations-worked-examples/",
+      "access_routes": [
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.1016/0364-0213(89)90002-5"
+        }
+      ]
+    },
+    {
+      "slug": "kirschner-sweller-clark-minimal-guidance",
+      "domain": "anti_pattern_guardrails",
+      "title": "Why Minimal Guidance During Instruction Does Not Work",
+      "organization": "Educational Psychologist",
+      "date_label": "2006",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Major guardrail source against expecting novices to learn efficiently from under-guided instruction before they have sufficient internal structure.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/kirschner-sweller-clark-minimal-guidance/",
+      "access_routes": [
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.1207/s15326985ep4102_1"
+        },
+        {
+          "provider": "Utrecht University Repository",
+          "url": "https://dspace.library.uu.nl/handle/1874/16899"
+        }
+      ]
+    }
+  ]
+}

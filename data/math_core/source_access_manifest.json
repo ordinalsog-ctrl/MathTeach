@@ -1602,6 +1602,200 @@
           "notes": "Biographical route covering Russell's logicism and the Principia project."
         }
       ]
+    },
+    {
+      "slug": "von-neumann-theory-of-games",
+      "era": "modern-mathematics",
+      "title": "John von Neumann and Oskar Morgenstern: Theory of Games and Economic Behavior",
+      "date_label": "1944",
+      "figures": [
+        "John von Neumann",
+        "Oskar Morgenstern"
+      ],
+      "source_kind": "primary_book_with_preview_route",
+      "significance": "Epochal work that founded modern game theory and expanded mathematical method into strategic interaction, economics, and later computing.",
+      "proof_or_equation_value": "Important for minimax reasoning, formal strategic models, and the widening of modern mathematics into institutional and applied structure.",
+      "rights_class": "preview_only_and_biographical_routes",
+      "storage_class": "metadata_only_until_rights_clear",
+      "storage_path_hint": "library/raw/restricted/von-neumann-theory-of-games/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "preview_only",
+          "url": "https://openlibrary.org/books/OL59074745M/theory_of_games_and_economic_behavior",
+          "availability": "preview_or_locate",
+          "notes": "Preview route to the 1944 Princeton edition of the foundational game theory text."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Von_Neumann/?level=1",
+          "availability": "open",
+          "notes": "Biographical route summarizing von Neumann's work in game theory, quantum mechanics, operator theory, and computation."
+        }
+      ]
+    },
+    {
+      "slug": "church-unsolvable-problem",
+      "era": "modern-mathematics",
+      "title": "Alonzo Church: An Unsolvable Problem of Elementary Number Theory",
+      "date_label": "1936; reprinted in later undecidability anthologies",
+      "figures": [
+        "Alonzo Church"
+      ],
+      "source_kind": "primary_article_with_reprint_and_biographical_routes",
+      "significance": "Canonical 1936 contribution that formalized effective calculability and helped fix the landscape of undecidability and recursive function theory.",
+      "proof_or_equation_value": "Important for lambda-calculus context, Church's thesis, and the parallel completion of the computability line alongside Turing.",
+      "rights_class": "borrowable_reprint_and_biographical_routes",
+      "storage_class": "metadata_only_until_rights_clear",
+      "storage_path_hint": "library/raw/restricted/church-unsolvable-problem/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_reprint",
+          "url": "https://openlibrary.org/books/OL5936490M/The_undecidable",
+          "availability": "borrow_or_locate",
+          "notes": "Borrowable anthology route to Martin Davis's The Undecidable, which reprints Church's foundational 1936 paper."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Church/",
+          "availability": "open",
+          "notes": "Biographical route covering Church's thesis, lambda calculus, and the Entscheidungsproblem context."
+        }
+      ]
+    },
+    {
+      "slug": "gentzen-logical-inference",
+      "era": "modern-mathematics",
+      "title": "Gerhard Gentzen: Untersuchungen ueber das logische Schliessen I and II",
+      "date_label": "1935",
+      "figures": [
+        "Gerhard Gentzen"
+      ],
+      "source_kind": "primary_articles_with_open_archive_route",
+      "significance": "Landmark papers introducing natural deduction and sequent-style proof analysis in a form much closer to later mathematical logic and proof theory.",
+      "proof_or_equation_value": "Important for proof normalization, sequent reasoning, and the modern internal analysis of formal derivations.",
+      "rights_class": "open_archive_and_biographical_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/gentzen-logical-inference/",
+      "access_routes": [
+        {
+          "provider": "EuDML",
+          "access_type": "open_html",
+          "url": "https://eudml.org/doc/168546",
+          "availability": "open",
+          "notes": "Open archive route to Untersuchungen ueber das logische Schliessen I."
+        },
+        {
+          "provider": "EuDML",
+          "access_type": "open_html",
+          "url": "https://eudml.org/doc/168556",
+          "availability": "open",
+          "notes": "Open archive route to Untersuchungen ueber das logische Schliessen II."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Gentzen/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Gentzen's role in natural deduction, proof theory, and consistency methods."
+        }
+      ]
+    },
+    {
+      "slug": "bourbaki-elements-of-mathematics",
+      "era": "modern-mathematics",
+      "title": "Nicolas Bourbaki: Elements of Mathematics (Theory of Sets)",
+      "date_label": "1939 onward; Theory of Sets English route 1968",
+      "figures": [
+        "Nicolas Bourbaki"
+      ],
+      "source_kind": "collective_treatise_with_library_route",
+      "significance": "Representative access route to the Bourbaki project that reorganized modern mathematics around collective axiomatics, structure, and uniform exposition.",
+      "proof_or_equation_value": "Important for the institutional and stylistic remaking of twentieth-century mathematics around set-theoretic and structural language.",
+      "rights_class": "preview_or_borrow_and_biographical_routes",
+      "storage_class": "metadata_only_until_rights_clear",
+      "storage_path_hint": "library/raw/restricted/bourbaki-elements-of-mathematics/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrow_or_preview",
+          "url": "https://openlibrary.org/works/OL9050692W/Elements_of_Mathematics",
+          "availability": "preview_or_borrow",
+          "notes": "Open Library work route for Bourbaki's Elements of Mathematics, including the Theory of Sets volume."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Bourbaki/",
+          "availability": "open",
+          "notes": "Biographical route to the Bourbaki collective and its restructuring of mathematical exposition."
+        }
+      ]
+    },
+    {
+      "slug": "grothendieck-tohoku-paper",
+      "era": "modern-mathematics",
+      "title": "Alexander Grothendieck: Sur quelques points d'algebre homologique",
+      "date_label": "1957",
+      "figures": [
+        "Alexander Grothendieck"
+      ],
+      "source_kind": "primary_article_with_open_journal_route",
+      "significance": "The Tohoku paper recast homological algebra through abelian categories and became one of the key engines of postwar structural mathematics.",
+      "proof_or_equation_value": "Important for category language, derived functor methods, and the expansion of algebraic geometry through structural tools.",
+      "rights_class": "open_journal_and_biographical_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/grothendieck-tohoku-paper/",
+      "access_routes": [
+        {
+          "provider": "J-STAGE",
+          "access_type": "open_pdf",
+          "url": "https://www.jstage.jst.go.jp/article/tmj1949/9/2/9_2_119/_article",
+          "availability": "open",
+          "notes": "Free journal route to the 1957 Tohoku paper introducing the abelian-category viewpoint."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Grothendieck/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Grothendieck's role in structural, topological, and algebraic transformation."
+        }
+      ]
+    },
+    {
+      "slug": "serre-gaga",
+      "era": "modern-mathematics",
+      "title": "Jean-Pierre Serre: Geometrie algebrique et geometrie analytique",
+      "date_label": "1956",
+      "figures": [
+        "Jean-Pierre Serre"
+      ],
+      "source_kind": "primary_article_with_open_journal_route",
+      "significance": "GAGA is one of the decisive bridge texts between algebraic and analytic geometry and a major marker of postwar structural mathematics.",
+      "proof_or_equation_value": "Important for coherent sheaves, comparison theorems, and the transfer of modern algebraic methods into a broader geometric language.",
+      "rights_class": "open_journal_and_biographical_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/serre-gaga/",
+      "access_routes": [
+        {
+          "provider": "Numdam",
+          "access_type": "open_pdf",
+          "url": "https://www.numdam.org/articles/AIF_1956__6__1_0/",
+          "availability": "open",
+          "notes": "Open journal route to Serre's GAGA paper in Annales de l'Institut Fourier."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Serre/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Serre's role in algebraic topology, geometry, and number theory."
+        }
+      ]
     }
   ]
 }

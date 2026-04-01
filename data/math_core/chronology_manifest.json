@@ -257,7 +257,7 @@
       "slug": "modern-mathematics",
       "name": "Modern Mathematics",
       "sequence": 4,
-      "focus": "Rigor, abstraction, set-theoretic foundations, topology, formal probability, and computation.",
+      "focus": "Rigor, abstraction, set-theoretic foundations, topology, formal probability, computation, and structural reorganization.",
       "canonical_figures": [
         "Gauss",
         "Fourier",
@@ -280,11 +280,17 @@
         "Alfred North Whitehead",
         "Hilbert",
         "Wilhelm Ackermann",
+        "John von Neumann",
+        "Nicolas Bourbaki",
         "Emmy Noether",
         "Lebesgue",
+        "Alonzo Church",
+        "Gerhard Gentzen",
         "Kolmogorov",
         "Godel",
-        "Turing"
+        "Turing",
+        "Alexander Grothendieck",
+        "Jean-Pierre Serre"
       ],
       "canonical_works": [
         "Gauss: Disquisitiones Arithmeticae",
@@ -307,11 +313,17 @@
         "Russell and Whitehead: Principia Mathematica",
         "Hilbert: Grundlagen der Geometrie",
         "Hilbert and Ackermann: Grundzuege der theoretischen Logik",
+        "John von Neumann and Oskar Morgenstern: Theory of Games and Economic Behavior",
+        "Nicolas Bourbaki: Elements of Mathematics (Theory of Sets)",
         "Emmy Noether: Idealtheorie in Ringbereichen",
         "Lebesgue: Integrale, longueur, aire",
+        "Alonzo Church: An Unsolvable Problem of Elementary Number Theory",
+        "Gerhard Gentzen: Untersuchungen ueber das logische Schliessen I and II",
         "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
         "Godel: Ueber formal unentscheidbare Saetze der Principia Mathematica und verwandter Systeme I",
-        "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem"
+        "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem",
+        "Alexander Grothendieck: Sur quelques points d'algebre homologique",
+        "Jean-Pierre Serre: Geometrie algebrique et geometrie analytique"
       ],
       "proof_threads": [
         {
@@ -345,7 +357,8 @@
             "group viewpoint",
             "non-commutative algebraic extension",
             "ring and ideal language",
-            "later structural generalization"
+            "later structural generalization",
+            "categorical and homological viewpoint"
           ]
         },
         {
@@ -356,8 +369,10 @@
             "number construction",
             "cardinality and transfinite ideas",
             "axiomatic set theory and choice",
+            "cumulative-hierarchy formulation",
             "axiomatic foundation",
-            "consistency and paradox context"
+            "consistency and paradox context",
+            "collective structural reorganization"
           ]
         },
         {
@@ -370,6 +385,18 @@
             "manifold and curvature idea",
             "topological invariants",
             "axiomatic recasting"
+          ]
+        },
+        {
+          "slug": "structural-reorganization-thread",
+          "title": "Categories, sheaves, and structural reorganization",
+          "story_focus": "How twentieth-century mathematics reorganized itself around collective axiomatics, category language, sheaves, and cohomological bridges.",
+          "required_artifacts": [
+            "axiomatic collective synthesis",
+            "category-theoretic language",
+            "abelian-category method",
+            "sheaf and cohomology bridge",
+            "structural unification across domains"
           ]
         },
         {
@@ -389,6 +416,8 @@
           "story_focus": "How procedures, decidability, and the limits of formal reasoning became rigorous mathematical subjects.",
           "required_artifacts": [
             "logicist foundations attempt",
+            "lambda-calculus formulation",
+            "proof normalization method",
             "algorithmic model",
             "decision-problem context",
             "incompleteness consequence",

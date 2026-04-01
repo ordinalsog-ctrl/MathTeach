@@ -48,6 +48,7 @@ def test_corpus_chronology_endpoint() -> None:
     assert payload["eras"][1]["canonical_figures"][0] == "Brahmagupta"
     assert payload["eras"][-1]["slug"] == "modern-mathematics"
     assert "Hilbert: Grundlagen der Geometrie" in payload["eras"][-1]["canonical_works"]
+    assert "Russell and Whitehead: Principia Mathematica" in payload["eras"][-1]["canonical_works"]
 
 
 def test_corpus_source_access_endpoint() -> None:
@@ -60,6 +61,7 @@ def test_corpus_source_access_endpoint() -> None:
     assert any(item["slug"] == "apollonius-conics" for item in payload["sources"])
     assert any(item["slug"] == "aryabhata-aryabhatiya" for item in payload["sources"])
     assert any(item["slug"] == "godel-undecidable-propositions" for item in payload["sources"])
+    assert any(item["slug"] == "principia-mathematica" for item in payload["sources"])
     assert any(item["slug"] == "napier-logarithmorum-canonis-descriptio" for item in payload["sources"])
     assert any(item["slug"] == "kepler-astronomia-nova" for item in payload["sources"])
 

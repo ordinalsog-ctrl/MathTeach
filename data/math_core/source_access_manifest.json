@@ -1415,6 +1415,193 @@
           "notes": "Biographical route summarizing the incompleteness theorems and their place in foundations."
         }
       ]
+    },
+    {
+      "slug": "abel-equations-algebriques",
+      "era": "modern-mathematics",
+      "title": "Abel: Memoire sur les equations algebriques, ou l'on demontre l'impossibilite de la resolution de l'equation generale du cinquieme degre",
+      "date_label": "1824; collected in later editions of Abel's works",
+      "figures": [
+        "Niels Henrik Abel"
+      ],
+      "source_kind": "primary_work_with_collected_works_route",
+      "significance": "Foundational modern result on the insolvability of the general quintic and a major bridge from classical equations to structural algebra.",
+      "proof_or_equation_value": "Important for the transition from equation-solving ambition to algebraic impossibility and later group-theoretic understanding.",
+      "rights_class": "public_domain_collected_works_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/abel-equations-algebriques/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL24142896M/Oeuvres_compl%C3%A8tes_de_N.H._Abel_math%C3%A9maticien",
+          "availability": "open",
+          "notes": "Public-domain collected works route containing Abel's major papers on equations and functions."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Abel/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Abel's equations work and its later importance."
+        }
+      ]
+    },
+    {
+      "slug": "kronecker-werke",
+      "era": "modern-mathematics",
+      "title": "Kronecker: Werke",
+      "date_label": "1895 onward collected edition of nineteenth-century work",
+      "figures": [
+        "Leopold Kronecker"
+      ],
+      "source_kind": "collected_works_with_open_scan",
+      "significance": "Key access route to Kronecker's work on equations, algebraic numbers, and finitist-leaning foundations.",
+      "proof_or_equation_value": "Important for the arithmetic and constructivist counterpoint to Cantor, Dedekind, and later set-theoretic foundations.",
+      "rights_class": "public_domain_collected_works_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/kronecker-werke/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL23321041M/Werke.",
+          "availability": "open",
+          "notes": "Public-domain collected works route with downloadable scan access."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Kronecker/",
+          "availability": "open",
+          "notes": "Biographical route for Kronecker's contributions to equations, algebraic numbers, and constructive viewpoints."
+        }
+      ]
+    },
+    {
+      "slug": "cayley-collected-papers",
+      "era": "modern-mathematics",
+      "title": "Cayley: The collected mathematical papers of Arthur Cayley",
+      "date_label": "1889 onward collected edition of nineteenth-century work",
+      "figures": [
+        "Arthur Cayley"
+      ],
+      "source_kind": "collected_works_with_open_scan",
+      "significance": "Central route to Cayley's work on matrices, invariant theory, abstract groups, and higher-dimensional geometry.",
+      "proof_or_equation_value": "Important for the emergence of abstract algebraic structure and matrix language before twentieth-century axiomatization.",
+      "rights_class": "public_domain_collected_works_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/cayley-collected-papers/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL7232761M/The_collected_mathematical_papers_of_Arthur_Cayley.",
+          "availability": "open",
+          "notes": "Public-domain collected papers route with PDF and text download options."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Cayley/",
+          "availability": "open",
+          "notes": "Biographical route covering Cayley's work on matrices, groups, and geometry."
+        }
+      ]
+    },
+    {
+      "slug": "hamilton-elements-of-quaternions",
+      "era": "modern-mathematics",
+      "title": "Hamilton: Elements of Quaternions",
+      "date_label": "1866",
+      "figures": [
+        "William Rowan Hamilton"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Foundational work on quaternions and one of the major expansions of algebra beyond commutative arithmetic.",
+      "proof_or_equation_value": "Important for non-commutative algebra, algebraic structure, and later links to geometry and physics.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/hamilton-elements-of-quaternions/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL7211578M/Elements_of_quaternions.",
+          "availability": "open",
+          "notes": "Public-domain reading route for the original work and later editions."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Extras/Hamilton_elements/",
+          "availability": "open",
+          "notes": "Dedicated MacTutor route to Hamilton's quaternion text with historical framing."
+        }
+      ]
+    },
+    {
+      "slug": "klein-erlangen-programm",
+      "era": "modern-mathematics",
+      "title": "Klein: Vergleichende Betrachtungen ueber neuere geometrische Forschungen",
+      "date_label": "1872",
+      "figures": [
+        "Felix Klein"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Landmark text that recast geometry through transformation groups and invariants.",
+      "proof_or_equation_value": "Important for the structural unification of geometries and the role of symmetry in modern mathematics.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/klein-erlangen-programm/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL6945947M/Vergleichende_Betrachtungen_u%CC%88ber_neuere_geometrische_Forschungen",
+          "availability": "open",
+          "notes": "Public-domain route to the 1872 Erlangen program text."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Klein/",
+          "availability": "open",
+          "notes": "Biographical route explaining the Erlangen program and Klein's group-based view of geometry."
+        }
+      ]
+    },
+    {
+      "slug": "principia-mathematica",
+      "era": "modern-mathematics",
+      "title": "Russell and Whitehead: Principia Mathematica",
+      "date_label": "1910 to 1913",
+      "figures": [
+        "Bertrand Russell",
+        "Alfred North Whitehead"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Major logicist attempt to reconstruct mathematics on symbolic logical foundations.",
+      "proof_or_equation_value": "Important for type theory, formal logical method, and the foundations debates later challenged by incompleteness.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/principia-mathematica/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL14245342M/Principia_mathematica",
+          "availability": "open",
+          "notes": "Open scan route to the first volume of Principia Mathematica."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Russell/",
+          "availability": "open",
+          "notes": "Biographical route covering Russell's logicism and the Principia project."
+        }
+      ]
     }
   ]
 }

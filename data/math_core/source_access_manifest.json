@@ -732,6 +732,254 @@
           "notes": "Heath route for commentary on Campanus and later medieval Euclid transmission."
         }
       ]
+    },
+    {
+      "slug": "heron-metrica",
+      "era": "antiquity",
+      "title": "Heron: Metrica",
+      "date_label": "1st century CE; recovered through later manuscript tradition",
+      "figures": [
+        "Heron of Alexandria"
+      ],
+      "source_kind": "primary_work_with_mixed_access",
+      "significance": "Key text for mensuration, area and volume formulas, and practical geometry.",
+      "proof_or_equation_value": "Important for the operational side of ancient geometry and the later teaching of measurement formulas.",
+      "rights_class": "mixed_open_preview_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/heron-metrica/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/books/OL4234477M/Heronis_Alexandrini_Metrica",
+          "availability": "locate",
+          "notes": "Locate route for the Greek-English Brill edition."
+        },
+        {
+          "provider": "Google Books",
+          "access_type": "open_snippet",
+          "url": "https://books.google.com/books/about/Heronis_mathematici_Alexandrini_Metrica.html?id=v29SAAAAcAAJ",
+          "availability": "preview",
+          "notes": "Digitized historical edition route useful for bibliographic verification and partial reading."
+        }
+      ]
+    },
+    {
+      "slug": "pappus-collection",
+      "era": "antiquity",
+      "title": "Pappus: Collection",
+      "date_label": "4th century CE; surviving through later manuscript and print traditions",
+      "figures": [
+        "Pappus of Alexandria"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Major late antique synthesis of Greek mathematics and a crucial transmission source.",
+      "proof_or_equation_value": "Important for the theorem of Pappus, analysis and synthesis methods, and the preservation of earlier Greek mathematics.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/pappus-collection/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL20156334M/Pappi_Alexandrini_collectionis_quae_supersunt",
+          "availability": "open",
+          "notes": "Public-domain Hultsch edition with PDF download."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL2545933M/Book_7_of_the_Collection",
+          "availability": "borrow_or_preview",
+          "notes": "Modern translation and commentary for the mathematically influential seventh book."
+        }
+      ]
+    },
+    {
+      "slug": "al-karaji-al-fakhri",
+      "era": "medieval-transmission-synthesis",
+      "title": "Al-Karaji: Al-Fakhri",
+      "date_label": "around early 11th century; 1853 excerpt edition route",
+      "figures": [
+        "Al-Karaji"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "One of the central algebra texts in the medieval Islamic tradition and a major step away from purely geometric algebra.",
+      "proof_or_equation_value": "Important for polynomial operations, powers, and the development of algebraic procedure.",
+      "rights_class": "public_domain_excerpt_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/al-karaji-al-fakhri/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/Extrait_du_Fakhr%C3%AE.html?id=R69CAAAAcAAJ",
+          "availability": "open",
+          "notes": "Full-view Woepcke edition of an algebra extract from al-Fakhri."
+        },
+        {
+          "provider": "Wikimedia Commons",
+          "access_type": "open_pdf",
+          "url": "https://commons.wikimedia.org/wiki/File:Extrait_du_Fakhr%C3%AE-_trait%C3%A9_d%27alg%C3%A8bre_%28IA_extraitdufakhrt00karagoog%29.pdf",
+          "availability": "open",
+          "notes": "Direct PDF route for the same 1853 excerpt edition."
+        }
+      ]
+    },
+    {
+      "slug": "oresme-configurationibus",
+      "era": "medieval-transmission-synthesis",
+      "title": "Nicole Oresme: Tractatus de configurationibus qualitatum et motuum",
+      "date_label": "14th century; modern bilingual edition route 1968",
+      "figures": [
+        "Nicole Oresme"
+      ],
+      "source_kind": "primary_work_with_translation_route",
+      "significance": "Crucial medieval work for quantified qualities, graphical thinking, and proto-functional reasoning.",
+      "proof_or_equation_value": "Important for the prehistory of coordinates, changing intensities, and analysis-style reasoning.",
+      "rights_class": "mixed_open_preview_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/oresme-configurationibus/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/books/OL5606761M/Nicole_Oresme_and_the_medieval_geometry_of_qualities_and_motions",
+          "availability": "locate",
+          "notes": "Locate route for the standard Clagett edition with Latin and English."
+        },
+        {
+          "provider": "Google Books",
+          "access_type": "open_snippet",
+          "url": "https://books.google.com/books/about/Nicole_Oresme_and_the_Medieval_Geometry.html?id=5Q5wAAAAIAAJ",
+          "availability": "preview",
+          "notes": "Snippet route for bibliographic confirmation and limited content preview."
+        }
+      ]
+    },
+    {
+      "slug": "regiomontanus-de-triangulis",
+      "era": "medieval-transmission-synthesis",
+      "title": "Regiomontanus: De triangulis omnimodis",
+      "date_label": "written 1464, printed 1533",
+      "figures": [
+        "Regiomontanus"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Foundational European trigonometry text linking medieval astronomy and later mathematical practice.",
+      "proof_or_equation_value": "Essential for systematic plane and spherical trigonometry before the calculus era.",
+      "rights_class": "public_domain_original_plus_translation_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/regiomontanus-de-triangulis/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/De_Triangulis_Omnimodis_Libri_Quinque.html?id=x2pmAAAAcAAJ",
+          "availability": "open",
+          "notes": "Full-view scan of the 1533 printed edition."
+        },
+        {
+          "provider": "Google Books",
+          "access_type": "open_snippet",
+          "url": "https://books.google.com/books/about/Regiomontanus_On_Triangles.html?id=QyY5AAAAIAAJ",
+          "availability": "preview",
+          "notes": "Modern English translation route with bibliographic preview."
+        }
+      ]
+    },
+    {
+      "slug": "kepler-astronomia-nova",
+      "era": "early-modern-analysis-chance",
+      "title": "Kepler: Astronomia nova",
+      "date_label": "1609",
+      "figures": [
+        "Johannes Kepler"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Major bridge between geometry, astronomy, physical reasoning, and infinitesimal-style thinking.",
+      "proof_or_equation_value": "Important for ellipse-based planetary models and the path from geometric astronomy toward calculus-era methods.",
+      "rights_class": "public_domain_original_plus_translation_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/kepler-astronomia-nova/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/works/OL16892801W/Astronomia_nova_aitiologetos_romanized",
+          "availability": "open",
+          "notes": "Original 1609 Latin edition with download options."
+        },
+        {
+          "provider": "Google Books",
+          "access_type": "purchase_or_library",
+          "url": "https://books.google.com/books/about/Astronomia_Nova.html?id=hqMvjgEACAAJ",
+          "availability": "locate",
+          "notes": "Modern English translation route useful for teaching and verification."
+        }
+      ]
+    },
+    {
+      "slug": "fermat-methodus-maximam-minimam",
+      "era": "early-modern-analysis-chance",
+      "title": "Fermat: Methodus ad disquirendam maximam et minimam",
+      "date_label": "17th century; preserved in the 1679 Varia opera mathematica",
+      "figures": [
+        "Pierre de Fermat"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "One of the strongest pre-calculus routes to maxima, minima, and tangent-style reasoning.",
+      "proof_or_equation_value": "Important for the differential prehistory and Fermat's method of adequality.",
+      "rights_class": "public_domain_collected_edition_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/fermat-methodus-maximam-minimam/",
+      "access_routes": [
+        {
+          "provider": "Smithsonian Libraries",
+          "access_type": "open_scan",
+          "url": "https://library.si.edu/digital-library/book/variaoperamathe00ferm",
+          "availability": "open",
+          "notes": "Digital route to the 1679 collected edition containing the relevant Fermat texts."
+        },
+        {
+          "provider": "Google Play Books",
+          "access_type": "open_scan",
+          "url": "https://play.google.com/store/books/details/Pierre_de_Fermat_Varia_Opera_mathematica?id=fvZaAAAAQAAJ",
+          "availability": "open",
+          "notes": "Free digitized access to the same 1679 Varia opera mathematica."
+        }
+      ]
+    },
+    {
+      "slug": "barrow-lectiones-geometricae",
+      "era": "early-modern-analysis-chance",
+      "title": "Barrow: Lectiones geometricae",
+      "date_label": "1670",
+      "figures": [
+        "Isaac Barrow"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Major conceptual and didactic bridge between seventeenth-century geometry and Newtonian calculus.",
+      "proof_or_equation_value": "Important for tangent-area relations and the conceptual path toward the fundamental theorem tradition.",
+      "rights_class": "public_domain_compilation_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/barrow-lectiones-geometricae/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL24627560M/Lectiones_optic%C3%A6_geometric%C3%A6",
+          "availability": "open",
+          "notes": "Open scan of the 1674 volume that includes Lectiones geometricae."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/works/OL6723566W/The_mathematical_works_of_Isaac_Barrow",
+          "availability": "open",
+          "notes": "Collected works route with downloadable nineteenth-century reprint."
+        }
+      ]
     }
   ]
 }

@@ -13,14 +13,18 @@
         "Euclid",
         "Archimedes",
         "Apollonius",
-        "Diophantus"
+        "Diophantus",
+        "Heron of Alexandria",
+        "Pappus of Alexandria"
       ],
       "canonical_works": [
         "Euclid: Elements",
         "Archimedes: On the Sphere and Cylinder",
         "Archimedes: The Method",
         "Apollonius: Conics",
-        "Diophantus: Arithmetica"
+        "Diophantus: Arithmetica",
+        "Heron: Metrica",
+        "Pappus: Collection"
       ],
       "proof_threads": [
         {
@@ -77,7 +81,10 @@
         "Madhava",
         "Bhaskara II",
         "Omar Khayyam",
-        "Adelard of Bath"
+        "Adelard of Bath",
+        "Al-Karaji",
+        "Nicole Oresme",
+        "Regiomontanus"
       ],
       "canonical_works": [
         "Brahmasphutasiddhanta",
@@ -87,7 +94,10 @@
         "Bhaskara II: Lilavati",
         "Bhaskara II: Bijaganita",
         "Omar Khayyam: Demonstration concerning problems of algebra",
-        "Adelard of Bath: Euclid translation tradition"
+        "Adelard of Bath: Euclid translation tradition",
+        "Al-Karaji: Al-Fakhri",
+        "Nicole Oresme: Tractatus de configurationibus qualitatum et motuum",
+        "Regiomontanus: De triangulis omnimodis"
       ],
       "proof_threads": [
         {
@@ -154,7 +164,10 @@
         "Viete",
         "Stevin",
         "Napier",
-        "Jacob Bernoulli"
+        "Jacob Bernoulli",
+        "Kepler",
+        "Fermat",
+        "Isaac Barrow"
       ],
       "canonical_works": [
         "Newton: Method of Fluxions",
@@ -167,7 +180,10 @@
         "Viete: In artem analyticam isagoge",
         "Stevin: De Thiende",
         "Napier: Mirifici logarithmorum canonis descriptio",
-        "Jacob Bernoulli: Ars Conjectandi"
+        "Jacob Bernoulli: Ars Conjectandi",
+        "Kepler: Astronomia nova",
+        "Fermat: Methodus ad disquirendam maximam et minimam",
+        "Barrow: Lectiones geometricae"
       ],
       "proof_threads": [
         {

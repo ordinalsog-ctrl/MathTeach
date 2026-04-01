@@ -90,6 +90,15 @@ Die Live-Laufzeit sollte in klaren Schritten arbeiten:
 5. Verstaendnis pruefen
 6. bei Bedarf neue Darstellung waehlen
 
+Die Runtime braucht dabei mindestens zwei erkannte Hauptmodi:
+
+- `worked_example_tutoring` fuer konkrete Aufgaben und Zahlenbeispiele
+- `origin_story_explanation` fuer Laienfragen, die vom Ursprung, Bedarf und Einsatz einer Idee her erklaert werden sollen
+
+Ein dritter Mischmodus verbindet beides:
+
+- `origin_then_example`
+
 Empfehlung:
 
 - `gpt-5.4` als Haupt-Orchestrator

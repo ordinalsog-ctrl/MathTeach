@@ -25,6 +25,138 @@ LEVEL_DEPTH = {
     "research": ("research-grade", True),
 }
 
+ORIGIN_HINTS = (
+    "laie",
+    "einfach",
+    "ursprung",
+    "notwendig",
+    "angewandt",
+    "geschichte",
+    "grundidee",
+    "wozu",
+    "warum",
+)
+
+EXAMPLE_HINTS = (
+    "beispiel",
+    "zahlenbeispiel",
+    "anhand",
+    "aufgabe",
+    "rechne",
+    "loese",
+    "loesen",
+    "gegeben",
+)
+
+
+def _normalize_text(value: str) -> str:
+    return (
+        value.casefold()
+        .replace("\u00e4", "ae")
+        .replace("\u00f6", "oe")
+        .replace("\u00fc", "ue")
+        .replace("\u00df", "ss")
+    )
+
+
+def _infer_lesson_mode(request: SessionRequest) -> str:
+    objective = _normalize_text(request.objective)
+    has_origin = any(hint in objective for hint in ORIGIN_HINTS)
+    has_example = any(hint in objective for hint in EXAMPLE_HINTS)
+
+    if has_origin and has_example:
+        return "origin_then_example"
+    if has_origin:
+        return "origin_story_explanation"
+    if has_example:
+        return "worked_example_tutoring"
+    if request.learner_profile.age_group == "expert":
+        return "formal_compact_explanation"
+    return "guided_concept_explanation"
+
+
+def _mode_response_arc(lesson_mode: str) -> list[str]:
+    if lesson_mode == "origin_story_explanation":
+        return [
+            "Start with the motivating problem before formal notation.",
+            "Explain why the concept became necessary.",
+            "Use plain language before symbols.",
+            "Connect the concept to one simple example.",
+            "Close with a present-day application.",
+        ]
+    if lesson_mode == "origin_then_example":
+        return [
+            "Start with the historical or intuitive need for the concept.",
+            "Name the core mathematical idea in simple language.",
+            "Work through the learner example step by step.",
+            "Check the result against the original problem.",
+            "End with a transfer pattern for similar tasks.",
+        ]
+    if lesson_mode == "worked_example_tutoring":
+        return [
+            "Restate the learner problem in simple words.",
+            "Classify the problem type before solving.",
+            "Solve one step at a time with local justification.",
+            "Check the answer against the original statement.",
+            "End with a reusable pattern summary.",
+        ]
+    if lesson_mode == "formal_compact_explanation":
+        return [
+            "State the formal object first.",
+            "Name assumptions and notation explicitly.",
+            "Give the shortest valid derivation path.",
+            "Point to one alternative formulation or proof route.",
+            "Close with source-aware next steps.",
+        ]
+    return [
+        "Start from intuition before notation.",
+        "Name the core mathematical object clearly.",
+        "Give one small worked example.",
+        "State the main rule or pattern explicitly.",
+        "End with a quick self-check question.",
+    ]
+
+
+def _mode_history_strategy(lesson_mode: str, wants_history: bool) -> tuple[bool, str]:
+    if lesson_mode == "origin_story_explanation":
+        return True, "origin_first"
+    if lesson_mode == "origin_then_example":
+        return True, "origin_then_example"
+    if lesson_mode == "worked_example_tutoring":
+        return wants_history, "supporting_only" if wants_history else "minimal"
+    if lesson_mode == "formal_compact_explanation":
+        return wants_history, "minimal"
+    return wants_history, "supporting_only" if wants_history else "minimal"
+
+
+def _mode_network_focus(lesson_mode: str) -> list[str]:
+    if lesson_mode == "origin_story_explanation":
+        return [
+            "transmission_path",
+            "domain_line",
+            "application_bridge",
+        ]
+    if lesson_mode == "origin_then_example":
+        return [
+            "domain_line",
+            "equation_line",
+            "application_bridge",
+        ]
+    if lesson_mode == "worked_example_tutoring":
+        return [
+            "equation_line",
+            "proof_line",
+        ]
+    if lesson_mode == "formal_compact_explanation":
+        return [
+            "proof_line",
+            "domain_line",
+        ]
+    return [
+        "domain_line",
+        "equation_line",
+    ]
+
 
 def build_stack(settings: Settings) -> StackResponse:
     return StackResponse(
@@ -67,6 +199,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     profile: LearnerProfile = request.learner_profile
     tone, pattern_hint = AUDIENCE_MODES[profile.age_group]
     concept_depth, include_proof = LEVEL_DEPTH[profile.math_level]
+    lesson_mode = _infer_lesson_mode(request)
+    response_arc = _mode_response_arc(lesson_mode)
+    include_history, history_mode = _mode_history_strategy(lesson_mode, profile.wants_history)
+    network_focus = _mode_network_focus(lesson_mode)
 
     teaching_pattern = [
         "Start from the learner objective before introducing formal notation.",
@@ -78,23 +214,33 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append("Offer a visual or spatial explanation when possible.")
     if profile.confidence == "low":
         teaching_pattern.append("Reduce shame and normalize mistakes as part of learning.")
-    if profile.wants_history:
+    if include_history:
         teaching_pattern.append("Include origin stories when they improve intuition.")
+    if lesson_mode == "origin_story_explanation":
+        teaching_pattern.append("Treat history as the main entry point, not as a side note.")
+    if lesson_mode == "worked_example_tutoring":
+        teaching_pattern.append("Keep each algebraic move local, explicit, and checkable.")
+    if lesson_mode == "origin_then_example":
+        teaching_pattern.append("Bridge from historical motivation into the learner's own example.")
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,
-        include_history=profile.wants_history,
+        include_history=include_history,
+        history_mode=history_mode,
         include_proof_sketch=include_proof,
         include_modern_applications=True,
         highlight_misconceptions=True,
+        network_focus=network_focus,
         required_source_types=[
             "primary_math_source_or_standard_reference",
             "modern_explanatory_source",
             "worked_example_source",
+            "historical_network_source",
         ],
     )
 
     evaluation_focus = [
+        "Did the answer choose the right lesson mode for the learner request?",
         "Did the explanation respect prerequisites?",
         "Was the mathematical claim sourceable?",
         "Was the difficulty level appropriate for the learner?",
@@ -109,9 +255,11 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     ]
 
     return TeachingPlan(
+        lesson_mode=lesson_mode,
         audience_mode=profile.age_group,
         tone=tone,
         teaching_pattern=teaching_pattern,
+        response_arc=response_arc,
         retrieval_plan=retrieval_plan,
         evaluation_focus=evaluation_focus,
         next_turn_contract=next_turn_contract,

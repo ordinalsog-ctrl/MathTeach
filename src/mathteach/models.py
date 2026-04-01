@@ -34,16 +34,20 @@ class SessionRequest(BaseModel):
 class RetrievalPlan(BaseModel):
     concept_depth: str
     include_history: bool
+    history_mode: str
     include_proof_sketch: bool
     include_modern_applications: bool
     highlight_misconceptions: bool
+    network_focus: list[str]
     required_source_types: list[str]
 
 
 class TeachingPlan(BaseModel):
+    lesson_mode: str
     audience_mode: str
     tone: str
     teaching_pattern: list[str]
+    response_arc: list[str]
     retrieval_plan: RetrievalPlan
     evaluation_focus: list[str]
     next_turn_contract: list[str]

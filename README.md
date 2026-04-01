@@ -42,6 +42,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 
 ## Repository-Inhalt
 
+- [JOURNAL.md](/Users/jonasweiss/MathTeach/JOURNAL.md): Laufender Session- und Projektstand mit Mathematikwerken, Teacher-Mind-Quellen, Runtime-Handoff und naechsten Schritten
 - [docs/architecture.md](/Users/jonasweiss/MathTeach/docs/architecture.md): Zielarchitektur und Komponenten
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte

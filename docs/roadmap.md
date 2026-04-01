@@ -31,6 +31,7 @@
 - Frustrations- und Motivationssignale
 - alternative Erklaerpfade
 - visuelle und textuelle Lehrmodi
+- Routing zwischen Beispielmodus und Ursprung-Erklaermodus
 
 ## Phase 4: Expertenmodus
 

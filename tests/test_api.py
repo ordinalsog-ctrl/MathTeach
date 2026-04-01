@@ -99,5 +99,32 @@ def test_tutoring_plan_endpoint() -> None:
 
     assert response.status_code == 200
     payload = response.json()
+    assert payload["lesson_mode"] == "guided_concept_explanation"
     assert payload["audience_mode"] == "teen"
     assert payload["retrieval_plan"]["include_history"] is True
+    assert payload["retrieval_plan"]["history_mode"] == "supporting_only"
+
+
+def test_tutoring_plan_origin_story_mode() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir als Mathe-Laie die Differentialgleichung und warum sie notwendig wurde.",
+            "learner_profile": {
+                "age_group": "adult",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["lesson_mode"] == "origin_story_explanation"
+    assert payload["retrieval_plan"]["include_history"] is True
+    assert payload["retrieval_plan"]["history_mode"] == "origin_first"
+    assert "application_bridge" in payload["retrieval_plan"]["network_focus"]

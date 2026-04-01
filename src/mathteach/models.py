@@ -107,3 +107,35 @@ class CorpusBlueprintResponse(BaseModel):
     source_families: list[SourceFamily]
     starter_collection_queue: list[CollectionQueueItem]
     out_of_scope_for_now: list[str]
+
+
+class ProofThread(BaseModel):
+    slug: str
+    title: str
+    story_focus: str
+    required_artifacts: list[str]
+
+
+class EquationThread(BaseModel):
+    slug: str
+    title: str
+    story_focus: str
+
+
+class ChronologyEra(BaseModel):
+    slug: str
+    name: str
+    sequence: int
+    focus: str
+    canonical_figures: list[str]
+    canonical_works: list[str]
+    proof_threads: list[ProofThread]
+    equation_threads: list[EquationThread]
+
+
+class ChronologyProgramResponse(BaseModel):
+    checked_on: str
+    mission: str
+    organizing_rule: str
+    eras: list[ChronologyEra]
+    collection_rules: list[str]

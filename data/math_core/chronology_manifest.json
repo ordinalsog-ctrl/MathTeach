@@ -1,0 +1,205 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build the mathematics corpus as a historical program in which equations, proofs, and methods carry origin stories and transmission paths.",
+  "organizing_rule": "Important mathematical objects must later be teachable as both content and history.",
+  "eras": [
+    {
+      "slug": "antiquity",
+      "name": "Antiquity",
+      "sequence": 1,
+      "focus": "Number systems, arithmetic, geometric proof culture, and early rigorous work on magnitude and infinity.",
+      "canonical_figures": [
+        "Pythagorean tradition",
+        "Euclid",
+        "Archimedes"
+      ],
+      "canonical_works": [
+        "Euclid: Elements",
+        "Archimedes: On the Sphere and Cylinder",
+        "Archimedes: The Method"
+      ],
+      "proof_threads": [
+        {
+          "slug": "pythagorean-theorem-thread",
+          "title": "Pythagorean theorem",
+          "story_focus": "Why area relations in right triangles became a central proving tradition.",
+          "required_artifacts": [
+            "statement history",
+            "classical proof variant",
+            "Euclidean proof lineage",
+            "later pedagogical proof variants"
+          ]
+        },
+        {
+          "slug": "euclidean-proof-architecture",
+          "title": "Euclidean proof architecture",
+          "story_focus": "How definitions, common notions, and postulates shaped formal proof culture.",
+          "required_artifacts": [
+            "axiom structure",
+            "proposition chain",
+            "dependency map",
+            "modern restatement"
+          ]
+        },
+        {
+          "slug": "archimedean-exhaustion",
+          "title": "Archimedean exhaustion and infinite reasoning",
+          "story_focus": "How finite geometric reasoning approached areas, volumes, and limiting processes.",
+          "required_artifacts": [
+            "method of exhaustion",
+            "geometric proof summary",
+            "mechanical heuristic",
+            "bridge to later infinitesimal ideas"
+          ]
+        }
+      ],
+      "equation_threads": [
+        {
+          "slug": "right-triangle-relation",
+          "title": "Right-triangle square relation",
+          "story_focus": "A relation later written algebraically, but born in geometric language."
+        }
+      ]
+    },
+    {
+      "slug": "medieval-transmission-synthesis",
+      "name": "Medieval Transmission and Synthesis",
+      "sequence": 2,
+      "focus": "Indian and Arabic developments, transmission into Europe, algebraic procedure, and early infinite series ideas.",
+      "canonical_figures": [
+        "Brahmagupta",
+        "al-Khwarizmi",
+        "Fibonacci",
+        "Madhava"
+      ],
+      "canonical_works": [
+        "Brahmasphutasiddhanta",
+        "Al-Khwarizmi: Book on Addition and Subtraction after the Method of the Indians",
+        "Al-Khwarizmi: Al-jabr",
+        "Fibonacci: Liber Abaci"
+      ],
+      "proof_threads": [
+        {
+          "slug": "zero-and-arithmetic-rules",
+          "title": "Zero, sign rules, and arithmetic procedure",
+          "story_focus": "How rules of calculation became explicit objects of mathematical writing.",
+          "required_artifacts": [
+            "rule statements",
+            "worked examples",
+            "notation and language shift",
+            "later influence on arithmetic teaching"
+          ]
+        },
+        {
+          "slug": "algebraic-procedure-thread",
+          "title": "Algebra as a procedural science",
+          "story_focus": "How equation solving emerged as a textual procedure before symbolic algebra matured.",
+          "required_artifacts": [
+            "problem type taxonomy",
+            "rhetorical solution pattern",
+            "geometric support argument",
+            "transition toward symbolic notation"
+          ]
+        },
+        {
+          "slug": "infinite-series-prehistory",
+          "title": "Infinite series before early modern calculus",
+          "story_focus": "How summation ideas and approximation traditions prepared later analysis.",
+          "required_artifacts": [
+            "series identity",
+            "approximation logic",
+            "computational motivation",
+            "continuity to later calculus stories"
+          ]
+        }
+      ],
+      "equation_threads": [
+        {
+          "slug": "place-value-numeration",
+          "title": "Place-value numeration and written calculation",
+          "story_focus": "How numeral form reshaped what calculation itself could become."
+        },
+        {
+          "slug": "rhetorical-quadratic-procedures",
+          "title": "Quadratic equation procedures before modern symbolism",
+          "story_focus": "How verbal and geometric solution methods predated compact algebraic form."
+        }
+      ]
+    },
+    {
+      "slug": "early-modern-analysis-chance",
+      "name": "Early Modern Analysis and Chance",
+      "sequence": 3,
+      "focus": "Calculus, notation, changing quantities, and the formal beginnings of probability.",
+      "canonical_figures": [
+        "Newton",
+        "Leibniz",
+        "Pascal",
+        "Fermat"
+      ],
+      "canonical_works": [
+        "Newton: Method of Fluxions",
+        "Leibniz: Nova Methodus pro Maximis et Minimis",
+        "Pascal and Fermat correspondence on games of chance"
+      ],
+      "proof_threads": [
+        {
+          "slug": "fluxions-and-differentials",
+          "title": "Fluxions and differentials",
+          "story_focus": "How two frameworks for change developed together yet with different notation and philosophy.",
+          "required_artifacts": [
+            "Newtonian formulation",
+            "Leibnizian formulation",
+            "notation comparison",
+            "later standardization story"
+          ]
+        },
+        {
+          "slug": "fundamental-calculus-line",
+          "title": "Integral and differential connection",
+          "story_focus": "How accumulation and rate became linked in the emerging calculus tradition.",
+          "required_artifacts": [
+            "geometric motivation",
+            "tangent and area problems",
+            "early theorem forms",
+            "bridge to later rigor"
+          ]
+        },
+        {
+          "slug": "probability-foundation-thread",
+          "title": "Probability from correspondence to method",
+          "story_focus": "How questions about fair division and games produced general probabilistic reasoning.",
+          "required_artifacts": [
+            "problem context",
+            "counting logic",
+            "expectation-style reasoning",
+            "path toward formal probability"
+          ]
+        }
+      ],
+      "equation_threads": [
+        {
+          "slug": "differential-notation",
+          "title": "Differential notation",
+          "story_focus": "How notation changed the teachability and extensibility of calculus."
+        },
+        {
+          "slug": "integral-sign-lineage",
+          "title": "Integral sign lineage",
+          "story_focus": "How accumulation became visually and conceptually encoded."
+        },
+        {
+          "slug": "probability-expressions",
+          "title": "Early probability expressions",
+          "story_focus": "How chance moved from concrete games to reusable mathematical language."
+        }
+      ]
+    }
+  ],
+  "collection_rules": [
+    "Do not ingest later modern sources before each early era has a stable anchor set of works and figures.",
+    "For every proof thread, store at least one origin-oriented story summary and one mathematics-oriented proof summary.",
+    "For every equation thread, store origin, notation, and later standard form separately.",
+    "Treat transmission between cultures as first-class historical data, not as a footnote."
+  ]
+}

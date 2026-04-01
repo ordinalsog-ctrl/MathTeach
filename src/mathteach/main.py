@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from mathteach.config import get_settings
 from mathteach.models import SessionRequest
-from mathteach.services.corpus import build_corpus_blueprint
+from mathteach.services.corpus import build_chronology_program, build_corpus_blueprint
 from mathteach.services.foundation import build_foundation
 from mathteach.services.planner import build_stack, build_teaching_plan
 
@@ -28,6 +28,11 @@ def foundation():
 @app.get("/api/v1/corpus/blueprint")
 def corpus_blueprint():
     return build_corpus_blueprint()
+
+
+@app.get("/api/v1/corpus/chronology")
+def corpus_chronology():
+    return build_chronology_program()
 
 
 @app.post("/api/v1/tutoring/plan")

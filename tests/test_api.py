@@ -39,6 +39,15 @@ def test_corpus_blueprint_endpoint() -> None:
     assert "pedagogical literature" in payload["out_of_scope_for_now"]
 
 
+def test_corpus_chronology_endpoint() -> None:
+    response = client.get("/api/v1/corpus/chronology")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["eras"][0]["slug"] == "antiquity"
+    assert payload["eras"][1]["canonical_figures"][0] == "Brahmagupta"
+
+
 def test_tutoring_plan_endpoint() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

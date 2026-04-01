@@ -139,3 +139,33 @@ class ChronologyProgramResponse(BaseModel):
     organizing_rule: str
     eras: list[ChronologyEra]
     collection_rules: list[str]
+
+
+class SourceAccessRoute(BaseModel):
+    provider: str
+    access_type: str
+    url: str
+    availability: str
+    notes: str
+
+
+class SourceRegistryEntry(BaseModel):
+    slug: str
+    era: str
+    title: str
+    date_label: str
+    figures: list[str]
+    source_kind: str
+    significance: str
+    proof_or_equation_value: str
+    rights_class: str
+    storage_class: str
+    storage_path_hint: str
+    access_routes: list[SourceAccessRoute]
+
+
+class SourceAccessProgramResponse(BaseModel):
+    checked_on: str
+    mission: str
+    storage_rule: str
+    sources: list[SourceRegistryEntry]

@@ -48,6 +48,15 @@ def test_corpus_chronology_endpoint() -> None:
     assert payload["eras"][1]["canonical_figures"][0] == "Brahmagupta"
 
 
+def test_corpus_source_access_endpoint() -> None:
+    response = client.get("/api/v1/corpus/source-access")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["sources"][0]["slug"] == "rhind-mathematical-papyrus"
+    assert payload["sources"][2]["access_routes"][0]["provider"] == "Clay Mathematics Institute"
+
+
 def test_tutoring_plan_endpoint() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

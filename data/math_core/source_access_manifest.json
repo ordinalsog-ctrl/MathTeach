@@ -1,0 +1,328 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Track which foundational historical mathematics works exist, how they can be read today, and how they should be stored locally for ingestion.",
+  "storage_rule": "Keep raw files outside Git, keep manifests and metadata in Git, and record rights before large-scale ingestion.",
+  "sources": [
+    {
+      "slug": "rhind-mathematical-papyrus",
+      "era": "antiquity",
+      "title": "Rhind Mathematical Papyrus",
+      "date_label": "circa 1550 BCE manuscript copy of earlier material",
+      "figures": [
+        "Ahmes"
+      ],
+      "source_kind": "artifact_record",
+      "significance": "Early arithmetic and problem-text tradition for practical computation and geometry.",
+      "proof_or_equation_value": "Pre-proof arithmetic tradition and worked-problem culture.",
+      "rights_class": "museum_images_and_secondary_texts",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/rhind-mathematical-papyrus/",
+      "access_routes": [
+        {
+          "provider": "British Museum",
+          "access_type": "open_html",
+          "url": "https://www.britishmuseum.org/collection/object/Y_EA10057",
+          "availability": "open",
+          "notes": "Collection object page for one main Rhind papyrus section with catalog metadata."
+        },
+        {
+          "provider": "British Museum",
+          "access_type": "open_html",
+          "url": "https://www.britishmuseum.org/collection/object/Y_EA10058",
+          "availability": "open",
+          "notes": "Collection object page for the other main Rhind papyrus section."
+        }
+      ]
+    },
+    {
+      "slug": "plimpton-322",
+      "era": "antiquity",
+      "title": "Plimpton 322",
+      "date_label": "Old Babylonian period, likely 1800 BCE to 1600 BCE",
+      "figures": [
+        "Babylonian scribal tradition"
+      ],
+      "source_kind": "artifact_record",
+      "significance": "Key artifact for early number systems, tabular computation, and right-triangle relations.",
+      "proof_or_equation_value": "Shows pre-Euclidean numerical structure behind later right-triangle mathematics.",
+      "rights_class": "artifact_metadata_and_images_vary",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/plimpton-322/",
+      "access_routes": [
+        {
+          "provider": "CDLI",
+          "access_type": "open_html",
+          "url": "https://cdli.ucla.edu/search/search_results.php?SearchMode=Text&ObjectID=P254790",
+          "availability": "open",
+          "notes": "Direct catalog route for the tablet with metadata and imaging links."
+        }
+      ]
+    },
+    {
+      "slug": "euclid-elements",
+      "era": "antiquity",
+      "title": "Euclid: Elements",
+      "date_label": "around 300 BCE; extant through later manuscript and print traditions",
+      "figures": [
+        "Euclid"
+      ],
+      "source_kind": "primary_work_with_public_domain_editions",
+      "significance": "Core architecture of axioms, definitions, propositions, and proof dependencies.",
+      "proof_or_equation_value": "Primary anchor for proof culture and the Euclidean form of the Pythagorean theorem.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/euclid-elements/",
+      "access_routes": [
+        {
+          "provider": "Clay Mathematics Institute",
+          "access_type": "open_html",
+          "url": "https://www.claymath.org/library/historical/euclid/",
+          "availability": "open",
+          "notes": "Historical archive with Greek and English material around the Elements."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/works/OL54748W/The_Thirteen_Books_of_Euclid%27s_Elements",
+          "availability": "borrow_or_locate",
+          "notes": "Useful hub for scanned public-domain editions and lending."
+        }
+      ]
+    },
+    {
+      "slug": "archimedes-method-and-works",
+      "era": "antiquity",
+      "title": "Archimedes: The Method and related works",
+      "date_label": "3rd century BCE, transmitted through later manuscript traditions",
+      "figures": [
+        "Archimedes"
+      ],
+      "source_kind": "primary_work_with_public_domain_editions",
+      "significance": "Central for exhaustion methods, geometry, and proto-infinite reasoning.",
+      "proof_or_equation_value": "Essential for the story behind area, volume, and limit-like argumentation.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/archimedes-method-and-works/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Extras/Archimedes_The_Method/",
+          "availability": "open",
+          "notes": "Historical introduction and translated excerpts for The Method."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/works/OL16828432W/The_works_of_Archimedes",
+          "availability": "borrow_or_locate",
+          "notes": "Hub for scans and editions of The Works of Archimedes."
+        }
+      ]
+    },
+    {
+      "slug": "brahmasphutasiddhanta",
+      "era": "medieval-transmission-synthesis",
+      "title": "Brahmagupta: Brahmasphutasiddhanta",
+      "date_label": "628 CE",
+      "figures": [
+        "Brahmagupta"
+      ],
+      "source_kind": "primary_work_with_mixed_access",
+      "significance": "Key source for zero, arithmetic rules, and algebraic procedure in the Indian tradition.",
+      "proof_or_equation_value": "Important for rule-based arithmetic and equation history before later symbolic standardization.",
+      "rights_class": "mixed_open_text_and_specialist_editions",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/brahmasphutasiddhanta/",
+      "access_routes": [
+        {
+          "provider": "GRETIL",
+          "access_type": "open_html",
+          "url": "https://gretil.sub.uni-goettingen.de/gretil/corpustei/transformations/html/sa_brahmagupta-brAhmasphuTasiddhAnta.htm",
+          "availability": "open",
+          "notes": "Open e-text route to the Sanskrit text based on a historical edition."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/search?q=brahmagupta+algebra+with+arithmetic+and+mensuration",
+          "availability": "borrow_or_locate",
+          "notes": "Route to Colebrooke-era translation material and later library copies."
+        }
+      ]
+    },
+    {
+      "slug": "algoritmi-de-numero-indorum",
+      "era": "medieval-transmission-synthesis",
+      "title": "Algoritmi de numero Indorum",
+      "date_label": "Latin witness printed in 1857 from the earlier al-Khwarizmi tradition",
+      "figures": [
+        "al-Khwarizmi"
+      ],
+      "source_kind": "historical_witness_edition",
+      "significance": "Important access point for the transmission of Hindu-Arabic numerals and written calculation.",
+      "proof_or_equation_value": "Critical for the story of place-value notation and algorithmic arithmetic.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/algoritmi-de-numero-indorum/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.nl/books?hl=nl&id=dK4qqeA4f-IC",
+          "availability": "open",
+          "notes": "Full-view scan of the 1857 witness edition."
+        }
+      ]
+    },
+    {
+      "slug": "algebra-of-mohammed-ben-musa",
+      "era": "medieval-transmission-synthesis",
+      "title": "Al-Khwarizmi: Algebra of Mohammed ben Musa",
+      "date_label": "9th century original; 1831 English translation by Rosen",
+      "figures": [
+        "al-Khwarizmi"
+      ],
+      "source_kind": "primary_work_with_public_domain_translation",
+      "significance": "Anchor text for rhetorical algebra and systematic equation solving.",
+      "proof_or_equation_value": "Essential for the history of quadratic procedures before modern symbolic form.",
+      "rights_class": "public_domain_translation_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/algebra-of-mohammed-ben-musa/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/works/OL13523655W/The_algebra_of_Mohammed_ben_Musa",
+          "availability": "borrow_or_locate",
+          "notes": "Library hub for Rosen's translation and scan access."
+        },
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books?id=8B1bAAAAQAAJ",
+          "availability": "open_or_preview",
+          "notes": "Public scan route that often resolves to the 1831 translation."
+        }
+      ]
+    },
+    {
+      "slug": "fibonacci-liber-abaci",
+      "era": "medieval-transmission-synthesis",
+      "title": "Fibonacci: Liber Abaci",
+      "date_label": "1202, revised 1228",
+      "figures": [
+        "Fibonacci"
+      ],
+      "source_kind": "primary_work_with_manuscript_and_modern_routes",
+      "significance": "Major transmission route for Hindu-Arabic numerals into Latin Europe.",
+      "proof_or_equation_value": "Important for arithmetic culture, commercial calculation, and the European adoption story.",
+      "rights_class": "mixed_open_facsimile_and_modern_editions",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/fibonacci-liber-abaci/",
+      "access_routes": [
+        {
+          "provider": "Museo Galileo Digiteca",
+          "access_type": "open_scan",
+          "url": "https://bibdig.museogalileo.it/Fibonacci/index.html?language=en&path=",
+          "availability": "open",
+          "notes": "Digital Liber Abbaci edition and manuscript apparatus through Museo Galileo."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/search?q=fibonacci+liber+abaci",
+          "availability": "borrow_or_locate",
+          "notes": "Route to modern translations and library holdings."
+        }
+      ]
+    },
+    {
+      "slug": "newton-method-of-fluxions",
+      "era": "early-modern-analysis-chance",
+      "title": "Newton: The Method of Fluxions and Infinite Series",
+      "date_label": "written earlier; English publication 1736",
+      "figures": [
+        "Isaac Newton"
+      ],
+      "source_kind": "primary_work_with_public_domain_scan",
+      "significance": "Central source for Newtonian calculus language and infinite series methods.",
+      "proof_or_equation_value": "Key for fluxions, fluents, and the connection between changing quantities and integration.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/newton-method-of-fluxions/",
+      "access_routes": [
+        {
+          "provider": "Wikimedia Commons",
+          "access_type": "open_pdf",
+          "url": "https://commons.wikimedia.org/wiki/File:The_method_of_fluxions_and_infinite_series_-_with_its_application_to_the_geometry_of_curve-lines_%28IA_methodoffluxions00newt%29.pdf",
+          "availability": "open",
+          "notes": "Direct public-domain PDF route backed by the Internet Archive scan."
+        },
+        {
+          "provider": "Britannica",
+          "access_type": "open_html",
+          "url": "https://www.britannica.com/topic/The-Method-of-Fluxions-and-Infinite-Series",
+          "availability": "open",
+          "notes": "Useful contextual overview of the work and publication history."
+        }
+      ]
+    },
+    {
+      "slug": "leibniz-nova-methodus",
+      "era": "early-modern-analysis-chance",
+      "title": "Leibniz: Nova Methodus pro Maximis et Minimis",
+      "date_label": "1684",
+      "figures": [
+        "Gottfried Wilhelm Leibniz"
+      ],
+      "source_kind": "primary_article_with_public_domain_scan_route",
+      "significance": "Foundational publication for differential notation and the public calculus tradition.",
+      "proof_or_equation_value": "Key for notation history, derivative language, and teachability of calculus.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/leibniz-nova-methodus/",
+      "access_routes": [
+        {
+          "provider": "Biodiversity Heritage Library via Internet Archive",
+          "access_type": "open_pdf",
+          "url": "https://archive.org/download/s1id13206500/s1id13206500.pdf",
+          "availability": "open",
+          "notes": "Digitized volume of Acta Eruditorum containing the 1684 article."
+        },
+        {
+          "provider": "Wikipedia",
+          "access_type": "open_html",
+          "url": "https://en.wikipedia.org/wiki/Acta_Eruditorum",
+          "availability": "open",
+          "notes": "Context route to the journal in which the article appeared."
+        }
+      ]
+    },
+    {
+      "slug": "pascal-fermat-probability-correspondence",
+      "era": "early-modern-analysis-chance",
+      "title": "Pascal and Fermat correspondence on games of chance",
+      "date_label": "1654 correspondence",
+      "figures": [
+        "Blaise Pascal",
+        "Pierre de Fermat"
+      ],
+      "source_kind": "historical_correspondence_with_open_teaching_route",
+      "significance": "Foundational story for fair division, expectation, and probability reasoning.",
+      "proof_or_equation_value": "Critical for probability as method born from concrete problem correspondence.",
+      "rights_class": "mixed_open_teaching_material_and_print_sources",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/pascal-fermat-probability-correspondence/",
+      "access_routes": [
+        {
+          "provider": "MIT OCW external resource page",
+          "access_type": "open_html",
+          "url": "https://ocw.mit.edu/courses/18-969-topics-in-the-history-of-mathematics-fall-2004/resources/fermat-and-pascal-on-probability/",
+          "availability": "open",
+          "notes": "Public course route pointing to translated teaching material on the correspondence."
+        }
+      ]
+    }
+  ]
+}

@@ -150,7 +150,11 @@
         "Descartes",
         "Cavalieri",
         "Wallis",
-        "Huygens"
+        "Huygens",
+        "Viete",
+        "Stevin",
+        "Napier",
+        "Jacob Bernoulli"
       ],
       "canonical_works": [
         "Newton: Method of Fluxions",
@@ -159,7 +163,11 @@
         "Descartes: La Geometrie",
         "Cavalieri: Geometria indivisibilibus continuorum nova quadam ratione promota",
         "Wallis: Arithmetica infinitorum",
-        "Huygens: De Ratiociniis in Ludo Aleae"
+        "Huygens: De Ratiociniis in Ludo Aleae",
+        "Viete: In artem analyticam isagoge",
+        "Stevin: De Thiende",
+        "Napier: Mirifici logarithmorum canonis descriptio",
+        "Jacob Bernoulli: Ars Conjectandi"
       ],
       "proof_threads": [
         {

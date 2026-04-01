@@ -574,6 +574,164 @@
           "notes": "Full-view route for the 1657 treatise."
         }
       ]
+    },
+    {
+      "slug": "viete-in-artem-analyticam-isagoge",
+      "era": "early-modern-analysis-chance",
+      "title": "Viete: In artem analyticam isagoge",
+      "date_label": "1591",
+      "figures": [
+        "Francois Viete"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Landmark text for symbolic algebra and the systematic use of letters for known and unknown quantities.",
+      "proof_or_equation_value": "Essential for the transition from rhetorical algebra to symbolic manipulation that later supports modern equation practice.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/viete-in-artem-analyticam-isagoge/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/In_artem_analyticam_isagoge.html?id=t2FbmgEACAAJ",
+          "availability": "open",
+          "notes": "Bibliographic route with full-view 1591 edition references and linked scans."
+        }
+      ]
+    },
+    {
+      "slug": "stevin-de-thiende",
+      "era": "early-modern-analysis-chance",
+      "title": "Stevin: De Thiende",
+      "date_label": "1585",
+      "figures": [
+        "Simon Stevin"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Canonical early modern text for decimal fractions and the push toward decimalized practical computation.",
+      "proof_or_equation_value": "Important for notation history, arithmetic pedagogy, and the routinization of decimal representation.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/stevin-de-thiende/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/De_Thiende.html?hl=nl&id=1plDyV8Lq9MC",
+          "availability": "open",
+          "notes": "Full-view route to the 1585 edition from the Dutch national library scan."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/authors/OL138993A/Stevin_Simon",
+          "availability": "locate",
+          "notes": "Author hub including locate-only facsimile listings for De Thiende."
+        }
+      ]
+    },
+    {
+      "slug": "napier-logarithmorum-canonis-descriptio",
+      "era": "early-modern-analysis-chance",
+      "title": "Napier: Mirifici logarithmorum canonis descriptio",
+      "date_label": "1614",
+      "figures": [
+        "John Napier"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Foundational publication of logarithms as a practical computational tool.",
+      "proof_or_equation_value": "Essential for the history of calculation, tables, and the computational environment of early modern mathematics.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/napier-logarithmorum-canonis-descriptio/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books?id=J19dAAAAcAAJ",
+          "availability": "open",
+          "notes": "Direct scan route for the 1614 Descriptio."
+        }
+      ]
+    },
+    {
+      "slug": "jacob-bernoulli-ars-conjectandi",
+      "era": "early-modern-analysis-chance",
+      "title": "Jacob Bernoulli: Ars Conjectandi",
+      "date_label": "1713",
+      "figures": [
+        "Jacob Bernoulli"
+      ],
+      "source_kind": "primary_work_with_translation_route",
+      "significance": "Foundational bridge from early gambling problems to mature probability and combinatorics.",
+      "proof_or_equation_value": "Important for the law of large numbers tradition and the consolidation of probability as a field.",
+      "rights_class": "mixed_open_translation_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/jacob-bernoulli-ars-conjectandi/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "purchase_or_library",
+          "url": "https://books.google.com/books/about/The_Art_of_Conjecturing_Together_with_Le.html?id=-xgwSAjTh34C",
+          "availability": "locate",
+          "notes": "Modern scholarly translation and commentary route."
+        }
+      ]
+    },
+    {
+      "slug": "adelard-euclid-translation-tradition",
+      "era": "medieval-transmission-synthesis",
+      "title": "Adelard of Bath: Euclid translation tradition",
+      "date_label": "12th century",
+      "figures": [
+        "Adelard of Bath"
+      ],
+      "source_kind": "translation_tradition_record",
+      "significance": "Major Latin transmission route carrying Euclidean geometry from Arabic scholarship into western Europe.",
+      "proof_or_equation_value": "Essential for the story of how Euclidean proof culture became teachable in the Latin West.",
+      "rights_class": "mixed_library_and_historical_study_routes",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/adelard-euclid-translation-tradition/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Adelard/",
+          "availability": "open",
+          "notes": "Historical overview of Adelard's Euclid translation versions and their significance."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL7010624M/The_thirteen_books_of_Euclid%27s_Elements",
+          "availability": "open",
+          "notes": "Heath edition with extensive historical commentary on medieval transmission."
+        }
+      ]
+    },
+    {
+      "slug": "campanus-euclid-tradition",
+      "era": "medieval-transmission-synthesis",
+      "title": "Campanus of Novara: Euclid tradition",
+      "date_label": "13th century recension; influential in later print culture",
+      "figures": [
+        "Campanus of Novara"
+      ],
+      "source_kind": "translation_tradition_record",
+      "significance": "The dominant later medieval Latin Euclid tradition and a key teaching route into Renaissance print culture.",
+      "proof_or_equation_value": "Important for tracking how Euclidean propositions were presented to later European readers.",
+      "rights_class": "mixed_library_and_historical_study_routes",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/campanus-euclid-tradition/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL7010624M/The_thirteen_books_of_Euclid%27s_Elements",
+          "availability": "open",
+          "notes": "Heath route for commentary on Campanus and later medieval Euclid transmission."
+        }
+      ]
     }
   ]
 }

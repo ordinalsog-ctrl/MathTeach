@@ -21,6 +21,7 @@ Moegliche Zugriffsarten:
 - `borrowable_scan`
 - `institutional`
 - `purchase_or_library`
+- `open_snippet`
 
 ## Speicherlogik
 
@@ -87,6 +88,12 @@ Bei jedem Werk speichern wir getrennt:
 - `how to read now`: heutiger Zugriffsweg
 - `how to store`: lokaler Ablagepfad
 - `what rights apply`: Rechte- und Risikohinweis
+
+## Audit-Regel
+
+Jede Erweiterung der Quellenliste endet mit einem Folgeaudit.
+
+Die feste Projektregel dazu steht in [docs/curation-loop.md](/Users/jonasweiss/MathTeach/docs/curation-loop.md).
 
 ## Erste Prioritaet
 

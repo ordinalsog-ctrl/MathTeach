@@ -323,6 +323,257 @@
           "notes": "Public course route pointing to translated teaching material on the correspondence."
         }
       ]
+    },
+    {
+      "slug": "apollonius-conics",
+      "era": "antiquity",
+      "title": "Apollonius: Conics",
+      "date_label": "3rd century BCE original; extant through Greek, Arabic, and later print traditions",
+      "figures": [
+        "Apollonius"
+      ],
+      "source_kind": "primary_work_with_public_domain_editions",
+      "significance": "Canonical source for conic sections and a major bridge from Greek geometry to early modern analysis and astronomy.",
+      "proof_or_equation_value": "Essential for the historical story of ellipse, parabola, hyperbola, and geometric problem style.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/apollonius-conics/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL23349878M/Treatise_on_conic_sections.",
+          "availability": "open",
+          "notes": "Public reading route for a historical edition of Conics with download options."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/works/OL13361574W/Conics_books_V_to_VII",
+          "availability": "locate",
+          "notes": "Route to the later Arabic transmission of Books V to VII."
+        }
+      ]
+    },
+    {
+      "slug": "diophantus-arithmetica",
+      "era": "antiquity",
+      "title": "Diophantus: Arithmetica",
+      "date_label": "likely 3rd century CE; surviving through Greek and Arabic transmission",
+      "figures": [
+        "Diophantus"
+      ],
+      "source_kind": "primary_work_with_public_domain_editions",
+      "significance": "Central source for algebraic problem culture and later number-theoretic reception.",
+      "proof_or_equation_value": "Important for the history of indeterminate problems and algebraic problem-solving style.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/diophantus-arithmetica/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL37763846M/Diophante_d%27Alexandrie",
+          "availability": "open",
+          "notes": "Public edition of the six arithmetic books and polygonal numbers with download options."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL7110984M/Diophantus_of_Alexandria",
+          "availability": "open",
+          "notes": "Heath study with extensive historical apparatus around Arithmetica."
+        }
+      ]
+    },
+    {
+      "slug": "bhaskara-lilavati",
+      "era": "medieval-transmission-synthesis",
+      "title": "Bhaskara II: Lilavati",
+      "date_label": "1150 CE",
+      "figures": [
+        "Bhaskara II"
+      ],
+      "source_kind": "primary_work_with_translation_route",
+      "significance": "Major arithmetic and mensuration text in the Indian mathematical tradition with very long teaching influence.",
+      "proof_or_equation_value": "Important for worked arithmetic culture, verse mathematics, and transmission into later commentarial traditions.",
+      "rights_class": "public_domain_translation_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/bhaskara-lilavati/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL13992376M/Algebra_with_Arithmetic_and_mensuration_from_the_Sanscrit_of_Brahmegupta_and_Bh%C3%A1scara.",
+          "availability": "open",
+          "notes": "Colebrooke translation volume containing Bhaskara material with download options."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/books/OL58657334M/The_Lilavati",
+          "availability": "locate",
+          "notes": "Dedicated Lilavati edition hub for library or later acquisition."
+        }
+      ]
+    },
+    {
+      "slug": "bhaskara-bijaganita",
+      "era": "medieval-transmission-synthesis",
+      "title": "Bhaskara II: Bijaganita",
+      "date_label": "1150 CE",
+      "figures": [
+        "Bhaskara II"
+      ],
+      "source_kind": "primary_work_with_translation_route",
+      "significance": "Key algebra text for the Indian tradition and a major bridge after Brahmagupta.",
+      "proof_or_equation_value": "Important for equation handling, algebraic procedures, and continuity toward later Indian and Kerala traditions.",
+      "rights_class": "public_domain_translation_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/bhaskara-bijaganita/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL13992376M/Algebra_with_Arithmetic_and_mensuration_from_the_Sanscrit_of_Brahmegupta_and_Bh%C3%A1scara.",
+          "availability": "open",
+          "notes": "Colebrooke translation volume gives a practical public-domain reading route."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/books/OL3149141M/Bha%CC%84skara%CC%84cha%CC%84rya%27s_Bi%CC%84jagan%CC%A3ita_and_its_English_translation",
+          "availability": "locate",
+          "notes": "Dedicated Bijaganita translation route through library holdings."
+        }
+      ]
+    },
+    {
+      "slug": "omar-khayyam-algebra",
+      "era": "medieval-transmission-synthesis",
+      "title": "Omar Khayyam: Demonstration concerning problems of algebra",
+      "date_label": "11th to 12th century original; 1931 English translation route",
+      "figures": [
+        "Omar Khayyam"
+      ],
+      "source_kind": "primary_work_with_translation_route",
+      "significance": "Crucial source for cubic equations and their geometric solution before the early modern period.",
+      "proof_or_equation_value": "Important bridge between rhetorical algebra, conic methods, and later equation theory.",
+      "rights_class": "mixed_open_preview_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/restricted/omar-khayyam-algebra/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_html",
+          "url": "https://books.google.com/books/about/The_Algebra_of_Omar_Khayyam.html?id=-PtUAAAAYAAJ",
+          "availability": "open_snippet",
+          "notes": "Snippet-access translation with table of contents and historical metadata."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "purchase_or_library",
+          "url": "https://openlibrary.org/books/OL6274877M/The_algebra_of_Omar_Khayyam",
+          "availability": "locate",
+          "notes": "Library route for the classic English translation by Daoud Kasir."
+        }
+      ]
+    },
+    {
+      "slug": "descartes-la-geometrie",
+      "era": "early-modern-analysis-chance",
+      "title": "Descartes: La Geometrie",
+      "date_label": "1637 original; public-domain later editions available",
+      "figures": [
+        "Rene Descartes"
+      ],
+      "source_kind": "primary_work_with_public_domain_editions",
+      "significance": "Foundational for analytic geometry and the algebraization of geometric reasoning.",
+      "proof_or_equation_value": "Important for the shift from classical construction style to coordinate and algebraic representation.",
+      "rights_class": "public_domain_editions_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/descartes-la-geometrie/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "open_scan",
+          "url": "https://openlibrary.org/books/OL23308923M/La_g%C3%A9om%C3%A9trie.",
+          "availability": "open",
+          "notes": "Public-domain edition with download options."
+        }
+      ]
+    },
+    {
+      "slug": "cavalieri-geometria-indivisibilibus",
+      "era": "early-modern-analysis-chance",
+      "title": "Cavalieri: Geometria indivisibilibus continuorum nova quadam ratione promota",
+      "date_label": "1635, expanded 1653 editions",
+      "figures": [
+        "Bonaventura Cavalieri"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Seminal indivisibles text for the prehistory of integral calculus.",
+      "proof_or_equation_value": "Critical for the story from Archimedean exhaustion to seventeenth-century infinitesimal techniques.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/cavalieri-geometria-indivisibilibus/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/Geometria_indivisibilibus_continuorum_no.html?id=2fXGZrNKnKsC",
+          "availability": "open",
+          "notes": "Full-view scan route for the 1653 edition."
+        }
+      ]
+    },
+    {
+      "slug": "wallis-arithmetica-infinitorum",
+      "era": "early-modern-analysis-chance",
+      "title": "Wallis: Arithmetica infinitorum",
+      "date_label": "1656",
+      "figures": [
+        "John Wallis"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "One of the decisive bridge texts between indivisibles and later calculus.",
+      "proof_or_equation_value": "Important for summation, quadrature, and the arithmetization of infinite processes.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/wallis-arithmetica-infinitorum/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/Arithmetica_infinitorum.html?hl=en&id=Z5w_AAAAcAAJ",
+          "availability": "open",
+          "notes": "Full-view historical scan route."
+        }
+      ]
+    },
+    {
+      "slug": "huygens-de-ratiociniis",
+      "era": "early-modern-analysis-chance",
+      "title": "Huygens: De Ratiociniis in Ludo Aleae",
+      "date_label": "1657",
+      "figures": [
+        "Christiaan Huygens"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "First printed book devoted to probability theory in the European tradition.",
+      "proof_or_equation_value": "Essential bridge from Pascal-Fermat correspondence to systematic probability literature.",
+      "rights_class": "public_domain_scan_available",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/huygens-de-ratiociniis/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/De_ratiociniis_in_ludo_aleae.html?id=yS76XzFNcpMC",
+          "availability": "open",
+          "notes": "Full-view route for the 1657 treatise."
+        }
+      ]
     }
   ]
 }

@@ -55,6 +55,7 @@ def test_corpus_source_access_endpoint() -> None:
     payload = response.json()
     assert payload["sources"][0]["slug"] == "rhind-mathematical-papyrus"
     assert payload["sources"][2]["access_routes"][0]["provider"] == "Clay Mathematics Institute"
+    assert any(item["slug"] == "apollonius-conics" for item in payload["sources"])
 
 
 def test_tutoring_plan_endpoint() -> None:

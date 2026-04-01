@@ -11,12 +11,16 @@
       "canonical_figures": [
         "Pythagorean tradition",
         "Euclid",
-        "Archimedes"
+        "Archimedes",
+        "Apollonius",
+        "Diophantus"
       ],
       "canonical_works": [
         "Euclid: Elements",
         "Archimedes: On the Sphere and Cylinder",
-        "Archimedes: The Method"
+        "Archimedes: The Method",
+        "Apollonius: Conics",
+        "Diophantus: Arithmetica"
       ],
       "proof_threads": [
         {
@@ -70,13 +74,20 @@
         "Brahmagupta",
         "al-Khwarizmi",
         "Fibonacci",
-        "Madhava"
+        "Madhava",
+        "Bhaskara II",
+        "Omar Khayyam",
+        "Adelard of Bath"
       ],
       "canonical_works": [
         "Brahmasphutasiddhanta",
         "Al-Khwarizmi: Book on Addition and Subtraction after the Method of the Indians",
         "Al-Khwarizmi: Al-jabr",
-        "Fibonacci: Liber Abaci"
+        "Fibonacci: Liber Abaci",
+        "Bhaskara II: Lilavati",
+        "Bhaskara II: Bijaganita",
+        "Omar Khayyam: Demonstration concerning problems of algebra",
+        "Adelard of Bath: Euclid translation tradition"
       ],
       "proof_threads": [
         {
@@ -135,12 +146,20 @@
         "Newton",
         "Leibniz",
         "Pascal",
-        "Fermat"
+        "Fermat",
+        "Descartes",
+        "Cavalieri",
+        "Wallis",
+        "Huygens"
       ],
       "canonical_works": [
         "Newton: Method of Fluxions",
         "Leibniz: Nova Methodus pro Maximis et Minimis",
-        "Pascal and Fermat correspondence on games of chance"
+        "Pascal and Fermat correspondence on games of chance",
+        "Descartes: La Geometrie",
+        "Cavalieri: Geometria indivisibilibus continuorum nova quadam ratione promota",
+        "Wallis: Arithmetica infinitorum",
+        "Huygens: De Ratiociniis in Ludo Aleae"
       ],
       "proof_threads": [
         {

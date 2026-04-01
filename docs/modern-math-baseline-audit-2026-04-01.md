@@ -47,6 +47,8 @@ Er ist noch nicht vollstaendig, aber er ist stark genug, um:
 - heutige mathematische Strukturbegriffe historisch anzubinden,
 - spaetere Audits und externe Reviews auf einen klaren Kern zu richten.
 
+Ein externer Review bestaetigt diesen Seed-Kanon inzwischen als stark und ausgewogen. Die naechsten Ergaenzungen muessen deshalb nicht mehr die Breite der Moderne beweisen, sondern gezielt ihre Foundations-, Topologie- und Logiklinien verdichten.
+
 ## Offene Folgeprioritaeten
 
 ### Runde M.1
@@ -55,23 +57,25 @@ Er ist noch nicht vollstaendig, aber er ist stark genug, um:
 - `Peano`
 - `Zermelo`
 - `Godel`
+- `Hausdorff`
+- `Hilbert and Ackermann`
 
 Ziel:
 
-- Strenge, Axiome und Foundations-Linie der Moderne weiter verdichten.
+- Strenge, Mengenfundamente, Logik und Foundations-Linie der Moderne weiter verdichten.
 
 ### Runde M.2
 
 - `Lobachevsky`
 - `Bolyai`
 - `Klein`
-- `Hausdorff`
 - `Brouwer`
 - `Banach`
+- `Sophus Lie`
 
 Ziel:
 
-- Geometrie, Topologie und Funktionsraumdenken breiter und klarer machen.
+- Geometrie, Topologie, Symmetrie und Funktionsraumdenken breiter und klarer machen.
 
 ### Runde M.3
 
@@ -83,6 +87,18 @@ Ziel:
 Ziel:
 
 - spaete Struktur-, Informations- und Systemlinien fuer die heutige Mathematik vorbereiten.
+
+### Runde M.4
+
+- `Maxwell`
+- `Einstein`
+- `Pearson`
+- `Lyapunov`
+- `Courant`
+
+Ziel:
+
+- angrenzende mathematische Naturwissenschaften, Statistik und angewandte mathematische Grosslinien als eigene Kontextschicht ergaenzen
 
 ## Strategische Entscheidung
 

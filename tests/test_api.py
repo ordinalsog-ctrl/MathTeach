@@ -46,6 +46,8 @@ def test_corpus_chronology_endpoint() -> None:
     payload = response.json()
     assert payload["eras"][0]["slug"] == "antiquity"
     assert payload["eras"][1]["canonical_figures"][0] == "Brahmagupta"
+    assert payload["eras"][-1]["slug"] == "modern-mathematics"
+    assert "Hilbert: Grundlagen der Geometrie" in payload["eras"][-1]["canonical_works"]
 
 
 def test_corpus_source_access_endpoint() -> None:

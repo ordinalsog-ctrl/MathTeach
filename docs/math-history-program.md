@@ -18,8 +18,9 @@ Die erste Aufbauphase konzentriert sich auf:
 1. `Antiquity`
 2. `Medieval Transmission and Synthesis`
 3. `Early Modern Analysis and Chance`
+4. `Modern Mathematics`
 
-Die moderne Mathematik folgt erst spaeter, wenn diese drei Schichten tragfaehig sind.
+Die moderne Mathematik wird jetzt als vierte Aufbauphase eroeffnet, weil die ersten drei Schichten als stabiler Kern gelten.
 
 ## Antiquity
 
@@ -68,6 +69,31 @@ Pflichtfaelle:
 - Leibniz und Differentialnotation
 - Pascal und Fermat zur Wahrscheinlichkeitsrechnung
 - Fruehe Spannung zwischen Problemloesen, Intuition und Strenge
+
+## Modern Mathematics
+
+Fokus:
+
+- Strenge in Analysis und Zahlbegriff
+- Abstraktion in Algebra und Strukturdenken
+- Mengenlehre und Grundlagen
+- moderne Geometrie und Topologie
+- formale Wahrscheinlichkeit
+- Computierbarkeit und mathematische Logik
+
+Pflichtfaelle:
+
+- Gauss und die moderne Zahlentheorie
+- Fourier und Funktionsdarstellung fuer Waerme, Schwingung und spaetere Anwendungen
+- Cauchy und die Rigorosierung der Analysis
+- Galois und Struktur hinter Gleichungen
+- Riemann und neue Raumvorstellungen
+- Dedekind und Cantor fuer Zahl- und Mengenfundamente
+- Hilbert fuer Axiomatik
+- Emmy Noether fuer moderne Algebra
+- Lebesgue fuer Mass und Integral
+- Kolmogorov fuer axiomatische Wahrscheinlichkeit
+- Turing fuer Berechenbarkeit und formale Grenzen
 
 ## Neue Pflichtobjekte fuer den Korpus
 

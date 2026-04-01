@@ -45,6 +45,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/architecture.md](/Users/jonasweiss/MathTeach/docs/architecture.md): Zielarchitektur und Komponenten
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
+- [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
 - [docs/literature-gap-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01.md): Vergleich unseres Stands mit kanonischer Literatur fuer Antike bis Fruehe Neuzeit
 - [docs/literature-gap-audit-2026-04-01-post-round-a.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-a.md): Folgeaudit nach der ersten Brueckenwerk-Runde
 - [docs/literature-gap-audit-2026-04-01-post-round-b.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-b.md): Folgeaudit nach Runde B
@@ -58,7 +59,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/knowledge-system.md](/Users/jonasweiss/MathTeach/docs/knowledge-system.md): Mathematik-Korpus, Graphmodell und Retrieval
 - [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md): MVP- und Ausbauphasen
 - [data/math_core/foundation_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/foundation_manifest.json): Erstes Sammelmanifest fuer mathematische Quellen
-- [data/math_core/chronology_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/chronology_manifest.json): Historischer Startkatalog fuer Antike bis Fruehe Neuzeit
+- [data/math_core/chronology_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/chronology_manifest.json): Historischer Startkatalog fuer Antike bis Moderne Mathematik
 - [data/math_core/source_access_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/source_access_manifest.json): Register mit Werken, Zugriffspfaden und Ablagehinweisen
 - [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [sql/002_math_corpus_collection.sql](/Users/jonasweiss/MathTeach/sql/002_math_corpus_collection.sql): Quellenkatalog, Collection-Queue und Ingestion-Tabellen
@@ -97,6 +98,7 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Das Datenfundament ist jetzt explizit zweigeteilt in fachlichen Wissenskern und paedagogische Lehrerfigur.
 - Die mathematische Datensammlung hat jetzt ein erstes Manifest mit Prioritaeten, Quellenfamilien und Collection-Queue.
 - Die erste historische Sammelschicht ordnet Mathematik nach Epochen, Werken, Beweisen und Gleichungsgeschichten.
+- Die Chronologie reicht jetzt als erste belastbare Linie von der Antike bis in die Moderne.
 - Das erste Quellenregister sagt jetzt auch, wo historische Werke heute gelesen werden koennen und wie Rohdateien lokal abgelegt werden sollen.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 

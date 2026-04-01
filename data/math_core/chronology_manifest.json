@@ -252,10 +252,153 @@
           "story_focus": "How chance moved from concrete games to reusable mathematical language."
         }
       ]
+    },
+    {
+      "slug": "modern-mathematics",
+      "name": "Modern Mathematics",
+      "sequence": 4,
+      "focus": "Rigor, abstraction, set-theoretic foundations, topology, formal probability, and computation.",
+      "canonical_figures": [
+        "Gauss",
+        "Fourier",
+        "Cauchy",
+        "Galois",
+        "Riemann",
+        "Dedekind",
+        "Cantor",
+        "Poincare",
+        "Hilbert",
+        "Emmy Noether",
+        "Lebesgue",
+        "Kolmogorov",
+        "Turing"
+      ],
+      "canonical_works": [
+        "Gauss: Disquisitiones Arithmeticae",
+        "Fourier: Theorie analytique de la chaleur",
+        "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+        "Galois: Memoire sur les conditions de resolubilite des equations par radicaux",
+        "Riemann: Ueber die Hypothesen welche der Geometrie zu Grunde liegen",
+        "Dedekind: Was sind und was sollen die Zahlen?",
+        "Cantor: Beitrage zur Begrundung der transfiniten Mengenlehre",
+        "Poincare: Analysis Situs",
+        "Hilbert: Grundlagen der Geometrie",
+        "Emmy Noether: Idealtheorie in Ringbereichen",
+        "Lebesgue: Integrale, longueur, aire",
+        "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
+        "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem"
+      ],
+      "proof_threads": [
+        {
+          "slug": "rigorous-analysis-thread",
+          "title": "Rigorous analysis and limit language",
+          "story_focus": "How calculus was rebuilt through convergence, continuity, and increasingly explicit proof standards.",
+          "required_artifacts": [
+            "Cauchy-style rigor",
+            "limit and continuity language",
+            "real-number foundation bridge",
+            "measure and integration expansion"
+          ]
+        },
+        {
+          "slug": "function-representation-thread",
+          "title": "Function representation and series methods",
+          "story_focus": "How heat, waves, and functions became expressible through series, decomposition, and transform thinking.",
+          "required_artifacts": [
+            "physical motivation",
+            "series representation idea",
+            "convergence debate",
+            "bridge to later spectral and signal methods"
+          ]
+        },
+        {
+          "slug": "algebraic-structure-thread",
+          "title": "Equations, groups, and abstract algebra",
+          "story_focus": "How solvability questions turned mathematics toward structure, symmetry, and algebraic objects.",
+          "required_artifacts": [
+            "polynomial solvability problem",
+            "group viewpoint",
+            "ring and ideal language",
+            "later structural generalization"
+          ]
+        },
+        {
+          "slug": "set-foundation-thread",
+          "title": "Sets, numbers, and mathematical foundations",
+          "story_focus": "How infinity, arithmetic, and formal systems became explicit mathematical objects of study.",
+          "required_artifacts": [
+            "number construction",
+            "cardinality and transfinite ideas",
+            "axiomatic foundation",
+            "consistency and paradox context"
+          ]
+        },
+        {
+          "slug": "geometry-topology-thread",
+          "title": "Geometry beyond Euclid",
+          "story_focus": "How space became manifold, topological, and axiomatic rather than only classical and metric.",
+          "required_artifacts": [
+            "non-Euclidean trigger",
+            "manifold and curvature idea",
+            "topological invariants",
+            "axiomatic recasting"
+          ]
+        },
+        {
+          "slug": "probability-axiomatization-thread",
+          "title": "Probability as an axiomatic theory",
+          "story_focus": "How chance moved from problem-solving practice to a modern formal branch of mathematics.",
+          "required_artifacts": [
+            "measure-based probability setup",
+            "event language",
+            "expectation and law framing",
+            "bridge to statistics and stochastic models"
+          ]
+        },
+        {
+          "slug": "computability-logic-thread",
+          "title": "Computability and formal limits",
+          "story_focus": "How procedures, decidability, and the limits of formal reasoning became rigorous mathematical subjects.",
+          "required_artifacts": [
+            "algorithmic model",
+            "decision-problem context",
+            "computability criterion",
+            "bridge to computer science"
+          ]
+        }
+      ],
+      "equation_threads": [
+        {
+          "slug": "congruence-notation-thread",
+          "title": "Congruence notation and modular arithmetic",
+          "story_focus": "How arithmetic relations became compact, reusable, and central to modern number theory."
+        },
+        {
+          "slug": "epsilon-delta-language",
+          "title": "Epsilon-delta language",
+          "story_focus": "How limiting processes became explicit quantified mathematical statements."
+        },
+        {
+          "slug": "fourier-series-language",
+          "title": "Fourier series language",
+          "story_focus": "How functions became representable through infinite trigonometric expansions."
+        },
+        {
+          "slug": "cardinality-language-thread",
+          "title": "Cardinality and transfinite notation",
+          "story_focus": "How different sizes of infinity became explicit mathematical language."
+        },
+        {
+          "slug": "measure-probability-language",
+          "title": "Measure and probability language",
+          "story_focus": "How area, measure, and chance entered a common formal notation."
+        }
+      ]
     }
   ],
   "collection_rules": [
     "Do not ingest later modern sources before each early era has a stable anchor set of works and figures.",
+    "Once the early eras are stable, add modern mathematics before attempting full cross-epoch networking.",
     "For every proof thread, store at least one origin-oriented story summary and one mathematics-oriented proof summary.",
     "For every equation thread, store origin, notation, and later standard form separately.",
     "Treat transmission between cultures as first-class historical data, not as a footnote."

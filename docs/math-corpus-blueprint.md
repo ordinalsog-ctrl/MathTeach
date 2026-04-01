@@ -74,6 +74,14 @@ Noch nicht Teil dieser ersten Sammlung:
 
 Diese Bereiche kommen spaeter in den `Teacher Mind`, nicht in den `Knowledge Core`.
 
+## Historische Ausbauentscheidung
+
+Chronologisch gilt jetzt:
+
+- `Antiquity`, `Medieval Transmission and Synthesis` und `Early Modern Analysis and Chance` bilden den stabilen historischen Kern.
+- Vor einer grossen epochenuebergreifenden Vernetzung wird `Modern Mathematics` als vierte Epoche aufgebaut.
+- Erst danach folgt die globale Vernetzung von Beweislinien, Gleichungsgeschichten und Ueberlieferungswegen ueber alle Epochen.
+
 ## Technische Sammelreihenfolge
 
 1. Quellenfamilien definieren

@@ -20,7 +20,7 @@ Die erste Aufbauphase konzentriert sich auf:
 3. `Early Modern Analysis and Chance`
 4. `Modern Mathematics`
 
-Die moderne Mathematik wird jetzt als vierte Aufbauphase eroeffnet, weil die ersten drei Schichten als stabiler Kern gelten.
+Die moderne Mathematik ist jetzt als vierte Aufbauphase abgeschlossen, sodass der erste historische Sammlungsbogen von der Antike bis zur Moderne als stabiler Kern gilt.
 
 ## Antiquity
 
@@ -124,9 +124,11 @@ Eine `equation_story` beschreibt:
 2. Schluesselpersonen und Werke verankern
 3. Proof Stories und Equation Stories anlegen
 4. Erst danach Volltextquellen segmentieren und ausweiten
+5. Sobald alle vier Epochen stabil sind, in die epochenuebergreifende Vernetzung wechseln
 
 ## Repo-Artefakte
 
 - [data/math_core/chronology_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/chronology_manifest.json)
 - [sql/003_math_history_program.sql](/Users/jonasweiss/MathTeach/sql/003_math_history_program.sql)
 - [src/mathteach/services/corpus.py](/Users/jonasweiss/MathTeach/src/mathteach/services/corpus.py)
+- [docs/full-corpus-final-assessment-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/full-corpus-final-assessment-2026-04-01.md)

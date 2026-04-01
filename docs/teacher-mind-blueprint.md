@@ -103,10 +103,13 @@ flowchart TD
     B --> B4["Beispiele und Anwendungen"]
 
     C --> C1["Safety Layer"]
-    C --> C2["Learner Support Profiles"]
-    C --> C3["Pedagogical Strategy Matrix"]
-    C --> C4["Format and Accessibility Layer"]
-    C --> C5["Intervention Rules"]
+    C --> C2["Psychological Foundations"]
+    C --> C3["Pedagogical Foundations"]
+    C --> C4["Mathematics Teaching Foundations"]
+    C --> C5["Learner Support Profiles"]
+    C --> C6["Pedagogical Strategy Matrix"]
+    C --> C7["Format and Accessibility Layer"]
+    C --> C8["Intervention Rules"]
 
     A --> O["Antwort schriftlich oder verbal"]
 ```
@@ -127,7 +130,49 @@ Sie regelt:
 
 Diese Schicht kann teilweise aus dem vorhandenen Adventure-Material abgeleitet werden.
 
-### 2. Learner Support Profiles
+### 2. Psychological Foundations
+
+Diese Schicht ist die allgemeine Lernpsychologie-Basis des Tutors.
+
+Sie behandelt:
+
+- Aufmerksamkeit
+- Gedaechtnis und Abruf
+- kognitive Belastung
+- Motivation und Selbstwirksamkeit
+- Metakognition
+- emotionale Belastung im Lernkontext
+
+Der Tutor soll zuerst verstehen, wie Lernen allgemein funktioniert, bevor er in besondere Bedarfe oder stoerungsnahe Unterstuetzung geht.
+
+### 3. Pedagogical Foundations
+
+Diese Schicht ist die allgemeine Vermittlungsbasis.
+
+Sie behandelt:
+
+- Erklaeraufbau
+- Worked Examples
+- Scaffolding
+- Rueckfragen
+- formative Rueckmeldung
+- Lernprogression
+- Fehlermuster und Reparatur
+
+### 4. Mathematics Teaching Foundations
+
+Diese Schicht verbindet allgemeine Psychologie und allgemeine Paedagogik mit Mathematik als Fach.
+
+Sie behandelt:
+
+- mathematische Intuition versus Formalitaet
+- Begriffseinfuehrung
+- Repraesentationswechsel
+- Beispielwahl
+- Ursprungsproblem, historische Motivation und Anwendung
+- typische Mathematikbarrieren in Zahl, Symbolik, Problemloesen und Beweis
+
+### 5. Learner Support Profiles
 
 Diese Schicht speichert keine klinischen Diagnosen, sondern lernrelevante Unterstuetzungsbedarfe.
 
@@ -165,7 +210,7 @@ Dann gilt trotzdem:
 - keine Ueberdehnung des Wissens
 - Fokus auf Lernstrategie statt Label
 
-### 3. Pedagogical Strategy Matrix
+### 6. Pedagogical Strategy Matrix
 
 Diese Schicht entscheidet, wie etwas erklaert wird.
 
@@ -189,7 +234,7 @@ Beispielhafte Strategien:
 - `formal_university_mode`
 - `research_companion_mode`
 
-### 4. Format and Accessibility Layer
+### 7. Format and Accessibility Layer
 
 Diese Schicht bestimmt das Antwortformat.
 
@@ -204,7 +249,7 @@ Beispiele:
 - Rueckfragen nach jedem Schritt
 - verbal erklaerbar fuer Bildschirm plus Sprache
 
-### 5. Intervention Rules
+### 8. Intervention Rules
 
 Diese Schicht entscheidet, wann umgeschaltet wird.
 
@@ -232,6 +277,24 @@ Er dient dazu, dass mathematisches Wissen:
 - besser erinnert wird
 - weniger ueberfordert
 - und individueller erklaert werden kann
+
+## Neue Reihenfolge des Aufbaus
+
+Die Reihenfolge fuer den eigentlichen Aufbau lautet jetzt:
+
+1. `Safety Layer`
+2. `Psychological Foundations`
+3. `Pedagogical Foundations`
+4. `Mathematics Teaching Foundations`
+5. `Learner Support Profiles`
+6. `Pedagogical Strategy Matrix`
+7. `Format and Accessibility Layer`
+8. `Intervention Rules`
+
+Damit ist klar:
+
+- spezielle Unterstuetzungslogik kommt nicht zuerst
+- sie wird auf ein starkes allgemeines Lern- und Lehrfundament gesetzt
 
 ## Warum Historie trotzdem wichtig bleibt
 

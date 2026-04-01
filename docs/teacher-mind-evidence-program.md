@@ -18,6 +18,8 @@ besteht.
 
 Im Bereich `Teacher Mind` starten wir nicht mit Psychologiegeschichte, sondern mit einer belastbaren Funktionsbasis fuer:
 
+- allgemeine Lernpsychologie
+- allgemeine Paedagogik
 - Lernunterstuetzung
 - Mathematikvermittlung
 - Accessibility
@@ -37,17 +39,24 @@ sein.
 
 ## Was zuerst gesammelt wird
 
-Die erste Evidence-Layer fuer den Tutor besteht aus fuenf Quellfamilien:
+Die erste Evidence-Layer fuer den Tutor besteht aus sieben Quellfamilien:
 
-1. `federal or institutional practice guides`
-2. `official disability and learning support guidance`
-3. `professional universal design frameworks`
-4. `evidence syntheses for mathematics teaching`
-5. `research restraint and interpretation rules`
+1. `learning science and educational psychology syntheses`
+2. `pedagogical guidance and instructional decision frameworks`
+3. `federal or institutional practice guides`
+4. `official disability and learning support guidance`
+5. `professional universal design frameworks`
+6. `evidence syntheses for mathematics teaching`
+7. `research restraint and interpretation rules`
 
 ## Warum diese Reihenfolge sinnvoll ist
 
 Bevor wir hunderte Einzelstudien einsammeln, brauchen wir eine starke Basisschicht mit hoher Verlaesslichkeit.
+
+Und bevor wir tief in besondere Unterstuetzungslogik einsteigen, braucht der Tutor zuerst:
+
+- allgemeines psychologisches Fachwissen ueber Lernen
+- allgemeines paedagogisches Fachwissen ueber Vermittlung
 
 Deshalb beginnen wir mit:
 
@@ -63,7 +72,23 @@ Sie sind die erste belastbare Orientierungsschicht, auf die spaeter Einzelstudie
 
 ## Evidenz-Domains
 
-### 1. Safety and Restraint
+### 1. Psychological Foundations
+
+Fragen:
+
+- Wie funktionieren Aufmerksamkeit, Gedaechtnis, Abruf und Belastung im Lernen?
+- Welche Rolle spielen Motivation, Selbstwirksamkeit und Emotion?
+- Wie lernen Menschen ueber Wiederholung, Erklaeren, Rueckmeldung und Transfer?
+
+### 2. Pedagogical Foundations
+
+Fragen:
+
+- Wie baut man gute Erklaerungen auf?
+- Welche Rolle spielen Worked Examples, Scaffolding, Rueckfragen und formative Checks?
+- Wie fuehrt man von konkretem Verstehen zu formaler Beherrschung?
+
+### 3. Safety and Restraint
 
 Fragen:
 
@@ -76,28 +101,28 @@ Quellenbasis:
 - bestehendes Adventure-Material
 - spaeter zusaetzliche Fachliteratur zu Selbstwirksamkeit, Threat, Framing und Ueberforderung
 
-### 2. Mathematics Intervention
+### 4. Mathematics Intervention
 
 Fragen:
 
 - Welche evidenzbasierten Mathematikstrategien helfen bei Lernschwierigkeiten?
 - Wie sollten Beispiele, Repraesentationen, Sprache und Problemloesen aufgebaut sein?
 
-### 3. Universal Design and Accessibility
+### 5. Universal Design and Accessibility
 
 Fragen:
 
 - Wie bauen wir Erklaerungen, die fuer viele Lernende zugaenglich sind?
 - Wie reduzieren wir Barrieren in Format, Sprache und Darstellung?
 
-### 4. Attention and Executive Load
+### 6. Attention and Executive Load
 
 Fragen:
 
 - Wie erklaert man bei fragiler Aufmerksamkeit?
 - Welche Struktur, welche Schrittgroesse und welches Tempo helfen?
 
-### 5. Reading and Math Learning Difficulties
+### 7. Reading and Math Learning Difficulties
 
 Fragen:
 
@@ -122,15 +147,18 @@ Wichtig:
 
 ## Erste Sammlungspolitik
 
-1. Zuerst Rahmen- und Leitquellen
-2. Dann hochrelevante oft zitierte Einzelstudien
-3. Dann thematische Vertiefung pro Support-Profil
-4. Erst danach spaetere Psychologie- und Paedagogikgeschichte
+1. Zuerst psychologische und paedagogische Grundlagensynthesen
+2. Dann Rahmen- und Leitquellen fuer Mathematikvermittlung
+3. Dann hochrelevante oft zitierte Einzelstudien
+4. Dann thematische Vertiefung pro Support-Profil
+5. Erst danach spaetere Psychologie- und Paedagogikgeschichte
 
 ## Erste Startbibliographie
 
 Die erste Startbibliographie fuer den `Teacher Mind` soll mindestens folgende Rollen abdecken:
 
+- allgemeine Lernpsychologie
+- allgemeine Paedagogik des Erklaerens
 - evidenzbasierte Mathematikintervention in der Grundschule
 - evidenzbasierte Mathematikintervention in spaeteren Schulstufen
 - Universal Design fuer Zugaenglichkeit
@@ -154,5 +182,6 @@ Sie soll spaeter direkt in folgende Bausteine einfliessen:
 - [data/teacher_mind/evidence_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/evidence_manifest.json)
 - [docs/teacher-mind-blueprint.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-blueprint.md)
 - [docs/teacher-mind-charter.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-charter.md)
+- [docs/teacher-mind-foundation-stack.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-foundation-stack.md)
 - [docs/learner-support-profiles.md](/Users/jonasweiss/MathTeach/docs/learner-support-profiles.md)
 - [docs/pedagogical-strategy-matrix.md](/Users/jonasweiss/MathTeach/docs/pedagogical-strategy-matrix.md)

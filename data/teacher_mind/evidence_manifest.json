@@ -11,6 +11,16 @@
   ],
   "evidence_domains": [
     {
+      "slug": "psychological_foundations",
+      "name": "Psychological Foundations",
+      "goal": "Ground the Teacher Mind in serious learning science, memory, attention, motivation, and metacognitive research before special-case adaptations."
+    },
+    {
+      "slug": "pedagogical_foundations",
+      "name": "Pedagogical Foundations",
+      "goal": "Ground explanation design, scaffolding, formative checks, and instructional decision-making before support-profile specialization."
+    },
+    {
       "slug": "math_intervention",
       "name": "Mathematics Intervention",
       "goal": "Ground tutoring moves in evidence-based mathematics instruction for struggling learners."
@@ -37,6 +47,54 @@
     }
   ],
   "starter_sources": [
+    {
+      "slug": "national-academies-how-people-learn-ii",
+      "domain": "psychological_foundations",
+      "title": "How People Learn II: Learners, Contexts, and Cultures",
+      "organization": "National Academies of Sciences, Engineering, and Medicine",
+      "date_label": "2018",
+      "source_kind": "consensus_study_report",
+      "why_it_matters": "High-credibility synthesis for learning, memory, attention, motivation, culture, development, and implications for schooling.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/national-academies-how-people-learn-ii/",
+      "access_routes": [
+        {
+          "provider": "National Academies Press",
+          "url": "https://nap.nationalacademies.org/catalog/24783/how-people-learn-ii-learners-contexts-and-cultures"
+        }
+      ]
+    },
+    {
+      "slug": "ies-organizing-instruction-and-study",
+      "domain": "pedagogical_foundations",
+      "title": "Organizing Instruction and Study to Improve Student Learning",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2007",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Foundational guide for spacing, worked examples, dual coding, abstract-concrete linking, quizzing, metacognition, and deep explanatory questioning.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-organizing-instruction-and-study/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/1"
+        }
+      ]
+    },
+    {
+      "slug": "ies-using-student-achievement-data",
+      "domain": "pedagogical_foundations",
+      "title": "Using Student Achievement Data to Support Instructional Decision Making",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2009",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Useful baseline for formative decision-making, feedback loops, progress monitoring, and helping learners use evidence about their own progress.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-using-student-achievement-data/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/12"
+        }
+      ]
+    },
     {
       "slug": "ies-math-intervention-elementary-grades-2021",
       "domain": "math_intervention",

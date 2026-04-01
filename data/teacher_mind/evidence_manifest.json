@@ -1,0 +1,209 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build a local evidence base for the Teacher Mind so tutoring, accessibility, and support strategies are grounded in serious professional guidance rather than improvised assumptions.",
+  "storage_rule": "Keep PDFs and large files outside Git; keep manifest metadata, local storage paths, and evidence notes in the repo.",
+  "collection_principles": [
+    "Start with official practice guides, institutional frameworks, and high-credibility syntheses before collecting many individual studies.",
+    "Prefer sources that directly inform teaching decisions, accessibility choices, and support for mathematically relevant learning barriers.",
+    "Translate all evidence into bounded instructional implications rather than diagnosis claims.",
+    "Keep the Teacher Mind evidence corpus separate from the Mathematics Knowledge Core but interoperable with it.",
+    "Treat storage, provenance, and rights status as first-class metadata."
+  ],
+  "evidence_domains": [
+    {
+      "slug": "math_intervention",
+      "name": "Mathematics Intervention",
+      "goal": "Ground tutoring moves in evidence-based mathematics instruction for struggling learners."
+    },
+    {
+      "slug": "universal_design_accessibility",
+      "name": "Universal Design and Accessibility",
+      "goal": "Support format choices that reduce barriers for a wide range of learners."
+    },
+    {
+      "slug": "attention_and_self_regulation",
+      "name": "Attention and Self-Regulation",
+      "goal": "Guide explanation pacing, chunking, and classroom-support style adjustments for learners with attention-related challenges."
+    },
+    {
+      "slug": "learning_disabilities_overview",
+      "name": "Learning Disabilities Overview",
+      "goal": "Provide careful, non-diagnostic grounding for dyslexia-, dysgraphia-, and dyscalculia-relevant support."
+    },
+    {
+      "slug": "research_restraint",
+      "name": "Research Restraint",
+      "goal": "Ensure the tutor remains psychologically careful, non-overreaching, and dignity-preserving."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "ies-math-intervention-elementary-grades-2021",
+      "domain": "math_intervention",
+      "title": "Assisting Students Struggling with Mathematics: Intervention in the Elementary Grades",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2021",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Core evidence base for systematic math intervention, representations, mathematical language, number lines, word problems, and fluency support.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-math-intervention-elementary-grades-2021/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/26"
+        }
+      ]
+    },
+    {
+      "slug": "ies-math-problem-solving-grades-4-8",
+      "domain": "math_intervention",
+      "title": "Improving Mathematical Problem Solving in Grades 4 Through 8",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2012; revised 2018",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Important for visual representations, multiple solution strategies, mathematical notation, and reflective problem-solving support.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-math-problem-solving-grades-4-8/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/PracticeGuide/16"
+        }
+      ]
+    },
+    {
+      "slug": "ies-teaching-math-to-young-children",
+      "domain": "math_intervention",
+      "title": "Teaching Math to Young Children",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2013",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Grounds early math explanation, developmental progression, and formative monitoring for foundational number understanding.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-teaching-math-to-young-children/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/18"
+        }
+      ]
+    },
+    {
+      "slug": "us-ed-national-math-advisory-panel-2008",
+      "domain": "math_intervention",
+      "title": "Foundations for Success: The Final Report of the National Mathematics Advisory Panel",
+      "organization": "U.S. Department of Education",
+      "date_label": "2008",
+      "source_kind": "federal_advisory_report",
+      "why_it_matters": "Broad evidence-oriented synthesis on mathematics learning, algebra readiness, conceptual understanding, procedural fluency, and instructional priorities.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/us-ed-national-math-advisory-panel-2008/",
+      "access_routes": [
+        {
+          "provider": "U.S. Department of Education",
+          "url": "https://www.ed.gov/media/document/final-reportpdf-89275.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "cast-udl-guidelines-3",
+      "domain": "universal_design_accessibility",
+      "title": "CAST Universal Design for Learning Guidelines 3.0",
+      "organization": "CAST",
+      "date_label": "2024",
+      "source_kind": "professional_framework",
+      "why_it_matters": "Primary accessibility framework for offering multiple means of engagement, representation, and action in learning design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cast-udl-guidelines-3/",
+      "access_routes": [
+        {
+          "provider": "CAST",
+          "url": "https://udlguidelines.cast.org/"
+        }
+      ]
+    },
+    {
+      "slug": "cdc-adhd-classroom-support",
+      "domain": "attention_and_self_regulation",
+      "title": "ADHD in the Classroom: Helping Children Succeed in School",
+      "organization": "CDC",
+      "date_label": "2024",
+      "source_kind": "official_public_health_guidance",
+      "why_it_matters": "Authoritative classroom support reference for attention-related obstacles, accommodations, and evidence-aligned school support options.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cdc-adhd-classroom-support/",
+      "access_routes": [
+        {
+          "provider": "CDC",
+          "url": "https://www.cdc.gov/adhd/treatment/classroom.html"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-learning-disabilities-overview",
+      "domain": "learning_disabilities_overview",
+      "title": "Learning Disabilities",
+      "organization": "NICHD",
+      "date_label": "current overview",
+      "source_kind": "official_research_overview",
+      "why_it_matters": "Official overview for dyslexia, dysgraphia, and dyscalculia with careful non-stigmatizing definitions and signs.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-learning-disabilities-overview/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/health/topics/learningdisabilities"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-reading-and-reading-disorders",
+      "domain": "learning_disabilities_overview",
+      "title": "Reading and Reading Disorders",
+      "organization": "NICHD",
+      "date_label": "current overview",
+      "source_kind": "official_research_overview",
+      "why_it_matters": "Useful grounding for dyslexia-adjacent support choices, reading load concerns, and non-diagnostic explanation design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-reading-and-reading-disorders/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/health/topics/reading"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-dyscalculia-overview",
+      "domain": "learning_disabilities_overview",
+      "title": "Infographic: Does your child struggle with Math? Dyscalculia could be the reason.",
+      "organization": "NICHD",
+      "date_label": "2017",
+      "source_kind": "official_public_information",
+      "why_it_matters": "Useful supplementary official framing for math-learning-disability language, signs, and public-facing explanation constraints.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-dyscalculia-overview/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/newsroom/digital-media/infographics/MathLearningDisability-txtalt"
+        }
+      ]
+    },
+    {
+      "slug": "adventure-research-restraint-layer",
+      "domain": "research_restraint",
+      "title": "Adventure Research Restraint Layer",
+      "organization": "Local project corpus",
+      "date_label": "existing internal material",
+      "source_kind": "internal_safety_corpus",
+      "why_it_matters": "Carries forward non-diagnostic, dignity-preserving, anti-overreach rules that can anchor the Teacher Mind safety layer.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/adventure-research-restraint-layer/",
+      "access_routes": [
+        {
+          "provider": "Local workspace",
+          "url": "/Users/jonasweiss/Documents/New project/projects/Adventure/RESEARCH_RESTRAINT_MODEL_V1.md"
+        },
+        {
+          "provider": "Local workspace",
+          "url": "/Users/jonasweiss/Documents/New project/projects/Adventure/CORE_INTERPRETATION_RULES_V1.md"
+        },
+        {
+          "provider": "Local workspace",
+          "url": "/Users/jonasweiss/Documents/New project/projects/Adventure/ADAPTIVE_SYSTEM_RULES_V1.md"
+        }
+      ]
+    }
+  ]
+}

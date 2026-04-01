@@ -57,30 +57,48 @@ Sie enthaelt nun klarer:
 
 ### Runde M.2
 
-- `Lobachevsky`
-- `Bolyai`
+- `Abel`
+- `Kronecker`
+- `Cayley`
+- `Hamilton`
 - `Klein`
-- `Brouwer`
-- `Banach`
-- `Sophus Lie`
+- `Russell and Whitehead`
 
 Ziel:
 
-- Geometrie, Topologie, Symmetrie und Funktionsraumdenken weiter ausbauen
+- die Algebra-, Struktur- und Axiomatiklinien zwischen fruehem 19. Jahrhundert und spaeter Moderneverfestigung schliessen
 
 ### Runde M.3
 
-- `Jordan`
 - `von Neumann`
-- `Shannon`
-- `Grothendieck`
+- `Church`
+- `Gentzen`
+- `Bourbaki`
+- `Brouwer`
+- `Banach`
 
 Ziel:
 
-- spaete Struktur-, Informations- und Systemlinien der Moderne vorbereiten
+- Logik, Beweistheorie, axiomatische Reorganisation und spaetere Topologie- und Analysislinien verdichten
 
 ### Runde M.4
 
+- `Grothendieck`
+- `Serre`
+- `Jordan`
+- `Shannon`
+- `Erdos`
+- `Ramanujan`
+
+Ziel:
+
+- spaete Struktur-, Informations- und Nachkriegswellen der Moderne vorbereiten
+
+### Runde M.5
+
+- `Hilbert: Mathematische Probleme`
+- `Godel: Vollstaendigkeit`
+- `Turing: Computing Machinery and Intelligence`
 - `Maxwell`
 - `Einstein`
 - `Pearson`
@@ -89,7 +107,7 @@ Ziel:
 
 Ziel:
 
-- angrenzende mathematische Naturwissenschaften und angewandte Kontextschichten ergaenzen
+- Meta-, KI- und angewandte Kontextschichten der Moderne getrennt vom Kernkanon ergaenzen
 
 ## Prozessregel bestaetigt
 

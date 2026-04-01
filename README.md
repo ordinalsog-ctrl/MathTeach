@@ -69,6 +69,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/teacher-mind-blueprint.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-blueprint.md): Grundmodell der paedagogischen und psychologischen Lehrerschicht
 - [docs/teacher-mind-charter.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-charter.md): Verbindliche Regeln fuer selbstbeschriebene Lernbedarfe, lokale Speicherung und Nicht-Therapie-Rolle
 - [docs/teacher-mind-foundation-stack.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-foundation-stack.md): Reihenfolge des Tutor-Aufbaus: erst psychologische und paedagogische Grundlagen, dann Support- und Accessibility-Schichten
+- [docs/psychological-foundations-program.md](/Users/jonasweiss/MathTeach/docs/psychological-foundations-program.md): Erster Teacher-Mind-Korpus fuer Lernen, Gedaechtnis, Abruf, Motivation und Anti-Myth-Guardrails
 - [docs/learner-support-profiles.md](/Users/jonasweiss/MathTeach/docs/learner-support-profiles.md): Erste nicht-diagnostische Support-Profile fuer Lernbarrieren und Unterstuetzungsbedarfe
 - [docs/pedagogical-strategy-matrix.md](/Users/jonasweiss/MathTeach/docs/pedagogical-strategy-matrix.md): Uebersetzung von Profilmix in Unterrichtsmodus, Tempo, Schrittgroesse und Interventionsstil
 - [docs/teacher-mind-evidence-program.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-evidence-program.md): Lokales Evidenzprogramm fuer serioese Leitquellen, Practice Guides und spaetere Einzelstudien des Teacher Mind
@@ -79,6 +80,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [data/math_core/source_access_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/source_access_manifest.json): Register mit Werken, Zugriffspfaden und Ablagehinweisen
 - [data/math_core/network_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/network_manifest.json): Erstes Netzwerkmanifest fuer Proof Lines, Equation Lines, Transmission Paths und Domain Lines
 - [data/teacher_mind/evidence_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/evidence_manifest.json): Startmanifest fuer die lokale Teacher-Mind-Evidenzbasis
+- [data/teacher_mind/psychological_foundations_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/psychological_foundations_manifest.json): Startmanifest fuer die erste psychologische Grundausbildung des Tutors
 - [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [sql/002_math_corpus_collection.sql](/Users/jonasweiss/MathTeach/sql/002_math_corpus_collection.sql): Quellenkatalog, Collection-Queue und Ingestion-Tabellen
 - [sql/003_math_history_program.sql](/Users/jonasweiss/MathTeach/sql/003_math_history_program.sql): Epochen, Werke und Story-Tabellen fuer Beweise und Gleichungen

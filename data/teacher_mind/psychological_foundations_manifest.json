@@ -1,0 +1,194 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Establish the first local psychological foundations corpus for the Teacher Mind so tutoring rests on serious learning science before specialization into support profiles or impairment-aware adaptations.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "mathematics_teaching_foundations",
+    "support_and_accessibility_layers"
+  ],
+  "collection_principles": [
+    "Prefer consensus reports, institutional syntheses, and highly cited review articles before collecting many narrow studies.",
+    "Translate psychology into bounded teaching implications rather than diagnosis claims.",
+    "Favor sources that can directly change tutoring decisions about pacing, chunking, retrieval, feedback, and learner confidence.",
+    "Include anti-myth guardrails so the Teacher Mind does not absorb popular but weakly supported educational beliefs."
+  ],
+  "core_questions": [
+    "How do encoding, retrieval, spacing, and retention affect durable learning?",
+    "Why do some learning strategies feel effective while producing weak long-term retention?",
+    "How should a tutor reason about cognitive load, working-memory pressure, and explanation chunking?",
+    "How should a tutor treat learner confidence, motivation, and self-efficacy without becoming therapeutic?",
+    "Which widespread educational myths should be excluded from the Teacher Mind policy layer?"
+  ],
+  "domains": [
+    {
+      "slug": "learning_memory",
+      "name": "Learning and Memory",
+      "goal": "Ground explanation and review in encoding, retention, forgetting, and durable learning."
+    },
+    {
+      "slug": "retrieval_spacing",
+      "name": "Retrieval and Spacing",
+      "goal": "Support practice strategies that privilege recall and delayed retention over short-term fluency."
+    },
+    {
+      "slug": "cognitive_load",
+      "name": "Cognitive Load and Working Limits",
+      "goal": "Guide step size, notation density, and pacing decisions."
+    },
+    {
+      "slug": "motivation_self_efficacy",
+      "name": "Motivation and Self-Efficacy",
+      "goal": "Help the tutor preserve agency and productive persistence without empty encouragement."
+    },
+    {
+      "slug": "metacognition",
+      "name": "Metacognition",
+      "goal": "Help the tutor distinguish confidence from understanding and design better checks for understanding."
+    },
+    {
+      "slug": "anti_myth_guardrails",
+      "name": "Anti-Myth Guardrails",
+      "goal": "Block unsupported teaching myths from becoming policy defaults."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "national-academies-how-people-learn-ii",
+      "domain": "learning_memory",
+      "title": "How People Learn II: Learners, Contexts, and Cultures",
+      "organization": "National Academies of Sciences, Engineering, and Medicine",
+      "date_label": "2018",
+      "source_kind": "consensus_study_report",
+      "why_it_matters": "High-credibility synthesis on learning, development, context, memory, attention, and implications for educational design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/national-academies-how-people-learn-ii/",
+      "access_routes": [
+        {
+          "provider": "National Academies Press",
+          "url": "https://nap.nationalacademies.org/catalog/24783/how-people-learn-ii-learners-contexts-and-cultures"
+        }
+      ]
+    },
+    {
+      "slug": "national-research-council-how-people-learn",
+      "domain": "learning_memory",
+      "title": "How People Learn: Brain, Mind, Experience, and School",
+      "organization": "National Research Council",
+      "date_label": "2000",
+      "source_kind": "consensus_study_report",
+      "why_it_matters": "Foundational earlier synthesis that strongly shaped modern conversations about prior knowledge, metacognition, transfer, and expert learning.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/national-research-council-how-people-learn/",
+      "access_routes": [
+        {
+          "provider": "National Academies Press",
+          "url": "https://nap.nationalacademies.org/catalog/9853/how-people-learn-brain-mind-experience-and-school-expanded-edition"
+        }
+      ]
+    },
+    {
+      "slug": "dunlosky-effective-learning-techniques",
+      "domain": "retrieval_spacing",
+      "title": "Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology",
+      "organization": "Psychological Science in the Public Interest",
+      "date_label": "2013",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Often-cited synthesis comparing common study strategies and highlighting strong versus weak evidence for techniques such as practice testing and distributed practice.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/dunlosky-effective-learning-techniques/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26173288/"
+        },
+        {
+          "provider": "Sage",
+          "url": "https://journals.sagepub.com/doi/10.1177/1529100612453266"
+        }
+      ]
+    },
+    {
+      "slug": "roediger-karpicke-test-enhanced-learning",
+      "domain": "retrieval_spacing",
+      "title": "Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention",
+      "organization": "Psychological Science",
+      "date_label": "2006",
+      "source_kind": "landmark_study",
+      "why_it_matters": "Classic demonstration that retrieval practice can improve delayed retention more than restudying.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/roediger-karpicke-test-enhanced-learning/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16507066/"
+        },
+        {
+          "provider": "Sage",
+          "url": "https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x"
+        }
+      ]
+    },
+    {
+      "slug": "karpicke-roediger-critical-importance-retrieval",
+      "domain": "retrieval_spacing",
+      "title": "The Critical Importance of Retrieval for Learning",
+      "organization": "Science",
+      "date_label": "2008",
+      "source_kind": "landmark_study",
+      "why_it_matters": "Important follow-up showing the special value of retrieval for durable learning and the gap between felt fluency and actual retention.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/karpicke-roediger-critical-importance-retrieval/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18276894/"
+        }
+      ]
+    },
+    {
+      "slug": "ies-organizing-instruction-and-study",
+      "domain": "cognitive_load",
+      "title": "Organizing Instruction and Study to Improve Student Learning",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2007",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Practical bridge from cognitive psychology to classroom moves, including spacing, quizzing, concrete-abstract links, and question design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-organizing-instruction-and-study/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/Docs/PracticeGuide/20072004.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "ies-using-student-achievement-data",
+      "domain": "metacognition",
+      "title": "Using Student Achievement Data to Support Instructional Decision Making",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2009",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Useful for formative decision-making, progress monitoring, and treating learner performance as feedback for instruction rather than fixed ability.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-using-student-achievement-data/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/12"
+        }
+      ]
+    },
+    {
+      "slug": "pashler-learning-styles-concepts-and-evidence",
+      "domain": "anti_myth_guardrails",
+      "title": "Learning Styles: Concepts and Evidence",
+      "organization": "Psychological Science in the Public Interest",
+      "date_label": "2008",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Core guardrail source against turning learning-styles claims into Teacher Mind policy logic without evidence.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/pashler-learning-styles-concepts-and-evidence/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26162104/"
+        }
+      ]
+    }
+  ]
+}

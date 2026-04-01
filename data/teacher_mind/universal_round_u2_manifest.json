@@ -1,0 +1,200 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build Universal Round U.2 as the second universal-design layer for MathTeach, grounding transfer, situated learning, collaborative learning, zone-of-proximal-development reasoning, and adult learning before mathematics-specific specialization.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "universal_round_u1",
+    "universal_round_u2",
+    "mathematics_teaching_foundations",
+    "specific_support_logic"
+  ],
+  "collection_principles": [
+    "Prefer foundational and highly cited sources that can change tutor behavior around transfer, help calibration, collaboration, and adult learners.",
+    "Translate U.2 evidence into concrete tutoring rules for example variation, analogical comparison, guided participation, and context-sensitive explanation.",
+    "Preserve the local, low-friction, non-therapeutic character of the tutor while expanding its universal instructional range.",
+    "Use adult-learning theory as an early architectural input because the target product explicitly includes university learners and adult self-learners."
+  ],
+  "domains": [
+    {
+      "slug": "transfer_generalization",
+      "name": "Transfer and Generalization",
+      "goal": "Help the tutor move learners from one solved case toward principled use across new contexts."
+    },
+    {
+      "slug": "situated_learning",
+      "name": "Situated Learning",
+      "goal": "Ground explanation in practices, contexts, and authentic use rather than isolated exercise forms alone."
+    },
+    {
+      "slug": "collaborative_learning",
+      "name": "Collaborative Learning",
+      "goal": "Support tutor behaviors that can model, prepare, or simulate cooperative and socially shared learning."
+    },
+    {
+      "slug": "zpd_guided_participation",
+      "name": "Zone of Proximal Development and Guided Participation",
+      "goal": "Calibrate help to what the learner can almost do, rather than giving either too much or too little support."
+    },
+    {
+      "slug": "adult_learning",
+      "name": "Adult Learning",
+      "goal": "Adapt instruction for self-directed, experience-rich, relevance-sensitive adult learners."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "barnett-ceci-taxonomy-of-far-transfer",
+      "domain": "transfer_generalization",
+      "title": "When and Where Do We Apply What We Learn? A Taxonomy for Far Transfer",
+      "organization": "Psychological Bulletin",
+      "date_label": "2002",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Major framework for distinguishing transfer conditions and preventing naive one-number thinking about far transfer.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/barnett-ceci-taxonomy-of-far-transfer/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/12081085/"
+        }
+      ]
+    },
+    {
+      "slug": "nokes-malach-mestre-transfer-as-sense-making",
+      "domain": "transfer_generalization",
+      "title": "Toward a Model of Transfer as Sense-Making",
+      "organization": "Educational Psychologist",
+      "date_label": "2013",
+      "source_kind": "theoretical_review",
+      "why_it_matters": "Strong model for treating transfer as context-sensitive sense-making rather than mere reuse of a stored procedure.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nokes-malach-mestre-transfer-as-sense-making/",
+      "access_routes": [
+        {
+          "provider": "Illinois Experts",
+          "url": "https://experts.illinois.edu/en/publications/toward-a-model-of-transfer-as-sense-making"
+        },
+        {
+          "provider": "DOI",
+          "url": "https://doi.org/10.1080/00461520.2013.807556"
+        }
+      ]
+    },
+    {
+      "slug": "gentner-holyoak-reasoning-and-learning-by-analogy",
+      "domain": "transfer_generalization",
+      "title": "Reasoning and Learning by Analogy",
+      "organization": "American Psychologist",
+      "date_label": "1997",
+      "source_kind": "landmark_review",
+      "why_it_matters": "Foundational source for analogy as a route to abstraction and transfer, directly relevant to mathematics explanation design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/gentner-holyoak-reasoning-and-learning-by-analogy/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/9017930/"
+        }
+      ]
+    },
+    {
+      "slug": "lave-wenger-situated-learning",
+      "domain": "situated_learning",
+      "title": "Situated Learning: Legitimate Peripheral Participation",
+      "organization": "Cambridge University Press",
+      "date_label": "1991",
+      "source_kind": "foundational_book",
+      "why_it_matters": "Canonical foundation for learning as participation in social practice, not just internal knowledge accumulation.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/lave-wenger-situated-learning/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "url": "https://books.google.com/books/about/Situated_Learning.html?id=CAVIOrW3vYAC"
+        }
+      ]
+    },
+    {
+      "slug": "vygotsky-mind-in-society",
+      "domain": "zpd_guided_participation",
+      "title": "Mind in Society: The Development of Higher Psychological Processes",
+      "organization": "Harvard University Press",
+      "date_label": "1978",
+      "source_kind": "foundational_book",
+      "why_it_matters": "Primary anchor for the zone of proximal development and the role of socially mediated learning.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/vygotsky-mind-in-society/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "url": "https://books.google.com/books/about/Mind_in_Society.html?id=RxjjUefze_oC"
+        }
+      ]
+    },
+    {
+      "slug": "collins-brown-newman-cognitive-apprenticeship",
+      "domain": "zpd_guided_participation",
+      "title": "Cognitive Apprenticeship: Teaching the Craft of Reading, Writing, and Mathematics",
+      "organization": "Center for the Study of Reading",
+      "date_label": "1987 technical report; 1989 book chapter tradition",
+      "source_kind": "foundational_report",
+      "why_it_matters": "Bridges guided participation, modeling, coaching, articulation, and reflection into concrete teaching design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/collins-brown-newman-cognitive-apprenticeship/",
+      "access_routes": [
+        {
+          "provider": "ERIC",
+          "url": "https://eric.ed.gov/?id=ED284181"
+        },
+        {
+          "provider": "IDEALS",
+          "url": "https://www.ideals.illinois.edu/items/18043"
+        }
+      ]
+    },
+    {
+      "slug": "johnson-johnson-social-interdependence-cooperative-learning",
+      "domain": "collaborative_learning",
+      "title": "An Educational Psychology Success Story: Social Interdependence Theory and Cooperative Learning",
+      "organization": "Educational Researcher",
+      "date_label": "2009",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Strong synthesis on cooperative learning, social interdependence, and the instructional conditions under which collaboration helps.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/johnson-johnson-social-interdependence-cooperative-learning/",
+      "access_routes": [
+        {
+          "provider": "ERIC",
+          "url": "https://eric.ed.gov/?id=EJ883339"
+        }
+      ]
+    },
+    {
+      "slug": "knowles-the-adult-learner",
+      "domain": "adult_learning",
+      "title": "The Adult Learner",
+      "organization": "Routledge",
+      "date_label": "classic andragogy line; current editions continue",
+      "source_kind": "foundational_book",
+      "why_it_matters": "Primary anchor for adult learning as self-directed, experience-rich, relevance-sensitive, and problem-centered.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/knowles-the-adult-learner/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "url": "https://books.google.com/books/about/The_Adult_Learner.html?id=mTFiCcjqKr8C"
+        }
+      ]
+    },
+    {
+      "slug": "merriam-baumgartner-learning-in-adulthood",
+      "domain": "adult_learning",
+      "title": "Learning in Adulthood: A Comprehensive Guide",
+      "organization": "Wiley",
+      "date_label": "2020 edition",
+      "source_kind": "comprehensive_synthesis_book",
+      "why_it_matters": "Broad synthesis for adult learning theory and practice, useful to avoid reducing adult learning to one andragogy slogan.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/merriam-baumgartner-learning-in-adulthood/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "url": "https://books.google.com/books/about/Learning_in_Adulthood.html?id=fdjIDwAAQBAJ"
+        }
+      ]
+    }
+  ]
+}

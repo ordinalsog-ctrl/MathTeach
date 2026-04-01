@@ -50,6 +50,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/literature-gap-audit-2026-04-01-post-round-b.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-b.md): Folgeaudit nach Runde B
 - [docs/literature-gap-audit-2026-04-01-post-round-c.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-c.md): Folgeaudit nach Runde C
 - [docs/external-feedback-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/external-feedback-triage-2026-04-01.md): Einordnung externer LLM-Rueckmeldungen in kommende Runden
+- [docs/external-feedback-triage-2026-04-01-second-assessment.md](/Users/jonasweiss/MathTeach/docs/external-feedback-triage-2026-04-01-second-assessment.md): Prioritaetskorrektur nach der zweiten externen Bewertung
 - [docs/curation-loop.md](/Users/jonasweiss/MathTeach/docs/curation-loop.md): Fester Arbeitszyklus aus Audit, Werk-Ergaenzung und Folgeaudit
 - [docs/source-access-program.md](/Users/jonasweiss/MathTeach/docs/source-access-program.md): Wie historische Quellen gelesen, beschafft und lokal abgelegt werden
 - [docs/data-foundation.md](/Users/jonasweiss/MathTeach/docs/data-foundation.md): Trennung von Knowledge Core und Teacher Mind

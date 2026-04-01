@@ -1,0 +1,273 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build Universal Round U.4 as the first support-specific layer for MathTeach, grounding ADHD-aware, dyscalculia-aware, dyslexia-aware, autism-spectrum-aware, and language-sensitive tutoring without turning the system into diagnosis or therapy.",
+  "position_in_stack": [
+    "safety_and_restraint",
+    "psychological_foundations",
+    "pedagogical_foundations",
+    "universal_round_u1",
+    "universal_round_u2",
+    "universal_round_u3",
+    "universal_round_u4",
+    "mathematics_teaching_foundations",
+    "runtime_rule_matrices"
+  ],
+  "collection_principles": [
+    "Treat support-specific design as instructional adaptation rather than diagnosis or identity assignment.",
+    "Prefer official educational and health guidance plus strongly cited reviews with direct classroom or tutoring implications.",
+    "Translate every source into response axes such as pacing, notation density, text load, visual structure, and feedback style.",
+    "Keep support families interoperable so later mixed-profile learners can be handled compositionally."
+  ],
+  "response_axes": [
+    "tempo",
+    "step_size",
+    "transition_cues",
+    "notation_density",
+    "text_density",
+    "visual_structure",
+    "concrete_to_abstract_depth",
+    "working_memory_scaffolds",
+    "feedback_tone",
+    "error_recovery",
+    "sensory_load",
+    "language_support",
+    "self_check_rhythm"
+  ],
+  "domains": [
+    {
+      "slug": "adhd_aware_support",
+      "name": "ADHD-Aware Support",
+      "goal": "Adapt pacing, transitions, self-check rhythm, and external structure for attention and executive-function challenges."
+    },
+    {
+      "slug": "dyscalculia_aware_support",
+      "name": "Dyscalculia-Aware Support",
+      "goal": "Adapt number-sense support, representation choice, and concrete-to-symbolic progression for math-specific learning barriers."
+    },
+    {
+      "slug": "dyslexia_aware_support",
+      "name": "Dyslexia-Aware Support",
+      "goal": "Reduce reading and decoding barriers in mathematical explanation, notation, and text-heavy problem solving."
+    },
+    {
+      "slug": "autism_spectrum_aware_support",
+      "name": "Autism-Spectrum-Aware Support",
+      "goal": "Use predictable structure, visual supports, and reduced uncertainty and sensory friction where needed."
+    },
+    {
+      "slug": "ell_language_sensitive_support",
+      "name": "ELL and Language-Sensitive Support",
+      "goal": "Support multilingual learners by coupling mathematical meaning with academic-language scaffolds."
+    }
+  ],
+  "starter_sources": [
+    {
+      "slug": "cdc-adhd-classroom-support",
+      "domain": "adhd_aware_support",
+      "title": "ADHD in the Classroom: Helping Children Succeed in School",
+      "organization": "CDC",
+      "date_label": "2024",
+      "source_kind": "official_public_health_guidance",
+      "why_it_matters": "Direct official anchor for structure, accommodations, transitions, behavioral supports, and school-relevant adaptation.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cdc-adhd-classroom-support/",
+      "access_routes": [
+        {
+          "provider": "CDC",
+          "url": "https://www.cdc.gov/adhd/treatment/classroom.html"
+        }
+      ]
+    },
+    {
+      "slug": "richardson-school-interventions-adhd",
+      "domain": "adhd_aware_support",
+      "title": "Non-pharmacological interventions for attention-deficit/hyperactivity disorder (ADHD) delivered in school settings: systematic reviews of quantitative and qualitative research",
+      "organization": "Health Technology Assessment",
+      "date_label": "2015",
+      "source_kind": "systematic_review",
+      "why_it_matters": "Large review focused specifically on school-delivered ADHD interventions, useful for tutoring implications beyond medication.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/richardson-school-interventions-adhd/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26129788/"
+        }
+      ]
+    },
+    {
+      "slug": "barkley-executive-functions-adhd",
+      "domain": "adhd_aware_support",
+      "title": "Genetics of childhood disorders: XVII. ADHD, Part 1: The executive functions and ADHD",
+      "organization": "Journal of the American Academy of Child and Adolescent Psychiatry",
+      "date_label": "2000",
+      "source_kind": "review_article",
+      "why_it_matters": "Compact classic anchor for executive-function framing that helps interpret why external structure can be instructionally necessary.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/barkley-executive-functions-adhd/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/10939238/"
+        }
+      ]
+    },
+    {
+      "slug": "butterworth-varma-laurillard-dyscalculia-science",
+      "domain": "dyscalculia_aware_support",
+      "title": "Dyscalculia: from brain to education",
+      "organization": "Science",
+      "date_label": "2011",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Strong bridge source from numerical cognition to educational consequences, useful for avoiding simplistic 'just practice more' logic.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/butterworth-varma-laurillard-dyscalculia-science/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21617068/"
+        }
+      ]
+    },
+    {
+      "slug": "landerl-bevan-butterworth-developmental-dyscalculia",
+      "domain": "dyscalculia_aware_support",
+      "title": "Developmental dyscalculia and basic numerical capacities: a study of 8-9-year-old students",
+      "organization": "Cognition",
+      "date_label": "2004",
+      "source_kind": "landmark_primary_study",
+      "why_it_matters": "Foundational empirical anchor connecting low arithmetic attainment to basic numerical-capacity differences.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/landerl-bevan-butterworth-developmental-dyscalculia/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/15147931/"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-dyscalculia-overview",
+      "domain": "dyscalculia_aware_support",
+      "title": "Infographic: Does your child struggle with Math? Dyscalculia could be the reason.",
+      "organization": "NICHD",
+      "date_label": "2017",
+      "source_kind": "official_public_information",
+      "why_it_matters": "Useful official framing source for non-stigmatizing public explanation and first-pass tutor language constraints.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-dyscalculia-overview/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/newsroom/digital-media/infographics/MathLearningDisability-txtalt"
+        }
+      ]
+    },
+    {
+      "slug": "nichd-reading-and-reading-disorders",
+      "domain": "dyslexia_aware_support",
+      "title": "Reading and Reading Disorders",
+      "organization": "NICHD",
+      "date_label": "current overview",
+      "source_kind": "official_research_overview",
+      "why_it_matters": "Official anchor for reading-load and decoding barriers that can spill into mathematics tutoring and word-problem comprehension.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/nichd-reading-and-reading-disorders/",
+      "access_routes": [
+        {
+          "provider": "NICHD",
+          "url": "https://www.nichd.nih.gov/health/topics/reading"
+        }
+      ]
+    },
+    {
+      "slug": "shaywitz-dyslexia-specific-reading-disability",
+      "domain": "dyslexia_aware_support",
+      "title": "Dyslexia (specific reading disability)",
+      "organization": "Biological Psychiatry",
+      "date_label": "2005",
+      "source_kind": "highly_cited_review",
+      "why_it_matters": "Classic review for phonological-processing barriers, with clear implications for mathematical language and symbol decoding.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/shaywitz-dyslexia-specific-reading-disability/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/15950002/"
+        }
+      ]
+    },
+    {
+      "slug": "cdc-autism-treatment-and-intervention",
+      "domain": "autism_spectrum_aware_support",
+      "title": "Treatment and Intervention for Autism Spectrum Disorder",
+      "organization": "CDC",
+      "date_label": "2024",
+      "source_kind": "official_public_health_guidance",
+      "why_it_matters": "Official anchor that explicitly includes educational approaches and highlights consistency, structure, and visual-learning implications.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/cdc-autism-treatment-and-intervention/",
+      "access_routes": [
+        {
+          "provider": "CDC",
+          "url": "https://www.cdc.gov/autism/treatment/index.html"
+        }
+      ]
+    },
+    {
+      "slug": "rutherford-visual-supports-autism-scoping-review",
+      "domain": "autism_spectrum_aware_support",
+      "title": "Visual supports at home and in the community for individuals with autism spectrum disorders: A scoping review",
+      "organization": "Autism",
+      "date_label": "2020",
+      "source_kind": "scoping_review",
+      "why_it_matters": "Useful synthesis for predictability, visual supports, participation, and individualized structuring as general design signals.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/rutherford-visual-supports-autism-scoping-review/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31451016/"
+        }
+      ]
+    },
+    {
+      "slug": "arthur-kelly-visual-supports-autism-issues",
+      "domain": "autism_spectrum_aware_support",
+      "title": "Issues in the use of visual supports to promote communication in individuals with autism spectrum disorder",
+      "organization": "Disability and Rehabilitation",
+      "date_label": "2009",
+      "source_kind": "review_article",
+      "why_it_matters": "Helpful review for the strengths and limits of visual supports, avoiding naive one-tool-fits-all design.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/arthur-kelly-visual-supports-autism-issues/",
+      "access_routes": [
+        {
+          "provider": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/19296313/"
+        }
+      ]
+    },
+    {
+      "slug": "ies-english-learners-practice-guide",
+      "domain": "ell_language_sensitive_support",
+      "title": "Teaching Academic Content and Literacy to English Learners in Elementary and Middle School",
+      "organization": "Institute of Education Sciences / What Works Clearinghouse",
+      "date_label": "2014",
+      "source_kind": "federal_practice_guide",
+      "why_it_matters": "Strong official guide for integrating academic language support into content teaching, directly relevant to mathematics explanation.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/ies-english-learners-practice-guide/",
+      "access_routes": [
+        {
+          "provider": "IES / WWC",
+          "url": "https://ies.ed.gov/ncee/wwc/practiceguide/19"
+        }
+      ]
+    },
+    {
+      "slug": "sharma-sharma-multilingual-math-meta-analysis",
+      "domain": "ell_language_sensitive_support",
+      "title": "Successful teaching practices for English language learners in multilingual mathematics classrooms: a meta-analysis",
+      "organization": "Mathematics Education Research Journal",
+      "date_label": "2023",
+      "source_kind": "meta_analysis",
+      "why_it_matters": "Direct mathematics-specific synthesis for multilingual classrooms, useful for linking language support with mathematical access.",
+      "storage_path_hint": "library/raw/restricted/teacher-mind/sharma-sharma-multilingual-math-meta-analysis/",
+      "access_routes": [
+        {
+          "provider": "Springer",
+          "url": "https://link.springer.com/article/10.1007/s13394-022-00414-0"
+        }
+      ]
+    }
+  ]
+}

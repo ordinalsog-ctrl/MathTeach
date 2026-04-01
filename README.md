@@ -74,6 +74,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/universal-round-u1-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u1-program.md): Erste universelle Designrunde fuer Motivation, Belonging, Errors, Equity/Scarcity und UDL
 - [docs/universal-round-u2-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u2-program.md): Zweite universelle Designrunde fuer Transfer, situiertes Lernen, Zusammenarbeit, ZPD und Adult Learning
 - [docs/universal-round-u3-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u3-program.md): Dritte universelle Designrunde fuer neurodiversitaetsbewusste Kernarchitektur, trauma-informed safety, Lifespan-Sequencing und Guardrails
+- [docs/universal-round-u4-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u4-program.md): Erste support-spezifische Runde fuer ADHD, Dyskalkulie, Dyslexie, Autismusspektrum und sprachsensible Unterstuetzung
 - [docs/psychological-foundations-program.md](/Users/jonasweiss/MathTeach/docs/psychological-foundations-program.md): Erster Teacher-Mind-Korpus fuer Lernen, Gedaechtnis, Abruf, Motivation und Anti-Myth-Guardrails
 - [docs/pedagogical-foundations-program.md](/Users/jonasweiss/MathTeach/docs/pedagogical-foundations-program.md): Allgemeine Tutor-Grundausbildung fuer Erklaeraufbau, Scaffolding, Worked Examples, Feedback und Lernprogression
 - [docs/learner-support-profiles.md](/Users/jonasweiss/MathTeach/docs/learner-support-profiles.md): Erste nicht-diagnostische Support-Profile fuer Lernbarrieren und Unterstuetzungsbedarfe
@@ -91,6 +92,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [data/teacher_mind/universal_round_u1_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/universal_round_u1_manifest.json): Startmanifest fuer die erste universelle Designrunde des Tutors
 - [data/teacher_mind/universal_round_u2_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/universal_round_u2_manifest.json): Startmanifest fuer die zweite universelle Designrunde des Tutors
 - [data/teacher_mind/universal_round_u3_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/universal_round_u3_manifest.json): Startmanifest fuer die dritte universelle Designrunde des Tutors
+- [data/teacher_mind/universal_round_u4_manifest.json](/Users/jonasweiss/MathTeach/data/teacher_mind/universal_round_u4_manifest.json): Startmanifest fuer die erste support-spezifische Runde des Tutors
 - [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [sql/002_math_corpus_collection.sql](/Users/jonasweiss/MathTeach/sql/002_math_corpus_collection.sql): Quellenkatalog, Collection-Queue und Ingestion-Tabellen
 - [sql/003_math_history_program.sql](/Users/jonasweiss/MathTeach/sql/003_math_history_program.sql): Epochen, Werke und Story-Tabellen fuer Beweise und Gleichungen

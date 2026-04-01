@@ -54,6 +54,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/modern-math-post-round-m3-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-post-round-m3-audit-2026-04-01.md): Folgeaudit nach Runde M.3 der modernen Epoche
 - [docs/modern-math-final-assessment-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-final-assessment-2026-04-01.md): Abschlussbewertung der modernen Epoche innerhalb des definierten Kanons
 - [docs/full-corpus-final-assessment-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/full-corpus-final-assessment-2026-04-01.md): Abschlussbewertung des historischen Gesamtkorpus vor der Vernetzungsphase
+- [docs/cross-epoch-networking.md](/Users/jonasweiss/MathTeach/docs/cross-epoch-networking.md): Erste Architektur fuer Proof Lines, Equation Lines und Transmission Paths ueber alle Epochen
 - [docs/literature-gap-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01.md): Vergleich unseres Stands mit kanonischer Literatur fuer Antike bis Fruehe Neuzeit
 - [docs/literature-gap-audit-2026-04-01-post-round-a.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-a.md): Folgeaudit nach der ersten Brueckenwerk-Runde
 - [docs/literature-gap-audit-2026-04-01-post-round-b.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-b.md): Folgeaudit nach Runde B
@@ -69,10 +70,12 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [data/math_core/foundation_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/foundation_manifest.json): Erstes Sammelmanifest fuer mathematische Quellen
 - [data/math_core/chronology_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/chronology_manifest.json): Historischer Startkatalog fuer Antike bis Moderne Mathematik
 - [data/math_core/source_access_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/source_access_manifest.json): Register mit Werken, Zugriffspfaden und Ablagehinweisen
+- [data/math_core/network_manifest.json](/Users/jonasweiss/MathTeach/data/math_core/network_manifest.json): Erstes Netzwerkmanifest fuer Proof Lines, Equation Lines, Transmission Paths und Domain Lines
 - [sql/001_foundation_schema.sql](/Users/jonasweiss/MathTeach/sql/001_foundation_schema.sql): Erstes Postgres-Schema fuer die Datenbasis
 - [sql/002_math_corpus_collection.sql](/Users/jonasweiss/MathTeach/sql/002_math_corpus_collection.sql): Quellenkatalog, Collection-Queue und Ingestion-Tabellen
 - [sql/003_math_history_program.sql](/Users/jonasweiss/MathTeach/sql/003_math_history_program.sql): Epochen, Werke und Story-Tabellen fuer Beweise und Gleichungen
 - [sql/004_source_access_registry.sql](/Users/jonasweiss/MathTeach/sql/004_source_access_registry.sql): Zugriffsrouten und lokales Speicher-Audit fuer Quellen
+- [sql/005_cross_epoch_network.sql](/Users/jonasweiss/MathTeach/sql/005_cross_epoch_network.sql): Generisches Schema fuer epochenuebergreifende Linien und Anker
 - [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py): FastAPI-Startpunkt
 - [src/mathteach/services/corpus.py](/Users/jonasweiss/MathTeach/src/mathteach/services/corpus.py): Blueprint-Service fuer die Mathe-Datenbank
 - [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
@@ -95,6 +98,7 @@ Danach:
 - `GET /api/v1/corpus/blueprint`
 - `GET /api/v1/corpus/chronology`
 - `GET /api/v1/corpus/source-access`
+- `GET /api/v1/corpus/network`
 - `POST /api/v1/tutoring/plan`
 
 ## Naechste Produktstufe
@@ -108,6 +112,7 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Die erste historische Sammelschicht ordnet Mathematik nach Epochen, Werken, Beweisen und Gleichungsgeschichten.
 - Die Chronologie reicht jetzt als erste belastbare Linie von der Antike bis in die Moderne.
 - Das erste Quellenregister sagt jetzt auch, wo historische Werke heute gelesen werden koennen und wie Rohdateien lokal abgelegt werden sollen.
+- Die epochenuebergreifende Vernetzung hat jetzt ein erstes Manifest mit Proof Lines, Equation Lines, Transmission Paths, Domain Lines und Application Bridges.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
 Der naechste grosse Schritt ist der Aufbau des Mathematik-Korpus mit Zitationspflicht, Ontologie, Ingestion-Pipeline und Evaluationssuite.

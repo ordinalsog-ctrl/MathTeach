@@ -5,6 +5,7 @@ from mathteach.models import SessionRequest
 from mathteach.services.corpus import (
     build_chronology_program,
     build_corpus_blueprint,
+    build_network_program,
     build_source_access_program,
 )
 from mathteach.services.foundation import build_foundation
@@ -42,6 +43,11 @@ def corpus_chronology():
 @app.get("/api/v1/corpus/source-access")
 def corpus_source_access():
     return build_source_access_program()
+
+
+@app.get("/api/v1/corpus/network")
+def corpus_network():
+    return build_network_program()
 
 
 @app.post("/api/v1/tutoring/plan")

@@ -69,6 +69,17 @@ def test_corpus_source_access_endpoint() -> None:
     assert any(item["slug"] == "kepler-astronomia-nova" for item in payload["sources"])
 
 
+def test_corpus_network_endpoint() -> None:
+    response = client.get("/api/v1/corpus/network")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["proof_lines"][0]["slug"] == "exhaustion-to-integration-proof-line"
+    assert any(item["slug"] == "hindu-arabic-number-transmission-path" for item in payload["transmission_paths"])
+    assert any(item["slug"] == "logic-computation-domain-line" for item in payload["domain_lines"])
+    assert any(item["slug"] == "chance-to-decision-bridge" for item in payload["application_bridges"])
+
+
 def test_tutoring_plan_endpoint() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

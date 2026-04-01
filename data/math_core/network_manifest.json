@@ -1,0 +1,849 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Connect the historical corpus across eras so MathTeach can explain proofs, equations, transmission, domains, and applications as long arcs rather than isolated facts.",
+  "networking_principles": [
+    "Every cross-epoch line must use anchors that are historically attributable and already present in the corpus.",
+    "Proof lines explain why a result became believable, reusable, and later reformulated.",
+    "Equation lines separate origin, notation change, standardization, and modern reuse.",
+    "Transmission paths treat commentary, translation, and pedagogy as first-class mathematical events.",
+    "Domain lines should show continuity across eras without pretending that later categories existed unchanged in earlier periods.",
+    "Application bridges should end in a present-day teaching value, not just a historical slogan."
+  ],
+  "proof_lines": [
+    {
+      "slug": "exhaustion-to-integration-proof-line",
+      "title": "Exhaustion to integration",
+      "throughline": "How area and volume proofs moved from classical exhaustion to infinitesimals, limit language, and measure-based integration.",
+      "eras": [
+        "antiquity",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Archimedes: On the Sphere and Cylinder",
+          "anchor_type": "work",
+          "contribution": "Classical exhaustion and comparison arguments for area and volume."
+        },
+        {
+          "era_slug": "antiquity",
+          "label": "Archimedes: The Method",
+          "anchor_type": "work",
+          "contribution": "Heuristic slicing and balance reasoning that anticipates later integral thinking."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Cavalieri: Geometria indivisibilibus continuorum nova quadam ratione promota",
+          "anchor_type": "work",
+          "contribution": "Indivisibles become a reusable procedure for quadrature and volume arguments."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Wallis: Arithmetica infinitorum",
+          "anchor_type": "work",
+          "contribution": "Algebraizes infinitesimal summation and extends area methods to symbolic power rules."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Barrow: Lectiones geometricae",
+          "anchor_type": "work",
+          "contribution": "Links tangent and area reasoning in a form directly adjacent to calculus."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+          "anchor_type": "work",
+          "contribution": "Rebuilds infinitesimal reasoning through limit-based proof standards."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Lebesgue: Integrale, longueur, aire",
+          "anchor_type": "work",
+          "contribution": "Generalizes integration through measure and completes a long proof tradition about area."
+        }
+      ],
+      "learner_value": "Lets the tutor explain integrals as a centuries-long proof tradition instead of a sudden school formula."
+    },
+    {
+      "slug": "equation-solvability-proof-line",
+      "title": "Equation solvability to abstract structure",
+      "throughline": "How solving equations moved from explicit procedures to proofs about what cannot be solved and why structure matters.",
+      "eras": [
+        "antiquity",
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Diophantus: Arithmetica",
+          "anchor_type": "work",
+          "contribution": "Models algebraic problem solving as families of equation tasks."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Khwarizmi: Al-jabr",
+          "anchor_type": "work",
+          "contribution": "Turns equation solving into named procedures and canonical cases."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Omar Khayyam: Demonstration concerning problems of algebra",
+          "anchor_type": "work",
+          "contribution": "Extends solvability to cubic equations through geometric construction."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Viete: In artem analyticam isagoge",
+          "anchor_type": "work",
+          "contribution": "Creates symbolic language for general equation manipulation."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Abel: Memoire sur les equations algebriques, ou l'on demontre l'impossibilite de la resolution de l'equation generale du cinquieme degre",
+          "anchor_type": "work",
+          "contribution": "Proves that the general quintic cannot be solved by radicals."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Galois: Memoire sur les conditions de resolubilite des equations par radicaux",
+          "anchor_type": "work",
+          "contribution": "Explains solvability through group structure rather than formulas alone."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Emmy Noether: Idealtheorie in Ringbereichen",
+          "anchor_type": "work",
+          "contribution": "Shifts algebra toward structural method beyond individual equation families."
+        }
+      ],
+      "learner_value": "Helps explain why modern algebra studies structure, not only techniques for finding roots."
+    },
+    {
+      "slug": "formal-proof-and-limit-line",
+      "title": "Formal proof and its limits",
+      "throughline": "How proof moved from axiomatic demonstration to formal logic, normalization, incompleteness, and computability limits.",
+      "eras": [
+        "antiquity",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Euclid: Elements",
+          "anchor_type": "work",
+          "contribution": "Classical model of axioms, propositions, and deductive demonstration."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Hilbert: Grundlagen der Geometrie",
+          "anchor_type": "work",
+          "contribution": "Recasts geometry as an explicitly axiomatized formal system."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Russell and Whitehead: Principia Mathematica",
+          "anchor_type": "work",
+          "contribution": "Logicist attempt to rebuild mathematics inside symbolic logic."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Gerhard Gentzen: Untersuchungen ueber das logische Schliessen I and II",
+          "anchor_type": "work",
+          "contribution": "Studies the internal shape of proofs through natural deduction and normalization."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Godel: Ueber formal unentscheidbare Saetze der Principia Mathematica und verwandter Systeme I",
+          "anchor_type": "work",
+          "contribution": "Shows that strong formal systems cannot capture all arithmetic truth."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem",
+          "anchor_type": "work",
+          "contribution": "Connects formal procedure to mechanical computability and undecidability."
+        }
+      ],
+      "learner_value": "Makes proof itself teachable as a historical object with strengths, reforms, and hard limits."
+    }
+  ],
+  "equation_lines": [
+    {
+      "slug": "quadratic-equation-line",
+      "title": "Quadratic equation line",
+      "throughline": "How quadratic problems moved from verbal procedures to symbolic generality and modern classroom standard form.",
+      "eras": [
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Khwarizmi: Al-jabr",
+          "anchor_type": "work",
+          "contribution": "Canonical case-based procedures and geometric completion."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Viete: In artem analyticam isagoge",
+          "anchor_type": "work",
+          "contribution": "General symbolic manipulation of unknowns and coefficients."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Descartes: La Geometrie",
+          "anchor_type": "work",
+          "contribution": "Places polynomial equations into coordinate geometry and curve analysis."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+          "anchor_type": "work",
+          "contribution": "Stabilizes analytic language around function, equation, and solution behavior."
+        }
+      ],
+      "learner_value": "Supports a teaching path from verbal recipe to symbolic formula to graph-based interpretation."
+    },
+    {
+      "slug": "differential-and-integral-notation-line",
+      "title": "Differential and integral notation",
+      "throughline": "How change and accumulation gained a stable notation that outlived the first intuitions behind calculus.",
+      "eras": [
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Nicole Oresme: Tractatus de configurationibus qualitatum et motuum",
+          "anchor_type": "work",
+          "contribution": "Prefigures graphing and the representation of changing quantities."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Newton: Method of Fluxions",
+          "anchor_type": "work",
+          "contribution": "Introduces fluxional notation and variable change as motion."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Leibniz: Nova Methodus pro Maximis et Minimis",
+          "anchor_type": "work",
+          "contribution": "Introduces differential notation and the integral sign lineage."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+          "anchor_type": "work",
+          "contribution": "Reinterprets calculus notation through limit-centered rigor."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Weierstrass: Mathematische Werke",
+          "anchor_type": "work",
+          "contribution": "Pushes notation toward quantified epsilon-delta expression."
+        }
+      ],
+      "learner_value": "Allows the tutor to distinguish between notation, intuition, and later rigor when teaching calculus."
+    },
+    {
+      "slug": "probability-language-line",
+      "title": "Probability language line",
+      "throughline": "How chance moved from gambling correspondence to expectation, law, and axiomatic event language.",
+      "eras": [
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Pascal and Fermat correspondence on games of chance",
+          "anchor_type": "work",
+          "contribution": "Turns chance problems into countable mathematical cases."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Huygens: De Ratiociniis in Ludo Aleae",
+          "anchor_type": "work",
+          "contribution": "Systematizes expectation and reusable rules for games of chance."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Jacob Bernoulli: Ars Conjectandi",
+          "anchor_type": "work",
+          "contribution": "Extends chance into law-like reasoning and long-run frequency."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
+          "anchor_type": "work",
+          "contribution": "Recasts probability through events, sigma-algebras, and measure."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "John von Neumann and Oskar Morgenstern: Theory of Games and Economic Behavior",
+          "anchor_type": "work",
+          "contribution": "Pushes probabilistic language into strategy, equilibrium, and decision."
+        }
+      ],
+      "learner_value": "Shows that modern probability notation grew from concrete chance problems rather than appearing fully formed."
+    },
+    {
+      "slug": "infinity-and-set-language-line",
+      "title": "Infinity and set language",
+      "throughline": "How mathematical language for number, infinity, and collection became explicit and axiomatized.",
+      "eras": [
+        "antiquity",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Archimedes: The Method",
+          "anchor_type": "work",
+          "contribution": "Treats the infinite heuristically while keeping proof demands in view."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Dedekind: Was sind und was sollen die Zahlen?",
+          "anchor_type": "work",
+          "contribution": "Reconstructs number through set-theoretic and structural language."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Cantor: Beitrage zur Begrundung der transfiniten Mengenlehre",
+          "anchor_type": "work",
+          "contribution": "Makes transfinite size and cardinal comparison explicit."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Zermelo: Untersuchungen ueber die Grundlagen der Mengenlehre I",
+          "anchor_type": "work",
+          "contribution": "Stabilizes set language through axioms and controlled formation rules."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Nicolas Bourbaki: Elements of Mathematics (Theory of Sets)",
+          "anchor_type": "work",
+          "contribution": "Makes structural set language a common platform for modern exposition."
+        }
+      ],
+      "learner_value": "Supports lessons that separate intuitive infinity, formal infinity, and axiomatized set language."
+    }
+  ],
+  "transmission_paths": [
+    {
+      "slug": "euclid-commentary-transmission-path",
+      "title": "Euclid commentary and transmission path",
+      "throughline": "How Euclidean geometry survived and changed through commentary, teaching, and reaxiomatization.",
+      "eras": [
+        "antiquity",
+        "medieval-transmission-and-synthesis",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Euclid: Elements",
+          "anchor_type": "work",
+          "contribution": "Origin text of axiomatic geometry."
+        },
+        {
+          "era_slug": "antiquity",
+          "label": "Theon of Alexandria: Euclid and Ptolemy commentary tradition",
+          "anchor_type": "commentary",
+          "contribution": "Late-antique editorial and explanatory route for Euclidean geometry."
+        },
+        {
+          "era_slug": "antiquity",
+          "label": "Hypatia: commentary tradition on Arithmetica and Conics",
+          "anchor_type": "commentary",
+          "contribution": "Shows commentary as active mathematical continuation, not passive preservation."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Adelard of Bath: Euclid translation tradition",
+          "anchor_type": "translation",
+          "contribution": "Carries Euclidean geometry into the Latin teaching world."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Hilbert: Grundlagen der Geometrie",
+          "anchor_type": "reaxiomatization",
+          "contribution": "Reopens Euclid through formal independence and modern axiomatics."
+        }
+      ],
+      "learner_value": "Makes clear that Euclid stayed alive through schools, commentaries, and later reconstruction."
+    },
+    {
+      "slug": "hindu-arabic-number-transmission-path",
+      "title": "Hindu-Arabic number transmission path",
+      "throughline": "How positional arithmetic and zero moved from South Asian mathematics through Arabic scholarship into European calculation culture.",
+      "eras": [
+        "antiquity",
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Aryabhata: Aryabhatiya",
+          "anchor_type": "work",
+          "contribution": "Represents an early high-level Indian computational and astronomical tradition."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Brahmasphutasiddhanta",
+          "anchor_type": "work",
+          "contribution": "Articulates arithmetic with zero and signed quantity rules."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Khwarizmi: Book on Addition and Subtraction after the Method of the Indians",
+          "anchor_type": "transmission-work",
+          "contribution": "Explicitly transmits Indian numeration into Arabic mathematical practice."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Fibonacci: Liber Abaci",
+          "anchor_type": "teaching-text",
+          "contribution": "Introduces the numeral system into Latin European commerce and calculation."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Stevin: De Thiende",
+          "anchor_type": "extension",
+          "contribution": "Pushes decimal positional thinking into everyday and scientific calculation."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Gauss: Disquisitiones Arithmeticae",
+          "anchor_type": "modern-formalization",
+          "contribution": "Shows the fully mature arithmetic culture built on the earlier numeral tradition."
+        }
+      ],
+      "learner_value": "Lets the tutor teach arithmetic as a transmission success across cultures rather than a local invention."
+    },
+    {
+      "slug": "archimedean-method-transmission-path",
+      "title": "Archimedean method transmission path",
+      "throughline": "How Archimedean reasoning moved through commentary and reinvention into calculus and modern analysis.",
+      "eras": [
+        "antiquity",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Archimedes: The Method",
+          "anchor_type": "work",
+          "contribution": "Source of the slicing and balancing imagination around area and volume."
+        },
+        {
+          "era_slug": "antiquity",
+          "label": "Eutocius of Ascalon: commentaries on Archimedes and Apollonius",
+          "anchor_type": "commentary",
+          "contribution": "Preserves and explains Archimedean technical arguments."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Cavalieri: Geometria indivisibilibus continuorum nova quadam ratione promota",
+          "anchor_type": "reinvention",
+          "contribution": "Reopens a comparable area-and-volume imagination with indivisibles."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Barrow: Lectiones geometricae",
+          "anchor_type": "bridge-work",
+          "contribution": "Links older geometry to proto-calculus arguments."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Lebesgue: Integrale, longueur, aire",
+          "anchor_type": "modern-generalization",
+          "contribution": "Completes a modern general form of area reasoning with full rigor."
+        }
+      ],
+      "learner_value": "Supports narratives where classical geometry and modern integration belong to one historical family."
+    }
+  ],
+  "domain_lines": [
+    {
+      "slug": "algebra-domain-line",
+      "title": "Algebra domain line",
+      "throughline": "From equation procedures to symbolic manipulation, structural algebra, ideals, and homological method.",
+      "eras": [
+        "antiquity",
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Diophantus: Arithmetica",
+          "anchor_type": "work",
+          "contribution": "Early algebraic problem culture."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Khwarizmi: Al-jabr",
+          "anchor_type": "work",
+          "contribution": "Systematizes algebraic cases and procedures."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Karaji: Al-Fakhri",
+          "anchor_type": "work",
+          "contribution": "Pushes algebra beyond inherited geometric framing."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Viete: In artem analyticam isagoge",
+          "anchor_type": "work",
+          "contribution": "Creates reusable symbolic algebra."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Galois: Memoire sur les conditions de resolubilite des equations par radicaux",
+          "anchor_type": "work",
+          "contribution": "Turns equation theory into structural algebra."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Emmy Noether: Idealtheorie in Ringbereichen",
+          "anchor_type": "work",
+          "contribution": "Makes structure and ideal language central."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Alexander Grothendieck: Sur quelques points d'algebre homologique",
+          "anchor_type": "work",
+          "contribution": "Extends algebra through categories and homological tools."
+        }
+      ],
+      "learner_value": "Lets the tutor trace algebra from problem solving to modern structure in one line."
+    },
+    {
+      "slug": "geometry-domain-line",
+      "title": "Geometry domain line",
+      "throughline": "From axiomatic figures and conics to coordinates, manifolds, topology, and algebraic geometry.",
+      "eras": [
+        "antiquity",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Euclid: Elements",
+          "anchor_type": "work",
+          "contribution": "Axiomatic figure geometry."
+        },
+        {
+          "era_slug": "antiquity",
+          "label": "Apollonius: Conics",
+          "anchor_type": "work",
+          "contribution": "Systematic higher geometry of curves."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Descartes: La Geometrie",
+          "anchor_type": "work",
+          "contribution": "Coordinates unify algebra and geometry."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Riemann: Ueber die Hypothesen welche der Geometrie zu Grunde liegen",
+          "anchor_type": "work",
+          "contribution": "Generalizes geometry to manifolds and curvature."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Poincare: Analysis Situs",
+          "anchor_type": "work",
+          "contribution": "Launches topology and invariant-based geometric thinking."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Jean-Pierre Serre: Geometrie algebrique et geometrie analytique",
+          "anchor_type": "work",
+          "contribution": "Bridges algebraic and analytic geometry in a structural setting."
+        }
+      ],
+      "learner_value": "Supports explanations of why geometry today includes spaces, invariants, and sheaves."
+    },
+    {
+      "slug": "analysis-domain-line",
+      "title": "Analysis domain line",
+      "throughline": "From exhaustion and changing quantities to calculus, rigorous limits, and measure-based integration.",
+      "eras": [
+        "antiquity",
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Archimedes: On the Sphere and Cylinder",
+          "anchor_type": "work",
+          "contribution": "Classical area and volume reasoning."
+        },
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Nicole Oresme: Tractatus de configurationibus qualitatum et motuum",
+          "anchor_type": "work",
+          "contribution": "Early representation of varying quantities."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Newton: Method of Fluxions",
+          "anchor_type": "work",
+          "contribution": "Systematic treatment of change."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Leibniz: Nova Methodus pro Maximis et Minimis",
+          "anchor_type": "work",
+          "contribution": "Differential notation and accumulation language."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Cauchy: Cours d'analyse de l'Ecole Royale Polytechnique",
+          "anchor_type": "work",
+          "contribution": "Limit-based rigor."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Weierstrass: Mathematische Werke",
+          "anchor_type": "work",
+          "contribution": "Quantified control of convergence and continuity."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Lebesgue: Integrale, longueur, aire",
+          "anchor_type": "work",
+          "contribution": "Measure-based completion of integration."
+        }
+      ],
+      "learner_value": "Gives the tutor a continuous story for why analysis needed both invention and repair."
+    },
+    {
+      "slug": "probability-domain-line",
+      "title": "Probability domain line",
+      "throughline": "From games of chance to laws of expectation, measure-based probability, and strategic decision models.",
+      "eras": [
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Pascal and Fermat correspondence on games of chance",
+          "anchor_type": "work",
+          "contribution": "Foundational combinatorial chance problems."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Huygens: De Ratiociniis in Ludo Aleae",
+          "anchor_type": "work",
+          "contribution": "Reusable expectation reasoning."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Jacob Bernoulli: Ars Conjectandi",
+          "anchor_type": "work",
+          "contribution": "Chance becomes law-like and inferential."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
+          "anchor_type": "work",
+          "contribution": "Axiomatizes probability."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "John von Neumann and Oskar Morgenstern: Theory of Games and Economic Behavior",
+          "anchor_type": "work",
+          "contribution": "Extends uncertainty mathematics into strategy and interaction."
+        }
+      ],
+      "learner_value": "Explains why modern probability is both a branch of pure mathematics and a decision language."
+    },
+    {
+      "slug": "logic-computation-domain-line",
+      "title": "Logic and computation domain line",
+      "throughline": "From axiomatic proof ideals to formal logic, incompleteness, and machine-style computability.",
+      "eras": [
+        "antiquity",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Euclid: Elements",
+          "anchor_type": "work",
+          "contribution": "Canonical deductive model."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Hilbert and Ackermann: Grundzuege der theoretischen Logik",
+          "anchor_type": "work",
+          "contribution": "Formal logic as a structured mathematical language."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Alonzo Church: An Unsolvable Problem of Elementary Number Theory",
+          "anchor_type": "work",
+          "contribution": "Lambda-calculus route to effective calculability."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Godel: Ueber formal unentscheidbare Saetze der Principia Mathematica und verwandter Systeme I",
+          "anchor_type": "work",
+          "contribution": "Incompleteness of sufficiently strong formal systems."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem",
+          "anchor_type": "work",
+          "contribution": "Machine model of effective procedure and undecidability."
+        }
+      ],
+      "learner_value": "Lets the tutor explain logic and computation as mathematics with its own historical proofs and limits."
+    }
+  ],
+  "application_bridges": [
+    {
+      "slug": "celestial-modeling-bridge",
+      "title": "Celestial modeling bridge",
+      "throughline": "How geometric curve theory and calculus became tools for modeling planetary and spatial motion.",
+      "eras": [
+        "antiquity",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "antiquity",
+          "label": "Apollonius: Conics",
+          "anchor_type": "work",
+          "contribution": "Conic sections become mathematically available objects."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Kepler: Astronomia nova",
+          "anchor_type": "work",
+          "contribution": "Planetary motion is described with ellipses and quantitative law."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Newton: Method of Fluxions",
+          "anchor_type": "work",
+          "contribution": "Calculus becomes a language for changing motion."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Riemann: Ueber die Hypothesen welche der Geometrie zu Grunde liegen",
+          "anchor_type": "work",
+          "contribution": "Space itself becomes a mathematically variable object."
+        }
+      ],
+      "learner_value": "Useful for teaching why geometry and calculus mattered for astronomy and later space modeling."
+    },
+    {
+      "slug": "chance-to-decision-bridge",
+      "title": "Chance to decision bridge",
+      "throughline": "How gambling problems grew into probability laws and then into strategic decision mathematics.",
+      "eras": [
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Pascal and Fermat correspondence on games of chance",
+          "anchor_type": "work",
+          "contribution": "Chance begins as concrete game analysis."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Jacob Bernoulli: Ars Conjectandi",
+          "anchor_type": "work",
+          "contribution": "Chance becomes law and expectation."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Kolmogorov: Grundbegriffe der Wahrscheinlichkeitsrechnung",
+          "anchor_type": "work",
+          "contribution": "Probability gets a formal axiomatic language."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "John von Neumann and Oskar Morgenstern: Theory of Games and Economic Behavior",
+          "anchor_type": "work",
+          "contribution": "Uncertainty becomes strategic mathematical decision-making."
+        }
+      ],
+      "learner_value": "Shows how playful chance problems became essential for economics, risk, and decision theory."
+    },
+    {
+      "slug": "symbolic-procedure-to-computation-bridge",
+      "title": "Symbolic procedure to computation bridge",
+      "throughline": "How explicit symbolic procedures evolved into formal calculi and machine models of computation.",
+      "eras": [
+        "medieval-transmission-and-synthesis",
+        "early-modern-analysis-and-chance",
+        "modern-mathematics"
+      ],
+      "anchors": [
+        {
+          "era_slug": "medieval-transmission-and-synthesis",
+          "label": "Al-Khwarizmi: Book on Addition and Subtraction after the Method of the Indians",
+          "anchor_type": "work",
+          "contribution": "Algorithmic arithmetic procedures become teachable routines."
+        },
+        {
+          "era_slug": "early-modern-analysis-and-chance",
+          "label": "Viete: In artem analyticam isagoge",
+          "anchor_type": "work",
+          "contribution": "Symbolic manipulation becomes general mathematical method."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Peano: Arithmetices principia, nova methodo exposita",
+          "anchor_type": "work",
+          "contribution": "Arithmetic is made formal and symbolic."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Alonzo Church: An Unsolvable Problem of Elementary Number Theory",
+          "anchor_type": "work",
+          "contribution": "Procedure becomes formal lambda-calculus."
+        },
+        {
+          "era_slug": "modern-mathematics",
+          "label": "Turing: On Computable Numbers, with an Application to the Entscheidungsproblem",
+          "anchor_type": "work",
+          "contribution": "Procedure becomes machine computability."
+        }
+      ],
+      "learner_value": "Lets MathTeach connect school algorithms to the deep history of formal computation."
+    }
+  ],
+  "build_order": [
+    "Normalize stable ids for works, figures, proof threads, and equation threads.",
+    "Attach cross-epoch anchors to the current chronology corpus without duplicating historical facts.",
+    "Write short proof, equation, and transmission summaries for each network line.",
+    "Expose network traversal in the API before full database ingestion.",
+    "Use the network layer to guide later retrieval, citation, and pedagogy orchestration."
+  ]
+}

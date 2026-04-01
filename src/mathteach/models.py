@@ -169,3 +169,31 @@ class SourceAccessProgramResponse(BaseModel):
     mission: str
     storage_rule: str
     sources: list[SourceRegistryEntry]
+
+
+class NetworkAnchor(BaseModel):
+    era_slug: str
+    label: str
+    anchor_type: str
+    contribution: str
+
+
+class NetworkTrack(BaseModel):
+    slug: str
+    title: str
+    throughline: str
+    eras: list[str]
+    anchors: list[NetworkAnchor]
+    learner_value: str
+
+
+class NetworkProgramResponse(BaseModel):
+    checked_on: str
+    mission: str
+    networking_principles: list[str]
+    proof_lines: list[NetworkTrack]
+    equation_lines: list[NetworkTrack]
+    transmission_paths: list[NetworkTrack]
+    domain_lines: list[NetworkTrack]
+    application_bridges: list[NetworkTrack]
+    build_order: list[str]

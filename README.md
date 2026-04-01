@@ -52,6 +52,7 @@ MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + lea
 - [docs/modern-math-post-round-m2-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-post-round-m2-audit-2026-04-01.md): Folgeaudit nach Runde M.2 der modernen Epoche
 - [docs/modern-math-third-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-third-review-triage-2026-04-01.md): Prioritaetskorrektur nach dem Review von Runde M.2
 - [docs/modern-math-post-round-m3-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-post-round-m3-audit-2026-04-01.md): Folgeaudit nach Runde M.3 der modernen Epoche
+- [docs/modern-math-final-assessment-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-final-assessment-2026-04-01.md): Abschlussbewertung der modernen Epoche innerhalb des definierten Kanons
 - [docs/literature-gap-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01.md): Vergleich unseres Stands mit kanonischer Literatur fuer Antike bis Fruehe Neuzeit
 - [docs/literature-gap-audit-2026-04-01-post-round-a.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-a.md): Folgeaudit nach der ersten Brueckenwerk-Runde
 - [docs/literature-gap-audit-2026-04-01-post-round-b.md](/Users/jonasweiss/MathTeach/docs/literature-gap-audit-2026-04-01-post-round-b.md): Folgeaudit nach Runde B

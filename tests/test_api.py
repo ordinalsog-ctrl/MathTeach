@@ -30,6 +30,15 @@ def test_foundation_endpoint() -> None:
     assert payload["teacher_mind"]["name"] == "Teacher Mind"
 
 
+def test_corpus_blueprint_endpoint() -> None:
+    response = client.get("/api/v1/corpus/blueprint")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["domains"][0]["priority"] == "P0"
+    assert "pedagogical literature" in payload["out_of_scope_for_now"]
+
+
 def test_tutoring_plan_endpoint() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

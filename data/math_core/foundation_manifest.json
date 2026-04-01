@@ -1,0 +1,192 @@
+{
+  "checked_on": "2026-04-01",
+  "mission": "Build a sourceable mathematics corpus before pedagogy-specific literature is added.",
+  "collection_principles": [
+    "Collect broad mathematical foundations before specialist literature.",
+    "Prefer standard references with stable notation and explicit definitions.",
+    "Store segment-level citations before extracting concepts or claims.",
+    "Treat pedagogy and psychology as a later, separate literature program.",
+    "Keep historical enrichment optional until the core reference base is stable."
+  ],
+  "domain_sequence": [
+    {
+      "slug": "arithmetic-number-sense",
+      "name": "Arithmetic and Number Sense",
+      "priority": "P0",
+      "goal": "Secure the base language of number, operation, ratio, and quantity."
+    },
+    {
+      "slug": "algebra-foundations",
+      "name": "Algebra Foundations",
+      "priority": "P0",
+      "goal": "Cover symbolic manipulation, equations, expressions, and structural patterns."
+    },
+    {
+      "slug": "geometry-measurement",
+      "name": "Geometry and Measurement",
+      "priority": "P0",
+      "goal": "Anchor spatial reasoning, shape, congruence, similarity, and measurement."
+    },
+    {
+      "slug": "functions-precalculus",
+      "name": "Functions and Precalculus",
+      "priority": "P0",
+      "goal": "Prepare the bridge from school algebra to calculus and modeling."
+    },
+    {
+      "slug": "calculus-analysis",
+      "name": "Calculus and Analysis",
+      "priority": "P1",
+      "goal": "Capture limits, derivatives, integrals, and rigorous analysis foundations."
+    },
+    {
+      "slug": "linear-algebra",
+      "name": "Linear Algebra",
+      "priority": "P1",
+      "goal": "Store vectors, matrices, linear maps, spaces, eigen-ideas, and proofs."
+    },
+    {
+      "slug": "discrete-mathematics",
+      "name": "Discrete Mathematics",
+      "priority": "P1",
+      "goal": "Cover logic, combinatorics, graphs, recurrence, and proof technique."
+    },
+    {
+      "slug": "probability-statistics",
+      "name": "Probability and Statistics",
+      "priority": "P1",
+      "goal": "Provide the foundation for uncertainty, inference, and data reasoning."
+    },
+    {
+      "slug": "differential-equations",
+      "name": "Differential Equations",
+      "priority": "P2",
+      "goal": "Link calculus foundations to dynamic systems and applications."
+    },
+    {
+      "slug": "number-theory",
+      "name": "Number Theory",
+      "priority": "P2",
+      "goal": "Cover divisibility, congruences, prime structure, and classical results."
+    },
+    {
+      "slug": "abstract-algebra",
+      "name": "Abstract Algebra",
+      "priority": "P2",
+      "goal": "Model groups, rings, fields, homomorphisms, and algebraic structure."
+    },
+    {
+      "slug": "topology-geometry",
+      "name": "Topology and Advanced Geometry",
+      "priority": "P3",
+      "goal": "Extend the corpus toward advanced pure mathematics."
+    }
+  ],
+  "source_families": [
+    {
+      "slug": "historical-primary",
+      "name": "Historical Primary Works",
+      "role": "Origin tracing and historically grounded claims."
+    },
+    {
+      "slug": "modern-standard-textbook",
+      "name": "Modern Standard Textbooks",
+      "role": "Stable mainstream reference base for definitions and theorem statements."
+    },
+    {
+      "slug": "problem-collection",
+      "name": "Problem Collections",
+      "role": "Worked examples, exercises, and difficulty ladders."
+    },
+    {
+      "slug": "survey-reference",
+      "name": "Survey and Reference Texts",
+      "role": "Topic overviews, canonical summaries, and cross-links."
+    },
+    {
+      "slug": "curriculum-reference",
+      "name": "Curriculum References",
+      "role": "Mapping concepts to school and university progression."
+    }
+  ],
+  "starter_collection_queue": [
+    {
+      "slug": "school-foundations-core",
+      "priority": "P0",
+      "target_domains": [
+        "arithmetic-number-sense",
+        "algebra-foundations",
+        "geometry-measurement",
+        "functions-precalculus"
+      ],
+      "source_families": [
+        "modern-standard-textbook",
+        "problem-collection",
+        "curriculum-reference"
+      ],
+      "output_expectation": "High-confidence school-to-precalculus corpus with segment-level citations."
+    },
+    {
+      "slug": "proof-language-core",
+      "priority": "P1",
+      "target_domains": [
+        "discrete-mathematics",
+        "linear-algebra"
+      ],
+      "source_families": [
+        "modern-standard-textbook",
+        "survey-reference",
+        "problem-collection"
+      ],
+      "output_expectation": "Proof-friendly corpus for formal reasoning and misconception detection."
+    },
+    {
+      "slug": "calculus-core",
+      "priority": "P1",
+      "target_domains": [
+        "calculus-analysis",
+        "differential-equations"
+      ],
+      "source_families": [
+        "modern-standard-textbook",
+        "survey-reference",
+        "problem-collection"
+      ],
+      "output_expectation": "Continuity from intuitive calculus explanations to rigorous analysis."
+    },
+    {
+      "slug": "uncertainty-core",
+      "priority": "P1",
+      "target_domains": [
+        "probability-statistics"
+      ],
+      "source_families": [
+        "modern-standard-textbook",
+        "problem-collection",
+        "curriculum-reference"
+      ],
+      "output_expectation": "Introductory-to-intermediate probability and statistics reference set."
+    },
+    {
+      "slug": "pure-math-expansion",
+      "priority": "P2",
+      "target_domains": [
+        "number-theory",
+        "abstract-algebra",
+        "topology-geometry"
+      ],
+      "source_families": [
+        "historical-primary",
+        "modern-standard-textbook",
+        "survey-reference"
+      ],
+      "output_expectation": "Expansion path toward advanced pure mathematics and historical provenance."
+    }
+  ],
+  "out_of_scope_for_now": [
+    "pedagogical literature",
+    "psychological literature",
+    "teacher coaching material",
+    "non-sourceable math explanation blogs"
+  ]
+}

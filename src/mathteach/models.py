@@ -76,3 +76,34 @@ class FoundationResponse(BaseModel):
     teacher_mind: FoundationLayer
     handoff_contract: list[str]
     first_build_order: list[str]
+
+
+class CorpusDomain(BaseModel):
+    slug: str
+    name: str
+    priority: str
+    goal: str
+
+
+class SourceFamily(BaseModel):
+    slug: str
+    name: str
+    role: str
+
+
+class CollectionQueueItem(BaseModel):
+    slug: str
+    priority: str
+    target_domains: list[str]
+    source_families: list[str]
+    output_expectation: str
+
+
+class CorpusBlueprintResponse(BaseModel):
+    checked_on: str
+    mission: str
+    collection_principles: list[str]
+    domains: list[CorpusDomain]
+    source_families: list[SourceFamily]
+    starter_collection_queue: list[CollectionQueueItem]
+    out_of_scope_for_now: list[str]

@@ -980,6 +980,254 @@
           "notes": "Collected works route with downloadable nineteenth-century reprint."
         }
       ]
+    },
+    {
+      "slug": "theon-commentary-tradition",
+      "era": "antiquity",
+      "title": "Theon of Alexandria: Euclid and Ptolemy commentary tradition",
+      "date_label": "4th century CE",
+      "figures": [
+        "Theon of Alexandria"
+      ],
+      "source_kind": "commentary_tradition_record",
+      "significance": "Major late antique commentary route through which Euclid and mathematical astronomy were transmitted onward.",
+      "proof_or_equation_value": "Important for the survival, framing, and pedagogical ordering of classical mathematical argument.",
+      "rights_class": "mixed_open_biography_and_public_domain_editions",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/theon-commentary-tradition/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Theon/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Theon's editorial and commentary role."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL7010624M/The_thirteen_books_of_Euclid%27s_Elements",
+          "availability": "borrow_or_locate",
+          "notes": "Heath edition route useful for tracing Theon's recension and its later reception."
+        }
+      ]
+    },
+    {
+      "slug": "hypatia-commentary-tradition",
+      "era": "antiquity",
+      "title": "Hypatia: commentary tradition on Arithmetica and Conics",
+      "date_label": "late 4th to early 5th century CE",
+      "figures": [
+        "Hypatia"
+      ],
+      "source_kind": "commentary_tradition_record",
+      "significance": "Key witness to high-level late antique mathematical commentary and extension work on major Greek texts.",
+      "proof_or_equation_value": "Important for understanding how Diophantine and conic traditions remained mathematically active through commentary.",
+      "rights_class": "open_biographical_and_reference_routes",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/hypatia-commentary-tradition/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Hypatia/",
+          "availability": "open",
+          "notes": "Biographical route summarizing Hypatia's mathematical commentary tradition."
+        },
+        {
+          "provider": "MacTutor DSB",
+          "access_type": "open_pdf",
+          "url": "https://mathshistory.st-andrews.ac.uk/DSB/Hypatia.pdf",
+          "availability": "open",
+          "notes": "Reference PDF with historical detail useful for metadata and transmission notes."
+        }
+      ]
+    },
+    {
+      "slug": "eutocius-commentary-tradition",
+      "era": "antiquity",
+      "title": "Eutocius of Ascalon: commentaries on Archimedes and Apollonius",
+      "date_label": "6th century CE",
+      "figures": [
+        "Eutocius of Ascalon"
+      ],
+      "source_kind": "commentary_tradition_record",
+      "significance": "Crucial late antique preservation and explanatory route for Archimedean and Apollonian mathematics.",
+      "proof_or_equation_value": "Important for the textual survival and explicated proof structure of major Greek geometry works.",
+      "rights_class": "mixed_open_biography_and_public_domain_editions",
+      "storage_class": "metadata_first",
+      "storage_path_hint": "library/raw/restricted/eutocius-commentary-tradition/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies/Eutocius/",
+          "availability": "open",
+          "notes": "Biographical route covering Eutocius and his commentary corpus."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL24310128M/The_Works_of_Archimedes",
+          "availability": "borrow_or_locate",
+          "notes": "Collected Archimedes edition route for commentary-linked witness work."
+        }
+      ]
+    },
+    {
+      "slug": "aryabhata-aryabhatiya",
+      "era": "antiquity",
+      "title": "Aryabhata: Aryabhatiya",
+      "date_label": "499 CE",
+      "figures": [
+        "Aryabhata"
+      ],
+      "source_kind": "primary_work_with_public_domain_and_library_routes",
+      "significance": "Foundational Indian mathematics text spanning arithmetic, algebra, trigonometry, and astronomical computation.",
+      "proof_or_equation_value": "Important for sine tables, numerical approximation, and the Indian line feeding later Islamic mathematics.",
+      "rights_class": "mixed_public_domain_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/aryabhata-aryabhatiya/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL20426505M/The_Aryabhatiya",
+          "availability": "borrow_or_locate",
+          "notes": "Library route for a standard English translation and edition."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Aryabhata_I/",
+          "availability": "open",
+          "notes": "Biographical route documenting Aryabhata's mathematical influence and transmission."
+        }
+      ]
+    },
+    {
+      "slug": "hipparchus-trigonometry-tradition",
+      "era": "antiquity",
+      "title": "Hipparchus: commentary and chord-table tradition",
+      "date_label": "2nd century BCE; surviving through later commentary and witness traditions",
+      "figures": [
+        "Hipparchus"
+      ],
+      "source_kind": "historical_witness_record",
+      "significance": "Early anchor for trigonometric tabulation and geometric astronomy in the ancient world.",
+      "proof_or_equation_value": "Important for the prehistory of trigonometric tables later developed in Islamic and European mathematics.",
+      "rights_class": "mixed_open_biography_and_historical_editions",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/hipparchus-trigonometry-tradition/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Hipparchus/",
+          "availability": "open",
+          "notes": "Biographical route on Hipparchus and the origins of trigonometric practice."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/works/OL20271348W/Hipparchou_T%C5%8Dn_Aratou_kai_Eudoxou_Phainomen%C5%8Dn_ex%C4%93g%C4%93se%C5%8Ds_vivlia_tria",
+          "availability": "borrow_or_locate",
+          "notes": "Witness route for a surviving Hipparchus-linked text tradition."
+        }
+      ]
+    },
+    {
+      "slug": "al-tusi-quadrilateral",
+      "era": "medieval-transmission-synthesis",
+      "title": "Nasir al-Din al-Tusi: Treatise on the Quadrilateral",
+      "date_label": "13th century",
+      "figures": [
+        "Nasir al-Din al-Tusi"
+      ],
+      "source_kind": "primary_work_with_mixed_access",
+      "significance": "Landmark work in separating trigonometry from astronomy and systematizing it as its own mathematical discipline.",
+      "proof_or_equation_value": "Important for spherical trigonometry, triangle cases, and the sine-law lineage.",
+      "rights_class": "mixed_open_biography_and_library_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/al-tusi-quadrilateral/",
+      "access_routes": [
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Al-Tusi_Nasir/",
+          "availability": "open",
+          "notes": "Biographical route covering al-Tusi's role in trigonometry and mathematical astronomy."
+        },
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/works/OL44859163W/Traktat_o_polnom_chetyrekhstoronnike_%28Shaklul_gita%29",
+          "availability": "borrow_or_locate",
+          "notes": "Library route for a modern edition or translation of the quadrilateral treatise."
+        }
+      ]
+    },
+    {
+      "slug": "henry-briggs-arithmetica-logarithmica",
+      "era": "early-modern-analysis-chance",
+      "title": "Henry Briggs: Arithmetica logarithmica",
+      "date_label": "1624",
+      "figures": [
+        "Henry Briggs"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Operational breakthrough that made logarithms practically usable for large-scale scientific calculation.",
+      "proof_or_equation_value": "Important for the teachable shift from conceptual logarithm invention to standard computational tables.",
+      "rights_class": "public_domain_original_plus_preview_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/henry-briggs-arithmetica-logarithmica/",
+      "access_routes": [
+        {
+          "provider": "Open Library",
+          "access_type": "borrowable_scan",
+          "url": "https://openlibrary.org/books/OL58565869M/Arithmetica_Logarithimica",
+          "availability": "borrow_or_locate",
+          "notes": "Library route for the 1624 tables and later digitized copies."
+        },
+        {
+          "provider": "Google Play Books",
+          "access_type": "open_scan",
+          "url": "https://play.google.com/store/books/details/Henry_Briggs_Arithmetica_logarithmica?id=mS5CUWOuuiYC",
+          "availability": "open",
+          "notes": "Public scan route for a digitized copy of the work."
+        }
+      ]
+    },
+    {
+      "slug": "gregory-of-saint-vincent-opus-geometricum",
+      "era": "early-modern-analysis-chance",
+      "title": "Gregory of Saint-Vincent: Opus geometricum",
+      "date_label": "1647",
+      "figures": [
+        "Gregory of Saint-Vincent"
+      ],
+      "source_kind": "primary_work_with_open_scan",
+      "significance": "Important bridge between quadrature problems, the hyperbola, and the later analytic understanding of logarithmic behavior.",
+      "proof_or_equation_value": "Important for linking indivisibles-style area reasoning to the emerging function story around logarithms.",
+      "rights_class": "public_domain_original_plus_biographical_routes",
+      "storage_class": "raw_and_normalized",
+      "storage_path_hint": "library/raw/public_domain/gregory-of-saint-vincent-opus-geometricum/",
+      "access_routes": [
+        {
+          "provider": "Google Books",
+          "access_type": "open_scan",
+          "url": "https://books.google.com/books/about/Opus_Geometricum_Quadraturae_Circuli_Et.html?id=O05ZAAAAcAAJ",
+          "availability": "open",
+          "notes": "Full-view scan of the original work."
+        },
+        {
+          "provider": "MacTutor",
+          "access_type": "open_html",
+          "url": "https://mathshistory.st-andrews.ac.uk/Biographies//Saint-Vincent/",
+          "availability": "open",
+          "notes": "Biographical route describing Gregory's quadrature work and its historical role."
+        }
+      ]
     }
   ]
 }

@@ -8,7 +8,7 @@ Die neue Rueckmeldung ist deutlich feiner als die erste:
 
 - sie staerkt die Bedeutung von Kommentartraditionen
 - sie schaerft Trigonometrie- und Ueberlieferungslinien
-- sie korrigiert unsere naechsten Prioritaeten fuer Runde D
+- sie korrigiert unsere naechsten Prioritaeten innerhalb von Runde C
 
 ## Kurzfazit
 
@@ -18,11 +18,11 @@ Sie zeigt vor allem drei Dinge:
 
 1. `Transmission` ist fuer unseren Korpus noch wichtiger als bisher modelliert
 2. die antike und mittelalterliche Trigonometrie-Linie ist noch zu schwach
-3. unsere bisherige Runde D war zu stark auf angrenzende Naturwissenschaft fokussiert und sollte erst nach einigen Kern-Ergaenzungen kommen
+3. unsere bisherige naechste Runde war zu stark auf angrenzende Naturwissenschaft fokussiert und sollte erst nach einigen Kern-Ergaenzungen kommen
 
 ## 1. Direkt hochstufen
 
-Diese Vorschlaege sollten jetzt in die naechste Kernrunde aufsteigen.
+Diese Vorschlaege sollten jetzt in die naechste Unterrunde von Runde C aufsteigen.
 
 ### Antiquity
 
@@ -106,11 +106,11 @@ Diese Vorschlaege sind interessant, aber sollten nicht denselben Rang bekommen w
 
 - `Mersenne`
 - `Leibniz` jenseits seines Kalkuel-Werks nur als Zusatzkontext
-- rein kommunikative oder metawissenschaftliche Figuren ohne klaren Primärwerk-Fokus fuer unseren jetzigen Korpus
+- rein kommunikative oder metawissenschaftliche Figuren ohne klaren Primaerwerk-Fokus fuer unseren jetzigen Korpus
 
 ## 5. Neue Prioritaetsordnung nach dieser Rueckmeldung
 
-### Runde D
+### Runde C.1
 
 - `Theon of Alexandria`
 - `Hypatia`
@@ -121,7 +121,7 @@ Diese Vorschlaege sind interessant, aber sollten nicht denselben Rang bekommen w
 - `Henry Briggs`
 - `Gregory of Saint-Vincent`
 
-### Runde E
+### Runde C.2
 
 - `Al-Samaw'al`
 - `Ptolemy: Almagest`
@@ -133,7 +133,7 @@ Diese Vorschlaege sind interessant, aber sollten nicht denselben Rang bekommen w
 - `Johann Bernoulli`
 - `Robert of Chester`
 
-### Runde F
+### Runde C.3
 
 - `Sulbasutras`
 - `Bhaskara I`
@@ -143,7 +143,7 @@ Diese Vorschlaege sind interessant, aber sollten nicht denselben Rang bekommen w
 - `Bradwardine`
 - `Oxford Calculators`
 
-### Runde G
+### Runde C.4
 
 - `Liu Hui`
 - `Shen Kuo`
@@ -161,7 +161,7 @@ Das ist fuer MathTeach sehr wertvoll, weil unser Agent spaeter nicht nur sagen s
 
 ## Ergebnis
 
-Die naechste Kernrunde sollte deshalb nicht einfach die bisherige Runde D wiederholen.
+Die naechste Unterrunde von Runde C sollte deshalb nicht einfach die bisherige Priorisierung wiederholen.
 
 Sie sollte gezielt:
 

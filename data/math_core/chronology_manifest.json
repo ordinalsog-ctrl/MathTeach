@@ -15,7 +15,12 @@
         "Apollonius",
         "Diophantus",
         "Heron of Alexandria",
-        "Pappus of Alexandria"
+        "Pappus of Alexandria",
+        "Hipparchus",
+        "Theon of Alexandria",
+        "Hypatia",
+        "Eutocius of Ascalon",
+        "Aryabhata"
       ],
       "canonical_works": [
         "Euclid: Elements",
@@ -24,7 +29,12 @@
         "Apollonius: Conics",
         "Diophantus: Arithmetica",
         "Heron: Metrica",
-        "Pappus: Collection"
+        "Pappus: Collection",
+        "Hipparchus: commentary and chord-table tradition",
+        "Theon of Alexandria: Euclid and Ptolemy commentary tradition",
+        "Hypatia: commentary tradition on Arithmetica and Conics",
+        "Eutocius of Ascalon: commentaries on Archimedes and Apollonius",
+        "Aryabhata: Aryabhatiya"
       ],
       "proof_threads": [
         {
@@ -84,7 +94,8 @@
         "Adelard of Bath",
         "Al-Karaji",
         "Nicole Oresme",
-        "Regiomontanus"
+        "Regiomontanus",
+        "Nasir al-Din al-Tusi"
       ],
       "canonical_works": [
         "Brahmasphutasiddhanta",
@@ -97,7 +108,8 @@
         "Adelard of Bath: Euclid translation tradition",
         "Al-Karaji: Al-Fakhri",
         "Nicole Oresme: Tractatus de configurationibus qualitatum et motuum",
-        "Regiomontanus: De triangulis omnimodis"
+        "Regiomontanus: De triangulis omnimodis",
+        "Nasir al-Din al-Tusi: Treatise on the Quadrilateral"
       ],
       "proof_threads": [
         {
@@ -166,8 +178,9 @@
         "Napier",
         "Jacob Bernoulli",
         "Kepler",
-        "Fermat",
-        "Isaac Barrow"
+        "Isaac Barrow",
+        "Henry Briggs",
+        "Gregory of Saint-Vincent"
       ],
       "canonical_works": [
         "Newton: Method of Fluxions",
@@ -183,7 +196,9 @@
         "Jacob Bernoulli: Ars Conjectandi",
         "Kepler: Astronomia nova",
         "Fermat: Methodus ad disquirendam maximam et minimam",
-        "Barrow: Lectiones geometricae"
+        "Barrow: Lectiones geometricae",
+        "Henry Briggs: Arithmetica logarithmica",
+        "Gregory of Saint-Vincent: Opus geometricum"
       ],
       "proof_threads": [
         {

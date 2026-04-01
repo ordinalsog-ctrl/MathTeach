@@ -85,7 +85,7 @@ Er enthaelt nun:
 
 ## Neue Restprioritaeten
 
-### Runde D
+### Runde C.1
 
 - `Ptolemy: Almagest`
 - `Al-Battani: Kitab al-Zij`
@@ -96,7 +96,7 @@ Er enthaelt nun:
 - `Johann Bernoulli: Lectiones de calculo differentialium`
 - `Robert of Chester` als Algebra-Ueberlieferung
 
-### Runde E
+### Runde C.2
 
 - `Liu Hui`
 - `Shen Kuo`

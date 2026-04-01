@@ -56,6 +56,7 @@ def test_corpus_source_access_endpoint() -> None:
     assert payload["sources"][0]["slug"] == "rhind-mathematical-papyrus"
     assert payload["sources"][2]["access_routes"][0]["provider"] == "Clay Mathematics Institute"
     assert any(item["slug"] == "apollonius-conics" for item in payload["sources"])
+    assert any(item["slug"] == "aryabhata-aryabhatiya" for item in payload["sources"])
     assert any(item["slug"] == "napier-logarithmorum-canonis-descriptio" for item in payload["sources"])
     assert any(item["slug"] == "kepler-astronomia-nova" for item in payload["sources"])
 

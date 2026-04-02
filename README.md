@@ -92,6 +92,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md): Operative Spezifikation fuer Beobachtungssignale, `runtime_mode_adapter`, Hysterese und Transition-Messaging
 - [docs/live-mode-adaptation-readiness-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-readiness-review-2026-04-02.md): Readiness-Triage fuer den Uebergang von Phase-H-Spezifikation zu erster Runtime-Implementierung
 - [docs/live-mode-adaptation-final-assessment-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-final-assessment-2026-04-02.md): Abschlussbewertung, dass Phase `H.1` jetzt startbereit fuer die erste Runtime-Implementierung ist
+- [docs/live-mode-adaptation-h1-code-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-h1-code-review-2026-04-02.md): Review-Triage nach dem ersten H.1-Codecheckpoint mit Fokus auf den naechsten Block-Loop im Planner
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -209,6 +210,8 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - `Phase H.1` gilt jetzt abschliessend als `implementation-ready`,
   also bereit fuer die erste Runtime-Umsetzung
 - die ersten H.1-Codeartefakte existieren jetzt bereits im Repo
+- der naechste Engpass ist jetzt nicht mehr Spezifikation, sondern
+  `blockweise Planner-Integration`
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -246,7 +249,7 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- `planner-level live mode adaptation`
+- `planner-level live mode adaptation` als echter Block-Loop
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

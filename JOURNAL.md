@@ -2,6 +2,34 @@
 
 Stand: 2026-04-02
 
+## Phase-H-H1-Code-Review 2026-04-02
+
+Die neue Review-Lage bestaetigt, dass Phase `H.1` nicht mehr nur
+`implementation-ready`, sondern bereits real im MVP-Rahmen implementiert ist.
+
+Wichtigste Konsequenzen:
+
+- der Status verschiebt sich von `ready for code` zu `first runtime logic live`
+- die Hauptluecke ist nicht mehr Architektur, sondern `blockweise Planner-Integration`
+- `SignalInterpreter`, `RuntimeModeAdapter`, Hysterese und Transition-Sprache
+  gelten jetzt als bestaetigte Kernbausteine
+- der naechste direkte Schritt ist ein echter Block-Loop statt nur eines
+  initialen `mode_adaptation_state`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-h1-code-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-h1-code-review-2026-04-02.md)
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/tests/test_runtime_mode_adapter.py)
+- [tests/test_observation_signal_interpretation.py](/Users/jonasweiss/MathTeach/tests/test_observation_signal_interpretation.py)
+- [tests/test_transition_language.py](/Users/jonasweiss/MathTeach/tests/test_transition_language.py)
+
+Verifikation:
+
+- Review-Triage auf Basis des bereits gruenen H.1-Code-Checkpoints
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-H1-Code-Start 2026-04-02
 
 Die erste echte Runtime-Umsetzung fuer Phase `H.1` ist jetzt im Repo

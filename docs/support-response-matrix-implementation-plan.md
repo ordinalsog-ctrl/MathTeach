@@ -132,15 +132,17 @@ Aktueller Stand:
 - Paar-Regeln sind operational
 - erste Triads und `priority_ladders` sind operational
 - `mode_selector` ist jetzt als eigene Schicht fuer support-sensitive Moduswahl eingefuehrt
-- naechster Ausbau ist `planner-level live mode adaptation`
+- `runtime_mode_adapter` und erste H.1-Testfamilien sind operational
+- naechster Ausbau ist die vertiefte `planner-level live mode adaptation`
+  als echter Block-Loop
 
 Arbeitsregel fuer den naechsten Ausbau:
 
-- `Phase H.1` gilt jetzt als startbereit fuer Runtime-Code
-- zuerst `block-level adaptation`
-- zuerst eine kleine API zwischen Planner und Runtime-Adapter festziehen
-- dann `hysteresis and stability rules`
-- dann support-sensitive Signalinterpretation sauber einschieben
+- `Phase H.1` ist jetzt code-started und testgruen
+- zuerst den blockweisen Planner-Loop bauen
+- dann `ModeAdaptationState` zwischen Bloecken fortschreiben
+- dann erste End-to-End-Blocksimulationen testen
+- danach Signalabdeckung und Randfaelle verbreitern
 - erst spaeter `history-aware mode adaptation`
 
 Programmgrundlage:
@@ -205,9 +207,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- `src/mathteach/services/runtime_mode_adapter.py`
-- Adaptionsmodelle in `src/mathteach/models.py`
-- erste Tests fuer Beobachtung, Hysterese und blockweisen Moduswechsel
+- `planner.py` um echten Block-Loop erweitern
+- `ModeAdaptationState` zwischen Bloecken aktualisieren
+- erste Blocksimulationstests aufbauen
 
 ## Nicht-Ziele Des Naechsten Sprints
 

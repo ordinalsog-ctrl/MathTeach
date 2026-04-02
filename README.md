@@ -199,6 +199,8 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - `live mode adaptation` als naechste echte Architekturphase
 - `block-level adaptation` als sichere erste H-Version
 - `runtime_mode_adapter` als neue geplante H-Komponente
+- Phase `H` ist jetzt auch operativ geschaerft mit Schwellen, Block-Takt,
+  Entscheidungs-Matrix und Template-Logik fuer Uebergaenge
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

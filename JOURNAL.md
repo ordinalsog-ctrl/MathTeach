@@ -2,6 +2,34 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Planungsschaerfung 2026-04-02
+
+Der neue Review hat die entscheidende Frage gestellt, ob Phase `H` schon
+wirklich implementierungsreif beschrieben ist oder noch zu vage bleibt.
+
+Wichtigste Konsequenzen:
+
+- `observation signals` sind jetzt nicht nur benannt, sondern mit ersten
+  Schwellenklassen beschrieben
+- `Block` und Beobachtungstakt sind jetzt explizit definiert
+- eine erste `adaptation decision matrix` ist jetzt festgehalten
+- `hysteresis` hat jetzt ersten Pseudocode und konkrete Guardrails
+- `transition messaging` ist jetzt als Template-Struktur statt nur als Idee
+  beschrieben
+- die Rueckwaertskompatibilitaet zwischen Phase `G` und `H` ist jetzt klarer
+  formuliert
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
+- [docs/live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- reine Doku- und Planungsschaerfung
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-Spezifikation 2026-04-02
 
 Der neue Review hat gezeigt, dass Phase `H` als Programm bereits klar war,

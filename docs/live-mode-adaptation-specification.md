@@ -62,6 +62,28 @@ Ein Block ist **nicht**:
 - ein einzelner Token oder Satz
 - jede kleine Nutzerreaktion fuer sich
 
+## Beobachtungstakt
+
+### Wann wird beobachtet
+
+Beobachtet wird waehrend eines Blocks fortlaufend, aber ein formaler
+Adaptionscheck findet nur statt:
+
+- am Ende jedes abgeschlossenen Blocks
+
+### Default-Fenster fuer H.1
+
+Die erste Version bewertet:
+
+- den aktuellen Block
+- plus den direkt vorherigen Block fuer Vergleich und Hysterese
+
+### Nicht vorgesehen in H.1
+
+- sekundenbasierte Feinanalyse
+- Wechselpruefung nach jedem einzelnen Rechenschritt
+- lange gleitende Fenster ueber viele Bloecke
+
 ## Observation Signals
 
 ### Designprinzip
@@ -127,6 +149,64 @@ Hinweise:
 - Selbstkorrektur gelingt
 - sichtbar weniger rueckweichende Sprache
 
+## Schwellenwerte Fuer H.1
+
+Die erste Version arbeitet mit drei Signalstaerken:
+
+- `weak`
+- `meaningful`
+- `strong`
+
+### `confusion_signal`
+
+- `weak`
+  - ein einzelner konzeptioneller Fehler, der nach Hinweis verschwindet
+- `meaningful`
+  - derselbe konzeptionelle Fehler taucht zweimal in einem Block auf
+  - oder dieselbe Rueckfrage bleibt nach einer Klaerung bestehen
+- `strong`
+  - derselbe konzeptionelle Fehler zieht sich ueber zwei aufeinanderfolgende
+    Bloecke
+
+### `overload_signal`
+
+- `weak`
+  - ein Lastindikator im Block
+  - Beispiel: Antwort bricht ab oder ein Zwischenschritt faellt weg
+- `meaningful`
+  - zwei Lastindikatoren im selben Block
+  - Beispiel: Symbolmix plus Strukturabbruch
+- `strong`
+  - Ueberlastung bleibt trotz Zusatzstruktur oder Vereinfachung im naechsten
+    Block bestehen
+
+### `stagnation_signal`
+
+- `weak`
+  - wenig Fortschritt in einem Block
+- `meaningful`
+  - kein sichtbarer Fortschritt ueber zwei Bloecke
+- `strong`
+  - kein Fortschritt ueber drei Bloecke trotz gleichbleibender Hilfe
+
+### `breakthrough_signal`
+
+- `weak`
+  - richtige Antwort mit starker Fuehrung
+- `meaningful`
+  - richtiges Muster wird mit geringerer Hilfe selbst wiedererkannt
+- `strong`
+  - Transfer auf aehnliche Aufgabe gelingt in zwei Bloecken hintereinander
+
+### `confidence_recovery_signal`
+
+- `weak`
+  - weniger rueckweichende Sprache in einem Block
+- `meaningful`
+  - Selbstkorrektur plus aktive Fortsetzungsbereitschaft
+- `strong`
+  - der Lernende erklaert den naechsten Schritt selbst und bleibt stabil
+
 ## Support-Sensitive Interpretation
 
 Dasselbe Oberflaechensignal kann je nach Supportprofil anders gewichtet
@@ -189,6 +269,51 @@ Sie arbeitet mit drei Klassen:
 Ein Wechsel wird nur bei mindestens `meaningful` geprueft,
 und nur bei `strong` ohne weiteres Zusatzsignal empfohlen.
 
+## Adaptation Decision Matrix
+
+Die erste Phase nutzt eine kleine, feste Wechselmatrix.
+
+| Current Mode | Primary Trigger | Threshold | Target Mode | Notes |
+| --- | --- | --- | --- | --- |
+| `origin_then_example` | `confusion_signal` oder `overload_signal` | `meaningful` | `worked_example_tutoring` | Weniger Vorlauf, mehr direkte Struktur |
+| `guided_concept_explanation` | `confusion_signal` oder `stagnation_signal` | `meaningful` | `worked_example_tutoring` | Mehr Beispielbindung und engere Fuehrung |
+| `formal_compact_explanation` | `overload_signal` | `meaningful` | `guided_concept_explanation` | Weniger Verdichtung, mehr Zwischenschritte |
+| `worked_example_tutoring` | `breakthrough_signal` | `strong` | `guided_concept_explanation` | Nur bei stabiler Sicherheit oeffnen |
+| `guided_concept_explanation` | `breakthrough_signal` plus `confidence_recovery_signal` | `strong` | `origin_then_example` | Etwas mehr Eigenraum, aber nicht zu schnell |
+
+### Support-sensitive modifiers
+
+#### ADHD-aware support
+
+- `stagnation_signal` allein reicht nicht schnell fuer einen Wechsel
+- `overload_signal` plus Kontextverlust wiegt staerker
+
+#### Dyscalculia-aware support
+
+- langsames Arbeiten im konkreten Modus zaehlt nicht automatisch als
+  `stagnation_signal`
+- Wechsel nach oben braucht eher `strong breakthrough`, nicht nur Tempo
+
+#### Dyslexia-aware support
+
+- Textfehler muessen zuerst als Sprach- oder Leselast geprueft werden
+- `confusion_signal` ist schwaecher, wenn die Mathematik an sich plausibel ist
+
+#### Autism-spectrum-aware support
+
+- Strukturbruch verstaerkt `overload_signal`
+- Wechsel duerfen seltener und erklaerter stattfinden
+
+#### Language-sensitive support
+
+- Vokabularprobleme sollen eher den Block vereinfachen als sofort den Modus
+  wechseln
+
+#### Scarcity-aware support
+
+- fehlende Erfolgslinie ueber zwei Bloecke verstaerkt `stagnation_signal`
+- sichtbare kleine Erfolge verstaerken `confidence_recovery_signal`
+
 ## Adaptation Rules
 
 ### Form
@@ -225,6 +350,19 @@ Nicht erlaubt:
 - `formal_compact_explanation -> origin_story_explanation`
 - mehrere Spruenge in einem einzigen Adaptionsschritt
 
+## Rueckkehrregeln
+
+Ein Rueckwechsel in einen frueheren Modus ist in H.1 nur erlaubt, wenn:
+
+1. der aktuelle Modus mindestens `min_blocks_in_mode` gehalten wurde
+2. kein Cooldown mehr aktiv ist
+3. ein erneutes `meaningful` oder `strong` Signal den Rueckwechsel stuetzt
+
+Das verhindert:
+
+- `A -> B -> A` in kurzer Folge
+- scheinbar nervoeses Tutorverhalten
+
 ## Hysteresis Model
 
 ### Zweck
@@ -252,6 +390,29 @@ class ModeAdaptationState:
 - `min_blocks_in_mode = 2`
 - `max_mode_changes_per_session = 3`
 - `cooldown_blocks_after_change = 1`
+
+### Pseudocode
+
+```python
+def consider_mode_shift(
+    state: ModeAdaptationState,
+    current_mode: str,
+    suggested_mode: str,
+) -> tuple[bool, str]:
+    if suggested_mode == current_mode:
+        return False, current_mode
+
+    if state.cooldown_blocks_remaining > 0:
+        return False, current_mode
+
+    if state.blocks_in_current_mode < 2:
+        return False, current_mode
+
+    if state.mode_changes_in_session >= 3:
+        return False, current_mode
+
+    return True, suggested_mode
+```
 
 ### Wirkung
 
@@ -302,6 +463,46 @@ Wenn das System bei Erfolg etwas oeffnet:
 - interne Modusnamen gegenueber Lernenden
 - Formulierungen, die Defizite oder Scheitern zuschreiben
 
+## Transition Template Structure
+
+Die erste Version soll mit festen Template-Bausteinen arbeiten.
+
+### Template-Form
+
+1. `stabilize`
+   - kurze Normalisierung oder Beruhigung
+2. `reason`
+   - lernendensicherer Grund ohne Defizitzuschreibung
+3. `next_step`
+   - was jetzt konkret anders geschieht
+
+### Beispiele
+
+#### Simplifying
+
+- `stabilize`: "Das ist eine Stelle, an der viele kurz haengen bleiben."
+- `reason`: "Ich nehme etwas Last raus."
+- `next_step`: "Wir gehen jetzt in kleineren Schritten weiter."
+
+#### Reframing
+
+- `stabilize`: "Wir bleiben bei derselben Idee."
+- `reason`: "Ich erklaere sie dir nur auf einem anderen Weg."
+- `next_step`: "Danach pruefen wir sie wieder an einem Beispiel."
+
+#### Stretching
+
+- `stabilize`: "Das klappt schon gut."
+- `reason`: "Du hast das Muster sicherer im Griff."
+- `next_step`: "Ich gebe dir jetzt etwas mehr Eigenraum."
+
+### Ownership
+
+Die erste Version soll **nicht** frei generiert werden, sondern aus
+regelgebundenen Templates kommen.
+
+Damit bleibt die lokale Architektur gewahrt.
+
 ## Rueckwaertskompatibilitaet mit Phase G
 
 Phase `G` bleibt die gueltige Startentscheidung.
@@ -315,6 +516,15 @@ Stattdessen gilt:
 
 Damit ist `H` eine **zustandsbasierte Fortsetzung** von `G`, nicht deren
 Widerspruch.
+
+### Neue Nutzeranfrage waehrend einer Sitzung
+
+Wenn eine neue, fachlich andere Anfrage startet, gilt:
+
+- Phase `G` laeuft erneut
+- ein neuer Startmodus wird gewaehlt
+- Phase `H` beginnt fuer diese neue Sitzung wieder mit leerem
+  Adaptionszustand
 
 ## Teststrategie fuer H.1
 
@@ -348,3 +558,10 @@ Phase `H.1` ist erfolgreich, wenn:
 - Uebergangssprache sauber generiert werden kann
 - bestehende Phase-G-Tests nicht regressieren
 
+## Offene Restpunkte Nach Dieser Spezifikation
+
+Trotz dieser Schaerfung bleiben fuer spaetere Feinarbeit offen:
+
+- exakte Kalibrierung der Schwellenwerte im realen Einsatz
+- support-spezifische Feinabstimmung mit echten Lernenden
+- spaetere history-aware Adaptionspfade ueber mehrere Sitzungen

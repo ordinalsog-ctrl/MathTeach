@@ -64,6 +64,13 @@ Die operative Ausarbeitung dafuer liegt jetzt in:
 
 - [live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
 
+Die Spezifikation beantwortet jetzt auch explizit:
+
+- was ein `Block` ist
+- wann der Wechsel-Check laeuft
+- welche Schwellen als `weak`, `meaningful`, `strong` gelten
+- wie `runtime_mode_adapter` gegen Phase `G` abgegrenzt ist
+
 ### Positive Signals
 
 - `rapid_correct_answers`
@@ -175,6 +182,10 @@ Die erste Testschicht fuer Phase `H` soll zunaechst simuliert bleiben.
 
 - spaeter `40+` Tests im ersten H-Block
 - kein Rueckschritt der bisherigen Planner- und Mode-Selection-Tests
+
+Die operative Testaufschluesselung liegt jetzt ebenfalls in:
+
+- [live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
 
 ## H.8 Reihenfolge
 

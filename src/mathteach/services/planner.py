@@ -228,6 +228,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append(
             "Adapt pacing, notation, and scaffolds to the active support profile."
         )
+    if response_settings.conflict_pairs:
+        teaching_pattern.append(
+            "Use explicit conflict-resolution rules when multiple support profiles pull in different directions."
+        )
     if "adhd_aware_support" in response_settings.active_supports:
         teaching_pattern.append("Use short blocks, explicit transitions, and fast feedback.")
     if "dyscalculia_aware_support" in response_settings.active_supports:

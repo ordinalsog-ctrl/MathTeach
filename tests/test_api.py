@@ -262,3 +262,38 @@ def test_tutoring_plan_declared_scarcity_support() -> None:
     assert payload["response_settings"]["language_support"] == "plain_goal_and_relevance_framing"
     assert "clear_success_criteria" in payload["response_settings"]["external_scaffolds"]
     assert any("visible progress" in item for item in payload["teaching_pattern"])
+
+
+def test_tutoring_plan_mixed_profile_conflict_resolution() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["response_settings"]["session_duration"] == (
+        "15_to_18_minute_concrete_focus_blocks"
+    )
+    assert payload["response_settings"]["break_pattern"] == (
+        "ultradian_micro_breaks_within_concrete_work"
+    )
+    assert "adhd_aware_support__dyscalculia_aware_support" in payload["response_settings"][
+        "conflict_pairs"
+    ]
+    assert any("conflict-resolution rules" in item for item in payload["teaching_pattern"])

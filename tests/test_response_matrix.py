@@ -34,3 +34,5 @@ def test_tutor_response_settings_model_roundtrip() -> None:
 
     assert dumped["active_supports"] == ["language_sensitive_support"]
     assert dumped["source_anchors"] == ["organizing-instruction-and-study"]
+    assert dumped["conflict_pairs"] == []
+    assert dumped["conflict_resolution_notes"] == []

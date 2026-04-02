@@ -103,6 +103,29 @@ Beobachtungsfelder:
 - Abbruchpunkte
 - wahrgenommene Sicherheit
 
+## Phase E: Multi-Profile Conflict Resolution
+
+Zeitrahmen:
+
+- `next 2 to 3 weeks`
+
+Ziel:
+
+- von stabilen Einzelprofilen zu expliziter Konfliktaufloesung fuer Mischprofile
+
+Deliverables:
+
+- [profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
+- [mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
+- `src/mathteach/services/conflict_resolver.py`
+- `tests/test_profile_conflicts.py`
+
+Erste Prioritaet:
+
+- Konfliktpaare vor Triads
+- explizite Resolver-Regeln vor Gewichtungsmodellen
+- transparente API-Sichtbarkeit ueber `conflict_pairs` und `conflict_resolution_notes`
+
 ## Technische Zwischenziele
 
 ### 1. Support Signal Profile
@@ -146,8 +169,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 4. Autism-Matrix weiter verfeinern
 5. Language-Sensitive-Matrix weiter verfeinern
 6. Scarcity-Matrix weiter verfeinern
-7. `response_matrix.py` weiter stabilisieren
-8. `response_engine` von sechs Profilen auf gemischte Support-Familien ausbauen
+7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
+8. Triad-Szenarien und Prioritaetsleitern definieren
+9. `response_matrix.py` weiter stabilisieren
 
 ## Nicht-Ziele Des Naechsten Sprints
 

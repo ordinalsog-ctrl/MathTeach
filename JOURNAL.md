@@ -2,6 +2,39 @@
 
 Stand: 2026-04-02
 
+## Mixed-Profile-Architektur 2026-04-02 E
+
+Die Reviews zur naechsten Engstelle sind jetzt in eine erste echte
+`mixed profile`-Schicht uebersetzt.
+
+Wichtigste Konsequenzen:
+
+- Einzelprofile bleiben die Basis, aber nicht mehr der Endzustand
+- `conflict_resolver` ist jetzt als eigene Schicht eingefuehrt
+- Konfliktpaare werden explizit erkannt statt nur implizit von Lade-Reihenfolge getragen
+- `response settings` tragen jetzt transparente `conflict_pairs` und `conflict_resolution_notes`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
+- [docs/mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [tests/test_profile_conflicts.py](/Users/jonasweiss/MathTeach/tests/test_profile_conflicts.py)
+
+Zuerst operationalisierte Konfliktpaare:
+
+- `ADHD + Dyscalculia`
+- `ADHD + Autism`
+- `ADHD + Scarcity`
+- `Dyscalculia + Language-Sensitive`
+- `Dyscalculia + Scarcity`
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `28 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Runtime-Ausbau 2026-04-02 D
 
 Die Scarcity-Linie ist jetzt als sechste operative Profilfamilie eingebunden.
@@ -404,4 +437,6 @@ Direkt vorbereitete naechste Arbeitsartefakte:
 2. [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
 3. [support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md)
 4. [support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md)
-5. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+5. [profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
+6. [mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
+7. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)

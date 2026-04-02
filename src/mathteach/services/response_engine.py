@@ -1,5 +1,9 @@
 from mathteach.models import LearnerProfile
 from mathteach.response_matrix import SupportSignalProfile, TutorResponseSettings
+from mathteach.services.conflict_resolver import (
+    ordered_active_supports,
+    resolve_mixed_profile_settings,
+)
 
 
 def _merge_unique(existing: list[str], additions: list[str]) -> list[str]:
@@ -358,18 +362,21 @@ def derive_response_settings(
 ) -> TutorResponseSettings:
     settings = _default_response_settings(profile)
 
-    if signal_profile.adhd_aware_support in {"declared", "highly_relevant"}:
-        settings = _apply_adhd_support(settings)
-    if signal_profile.dyscalculia_aware_support in {"declared", "highly_relevant"}:
-        settings = _apply_dyscalculia_support(settings)
-    if signal_profile.dyslexia_aware_support in {"declared", "highly_relevant"}:
-        settings = _apply_dyslexia_support(settings)
-    if signal_profile.autism_spectrum_aware_support in {"declared", "highly_relevant"}:
-        settings = _apply_autism_support(settings)
-    if signal_profile.language_sensitive_support in {"possible", "declared", "highly_relevant"}:
-        settings = _apply_language_sensitive_support(settings)
-    if signal_profile.scarcity_aware_support in {"declared", "highly_relevant"}:
-        settings = _apply_scarcity_support(settings)
+    support_appliers = {
+        "adhd_aware_support": _apply_adhd_support,
+        "dyscalculia_aware_support": _apply_dyscalculia_support,
+        "dyslexia_aware_support": _apply_dyslexia_support,
+        "autism_spectrum_aware_support": _apply_autism_support,
+        "language_sensitive_support": _apply_language_sensitive_support,
+        "scarcity_aware_support": _apply_scarcity_support,
+    }
+    active_supports = ordered_active_supports(signal_profile.active_supports)
+
+    for support_need in active_supports:
+        applier = support_appliers[support_need]
+        settings = applier(settings)
+
+    settings = resolve_mixed_profile_settings(settings, active_supports)
 
     return settings
 

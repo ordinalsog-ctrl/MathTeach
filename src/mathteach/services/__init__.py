@@ -1,1 +1,1 @@
-__all__ = ["corpus", "foundation", "planner", "response_engine"]
+__all__ = ["conflict_resolver", "corpus", "foundation", "planner", "response_engine"]

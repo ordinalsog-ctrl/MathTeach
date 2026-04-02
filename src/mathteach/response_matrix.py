@@ -48,3 +48,5 @@ class TutorResponseSettings(BaseModel):
     active_supports: list[SupportNeed]
     rationale_summary: list[str]
     source_anchors: list[str]
+    conflict_pairs: list[str] = Field(default_factory=list)
+    conflict_resolution_notes: list[str] = Field(default_factory=list)

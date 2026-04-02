@@ -83,6 +83,8 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md): Vierte operative Matrix fuer autism-spectrum-aware support
 - [docs/support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md): Fuenfte operative Matrix fuer language-sensitive support
 - [docs/support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md): Sechste operative Matrix fuer scarcity-aware support
+- [docs/profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md): Erste Konfliktaufloesungsarchitektur fuer gemischte Supportprofile
+- [docs/mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md): Konkrete Mischprofil-Szenarien als Test- und Review-Basis
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -180,7 +182,9 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Die epochenuebergreifende Vernetzung hat jetzt ein erstes Manifest mit Proof Lines, Equation Lines, Transmission Paths, Domain Lines und Application Bridges.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
-Der naechste grosse Schritt ist jetzt die `Support Response Matrix` als operative Bruecke zwischen Learner-Profil, Teacher Mind und Tutor-Runtime.
+Der naechste grosse Schritt ist jetzt die `Mixed-Profile-Architektur`:
+also Triads, Prioritaetsleitern und spaeter support-sensitive Moduswahl
+im Planner.
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -198,3 +202,14 @@ einspeist. Dazu kommt jetzt auch ein eigenes Modellmodul `response_matrix.py`
 sowie operative Codepfade fuer `dyslexia-aware support`,
 `autism-spectrum-aware support`, `language-sensitive support`
 und `scarcity-aware support`.
+
+Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
+die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare
+mit nachvollziehbaren Regeln aufloest.
+
+Die naechste Ausbauphase ist damit nicht mehr das einzelne Supportprofil,
+sondern:
+
+- `triads and broader mixed-profile prioritization`
+- `planner-level mode selection under conflict`
+- spaetere Pilotierung mit echten Mischprofil-Szenarien

@@ -2,6 +2,35 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Block-Loop 2026-04-02
+
+Die vertiefte Planner-Integration fuer Phase `H.1` ist jetzt als erster
+echter Block-Loop im Repo angekommen.
+
+Wichtigste Konsequenzen:
+
+- `SessionRequest` kann jetzt optionale `runtime_observations` tragen
+- der Planner simuliert damit jetzt mehrere Bloecke statt nur einen
+  Startzustand
+- `planned_blocks` und `mode_adaptation_trace` sind jetzt Teil des
+  `TeachingPlan`
+- `ModeAdaptationState` wird jetzt zwischen beobachteten Bloecken
+  fortgeschrieben
+- ein Moduswechsel landet jetzt sichtbar im naechsten Preview-Block
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `50 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-H1-Code-Review 2026-04-02
 
 Die neue Review-Lage bestaetigt, dass Phase `H.1` nicht mehr nur

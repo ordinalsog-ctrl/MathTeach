@@ -103,6 +103,8 @@ def test_tutoring_plan_endpoint() -> None:
     assert payload["audience_mode"] == "teen"
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
     assert payload["mode_adaptation_state"]["blocks_in_current_mode"] == 0
+    assert payload["planned_blocks"][0]["mode"] == "guided_concept_explanation"
+    assert payload["mode_adaptation_trace"] == []
     assert payload["support_signal_profile"]["active_supports"] == []
     assert payload["response_settings"]["session_duration"] == "25_to_35_minute_guided_block"
     assert payload["retrieval_plan"]["include_history"] is True
@@ -132,10 +134,46 @@ def test_tutoring_plan_origin_story_mode() -> None:
     assert payload["mode_selection"]["requested_mode"] == "origin_story_explanation"
     assert payload["mode_selection"]["selected_mode"] == "origin_story_explanation"
     assert payload["mode_adaptation_state"]["current_mode"] == "origin_story_explanation"
+    assert payload["planned_blocks"][0]["mode"] == "origin_story_explanation"
     assert payload["response_settings"]["error_response_style"] == "gentle_normalize_then_strategy"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "origin_first"
     assert "application_bridge" in payload["retrieval_plan"]["network_focus"]
+
+
+def test_tutoring_plan_simulates_blockwise_mode_shift() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "runtime_observations": [
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["lesson_mode"] == "origin_then_example"
+    assert len(payload["mode_adaptation_trace"]) == 3
+    assert payload["mode_adaptation_trace"][-1]["changed"] is True
+    assert payload["mode_adaptation_trace"][-1]["mode_after"] == "worked_example_tutoring"
+    assert payload["mode_adaptation_trace"][-1]["transition_message"] is not None
+    assert payload["planned_blocks"][-1]["mode"] == "worked_example_tutoring"
+    assert payload["planned_blocks"][-1]["transition_message"] is not None
+    assert payload["mode_adaptation_state"]["current_mode"] == "worked_example_tutoring"
+    assert payload["mode_adaptation_state"]["mode_changes_in_session"] == 1
 
 
 def test_tutoring_plan_declared_adhd_support() -> None:

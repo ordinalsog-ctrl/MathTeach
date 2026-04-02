@@ -2,15 +2,20 @@ from mathteach.config import Settings
 from mathteach.models import (
     LearnerProfile,
     ModelAssignment,
+    ModeAdaptationTraceEntry,
     ModeAdaptationState,
     ModeSelection,
+    PlannedTeachingBlock,
+    RawBlockObservation,
     RetrievalPlan,
+    RuntimeObservationInput,
     SessionRequest,
     StackResponse,
     TeachingPlan,
 )
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.response_engine import build_support_response
+from mathteach.services.runtime_mode_adapter import RuntimeModeAdapter
 
 
 AUDIENCE_MODES = {
@@ -162,6 +167,160 @@ def _mode_network_focus(lesson_mode: str) -> list[str]:
     ]
 
 
+def _block_goal(lesson_mode: str, objective: str) -> str:
+    if lesson_mode == "worked_example_tutoring":
+        return f"Arbeite den naechsten loesbaren Schritt explizit an: {objective}"
+    if lesson_mode == "origin_then_example":
+        return f"Verbinde Sinnaufbau und naechstes Beispiel zu: {objective}"
+    if lesson_mode == "origin_story_explanation":
+        return f"Baue die Grundidee und Notwendigkeit fuer dieses Thema auf: {objective}"
+    if lesson_mode == "formal_compact_explanation":
+        return f"Verdichte die formale Kernaussage zu: {objective}"
+    return f"Fuehre die Kernidee klar und kleinschrittig zu diesem Ziel: {objective}"
+
+
+def _block_focus(
+    lesson_mode: str,
+    response_settings,
+) -> list[str]:
+    if lesson_mode == "worked_example_tutoring":
+        focus = [
+            "expliziter naechster Rechenschritt",
+            "lokaler Zwischenschritt-Check",
+            "sichtbare Fehlerkorrektur",
+        ]
+    elif lesson_mode == "origin_then_example":
+        focus = [
+            "kurzer Sinnanker",
+            "Bruecke vom Begriff ins Beispiel",
+            "Transfer in dieselbe Aufgabenfamilie",
+        ]
+    elif lesson_mode == "origin_story_explanation":
+        focus = [
+            "Problemursprung",
+            "warum die Idee noetig wurde",
+            "Anschluss an ein erstes Beispiel",
+        ]
+    elif lesson_mode == "formal_compact_explanation":
+        focus = [
+            "klare Notation",
+            "kurze Ableitung",
+            "formaler Kern ohne Umweg",
+        ]
+    else:
+        focus = [
+            "Kernidee vor Symbolik",
+            "gefuhrte Minierklaerung",
+            "kleiner Selbstcheck",
+        ]
+
+    if "dyscalculia_aware_support" in response_settings.active_supports:
+        focus.append("Mengenbedeutung sichtbar halten")
+    if "dyslexia_aware_support" in response_settings.active_supports:
+        focus.append("Leselast vor Mathefehler pruefen")
+    if "scarcity_aware_support" in response_settings.active_supports:
+        focus.append("sichtbaren kleinen Erfolg markieren")
+
+    return focus
+
+
+def _build_planned_block(
+    block_index: int,
+    lesson_mode: str,
+    objective: str,
+    response_settings,
+    transition_message: str | None,
+    observed_evidence: list[str],
+) -> PlannedTeachingBlock:
+    return PlannedTeachingBlock(
+        block_index=block_index,
+        mode=lesson_mode,
+        goal=_block_goal(lesson_mode, objective),
+        focus=_block_focus(lesson_mode, response_settings),
+        transition_message=transition_message,
+        observed_evidence=observed_evidence,
+    )
+
+
+def _simulate_runtime_blocks(
+    objective: str,
+    initial_mode: str,
+    runtime_observations: list[RuntimeObservationInput],
+    support_signal_profile,
+    response_settings,
+) -> tuple[list[PlannedTeachingBlock], list[ModeAdaptationTraceEntry], ModeAdaptationState]:
+    adapter = RuntimeModeAdapter()
+    current_mode = initial_mode
+    state = ModeAdaptationState(current_mode=current_mode)
+    planned_blocks: list[PlannedTeachingBlock] = []
+    adaptation_trace: list[ModeAdaptationTraceEntry] = []
+    pending_transition_message: str | None = None
+
+    if not runtime_observations:
+        planned_blocks.append(
+            _build_planned_block(
+                block_index=1,
+                lesson_mode=current_mode,
+                objective=objective,
+                response_settings=response_settings,
+                transition_message=None,
+                observed_evidence=[],
+            )
+        )
+        return planned_blocks, adaptation_trace, state
+
+    for block_index, observation_input in enumerate(runtime_observations, start=1):
+        planned_blocks.append(
+            _build_planned_block(
+                block_index=block_index,
+                lesson_mode=current_mode,
+                objective=objective,
+                response_settings=response_settings,
+                transition_message=pending_transition_message,
+                observed_evidence=observation_input.evidence,
+            )
+        )
+
+        decision = adapter.check_and_adapt_mode(
+            state=state,
+            current_mode=current_mode,
+            block_observation=RawBlockObservation(
+                block_index=block_index,
+                current_mode=current_mode,
+                evidence=observation_input.evidence,
+            ),
+            profile=support_signal_profile,
+        )
+        adaptation_trace.append(
+            ModeAdaptationTraceEntry(
+                block_index=block_index,
+                mode_before=current_mode,
+                mode_after=decision.selected_mode,
+                changed=decision.changed,
+                trigger_signals=decision.trigger_signals,
+                transition_message=decision.transition_message,
+                notes=decision.notes,
+            )
+        )
+
+        state = adapter.advance_state(state, decision)
+        current_mode = state.current_mode
+        pending_transition_message = decision.transition_message if decision.changed else None
+
+    planned_blocks.append(
+        _build_planned_block(
+            block_index=len(runtime_observations) + 1,
+            lesson_mode=current_mode,
+            objective=objective,
+            response_settings=response_settings,
+            transition_message=pending_transition_message,
+            observed_evidence=[],
+        )
+    )
+
+    return planned_blocks, adaptation_trace, state
+
+
 def build_stack(settings: Settings) -> StackResponse:
     return StackResponse(
         checked_on="2026-04-01",
@@ -305,6 +464,14 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         "Cite or reference source families for nontrivial claims.",
     ]
 
+    planned_blocks, adaptation_trace, mode_adaptation_state = _simulate_runtime_blocks(
+        objective=request.objective,
+        initial_mode=lesson_mode,
+        runtime_observations=request.runtime_observations,
+        support_signal_profile=support_signal_profile,
+        response_settings=response_settings,
+    )
+
     return TeachingPlan(
         lesson_mode=lesson_mode,
         audience_mode=profile.age_group,
@@ -312,7 +479,9 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern=teaching_pattern,
         response_arc=response_arc,
         mode_selection=mode_selection,
-        mode_adaptation_state=ModeAdaptationState(current_mode=lesson_mode),
+        mode_adaptation_state=mode_adaptation_state,
+        planned_blocks=planned_blocks,
+        mode_adaptation_trace=adaptation_trace,
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
         retrieval_plan=retrieval_plan,

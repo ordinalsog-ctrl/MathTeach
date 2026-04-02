@@ -238,6 +238,7 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - `runtime_mode_adapter` fuer blockweises `stay` oder `shift`
 - erste Hysterese- und Transition-Logik
 - initialer `mode_adaptation_state` direkt im `TeachingPlan`
+- erster Planner-Block-Loop mit `planned_blocks` und `mode_adaptation_trace`
 
 Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare
@@ -250,6 +251,7 @@ explizite Reihenfolge sichtbar machen.
 Die naechste Ausbauphase ist damit:
 
 - `planner-level live mode adaptation` als echter Block-Loop
+- laengere Blocksequenzen und Mehrfachwechsel absichern
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

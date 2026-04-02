@@ -133,15 +133,16 @@ Aktueller Stand:
 - erste Triads und `priority_ladders` sind operational
 - `mode_selector` ist jetzt als eigene Schicht fuer support-sensitive Moduswahl eingefuehrt
 - `runtime_mode_adapter` und erste H.1-Testfamilien sind operational
-- naechster Ausbau ist die vertiefte `planner-level live mode adaptation`
-  als echter Block-Loop
+- ein erster echter `planner-level live mode adaptation`-Block-Loop ist jetzt
+  operational
+- naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen
 
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst den blockweisen Planner-Loop bauen
-- dann `ModeAdaptationState` zwischen Bloecken fortschreiben
-- dann erste End-to-End-Blocksimulationen testen
+- zuerst laengere Blockfolgen und Mehrfachwechsel absichern
+- dann `ModeAdaptationState` robuster ueber Sequenzen und Randfaelle pruefen
+- dann End-to-End-Blocksimulationen verbreitern
 - danach Signalabdeckung und Randfaelle verbreitern
 - erst spaeter `history-aware mode adaptation`
 
@@ -207,9 +208,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- `planner.py` um echten Block-Loop erweitern
-- `ModeAdaptationState` zwischen Bloecken aktualisieren
-- erste Blocksimulationstests aufbauen
+- laengere Planner-Blocksequenzen testen
+- Mehrfachwechsel und Cooldown-Randfaelle absichern
+- spaeter Session-Persistenz fuer `ModeAdaptationState` vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints
 

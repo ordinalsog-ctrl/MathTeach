@@ -41,9 +41,14 @@ class LearnerProfile(BaseModel):
     declared_support_needs: list[SupportNeed] = Field(default_factory=list)
 
 
+class RuntimeObservationInput(BaseModel):
+    evidence: list[str] = Field(default_factory=list)
+
+
 class SessionRequest(BaseModel):
     objective: str = Field(min_length=5, max_length=500)
     learner_profile: LearnerProfile
+    runtime_observations: list[RuntimeObservationInput] = Field(default_factory=list)
 
 
 class RetrievalPlan(BaseModel):
@@ -101,6 +106,25 @@ class ModeAdaptationDecision(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
+class PlannedTeachingBlock(BaseModel):
+    block_index: int = Field(ge=1)
+    mode: str
+    goal: str
+    focus: list[str] = Field(default_factory=list)
+    transition_message: str | None = None
+    observed_evidence: list[str] = Field(default_factory=list)
+
+
+class ModeAdaptationTraceEntry(BaseModel):
+    block_index: int = Field(ge=1)
+    mode_before: str
+    mode_after: str
+    changed: bool
+    trigger_signals: list[str] = Field(default_factory=list)
+    transition_message: str | None = None
+    notes: list[str] = Field(default_factory=list)
+
+
 class TeachingPlan(BaseModel):
     lesson_mode: str
     audience_mode: str
@@ -109,6 +133,8 @@ class TeachingPlan(BaseModel):
     response_arc: list[str]
     mode_selection: ModeSelection
     mode_adaptation_state: ModeAdaptationState
+    planned_blocks: list[PlannedTeachingBlock] = Field(default_factory=list)
+    mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
     support_signal_profile: SupportSignalProfile
     response_settings: TutorResponseSettings
     retrieval_plan: RetrievalPlan

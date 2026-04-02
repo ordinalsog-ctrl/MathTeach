@@ -261,7 +261,7 @@ class SignalInterpreter:
     def _interpret_stagnation(self, evidence: set[str]) -> ObservationStrength | None:
         if "no_progress_three_blocks" in evidence:
             return "strong"
-        if "no_progress_two_blocks" in evidence:
+        if "no_progress_two_blocks" in evidence or "no_success_visible_two_blocks" in evidence:
             return "meaningful"
         if "no_progress_block" in evidence:
             return "weak"
@@ -297,6 +297,7 @@ class SignalInterpreter:
             "less_withdrawal_language",
             "self_correction",
             "active_continue",
+            "visible_small_success",
         }:
             return "weak"
         return None
@@ -559,6 +560,7 @@ class RuntimeModeAdapter:
         self,
         state: ModeAdaptationState,
         decision: ModeAdaptationDecision,
+        transition_was_consumed: bool = False,
     ) -> ModeAdaptationState:
         if decision.changed:
             return ModeAdaptationState(
@@ -576,7 +578,9 @@ class RuntimeModeAdapter:
             mode_changes_in_session=state.mode_changes_in_session,
             last_change_reason=state.last_change_reason,
             cooldown_blocks_remaining=max(state.cooldown_blocks_remaining - 1, 0),
-            pending_transition_message=state.pending_transition_message,
+            pending_transition_message=(
+                None if transition_was_consumed else state.pending_transition_message
+            ),
         )
 
     def build_transition_message(self, family: TransitionFamily | None) -> str | None:

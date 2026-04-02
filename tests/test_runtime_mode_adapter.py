@@ -1,4 +1,5 @@
 from mathteach.models import (
+    ModeAdaptationDecision,
     LearnerProfile,
     ModeAdaptationState,
     RawBlockObservation,
@@ -182,3 +183,28 @@ def test_runtime_mode_adapter_blocks_shift_when_change_budget_is_exhausted() -> 
     assert decision.changed is False
     assert decision.selected_mode == "origin_then_example"
     assert any("change budget" in note for note in decision.notes)
+
+
+def test_runtime_mode_adapter_clears_pending_transition_after_consumption() -> None:
+    adapter = RuntimeModeAdapter()
+    state = ModeAdaptationState(
+        current_mode="worked_example_tutoring",
+        blocks_in_current_mode=1,
+        pending_transition_message=(
+            "Das ist eine Stelle, an der viele kurz haengen bleiben. "
+            "Ich nehme etwas Last raus. "
+            "Wir gehen jetzt in kleineren Schritten weiter."
+        ),
+    )
+    decision = ModeAdaptationDecision(
+        selected_mode="worked_example_tutoring",
+        changed=False,
+    )
+
+    next_state = adapter.advance_state(
+        state,
+        decision,
+        transition_was_consumed=True,
+    )
+
+    assert next_state.pending_transition_message is None

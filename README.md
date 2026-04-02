@@ -241,6 +241,7 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - erster Planner-Block-Loop mit `planned_blocks` und `mode_adaptation_trace`
 - erste Session-Fortsetzung ueber wiederverwendeten `mode_adaptation_state`
 - Persistenz offener `transition_message` ueber Resume-Pfade
+- Konsumierung angezeigter `transition_message` ohne doppelte Wiederholung
 
 Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare
@@ -256,6 +257,7 @@ Die naechste Ausbauphase ist damit:
 - laengere Blocksequenzen und Mehrfachwechsel absichern
 - Persistenz und Resume robuster machen
 - Signalabdeckung fuer weitere Blockmuster verbreitern
+- spaeter echte Storage- und History-Schicht vorbereiten
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

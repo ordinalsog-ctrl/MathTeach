@@ -243,6 +243,7 @@ def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     payload = response.json()
     assert payload["planned_blocks"][0]["transition_message"] is not None
     assert "kleineren Schritten" in payload["planned_blocks"][0]["transition_message"]
+    assert payload["mode_adaptation_state"]["pending_transition_message"] is None
 
 
 def test_tutoring_plan_declared_adhd_support() -> None:

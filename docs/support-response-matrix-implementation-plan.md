@@ -137,6 +137,7 @@ Aktueller Stand:
   operational
 - Session-Resume ueber bestehenden `mode_adaptation_state` ist jetzt moeglich
 - `pending_transition_message` wird jetzt ebenfalls ueber Resume getragen
+- konsumierte `transition_message` wird jetzt nach Anzeige sauber geleert
 - naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen und
   robustere Persistenz
 
@@ -216,6 +217,7 @@ Naechster direkter Coding-Start:
 - Mehrfachwechsel und Cooldown-Randfaelle absichern
 - Persistenzschnittstelle fuer `ModeAdaptationState` spaeter nach aussen ziehen
 - Signalabdeckung fuer weitere reale Blockmuster verbreitern
+- spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints
 

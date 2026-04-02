@@ -263,30 +263,33 @@ def _simulate_runtime_blocks(
     adaptation_trace: list[ModeAdaptationTraceEntry] = []
 
     if not runtime_observations:
+        displayed_transition_message = pending_transition_message
         planned_blocks.append(
             _build_planned_block(
                 block_index=1,
                 lesson_mode=current_mode,
                 objective=objective,
                 response_settings=response_settings,
-                transition_message=pending_transition_message,
+                transition_message=displayed_transition_message,
                 observed_evidence=[],
             )
         )
+        if displayed_transition_message is not None:
+            state = state.model_copy(update={"pending_transition_message": None})
         return planned_blocks, adaptation_trace, state
 
     for block_index, observation_input in enumerate(runtime_observations, start=1):
+        displayed_transition_message = pending_transition_message
         planned_blocks.append(
             _build_planned_block(
                 block_index=block_index,
                 lesson_mode=current_mode,
                 objective=objective,
                 response_settings=response_settings,
-                transition_message=pending_transition_message,
+                transition_message=displayed_transition_message,
                 observed_evidence=observation_input.evidence,
             )
         )
-        pending_transition_message = None
 
         decision = adapter.check_and_adapt_mode(
             state=state,
@@ -310,7 +313,11 @@ def _simulate_runtime_blocks(
             )
         )
 
-        state = adapter.advance_state(state, decision)
+        state = adapter.advance_state(
+            state,
+            decision,
+            transition_was_consumed=displayed_transition_message is not None,
+        )
         current_mode = state.current_mode
         pending_transition_message = state.pending_transition_message
 

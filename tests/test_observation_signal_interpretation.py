@@ -83,3 +83,29 @@ def test_signal_interpreter_raises_confidence_recovery_for_visible_small_success
 
     assert confidence.strength == "strong"
     assert any("Scarcity-aware weighting raised confidence recovery" in note for note in result.notes)
+
+
+def test_signal_interpreter_detects_stagnation_from_missing_success_line() -> None:
+    learner = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="low",
+        preferred_pace="balanced",
+        language="de",
+        wants_visuals=True,
+        wants_history=False,
+        declared_support_needs=["scarcity_aware_support"],
+    )
+    signal_profile, _ = build_support_response(learner)
+    observation = RawBlockObservation(
+        block_index=4,
+        current_mode="guided_concept_explanation",
+        evidence=["no_success_visible_two_blocks"],
+    )
+
+    result = SignalInterpreter().interpret(observation, signal_profile)
+    stagnation = next(
+        signal for signal in result.signals if signal.signal_type == "stagnation_signal"
+    )
+
+    assert stagnation.strength == "strong"

@@ -2,6 +2,40 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Budget-And-Transition-Consumption 2026-04-02
+
+Die H.1-Runtime-Schicht behandelt jetzt zwei wichtige Robustheitsfaelle
+sauberer:
+
+- angezeigte `transition_message` wird nach Anzeige konsumiert und nicht
+  unnoetig mehrfach weitergetragen
+- das Wechselbudget ueber laengere Sequenzen ist jetzt durch direkte Tests
+  abgesichert
+
+Wichtigste Konsequenzen:
+
+- `pending_transition_message` verschwindet nach dem angezeigten Block wieder
+  aus dem Zustand
+- `no_success_visible_two_blocks` und `visible_small_success` sind jetzt
+  staerker im Signalraum verankert
+- laengere Sequenzen mit drei erlaubten Wechseln und blockiertem vierten
+  Wechsel sind jetzt direkt getestet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_observation_signal_interpretation.py](/Users/jonasweiss/MathTeach/tests/test_observation_signal_interpretation.py)
+- [tests/test_runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/tests/test_runtime_mode_adapter.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `59 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Pending-Transition-Persistence 2026-04-02
 
 Die H.1-Runtime-Fortsetzung traegt jetzt nicht nur den Moduszustand,

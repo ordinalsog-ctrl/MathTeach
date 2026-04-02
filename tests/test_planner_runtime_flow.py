@@ -153,3 +153,46 @@ def test_planner_preserves_pending_transition_message_across_resume() -> None:
     assert plan.planned_blocks[0].mode == "worked_example_tutoring"
     assert plan.planned_blocks[0].transition_message is not None
     assert "kleineren Schritten" in plan.planned_blocks[0].transition_message
+    assert plan.mode_adaptation_state.pending_transition_message is None
+
+
+def test_planner_blocks_fourth_change_when_budget_is_exhausted() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            runtime_observations=[
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+                {"evidence": ["pattern_recognized", "transfer_success", "explains_next_step", "active_continue"]},
+                {"evidence": ["pattern_recognized", "transfer_success", "explains_next_step", "active_continue"]},
+                {"evidence": ["pattern_recognized", "transfer_success", "explains_next_step", "active_continue"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+            ],
+        )
+    )
+
+    changed_entries = [entry for entry in plan.mode_adaptation_trace if entry.changed]
+
+    assert len(changed_entries) == 3
+    assert changed_entries[0].mode_after == "worked_example_tutoring"
+    assert changed_entries[1].mode_after == "guided_concept_explanation"
+    assert changed_entries[2].mode_after == "origin_then_example"
+    assert plan.mode_adaptation_trace[-1].changed is False
+    assert any("change budget" in note for note in plan.mode_adaptation_trace[-1].notes)
+    assert plan.mode_adaptation_state.mode_changes_in_session == 3
+    assert plan.mode_adaptation_state.current_mode == "origin_then_example"

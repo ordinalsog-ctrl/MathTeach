@@ -25,9 +25,11 @@ flowchart TD
     D --> E["Support Response Matrix Engine"]
     E --> M["Mode Selector"]
     M --> F["Tutor Planner and Runtime Modes"]
-    F --> G["Session Composer"]
+    F --> R["Runtime Mode Adapter"]
+    R --> G["Session Composer"]
     G --> H["Local UI and Voice Layer"]
     F --> I["Local Learning Memory"]
+    R --> I
     I --> M
     I --> C
 ```
@@ -142,7 +144,25 @@ Spaeter erweitert um:
 - `prerequisite_repair`
 - `live mode adaptation`
 
-### 7. Session Composer
+### 7. Runtime Mode Adapter
+
+Diese Schicht ist fuer Phase `H` vorgesehen.
+
+Sie soll spaeter:
+
+- blockweise Beobachtungssignale lesen
+- den aktuellen Modus gegen neue Laufzeitsignale pruefen
+- Hysterese und Ruecksprungschutz anwenden
+- einen sanften Moduswechsel oder bewussten Verbleib begruenden
+
+Wichtig:
+
+- nicht auf jedem Rechenschritt
+- keine freie Neuwahl aus dem Nichts
+- sondern kontrollierte Fortsetzung des durch `mode_selector`
+  gewaehlten Startmodus
+
+### 8. Session Composer
 
 Der Composer erstellt die konkrete Sitzung:
 
@@ -161,7 +181,7 @@ Diese Schicht muss:
 
 arbeiten.
 
-### 8. Local UI and Voice Layer
+### 9. Local UI and Voice Layer
 
 Das System soll als:
 

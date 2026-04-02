@@ -143,6 +143,7 @@ Arbeitsregel fuer den naechsten Ausbau:
 Programmgrundlage:
 
 - [live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+- [live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
 
 ## Technische Zwischenziele
 
@@ -190,9 +191,11 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
 8. Triad-Szenarien und Prioritaetsleitern erweitern
 9. planner-level live mode adaptation vorbereiten
-10. `response_matrix.py` weiter stabilisieren
-11. Moduswahl spaeter mit Lernerhistorie koppeln
-12. Wechselregeln gegen hektisches `mode thrashing` definieren
+10. `observation signals` operativ spezifizieren
+11. `runtime_mode_adapter` als neue Komponente vorbereiten
+12. `response_matrix.py` weiter stabilisieren
+13. Moduswahl spaeter mit Lernerhistorie koppeln
+14. Wechselregeln gegen hektisches `mode thrashing` definieren
 
 ## Nicht-Ziele Des Naechsten Sprints
 

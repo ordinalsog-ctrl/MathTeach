@@ -89,6 +89,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/mode-selection-strategy.md](/Users/jonasweiss/MathTeach/docs/mode-selection-strategy.md): Erste Strategie fuer support-sensitive Moduswahl unter Konfliktlagen und Triads
 - [docs/mode-selection-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/mode-selection-review-triage-2026-04-02.md): Prioritaetskorrektur nach dem Review der neuen `mode_selector`-Schicht
 - [docs/live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md): Erstes Arbeitsprogramm fuer Phase `H` mit Beobachtungssignalen, Wechselregeln und Hysterese
+- [docs/live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md): Operative Spezifikation fuer Beobachtungssignale, `runtime_mode_adapter`, Hysterese und Transition-Messaging
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -197,6 +198,7 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - `requested_mode` versus `selected_mode` als tragende Trennung
 - `live mode adaptation` als naechste echte Architekturphase
 - `block-level adaptation` als sichere erste H-Version
+- `runtime_mode_adapter` als neue geplante H-Komponente
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -208,6 +210,7 @@ Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 - `scarcity-aware support`
 - der erste `Implementation Plan` fuer Code-Skeleton, Planner-Integration und spaetere Validierung
 - das erste `Live Mode Adaptation Program` fuer Phase `H`
+- die erste `Live Mode Adaptation Specification` fuer die operative H-Umsetzung
 
 Im Code existiert dazu jetzt bereits ein erster `response_engine`, der
 `support signal profile` und `response settings` in die Tutoring-Planung

@@ -2,6 +2,32 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Spezifikation 2026-04-02
+
+Der neue Review hat gezeigt, dass Phase `H` als Programm bereits klar war,
+aber operativ noch zu grob blieb.
+
+Wichtigste Konsequenzen:
+
+- die offenen Luecken von Phase `H` sind jetzt explizit spezifiziert
+- `observation signals`, `runtime_mode_adapter`, `hysteresis` und
+  `transition messaging` sind jetzt auf Implementierungsniveau beschrieben
+- `mode_selector` bleibt fuer den Startmodus zustaendig
+- eine neue Komponente `runtime_mode_adapter` ist jetzt als sauberer Ort fuer
+  blockweise Live-Anpassung festgelegt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
+- [docs/live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- reine Doku- und Planungsschaerfung
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-Programm 2026-04-02
 
 Der neue Review ist jetzt nicht nur als Triage, sondern als erstes

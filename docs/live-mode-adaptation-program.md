@@ -60,6 +60,10 @@ flowchart TD
 
 Die erste Live-Version braucht nur wenige, klare Signalklassen.
 
+Die operative Ausarbeitung dafuer liegt jetzt in:
+
+- [live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
+
 ### Positive Signals
 
 - `rapid_correct_answers`
@@ -177,9 +181,11 @@ Die erste Testschicht fuer Phase `H` soll zunaechst simuliert bleiben.
 1. `observation signal schema`
 2. `adaptation rule draft`
 3. `hysteresis guard`
-4. `planner integration`
-5. `tests`
-6. `journal handoff`
+4. `transition message templates`
+5. `runtime_mode_adapter design`
+6. `planner integration`
+7. `tests`
+8. `journal handoff`
 
 ## Nicht-Ziele Von H.1
 
@@ -197,4 +203,3 @@ Phase `H` ist in ihrer ersten Runde erfolgreich, wenn MathTeach:
 - nach einem Block begruendet im Modus bleiben oder wechseln kann
 - Wechsel erklaerbar und ruhig formuliert
 - keine hektischen Rueckwechsel produziert
-

@@ -11,6 +11,7 @@ Der Fokus liegt auf:
 - `dyscalculia-aware support`
 - `dyslexia-aware support`
 - `autism-spectrum-aware support`
+- `language-sensitive support`
 - spaeterer Code-Integration in Planner und Runtime
 
 ## Arbeitsprinzip
@@ -36,11 +37,12 @@ Deliverables:
 - [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
 - [support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md)
 - [support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md)
+- [support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md)
 
 Exit criteria:
 
 - alle primaeren Response Dimensions sind fest
-- vier Einzelprofile sind operational beschrieben
+- fuenf Einzelprofile sind operational beschrieben
 - jede Matrix hat erkennbare Quellenanker
 
 ## Phase B: Code Skeleton
@@ -61,7 +63,7 @@ Mindestumfang:
 - Datenmodelle fuer `support signal profile`
 - Datenmodelle fuer `response settings`
 - einfache regelbasierte Evaluation
-- erste Tests fuer ADHD-, Dyscalculia-, Dyslexia- und Autism-Pfade
+- erste Tests fuer ADHD-, Dyscalculia-, Dyslexia-, Autism- und Language-Sensitive-Pfade
 
 ## Phase C: Planner Integration
 
@@ -140,8 +142,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 2. Dyscalculia-Matrix weiter verfeinern
 3. Dyslexia-Matrix weiter verfeinern
 4. Autism-Matrix weiter verfeinern
-5. `response_matrix.py` weiter stabilisieren
-6. `response_engine` von vier Profilen auf weitere Support-Familien ausbauen
+5. Language-Sensitive-Matrix weiter verfeinern
+6. `response_matrix.py` weiter stabilisieren
+7. `response_engine` von fuenf Profilen auf weitere Support-Familien ausbauen
 
 ## Nicht-Ziele Des Naechsten Sprints
 

@@ -88,3 +88,27 @@ def test_response_engine_autism_profile() -> None:
     assert response_settings.language_support == "explicit_literal_instructions"
     assert "consistent_session_structure" in response_settings.external_scaffolds
     assert "rutherford-visual-supports-autism-scoping-review" in response_settings.source_anchors
+
+
+def test_response_engine_language_sensitive_profile() -> None:
+    profile = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="medium",
+        preferred_pace="balanced",
+        language="en",
+        wants_visuals=True,
+        wants_history=False,
+    )
+
+    signal_profile, response_settings = build_support_response(profile)
+
+    assert signal_profile.language_sensitive_support == "possible"
+    assert response_settings.language_support == (
+        "translated_key_terms_glossary_and_simplified_syntax"
+    )
+    assert response_settings.symbolic_vs_verbal_balance == (
+        "everyday_language_bridge_before_compact_symbolic"
+    )
+    assert "key_term_glossary" in response_settings.external_scaffolds
+    assert "sharma-sharma-multilingual-math-meta-analysis" in response_settings.source_anchors

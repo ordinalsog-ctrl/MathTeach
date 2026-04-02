@@ -236,6 +236,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append("Reduce reading burden before concluding a math misunderstanding.")
     if "autism_spectrum_aware_support" in response_settings.active_supports:
         teaching_pattern.append("Keep structure predictable, explicit, and low in sensory clutter.")
+    if "language_sensitive_support" in response_settings.active_supports:
+        teaching_pattern.append(
+            "Bridge everyday language and math vocabulary before compressing into formal terms."
+        )
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,

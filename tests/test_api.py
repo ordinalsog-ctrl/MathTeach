@@ -209,3 +209,30 @@ def test_tutoring_plan_declared_autism_support() -> None:
     assert payload["response_settings"]["sensory_load_level"] == "minimal_and_high_contrast"
     assert payload["response_settings"]["language_support"] == "explicit_literal_instructions"
     assert "consistent_session_structure" in payload["response_settings"]["external_scaffolds"]
+
+
+def test_tutoring_plan_language_sensitive_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this word problem in small clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["support_signal_profile"]["language_sensitive_support"] == "possible"
+    assert payload["response_settings"]["language_support"] == (
+        "translated_key_terms_glossary_and_simplified_syntax"
+    )
+    assert "key_term_glossary" in payload["response_settings"]["external_scaffolds"]
+    assert any("math vocabulary" in item for item in payload["teaching_pattern"])

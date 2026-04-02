@@ -258,6 +258,52 @@ def _apply_autism_support(settings: TutorResponseSettings) -> TutorResponseSetti
     return settings
 
 
+def _apply_language_sensitive_support(settings: TutorResponseSettings) -> TutorResponseSettings:
+    settings.symbolic_vs_verbal_balance = "everyday_language_bridge_before_compact_symbolic"
+    settings.word_budget_per_chunk = "short_chunks_with_controlled_vocabulary"
+    if settings.primary_representation in {"verbal_then_symbolic", "visual_plus_verbal"}:
+        settings.primary_representation = "visual_plus_term_support_before_dense_language"
+    if settings.error_response_style in {
+        "gentle_normalize_then_strategy",
+        "direct_with_local_justification",
+        "normalize_then_strategy",
+    }:
+        settings.error_response_style = "clarify_term_meaning_then_math_correction"
+    if settings.check_frequency in {"every_few_steps", "every_major_step"}:
+        settings.check_frequency = "every_major_step_with_term_confirmation"
+    if settings.language_support == "explicit_literal_instructions":
+        settings.language_support = "explicit_literal_instructions_with_key_terms_and_syntax_support"
+    elif settings.language_support == "standard":
+        settings.language_support = "translated_key_terms_glossary_and_simplified_syntax"
+    settings.external_scaffolds = _merge_unique(
+        settings.external_scaffolds,
+        [
+            "key_term_glossary",
+            "everyday_to_math_language_bridge",
+            "translated_key_terms_when_needed",
+            "term_confirmation_checks",
+        ],
+    )
+    settings.active_supports = _merge_unique(
+        settings.active_supports, ["language_sensitive_support"]
+    )
+    settings.rationale_summary = _merge_unique(
+        settings.rationale_summary,
+        [
+            "Bridge everyday language and mathematical terminology before increasing formal density.",
+            "Check whether term meaning, not only calculation, is blocking the next step.",
+        ],
+    )
+    settings.source_anchors = _merge_unique(
+        settings.source_anchors,
+        [
+            "ies-english-learners-practice-guide",
+            "sharma-sharma-multilingual-math-meta-analysis",
+        ],
+    )
+    return settings
+
+
 def derive_response_settings(
     profile: LearnerProfile, signal_profile: SupportSignalProfile
 ) -> TutorResponseSettings:
@@ -272,11 +318,7 @@ def derive_response_settings(
     if signal_profile.autism_spectrum_aware_support in {"declared", "highly_relevant"}:
         settings = _apply_autism_support(settings)
     if signal_profile.language_sensitive_support in {"possible", "declared", "highly_relevant"}:
-        settings.language_support = "key_terms_and_syntax_support"
-        settings.source_anchors = _merge_unique(
-            settings.source_anchors,
-            ["ies-english-learners-practice-guide"],
-        )
+        settings = _apply_language_sensitive_support(settings)
 
     return settings
 

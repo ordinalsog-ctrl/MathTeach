@@ -136,6 +136,7 @@ Aktueller Stand:
 - ein erster echter `planner-level live mode adaptation`-Block-Loop ist jetzt
   operational
 - Session-Resume ueber bestehenden `mode_adaptation_state` ist jetzt moeglich
+- `pending_transition_message` wird jetzt ebenfalls ueber Resume getragen
 - naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen und
   robustere Persistenz
 
@@ -144,6 +145,7 @@ Arbeitsregel fuer den naechsten Ausbau:
 - `Phase H.1` ist jetzt code-started und testgruen
 - zuerst laengere Blockfolgen und Mehrfachwechsel absichern
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
+- dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
 - dann End-to-End-Blocksimulationen verbreitern
 - danach Signalabdeckung und Randfaelle verbreitern
 - erst spaeter `history-aware mode adaptation`
@@ -213,6 +215,7 @@ Naechster direkter Coding-Start:
 - laengere Planner-Blocksequenzen testen
 - Mehrfachwechsel und Cooldown-Randfaelle absichern
 - Persistenzschnittstelle fuer `ModeAdaptationState` spaeter nach aussen ziehen
+- Signalabdeckung fuer weitere reale Blockmuster verbreitern
 
 ## Nicht-Ziele Des Naechsten Sprints
 

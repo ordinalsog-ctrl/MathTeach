@@ -567,6 +567,7 @@ class RuntimeModeAdapter:
                 mode_changes_in_session=state.mode_changes_in_session + 1,
                 last_change_reason=", ".join(decision.trigger_signals) or None,
                 cooldown_blocks_remaining=self.cooldown_blocks_after_change,
+                pending_transition_message=decision.transition_message,
             )
 
         return ModeAdaptationState(
@@ -575,6 +576,7 @@ class RuntimeModeAdapter:
             mode_changes_in_session=state.mode_changes_in_session,
             last_change_reason=state.last_change_reason,
             cooldown_blocks_remaining=max(state.cooldown_blocks_remaining - 1, 0),
+            pending_transition_message=state.pending_transition_message,
         )
 
     def build_transition_message(self, family: TransitionFamily | None) -> str | None:

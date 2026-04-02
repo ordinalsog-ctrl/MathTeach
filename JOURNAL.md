@@ -2,6 +2,36 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Pending-Transition-Persistence 2026-04-02
+
+Die H.1-Runtime-Fortsetzung traegt jetzt nicht nur den Moduszustand,
+sondern auch offene Uebergangssprache sauber ueber Session-Grenzen.
+
+Wichtigste Konsequenzen:
+
+- `ModeAdaptationState` traegt jetzt `pending_transition_message`
+- ein offener Moduswechsel kann damit beim naechsten Resume weiter
+  angezeigt werden
+- das Wechselbudget ist jetzt durch explizite Tests gegen Erschoepfung
+  abgesichert
+- Resume-, Cooldown- und Uebergangspersistenz sind jetzt gemeinsam
+  ueber API- und Planner-Tests abgedeckt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/tests/test_runtime_mode_adapter.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `56 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Session-Resume 2026-04-02
 
 Der erste H.1-Block-Loop kann jetzt nicht nur mehrere Bloecke in einer

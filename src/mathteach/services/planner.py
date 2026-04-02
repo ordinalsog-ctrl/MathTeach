@@ -254,12 +254,13 @@ def _simulate_runtime_blocks(
     if initial_state is not None:
         state = initial_state.model_copy(deep=True)
         current_mode = initial_state.current_mode
+        pending_transition_message = initial_state.pending_transition_message
     else:
         current_mode = initial_mode
         state = ModeAdaptationState(current_mode=current_mode)
+        pending_transition_message = None
     planned_blocks: list[PlannedTeachingBlock] = []
     adaptation_trace: list[ModeAdaptationTraceEntry] = []
-    pending_transition_message: str | None = None
 
     if not runtime_observations:
         planned_blocks.append(
@@ -268,7 +269,7 @@ def _simulate_runtime_blocks(
                 lesson_mode=current_mode,
                 objective=objective,
                 response_settings=response_settings,
-                transition_message=None,
+                transition_message=pending_transition_message,
                 observed_evidence=[],
             )
         )
@@ -285,6 +286,7 @@ def _simulate_runtime_blocks(
                 observed_evidence=observation_input.evidence,
             )
         )
+        pending_transition_message = None
 
         decision = adapter.check_and_adapt_mode(
             state=state,
@@ -310,7 +312,7 @@ def _simulate_runtime_blocks(
 
         state = adapter.advance_state(state, decision)
         current_mode = state.current_mode
-        pending_transition_message = decision.transition_message if decision.changed else None
+        pending_transition_message = state.pending_transition_message
 
     planned_blocks.append(
         _build_planned_block(

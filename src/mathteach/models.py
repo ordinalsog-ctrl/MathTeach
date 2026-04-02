@@ -98,6 +98,7 @@ class ModeAdaptationState(BaseModel):
     mode_changes_in_session: int = Field(default=0, ge=0)
     last_change_reason: str | None = None
     cooldown_blocks_remaining: int = Field(default=0, ge=0)
+    pending_transition_message: str | None = None
 
 
 class ModeAdaptationDecision(BaseModel):

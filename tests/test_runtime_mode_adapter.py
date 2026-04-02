@@ -146,3 +146,39 @@ def test_runtime_mode_adapter_advances_state_and_applies_cooldown() -> None:
     assert shifted.blocks_in_current_mode == 0
     assert shifted.mode_changes_in_session == 2
     assert shifted.cooldown_blocks_remaining == 1
+    assert shifted.pending_transition_message is not None
+
+
+def test_runtime_mode_adapter_blocks_shift_when_change_budget_is_exhausted() -> None:
+    learner = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="low",
+        preferred_pace="balanced",
+        language="de",
+        wants_visuals=True,
+        wants_history=False,
+    )
+    signal_profile, _ = build_support_response(learner)
+    adapter = RuntimeModeAdapter()
+    state = ModeAdaptationState(
+        current_mode="origin_then_example",
+        blocks_in_current_mode=3,
+        mode_changes_in_session=3,
+    )
+    observation = RawBlockObservation(
+        block_index=4,
+        current_mode="origin_then_example",
+        evidence=["repeated_concept_error"],
+    )
+
+    decision = adapter.check_and_adapt_mode(
+        state,
+        "origin_then_example",
+        observation,
+        signal_profile,
+    )
+
+    assert decision.changed is False
+    assert decision.selected_mode == "origin_then_example"
+    assert any("change budget" in note for note in decision.notes)

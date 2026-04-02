@@ -211,6 +211,40 @@ def test_tutoring_plan_can_resume_mode_adaptation_state() -> None:
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
 
 
+def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "mode_adaptation_state": {
+                "current_mode": "worked_example_tutoring",
+                "blocks_in_current_mode": 0,
+                "mode_changes_in_session": 1,
+                "cooldown_blocks_remaining": 1,
+                "pending_transition_message": (
+                    "Das ist eine Stelle, an der viele kurz haengen bleiben. "
+                    "Ich nehme etwas Last raus. "
+                    "Wir gehen jetzt in kleineren Schritten weiter."
+                ),
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["planned_blocks"][0]["transition_message"] is not None
+    assert "kleineren Schritten" in payload["planned_blocks"][0]["transition_message"]
+
+
 def test_tutoring_plan_declared_adhd_support() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

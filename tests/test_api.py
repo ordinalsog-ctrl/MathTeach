@@ -211,6 +211,41 @@ def test_tutoring_plan_can_resume_mode_adaptation_state() -> None:
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
 
 
+def test_tutoring_plan_resume_derives_cross_block_breakthrough() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            "mode_adaptation_state": {
+                "current_mode": "worked_example_tutoring",
+                "blocks_in_current_mode": 2,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 0,
+                "last_observation_evidence": ["transfer_success"],
+            },
+            "runtime_observations": [
+                {"evidence": ["transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "transfer_success_two_blocks" in payload["planned_blocks"][0]["observed_evidence"]
+    assert payload["mode_adaptation_trace"][0]["changed"] is True
+    assert payload["mode_adaptation_trace"][0]["mode_after"] == "guided_concept_explanation"
+    assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

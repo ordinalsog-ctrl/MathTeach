@@ -89,6 +89,7 @@ def test_planner_supports_multiple_mode_changes_across_longer_block_sequence() -
     assert plan.planned_blocks[-1].mode == "guided_concept_explanation"
     assert plan.mode_adaptation_state.current_mode == "guided_concept_explanation"
     assert plan.mode_adaptation_state.mode_changes_in_session == 2
+    assert "transfer_success_two_blocks" in plan.planned_blocks[4].observed_evidence
 
 
 def test_planner_can_resume_from_existing_mode_adaptation_state() -> None:
@@ -196,3 +197,63 @@ def test_planner_blocks_fourth_change_when_budget_is_exhausted() -> None:
     assert any("change budget" in note for note in plan.mode_adaptation_trace[-1].notes)
     assert plan.mode_adaptation_state.mode_changes_in_session == 3
     assert plan.mode_adaptation_state.current_mode == "origin_then_example"
+
+
+def test_planner_derives_cross_block_stagnation_from_simple_progress_signals() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir die quadratische Gleichung anschaulich.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            runtime_observations=[
+                {"evidence": ["no_progress_block"]},
+                {"evidence": ["no_progress_block"]},
+                {"evidence": ["no_progress_block"]},
+            ],
+        )
+    )
+
+    assert "no_progress_two_blocks" in plan.planned_blocks[1].observed_evidence
+    assert "no_progress_three_blocks" in plan.planned_blocks[2].observed_evidence
+    assert plan.mode_adaptation_trace[1].changed is False
+    assert plan.mode_adaptation_trace[2].changed is True
+    assert plan.mode_adaptation_trace[2].mode_after == "worked_example_tutoring"
+    assert plan.planned_blocks[-1].mode == "worked_example_tutoring"
+
+
+def test_planner_derives_cross_block_breakthrough_on_resume() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            mode_adaptation_state={
+                "current_mode": "worked_example_tutoring",
+                "blocks_in_current_mode": 2,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 0,
+                "last_observation_evidence": ["transfer_success"],
+            },
+            runtime_observations=[
+                {"evidence": ["transfer_success"]},
+            ],
+        )
+    )
+
+    assert "transfer_success_two_blocks" in plan.planned_blocks[0].observed_evidence
+    assert plan.mode_adaptation_trace[0].changed is True
+    assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"

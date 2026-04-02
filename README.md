@@ -193,8 +193,9 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 
 Die support-sensitive Moduswahl im Planner ist jetzt als eigene Schicht eingefuehrt.
 
-Der naechste grosse Schritt ist jetzt die `planner-level live mode adaptation`
-unter komplexeren Mischprofilen und spaeterer Lernerhistorie.
+Die `planner-level live mode adaptation` ist jetzt im ersten H.1-MVP als
+Block-Loop, Resume-Pfad und Mehrblock-Beobachtungsfenster real im Code
+angekommen.
 
 Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 
@@ -207,11 +208,12 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   Entscheidungs-Matrix und Template-Logik fuer Uebergaenge
 - `Phase H` ist jetzt auch auf API- und MVP-Ebene weiter geschaerft:
   mit `SignalInterpreter`, Planner-Flow und Startkalibrierung fuer `H.1`
-- `Phase H.1` gilt jetzt abschliessend als `implementation-ready`,
-  also bereit fuer die erste Runtime-Umsetzung
-- die ersten H.1-Codeartefakte existieren jetzt bereits im Repo
-- der naechste Engpass ist jetzt nicht mehr Spezifikation, sondern
-  `blockweise Planner-Integration`
+- `Phase H.1` ist nicht mehr nur `implementation-ready`, sondern bereits
+  als erste Runtime-Stufe umgesetzt
+- die H.1-Codeartefakte tragen jetzt auch Resume-Pfade,
+  Transition-Konsumierung und Mehrblock-Signalverdichtung
+- der naechste Engpass ist jetzt nicht mehr die Grundintegration,
+  sondern breitere Signalabdeckung und spaetere History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -242,6 +244,9 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - erste Session-Fortsetzung ueber wiederverwendeten `mode_adaptation_state`
 - Persistenz offener `transition_message` ueber Resume-Pfade
 - Konsumierung angezeigter `transition_message` ohne doppelte Wiederholung
+- resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
+- automatische Ableitung von Mehrblock-Signalen wie
+  `transfer_success_two_blocks` und `no_progress_three_blocks`
 
 Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare
@@ -253,11 +258,9 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- `planner-level live mode adaptation` als echter Block-Loop
-- laengere Blocksequenzen und Mehrfachwechsel absichern
-- Persistenz und Resume robuster machen
-- Signalabdeckung fuer weitere Blockmuster verbreitern
-- spaeter echte Storage- und History-Schicht vorbereiten
+- laengere Mehrblockmuster und weitere reale Signalszenarien verbreitern
+- Persistenzschnittstellen fuer `mode_adaptation_state` nach aussen robuster machen
+- danach erste Storage- und History-Schicht vorbereiten
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

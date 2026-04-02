@@ -99,6 +99,7 @@ class ModeAdaptationState(BaseModel):
     last_change_reason: str | None = None
     cooldown_blocks_remaining: int = Field(default=0, ge=0)
     pending_transition_message: str | None = None
+    last_observation_evidence: list[str] = Field(default_factory=list)
 
 
 class ModeAdaptationDecision(BaseModel):

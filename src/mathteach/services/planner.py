@@ -242,6 +242,53 @@ def _build_planned_block(
     )
 
 
+def _has_overload_indicator(evidence: set[str]) -> bool:
+    return bool(
+        evidence
+        & {
+            "structure_break",
+            "symbol_mix",
+            "text_overload",
+            "answer_abandoned",
+            "context_loss",
+        }
+    )
+
+
+def _augment_observation_evidence(
+    raw_evidence: list[str],
+    previous_effective_evidence: set[str] | None,
+) -> list[str]:
+    evidence = set(raw_evidence)
+
+    if previous_effective_evidence:
+        if "repeated_concept_error" in evidence and (
+            "repeated_concept_error" in previous_effective_evidence
+            or "repeated_concept_error_across_blocks" in previous_effective_evidence
+        ):
+            evidence.add("repeated_concept_error_across_blocks")
+
+        if "no_progress_block" in evidence:
+            if "no_progress_two_blocks" in previous_effective_evidence:
+                evidence.add("no_progress_three_blocks")
+            elif "no_progress_block" in previous_effective_evidence:
+                evidence.add("no_progress_two_blocks")
+
+        if "transfer_success" in evidence and (
+            "transfer_success" in previous_effective_evidence
+            or "transfer_success_two_blocks" in previous_effective_evidence
+        ):
+            evidence.add("transfer_success_two_blocks")
+
+        if _has_overload_indicator(evidence) and (
+            _has_overload_indicator(previous_effective_evidence)
+            or "overload_persisted_after_simplification" in previous_effective_evidence
+        ):
+            evidence.add("overload_persisted_after_simplification")
+
+    return sorted(evidence)
+
+
 def _simulate_runtime_blocks(
     objective: str,
     initial_mode: str,
@@ -261,6 +308,9 @@ def _simulate_runtime_blocks(
         pending_transition_message = None
     planned_blocks: list[PlannedTeachingBlock] = []
     adaptation_trace: list[ModeAdaptationTraceEntry] = []
+    previous_effective_evidence = (
+        set(initial_state.last_observation_evidence) if initial_state else None
+    )
 
     if not runtime_observations:
         displayed_transition_message = pending_transition_message
@@ -279,6 +329,10 @@ def _simulate_runtime_blocks(
         return planned_blocks, adaptation_trace, state
 
     for block_index, observation_input in enumerate(runtime_observations, start=1):
+        effective_evidence = _augment_observation_evidence(
+            observation_input.evidence,
+            previous_effective_evidence,
+        )
         displayed_transition_message = pending_transition_message
         planned_blocks.append(
             _build_planned_block(
@@ -287,7 +341,7 @@ def _simulate_runtime_blocks(
                 objective=objective,
                 response_settings=response_settings,
                 transition_message=displayed_transition_message,
-                observed_evidence=observation_input.evidence,
+                observed_evidence=effective_evidence,
             )
         )
 
@@ -297,7 +351,7 @@ def _simulate_runtime_blocks(
             block_observation=RawBlockObservation(
                 block_index=block_index,
                 current_mode=current_mode,
-                evidence=observation_input.evidence,
+                evidence=effective_evidence,
             ),
             profile=support_signal_profile,
         )
@@ -318,8 +372,10 @@ def _simulate_runtime_blocks(
             decision,
             transition_was_consumed=displayed_transition_message is not None,
         )
+        state = state.model_copy(update={"last_observation_evidence": effective_evidence})
         current_mode = state.current_mode
         pending_transition_message = state.pending_transition_message
+        previous_effective_evidence = set(effective_evidence)
 
     planned_blocks.append(
         _build_planned_block(

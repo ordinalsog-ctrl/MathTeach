@@ -138,8 +138,11 @@ Aktueller Stand:
 - Session-Resume ueber bestehenden `mode_adaptation_state` ist jetzt moeglich
 - `pending_transition_message` wird jetzt ebenfalls ueber Resume getragen
 - konsumierte `transition_message` wird jetzt nach Anzeige sauber geleert
-- naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen und
-  robustere Persistenz
+- resume-faehige `last_observation_evidence` sind jetzt Teil des Runtime-State
+- Mehrblock-Signale werden jetzt im Planner selbst verdichtet statt nur als
+  Roh-Input erwartet
+- naechster Ausbau ist End-to-End-Vertiefung ueber breitere Signalszenarien,
+  robustere Persistenz und spaetere Storage-Anbindung
 
 Arbeitsregel fuer den naechsten Ausbau:
 
@@ -213,10 +216,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- laengere Planner-Blocksequenzen testen
-- Mehrfachwechsel und Cooldown-Randfaelle absichern
-- Persistenzschnittstelle fuer `ModeAdaptationState` spaeter nach aussen ziehen
 - Signalabdeckung fuer weitere reale Blockmuster verbreitern
+- Persistenzschnittstelle fuer `ModeAdaptationState` nach aussen robuster machen
+- Mehrfachwechsel-, Cooldown- und Budget-Randfaelle weiter haerten
 - spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints

@@ -2,6 +2,37 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Multi-Block-Observation-Windows 2026-04-02
+
+Die H.1-Runtime-Schicht verdichtet jetzt wiederkehrende Beobachtungsmuster
+ueber Blockgrenzen hinweg, statt nur rohe Einzelblock-Evidenz zu
+verarbeiten.
+
+Wichtigste Konsequenzen:
+
+- `ModeAdaptationState` traegt jetzt auch `last_observation_evidence`
+- der Planner leitet jetzt automatisch Mehrblock-Signale wie
+  `transfer_success_two_blocks`, `no_progress_two_blocks`,
+  `no_progress_three_blocks` und
+  `repeated_concept_error_across_blocks` ab
+- diese Verdichtung funktioniert jetzt auch ueber Resume-Grenzen hinweg
+- API- und Planner-Tests sichern jetzt nicht nur einzelne Blocks, sondern
+  auch resume-uebergreifende Beobachtungsfenster ab
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `62 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Budget-And-Transition-Consumption 2026-04-02
 
 Die H.1-Runtime-Schicht behandelt jetzt zwei wichtige Robustheitsfaelle

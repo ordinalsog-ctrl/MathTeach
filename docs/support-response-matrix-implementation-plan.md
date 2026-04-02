@@ -1,0 +1,146 @@
+# Support Response Matrix Implementation Plan
+
+## Ziel
+
+Dieser Plan uebersetzt die aktuelle Review-Lage in einen konkreten
+Arbeitsablauf fuer die naechste Implementationsphase.
+
+Der Fokus liegt auf:
+
+- `ADHD-aware support`
+- `dyscalculia-aware support`
+- spaeterer Code-Integration in Planner und Runtime
+
+## Arbeitsprinzip
+
+Die Reihenfolge lautet:
+
+1. `structure before code`
+2. `single profiles before mixed profiles`
+3. `candidate defaults before hard rules`
+4. `explainable rules before opaque adaptation`
+
+## Phase A: Documentation Pass
+
+Zeitrahmen:
+
+- `weeks 1 to 3`
+
+Deliverables:
+
+- [support-response-matrix-structure.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-structure.md)
+- [support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md)
+- [support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
+- [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
+
+Exit criteria:
+
+- alle primaeren Response Dimensions sind fest
+- zwei Einzelprofile sind operational beschrieben
+- jede Matrix hat erkennbare Quellenanker
+
+## Phase B: Code Skeleton
+
+Zeitrahmen:
+
+- `weeks 4 to 6`
+
+Geplante Dateien:
+
+- `src/mathteach/models/response_matrix.py`
+- `src/mathteach/services/response_engine.py`
+- spaeter `src/mathteach/services/profiler.py`
+- `tests/test_response_matrix.py`
+
+Mindestumfang:
+
+- Datenmodelle fuer `support signal profile`
+- Datenmodelle fuer `response settings`
+- einfache regelbasierte Evaluation
+- erste Tests fuer ADHD- und Dyscalculia-Pfade
+
+## Phase C: Planner Integration
+
+Zeitrahmen:
+
+- `weeks 7 to 9`
+
+Ziel:
+
+- Response Settings in den bestehenden Planner ziehen
+
+Geplante Wirkung:
+
+- `planner.py` bekommt response-aware Entscheidungen
+- Runtime-Modi werden nicht nur thematisch, sondern auch support-sensitiv gewaehlt
+- `TeachingPlan` bekommt spaeter konkrete Response-Felder
+
+## Phase D: Pilot and Validation
+
+Zeitrahmen:
+
+- `weeks 10 to 12`
+
+Nur unter diesen Bedingungen:
+
+- lokale Speicherung bleibt gewahrt
+- Datensparsamkeit ist klar geregelt
+- keine diagnostische oder therapeutische Selbstdarstellung des Systems
+
+Beobachtungsfelder:
+
+- Engagement
+- Verstaendnisfortschritt
+- Fehlererholung
+- Abbruchpunkte
+- wahrgenommene Sicherheit
+
+## Technische Zwischenziele
+
+### 1. Support Signal Profile
+
+Braucht spaeter mindestens:
+
+- cognitive signals
+- support-family signals
+- motivation signals
+- emotional safety signals
+- context signals
+- domain-specific signals
+
+### 2. Response Settings
+
+Braucht spaeter mindestens:
+
+- pacing
+- step_size
+- notation_density
+- text_load
+- visualization
+- error_handling
+- language_support
+- self_check_rhythm
+- external_scaffolds
+
+### 3. Evidence Traceability
+
+Jede spaetere Regel soll rueckfuehrbar bleiben auf:
+
+- Matrix-Dokument
+- Quellenanker
+- spaetere Testfaelle
+
+## Unmittelbar Naechste Aufgaben
+
+1. ADHD-Matrix weiter verfeinern
+2. Dyscalculia-Matrix weiter verfeinern
+3. Datenmodell fuer `support signal profile` entwerfen
+4. Datenmodell fuer `response settings` entwerfen
+5. ersten `response_engine` in minimierter Form bauen
+
+## Nicht-Ziele Des Naechsten Sprints
+
+- noch keine Vollabdeckung aller Support-Familien
+- noch keine gemischten Profile als Hauptpfad
+- noch keine vollstaendige UI-Neugestaltung
+- noch keine klinisch anmutenden Frageboegen

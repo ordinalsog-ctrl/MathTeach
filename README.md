@@ -75,6 +75,11 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md): Aktive lokale Zielarchitektur fuer das geschlossene Tutorsystem
 - [docs/journal-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/journal-review-triage-2026-04-02.md): Prioritaetskorrektur nach dem Review des aktuellen Journals
 - [docs/support-response-matrix-structure.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-structure.md): Erste Struktur fuer Learner-Signale, Response Dimensions und Support-Matrizen
+- [docs/support-response-matrix-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-review-triage-2026-04-02.md): Operative Prioritaetskorrektur fuer den Uebergang von Theorie zu Decision Rules
+- [docs/support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md): Standardform fuer alle spaeteren Profil-Matrizen
+- [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md): Erste operative Matrix fuer ADHD-aware support
+- [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md): Erste operative Matrix fuer dyscalculia-aware support
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -170,3 +175,9 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
 Der naechste grosse Schritt ist jetzt die `Support Response Matrix` als operative Bruecke zwischen Learner-Profil, Teacher Mind und Tutor-Runtime.
+
+Die ersten direkten Arbeitsdokumente dafuer sind bereits:
+
+- `ADHD-aware support`
+- `dyscalculia-aware support`
+- der erste `Implementation Plan` fuer Code-Skeleton, Planner-Integration und spaetere Validierung

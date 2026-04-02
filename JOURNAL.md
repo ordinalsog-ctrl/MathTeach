@@ -2,6 +2,28 @@
 
 Stand: 2026-04-02
 
+## Review-Einarbeitung 2026-04-02 B
+
+Ein weiterer operativer Review-Schritt hat die Richtung der `Support Response Matrix`
+konkretisiert.
+
+Wichtigste Konsequenzen:
+
+- der Uebergang von Theorie zu `Decision Rules` ist jetzt explizit dokumentiert
+- `ADHD-aware support` und `dyscalculia-aware support` sind die ersten
+  operativen Einzelprofile
+- es gibt jetzt einen ersten `Implementation Plan` fuer die Matrix-Phase
+- exakte klinisch klingende Prozent- oder Diagnosemodelle bleiben bewusst
+  ausserhalb der aktiven Architektur
+
+Neue Referenzdokumente aus dieser Review-Einarbeitung:
+
+- [docs/support-response-matrix-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-review-triage-2026-04-02.md)
+- [docs/support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md)
+- [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
+- [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
 ## Review-Einarbeitung 2026-04-02
 
 Der externe Journal-Review wurde als naechste Prioritaetskorrektur uebernommen.
@@ -301,3 +323,9 @@ Empfohlene erste Ausbaureihenfolge:
 4. `autism-spectrum-aware support`
 5. `ELL / language-sensitive support`
 6. `scarcity-aware support`
+
+Direkt vorbereitete naechste Arbeitsartefakte:
+
+1. [support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
+2. [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
+3. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)

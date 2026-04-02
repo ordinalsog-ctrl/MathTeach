@@ -32,6 +32,9 @@
 - Einzelprofile fuer ADHD, Dyskalkulie, Dyslexie, Autismusspektrum, ELL und Scarcity ausarbeiten
 - kombinierte Profile spaeter aus stabilen Einzelprofilen ableiten
 - `response_engine` als explizite Regelmaschine vorbereiten
+- zuerst `ADHD-aware support` und `dyscalculia-aware support` voll operationalisieren
+- danach Code-Skeleton fuer `response_matrix.py` und `response_engine.py`
+- danach Planner-Integration und spaetere Pilot-Validierung
 
 ## Phase 4: Adaptive Lehre
 

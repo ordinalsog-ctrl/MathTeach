@@ -22,6 +22,7 @@ Neue Referenzdokumente aus dieser Review-Einarbeitung:
 - [docs/support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md)
 - [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
 - [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
+- [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md)
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
 
 ## Review-Einarbeitung 2026-04-02
@@ -254,9 +255,11 @@ Seit dem letzten operativen Schritt existiert nun auch ein erster
 
 - `support signal profile` als eigenes Datenmodell
 - `response settings` als eigenes Datenmodell
+- `response_matrix.py` als eigenes Modellmodul
 - erste regelbasierte Ableitung fuer:
   - `ADHD-aware support`
   - `dyscalculia-aware support`
+  - `dyslexia-aware support`
 - `TeachingPlan` liefert diese Settings jetzt direkt mit aus
 - neue Service- und API-Tests sichern den Pfad ab
 
@@ -266,9 +269,11 @@ Betroffene Dateien:
 - [docs/architecture.md](/Users/jonasweiss/MathTeach/docs/architecture.md)
 - [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md)
 - [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/response_matrix.py](/Users/jonasweiss/MathTeach/src/mathteach/response_matrix.py)
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
 - [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [tests/test_response_matrix.py](/Users/jonasweiss/MathTeach/tests/test_response_matrix.py)
 - [tests/test_response_engine.py](/Users/jonasweiss/MathTeach/tests/test_response_engine.py)
 
 ## Wichtige Spannung im Repo
@@ -330,13 +335,11 @@ in konkrete Tutorentscheidungen ueber:
 
 Empfohlene erste Ausbaureihenfolge:
 
-1. `response_matrix.py` als eigenes Modellmodul
-2. `response_engine` weiter ausbauen
-3. Planner staerker response-aware machen
-4. danach `dyslexia-aware support`
-5. danach `autism-spectrum-aware support`
-6. danach `ELL / language-sensitive support`
-7. danach `scarcity-aware support`
+1. `response_engine` weiter entlang aller Response Dimensions ausbauen
+2. Planner staerker response-aware machen
+3. danach `autism-spectrum-aware support`
+4. danach `ELL / language-sensitive support`
+5. danach `scarcity-aware support`
 
 Direkt vorbereitete naechste Arbeitsartefakte:
 

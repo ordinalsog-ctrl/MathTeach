@@ -9,6 +9,7 @@ Der Fokus liegt auf:
 
 - `ADHD-aware support`
 - `dyscalculia-aware support`
+- `dyslexia-aware support`
 - spaeterer Code-Integration in Planner und Runtime
 
 ## Arbeitsprinzip
@@ -32,11 +33,12 @@ Deliverables:
 - [support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md)
 - [support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
 - [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
+- [support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md)
 
 Exit criteria:
 
 - alle primaeren Response Dimensions sind fest
-- zwei Einzelprofile sind operational beschrieben
+- drei Einzelprofile sind operational beschrieben
 - jede Matrix hat erkennbare Quellenanker
 
 ## Phase B: Code Skeleton
@@ -47,7 +49,7 @@ Zeitrahmen:
 
 Geplante Dateien:
 
-- `src/mathteach/models/response_matrix.py`
+- `src/mathteach/response_matrix.py`
 - `src/mathteach/services/response_engine.py`
 - spaeter `src/mathteach/services/profiler.py`
 - `tests/test_response_matrix.py`
@@ -57,7 +59,7 @@ Mindestumfang:
 - Datenmodelle fuer `support signal profile`
 - Datenmodelle fuer `response settings`
 - einfache regelbasierte Evaluation
-- erste Tests fuer ADHD- und Dyscalculia-Pfade
+- erste Tests fuer ADHD-, Dyscalculia- und Dyslexia-Pfade
 
 ## Phase C: Planner Integration
 
@@ -134,9 +136,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 1. ADHD-Matrix weiter verfeinern
 2. Dyscalculia-Matrix weiter verfeinern
-3. Datenmodell fuer `support signal profile` entwerfen
-4. Datenmodell fuer `response settings` entwerfen
-5. ersten `response_engine` in minimierter Form bauen
+3. Dyslexia-Matrix weiter verfeinern
+4. `response_matrix.py` weiter stabilisieren
+5. `response_engine` von drei Profilen auf weitere Support-Familien ausbauen
 
 ## Nicht-Ziele Des Naechsten Sprints
 

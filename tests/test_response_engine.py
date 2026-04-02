@@ -44,3 +44,25 @@ def test_response_engine_dyscalculia_profile() -> None:
     assert response_settings.conceptual_increment == "very_small"
     assert response_settings.error_response_style == "explicit_reconstruction"
     assert "number_lines" in response_settings.external_scaffolds
+
+
+def test_response_engine_dyslexia_profile() -> None:
+    profile = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="low",
+        preferred_pace="balanced",
+        language="de",
+        wants_visuals=True,
+        wants_history=False,
+        declared_support_needs=["dyslexia_aware_support"],
+    )
+
+    signal_profile, response_settings = build_support_response(profile)
+
+    assert signal_profile.dyslexia_aware_support == "declared"
+    assert signal_profile.symbolic_processing == "fragile"
+    assert response_settings.language_support == "glossary_plus_key_terms_plus_simplified_syntax"
+    assert response_settings.error_response_style == "clarify_reading_load_before_math_correction"
+    assert "key_term_highlighting" in response_settings.external_scaffolds
+    assert "shaywitz-dyslexia-specific-reading-disability" in response_settings.source_anchors

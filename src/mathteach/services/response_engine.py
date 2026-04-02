@@ -1,4 +1,5 @@
-from mathteach.models import LearnerProfile, SupportSignalProfile, TutorResponseSettings
+from mathteach.models import LearnerProfile
+from mathteach.response_matrix import SupportSignalProfile, TutorResponseSettings
 
 
 def _merge_unique(existing: list[str], additions: list[str]) -> list[str]:
@@ -27,6 +28,7 @@ def derive_support_signal_profile(profile: LearnerProfile) -> SupportSignalProfi
             signal_profile.symbolic_processing = "fragile"
         elif need == "dyslexia_aware_support":
             signal_profile.dyslexia_aware_support = "declared"
+            signal_profile.symbolic_processing = "fragile"
         elif need == "autism_spectrum_aware_support":
             signal_profile.autism_spectrum_aware_support = "declared"
         elif need == "language_sensitive_support":
@@ -176,6 +178,41 @@ def _apply_dyscalculia_support(settings: TutorResponseSettings) -> TutorResponse
     return settings
 
 
+def _apply_dyslexia_support(settings: TutorResponseSettings) -> TutorResponseSettings:
+    settings.symbolic_vs_verbal_balance = "clear_symbol_spacing_with_supported_language"
+    settings.word_budget_per_chunk = "very_short_chunks_with_simple_sentences"
+    settings.primary_representation = "visual_plus_audio_ready_before_dense_text"
+    settings.error_response_style = "clarify_reading_load_before_math_correction"
+    settings.check_frequency = "every_major_step_with_term_check"
+    settings.language_support = "glossary_plus_key_terms_plus_simplified_syntax"
+    settings.sensory_load_level = "reduced_visual_clutter"
+    settings.external_scaffolds = _merge_unique(
+        settings.external_scaffolds,
+        [
+            "key_term_highlighting",
+            "step_labels",
+            "symbol_reading_support",
+            "short_sentence_chunks",
+        ],
+    )
+    settings.active_supports = _merge_unique(settings.active_supports, ["dyslexia_aware_support"])
+    settings.rationale_summary = _merge_unique(
+        settings.rationale_summary,
+        [
+            "Reduce reading burden before inferring mathematical misunderstanding.",
+            "Keep symbols visible and spaced while language stays short and explicit.",
+        ],
+    )
+    settings.source_anchors = _merge_unique(
+        settings.source_anchors,
+        [
+            "nichd-reading-and-reading-disorders",
+            "shaywitz-dyslexia-specific-reading-disability",
+        ],
+    )
+    return settings
+
+
 def derive_response_settings(
     profile: LearnerProfile, signal_profile: SupportSignalProfile
 ) -> TutorResponseSettings:
@@ -185,6 +222,8 @@ def derive_response_settings(
         settings = _apply_adhd_support(settings)
     if signal_profile.dyscalculia_aware_support in {"declared", "highly_relevant"}:
         settings = _apply_dyscalculia_support(settings)
+    if signal_profile.dyslexia_aware_support in {"declared", "highly_relevant"}:
+        settings = _apply_dyslexia_support(settings)
     if signal_profile.language_sensitive_support in {"possible", "declared", "highly_relevant"}:
         settings.language_support = "key_terms_and_syntax_support"
         settings.source_anchors = _merge_unique(

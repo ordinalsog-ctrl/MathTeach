@@ -156,3 +156,30 @@ def test_tutoring_plan_declared_adhd_support() -> None:
     assert payload["support_signal_profile"]["adhd_aware_support"] == "declared"
     assert payload["response_settings"]["session_duration"] == "12_to_15_minute_focus_blocks"
     assert "step_labels" in payload["response_settings"]["external_scaffolds"]
+
+
+def test_tutoring_plan_declared_dyslexia_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Textaufgabe in kleinen Schritten.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyslexia_aware_support"],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["support_signal_profile"]["dyslexia_aware_support"] == "declared"
+    assert payload["response_settings"]["language_support"] == (
+        "glossary_plus_key_terms_plus_simplified_syntax"
+    )
+    assert "key_term_highlighting" in payload["response_settings"]["external_scaffolds"]

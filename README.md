@@ -79,6 +79,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-template.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-template.md): Standardform fuer alle spaeteren Profil-Matrizen
 - [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md): Erste operative Matrix fuer ADHD-aware support
 - [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md): Erste operative Matrix fuer dyscalculia-aware support
+- [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md): Dritte operative Matrix fuer dyslexia-aware support
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -136,6 +137,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [sql/004_source_access_registry.sql](/Users/jonasweiss/MathTeach/sql/004_source_access_registry.sql): Zugriffsrouten und lokales Speicher-Audit fuer Quellen
 - [sql/005_cross_epoch_network.sql](/Users/jonasweiss/MathTeach/sql/005_cross_epoch_network.sql): Generisches Schema fuer epochenuebergreifende Linien und Anker
 - [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py): FastAPI-Startpunkt
+- [src/mathteach/response_matrix.py](/Users/jonasweiss/MathTeach/src/mathteach/response_matrix.py): Eigenes Modellmodul fuer Support-Signale und Tutor-Response-Settings
 - [src/mathteach/services/corpus.py](/Users/jonasweiss/MathTeach/src/mathteach/services/corpus.py): Blueprint-Service fuer die Mathe-Datenbank
 - [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
@@ -185,4 +187,5 @@ Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
 Im Code existiert dazu jetzt bereits ein erster `response_engine`, der
 `support signal profile` und `response settings` in die Tutoring-Planung
-einspeist.
+einspeist. Dazu kommt jetzt auch ein eigenes Modellmodul `response_matrix.py`
+sowie ein erster operativer Codepfad fuer `dyslexia-aware support`.

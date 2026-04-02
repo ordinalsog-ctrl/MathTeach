@@ -2,6 +2,33 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Programm 2026-04-02
+
+Der neue Review ist jetzt nicht nur als Triage, sondern als erstes
+konkretes Arbeitsprogramm fuer die naechste Architekturphase verankert.
+
+Wichtigste Konsequenzen:
+
+- `planner-level live mode adaptation` ist jetzt als eigene Phase `H`
+  beschrieben
+- die naechste Implementierung soll auf `Block-Ebene` arbeiten
+- Beobachtungssignale, Wechselregeln, Hysterese und ruhige
+  Uebergangssprache sind jetzt explizit als erste Arbeitspakete definiert
+- noch keine neue Runtime-Logik, aber ein klarer Bauplan fuer die naechste
+  Session
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+- [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- reine Doku- und Programmphase
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Review-Triage Nach G 2026-04-02
 
 Die neuen Reviews bestaetigen Phase `G` nicht nur als erfolgreichen

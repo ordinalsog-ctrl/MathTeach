@@ -140,6 +140,10 @@ Arbeitsregel fuer den naechsten Ausbau:
 - dann `hysteresis and stability rules`
 - erst spaeter `history-aware mode adaptation`
 
+Programmgrundlage:
+
+- [live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+
 ## Technische Zwischenziele
 
 ### 1. Support Signal Profile

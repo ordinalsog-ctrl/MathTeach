@@ -2,11 +2,13 @@ from mathteach.config import Settings
 from mathteach.models import (
     LearnerProfile,
     ModelAssignment,
+    ModeSelection,
     RetrievalPlan,
     SessionRequest,
     StackResponse,
     TeachingPlan,
 )
+from mathteach.services.mode_selector import select_mode
 from mathteach.services.response_engine import build_support_response
 
 
@@ -200,11 +202,21 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     profile: LearnerProfile = request.learner_profile
     tone, pattern_hint = AUDIENCE_MODES[profile.age_group]
     concept_depth, include_proof = LEVEL_DEPTH[profile.math_level]
-    lesson_mode = _infer_lesson_mode(request)
+    requested_mode = _infer_lesson_mode(request)
+    support_signal_profile, response_settings = build_support_response(profile)
+    mode_selection: ModeSelection = select_mode(
+        requested_mode,
+        profile,
+        support_signal_profile,
+        response_settings,
+    )
+    lesson_mode = mode_selection.selected_mode
     response_arc = _mode_response_arc(lesson_mode)
     include_history, history_mode = _mode_history_strategy(lesson_mode, profile.wants_history)
+    if "short_origin_bridge" in mode_selection.constraints or "micro_origin_bridge" in mode_selection.constraints:
+        include_history = True
+        history_mode = "supporting_only"
     network_focus = _mode_network_focus(lesson_mode)
-    support_signal_profile, response_settings = build_support_response(profile)
 
     teaching_pattern = [
         "Start from the learner objective before introducing formal notation.",
@@ -224,6 +236,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append("Keep each algebraic move local, explicit, and checkable.")
     if lesson_mode == "origin_then_example":
         teaching_pattern.append("Bridge from historical motivation into the learner's own example.")
+    if requested_mode != lesson_mode:
+        teaching_pattern.append("Use a support-sensitive mode override instead of the naive request-only mode.")
     if response_settings.active_supports:
         teaching_pattern.append(
             "Adapt pacing, notation, and scaffolds to the active support profile."
@@ -252,6 +266,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append(
             "Make relevance, success criteria, and visible progress explicit from the start."
         )
+    if mode_selection.constraints:
+        teaching_pattern.append("Respect the active mode constraints instead of treating the mode as unconstrained.")
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,
@@ -292,6 +308,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         tone=tone,
         teaching_pattern=teaching_pattern,
         response_arc=response_arc,
+        mode_selection=mode_selection,
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
         retrieval_plan=retrieval_plan,

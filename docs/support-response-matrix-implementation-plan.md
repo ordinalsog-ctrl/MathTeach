@@ -131,7 +131,8 @@ Aktueller Stand:
 
 - Paar-Regeln sind operational
 - erste Triads und `priority_ladders` sind operational
-- naechster Ausbau ist `planner-level mode selection under conflict`
+- `mode_selector` ist jetzt als eigene Schicht fuer support-sensitive Moduswahl eingefuehrt
+- naechster Ausbau ist `planner-level live mode adaptation`
 
 ## Technische Zwischenziele
 
@@ -178,8 +179,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 6. Scarcity-Matrix weiter verfeinern
 7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
 8. Triad-Szenarien und Prioritaetsleitern erweitern
-9. support-sensitive Moduswahl im Planner auf Konfliktlagen ausrichten
+9. planner-level live mode adaptation vorbereiten
 10. `response_matrix.py` weiter stabilisieren
+11. Moduswahl spaeter mit Lernerhistorie koppeln
 
 ## Nicht-Ziele Des Naechsten Sprints
 

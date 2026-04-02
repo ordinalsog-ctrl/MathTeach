@@ -127,6 +127,8 @@ def test_tutoring_plan_origin_story_mode() -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["lesson_mode"] == "origin_story_explanation"
+    assert payload["mode_selection"]["requested_mode"] == "origin_story_explanation"
+    assert payload["mode_selection"]["selected_mode"] == "origin_story_explanation"
     assert payload["response_settings"]["error_response_style"] == "gentle_normalize_then_strategy"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "origin_first"
@@ -296,6 +298,8 @@ def test_tutoring_plan_mixed_profile_conflict_resolution() -> None:
     assert "adhd_aware_support__dyscalculia_aware_support" in payload["response_settings"][
         "conflict_pairs"
     ]
+    assert payload["mode_selection"]["selected_mode"] == "worked_example_tutoring"
+    assert "low_notation_density" in payload["mode_selection"]["constraints"]
     assert any("conflict-resolution rules" in item for item in payload["teaching_pattern"])
 
 
@@ -333,4 +337,35 @@ def test_tutoring_plan_triad_priority_ladders() -> None:
     assert "conceptual_grounding_before_speed" in payload["response_settings"][
         "priority_ladders"
     ]
+    assert payload["mode_selection"]["selected_mode"] == "worked_example_tutoring"
+    assert "micro_success_cycles" in payload["mode_selection"]["constraints"]
     assert any("priority ladders" in item for item in payload["teaching_pattern"])
+
+
+def test_tutoring_plan_origin_mode_reduced_under_adhd_scarcity() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir als Laie warum das notwendig wurde.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "scarcity_aware_support",
+                ],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["mode_selection"]["requested_mode"] == "origin_story_explanation"
+    assert payload["mode_selection"]["selected_mode"] == "origin_then_example"
+    assert "micro_origin_bridge" in payload["mode_selection"]["constraints"]
+    assert payload["retrieval_plan"]["history_mode"] == "supporting_only"

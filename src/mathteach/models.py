@@ -48,12 +48,20 @@ class RetrievalPlan(BaseModel):
     required_source_types: list[str]
 
 
+class ModeSelection(BaseModel):
+    requested_mode: str
+    selected_mode: str
+    rationale: list[str]
+    constraints: list[str]
+
+
 class TeachingPlan(BaseModel):
     lesson_mode: str
     audience_mode: str
     tone: str
     teaching_pattern: list[str]
     response_arc: list[str]
+    mode_selection: ModeSelection
     support_signal_profile: SupportSignalProfile
     response_settings: TutorResponseSettings
     retrieval_plan: RetrievalPlan

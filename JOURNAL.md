@@ -2,6 +2,41 @@
 
 Stand: 2026-04-02
 
+## Support-Sensitive-Mode-Selection 2026-04-02 G
+
+Die erste eigene `mode_selector`-Schicht ist jetzt zwischen
+`conflict_resolver` und `planner` eingezogen.
+
+Wichtigste Konsequenzen:
+
+- `requested_mode` und `selected_mode` sind jetzt explizit getrennt
+- Moduswahl ist jetzt support-sensitiv statt nur request-sensitiv
+- Triads und Konfliktpaare koennen jetzt echte `mode overrides` ausloesen
+- Modus-Constraints sind jetzt sichtbar und testbar
+- die naechste Engstelle verschiebt sich jetzt in `planner-level live mode adaptation`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/mode-selection-strategy.md](/Users/jonasweiss/MathTeach/docs/mode-selection-strategy.md)
+- [src/mathteach/services/mode_selector.py](/Users/jonasweiss/MathTeach/src/mathteach/services/mode_selector.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_mode_selection.py](/Users/jonasweiss/MathTeach/tests/test_mode_selection.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Erste explizite Modusentscheidungen:
+
+- `ADHD + Dyscalculia + Scarcity -> worked_example_tutoring`
+- `ADHD + Autism + Scarcity -> worked_example_tutoring`
+- `Dyscalculia + Language-Sensitive + Scarcity -> origin_then_example`
+- `ADHD + Scarcity + origin_story request -> origin_then_example`
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `38 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Triads-And-Priority-Ladders 2026-04-02 F
 
 Die erste Triad-Schicht ist jetzt auf dem bestehenden `conflict_resolver`

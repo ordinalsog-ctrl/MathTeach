@@ -86,6 +86,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md): Erste Konfliktaufloesungsarchitektur fuer gemischte Supportprofile
 - [docs/mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md): Konkrete Mischprofil-Szenarien als Test- und Review-Basis
 - [docs/profile-prioritization.md](/Users/jonasweiss/MathTeach/docs/profile-prioritization.md): Erste Priority-Ladder-Logik fuer Triads und spaetere groessere Mischlagen
+- [docs/mode-selection-strategy.md](/Users/jonasweiss/MathTeach/docs/mode-selection-strategy.md): Erste Strategie fuer support-sensitive Moduswahl unter Konfliktlagen und Triads
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -183,8 +184,10 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Die epochenuebergreifende Vernetzung hat jetzt ein erstes Manifest mit Proof Lines, Equation Lines, Transmission Paths, Domain Lines und Application Bridges.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
-Der naechste grosse Schritt ist jetzt die `support-sensitive Moduswahl im Planner`
-unter gemischten Profilen und expliziten Prioritaetsleitern.
+Die support-sensitive Moduswahl im Planner ist jetzt als eigene Schicht eingefuehrt.
+
+Der naechste grosse Schritt ist jetzt die `planner-level live mode adaptation`
+unter komplexeren Mischprofilen und spaeterer Lernerhistorie.
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -213,7 +216,7 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- `planner-level mode selection under conflict`
+- `planner-level live mode adaptation`
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

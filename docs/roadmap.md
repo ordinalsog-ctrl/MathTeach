@@ -43,6 +43,8 @@
 - alternative Erklaerpfade
 - visuelle und textuelle Lehrmodi
 - Routing zwischen Beispielmodus und Ursprung-Erklaermodus
+- support-sensitive Moduswahl unter Mixed Profiles und Priority-Ladders
+- spaeter live mode adaptation innerhalb einer Session
 
 ## Phase 5: Expertenmodus
 

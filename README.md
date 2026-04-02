@@ -213,7 +213,7 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - die H.1-Codeartefakte tragen jetzt auch Resume-Pfade,
   Transition-Konsumierung und Mehrblock-Signalverdichtung
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern breitere Signalabdeckung und spaetere History-Anbindung
+  sondern `Persistence`, `Resume-Semantik` und spaetere History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -261,9 +261,10 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- laengere Mehrblockmuster und weitere reale Signalszenarien verbreitern
 - Persistenzschnittstellen fuer `mode_adaptation_state` nach aussen robuster machen
+- Serialisierung und Resume-Vertrag ueber API-Grenzen schaerfen
 - danach erste Storage- und History-Schicht vorbereiten
+- spaeter weitere reale Signalszenarien verbreitern und kalibrieren
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

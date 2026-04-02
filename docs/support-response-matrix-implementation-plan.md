@@ -143,8 +143,8 @@ Aktueller Stand:
   Roh-Input erwartet
 - sichtbare kleine Erfolge und ausbleibende Erfolgslinien werden jetzt
   ebenfalls direkt im Planner abgeleitet
-- naechster Ausbau ist End-to-End-Vertiefung ueber breitere Signalszenarien,
-  robustere Persistenz und spaetere Storage-Anbindung
+- naechster Ausbau ist jetzt primaer robuste Persistenz, klare Resume-Semantik
+  und spaetere Storage-Anbindung
 
 Arbeitsregel fuer den naechsten Ausbau:
 
@@ -198,30 +198,23 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. ADHD-Matrix weiter verfeinern
-2. Dyscalculia-Matrix weiter verfeinern
-3. Dyslexia-Matrix weiter verfeinern
-4. Autism-Matrix weiter verfeinern
-5. Language-Sensitive-Matrix weiter verfeinern
-6. Scarcity-Matrix weiter verfeinern
-7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
-8. Triad-Szenarien und Prioritaetsleitern erweitern
-9. planner-level live mode adaptation vorbereiten
-10. `observation signals` operativ spezifizieren
-11. API zwischen `mode_selector`, `planner` und `runtime_mode_adapter` festziehen
-12. `SignalInterpreter` fuer rohe Blockbeobachtungen vorbereiten
-13. `runtime_mode_adapter` als neue Komponente vorbereiten
-14. erste MVP-Schwellen fuer `H.1` fest kalibrieren
-15. `response_matrix.py` weiter stabilisieren
-16. Moduswahl spaeter mit Lernerhistorie koppeln
-17. Wechselregeln gegen hektisches `mode thrashing` definieren
+1. Roundtrip-Serialisierung fuer `ModeAdaptationState` absichern
+2. Resume-API-Vertrag fuer `mode_adaptation_state` schaerfen
+3. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
+4. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
+5. Storage-Handoff fuer spaetere Session-Fortsetzung vorbereiten
+6. Signalabdeckung spaeter weiter verbreitern und kalibrieren
+7. `conflict_resolver` fuer gemischte Profile spaeter weiter ausbauen
+8. Triad-Szenarien und Prioritaetsleitern spaeter erweitern
+9. Moduswahl spaeter mit Lernerhistorie koppeln
+10. Wechselregeln spaeter gegen weiteres `mode thrashing` absichern
 
 Naechster direkter Coding-Start:
 
-- Signalabdeckung fuer weitere reale Blockmuster verbreitern
 - Persistenzschnittstelle fuer `ModeAdaptationState` nach aussen robuster machen
-- Mehrfachwechsel-, Cooldown- und Budget-Randfaelle weiter haerten
-- spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
+- Resume- und Serialisierungstests schreiben
+- API-Vertrag fuer echte Sitzungsfortsetzung festziehen
+- danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints
 

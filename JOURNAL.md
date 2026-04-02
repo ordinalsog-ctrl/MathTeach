@@ -2,6 +2,33 @@
 
 Stand: 2026-04-02
 
+## Phase-H-H1-Runtime-Review 2026-04-02
+
+Die neue Review-Lage bestaetigt den qualitativen Sprung von
+`implementation-ready` zu echter `runtime live`-Stufe fuer `Phase H.1`.
+
+Wichtigste Konsequenzen:
+
+- `Phase H.1` gilt jetzt nicht mehr primär als Planungs- oder
+  Integrationsbaustelle, sondern als reale MVP-Runtime-Schicht
+- die Hauptluecke verschiebt sich jetzt von Signal- und Blocklogik zu
+  `Persistence`, `Resume-Semantik` und spaeterer externer Storage-Anbindung
+- der bestaetigte naechste Engpass ist jetzt die robuste
+  `mode_adaptation_state`-Schnittstelle nach aussen
+- die naechste Session soll deshalb auf Serialisierung, Resume-API und
+  Planner-Fortsetzungslogik zielen statt auf weitere Review-Runden
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-persistence-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-persistence-review-2026-04-02.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- Review-Triage auf Basis des bereits grünen H.1-Runtime-Stands
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-Success-Visibility-Signals 2026-04-02
 
 Die H.1-Runtime-Schicht deckt jetzt zusaetzliche reale Blockmuster ab,

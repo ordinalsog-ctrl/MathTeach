@@ -2,6 +2,36 @@
 
 Stand: 2026-04-02
 
+## Review-Triage Nach G 2026-04-02
+
+Die neuen Reviews bestaetigen Phase `G` nicht nur als erfolgreichen
+Feature-Schritt, sondern als echte Architekturverschiebung.
+
+Wichtigste Konsequenzen:
+
+- `mode_selector` gilt jetzt als stabile neue Schicht zwischen
+  `conflict_resolver` und `planner`
+- die Trennung zwischen `requested_mode` und `selected_mode` ist jetzt
+  ausdruecklich projekttragend
+- die naechste Phase ist jetzt klar als `planner-level live mode adaptation`
+  benannt
+- die Live-Phase soll zunaechst auf `Block-Ebene` arbeiten, nicht auf jedem
+  Einzelschritt
+- `Hysterese` und ruhige Uebergangssprache sind jetzt fruehe Guardrails
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/mode-selection-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/mode-selection-review-triage-2026-04-02.md)
+- [docs/architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md)
+- [docs/mode-selection-strategy.md](/Users/jonasweiss/MathTeach/docs/mode-selection-strategy.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+- [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md)
+
+Verifikation:
+
+- reine Doku- und Architektur-Triage
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Support-Sensitive-Mode-Selection 2026-04-02 G
 
 Die erste eigene `mode_selector`-Schicht ist jetzt zwischen

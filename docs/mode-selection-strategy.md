@@ -99,6 +99,21 @@ Noch nicht enthalten:
 - feinere Moduswahl fuer vier oder mehr aktive Profile
 - Nutzung echter Lernerhistorie fuer Moduswahl
 
+## Bruecke Zur Naechsten Phase
+
+Die Reviews bestaetigen die aktuelle Moduswahl als richtige
+`Planungs-Schicht`, aber noch nicht als voll dynamische Tutorik.
+
+Die naechste Phase ist deshalb:
+
+- `planner-level live mode adaptation`
+
+Diese Phase soll zunaechst mit drei Guardrails arbeiten:
+
+1. Wechsel nur auf `Block-Ebene`, nicht nach jedem Einzelschritt
+2. `Hysterese`, damit das System nicht nervoes zwischen Modi springt
+3. sanfte Uebergangssprache statt abrupter Richtungswechsel
+
 ## Naechste Ausbaustufe
 
 Nach dieser Strategie folgt:

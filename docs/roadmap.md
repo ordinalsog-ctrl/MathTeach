@@ -44,7 +44,9 @@
 - visuelle und textuelle Lehrmodi
 - Routing zwischen Beispielmodus und Ursprung-Erklaermodus
 - support-sensitive Moduswahl unter Mixed Profiles und Priority-Ladders
-- spaeter live mode adaptation innerhalb einer Session
+- block-level live mode adaptation innerhalb einer Session
+- Hysterese und ruhige Uebergaenge zwischen Modi
+- spaeter history-aware mode adaptation
 
 ## Phase 5: Expertenmodus
 

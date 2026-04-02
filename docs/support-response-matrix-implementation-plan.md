@@ -134,6 +134,12 @@ Aktueller Stand:
 - `mode_selector` ist jetzt als eigene Schicht fuer support-sensitive Moduswahl eingefuehrt
 - naechster Ausbau ist `planner-level live mode adaptation`
 
+Arbeitsregel fuer den naechsten Ausbau:
+
+- zuerst `block-level adaptation`
+- dann `hysteresis and stability rules`
+- erst spaeter `history-aware mode adaptation`
+
 ## Technische Zwischenziele
 
 ### 1. Support Signal Profile
@@ -182,6 +188,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 9. planner-level live mode adaptation vorbereiten
 10. `response_matrix.py` weiter stabilisieren
 11. Moduswahl spaeter mit Lernerhistorie koppeln
+12. Wechselregeln gegen hektisches `mode thrashing` definieren
 
 ## Nicht-Ziele Des Naechsten Sprints
 
@@ -189,3 +196,4 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 - noch keine gemischten Profile als Hauptpfad
 - noch keine vollstaendige UI-Neugestaltung
 - noch keine klinisch anmutenden Frageboegen
+- noch keine Live-Wechsel nach jedem Einzelschritt

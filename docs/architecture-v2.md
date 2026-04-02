@@ -23,10 +23,12 @@ flowchart TD
     B["Local Teacher Mind Store"] --> D
     C["Local Learner State and Intake"] --> D
     D --> E["Support Response Matrix Engine"]
-    E --> F["Tutor Planner and Runtime Modes"]
+    E --> M["Mode Selector"]
+    M --> F["Tutor Planner and Runtime Modes"]
     F --> G["Session Composer"]
     G --> H["Local UI and Voice Layer"]
     F --> I["Local Learning Memory"]
+    I --> M
     I --> C
 ```
 
@@ -94,28 +96,53 @@ Beispiele:
 - Checkrhythmus
 - externe Strukturhilfen
 
-### 5. Tutor Planner and Runtime Modes
+### 5. Mode Selector
+
+Diese Schicht trennt jetzt explizit:
+
+- `requested_mode`
+- `selected_mode`
+
+Sie verarbeitet:
+
+- aktive Supports
+- Konfliktpaare
+- Triads
+- Priority Ladders
+
+und entscheidet danach, welcher stabile Lehrmodus fuer die aktuelle Sitzung
+getragen werden soll.
+
+Wichtig:
+
+- wenige stabile Modi
+- explizite `constraints`
+- keine opaque Mittelwertlogik
+
+### 6. Tutor Planner and Runtime Modes
 
 Die Runtime verbindet:
 
 - Inhalt
 - Profil
 - Response Settings
-- Lernmodus
+- ausgewaehlten Lernmodus
 
 Aktuelle Moduslinie:
 
 - `worked_example_tutoring`
 - `origin_story_explanation`
 - `origin_then_example`
+- `guided_concept_explanation`
+- `formal_compact_explanation`
 
 Spaeter erweitert um:
 
-- `formal_compact_explanation`
 - `guided_practice_loop`
 - `prerequisite_repair`
+- `live mode adaptation`
 
-### 6. Session Composer
+### 7. Session Composer
 
 Der Composer erstellt die konkrete Sitzung:
 
@@ -134,7 +161,7 @@ Diese Schicht muss:
 
 arbeiten.
 
-### 7. Local UI and Voice Layer
+### 8. Local UI and Voice Layer
 
 Das System soll als:
 
@@ -203,8 +230,10 @@ Die erste Projektphase baute vor allem:
 Die naechste Phase baut jetzt:
 
 - `Support Response Matrix`
-- spaetere `response_engine`
+- `response_engine`
+- `mode_selector`
 - Planner-Integration
+- spaetere `live mode adaptation`
 
 Damit verschiebt sich die Architektur von:
 

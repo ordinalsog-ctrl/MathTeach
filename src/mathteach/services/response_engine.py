@@ -31,6 +31,7 @@ def derive_support_signal_profile(profile: LearnerProfile) -> SupportSignalProfi
             signal_profile.symbolic_processing = "fragile"
         elif need == "autism_spectrum_aware_support":
             signal_profile.autism_spectrum_aware_support = "declared"
+            signal_profile.attention_regulation = "supported"
         elif need == "language_sensitive_support":
             signal_profile.language_sensitive_support = "declared"
         elif need == "scarcity_aware_support":
@@ -213,6 +214,50 @@ def _apply_dyslexia_support(settings: TutorResponseSettings) -> TutorResponseSet
     return settings
 
 
+def _apply_autism_support(settings: TutorResponseSettings) -> TutorResponseSettings:
+    settings.session_duration = "predictable_guided_block"
+    settings.break_pattern = "predictable_optional_pause_points"
+    settings.transition_buffer = "explicit_transition_cue_before_every_shift"
+    settings.conceptual_increment = "small_and_highly_explicit"
+    settings.worked_example_ratio = "structured_examples_before_variation"
+    settings.symbolic_vs_verbal_balance = "explicit_literal_language_with_clean_symbol_layout"
+    settings.word_budget_per_chunk = "short_explicit_chunks"
+    settings.primary_representation = "stable_visual_structure_before_format_shifts"
+    settings.error_response_style = "explicit_calm_local_correction"
+    settings.check_frequency = "predictable_checkpoint_rhythm"
+    settings.language_support = "explicit_literal_instructions"
+    settings.sensory_load_level = "minimal_and_high_contrast"
+    settings.external_scaffolds = _merge_unique(
+        settings.external_scaffolds,
+        [
+            "consistent_session_structure",
+            "step_labels",
+            "explicit_transition_cues",
+            "visible_progress_markers",
+            "stable_visual_layout",
+        ],
+    )
+    settings.active_supports = _merge_unique(
+        settings.active_supports, ["autism_spectrum_aware_support"]
+    )
+    settings.rationale_summary = _merge_unique(
+        settings.rationale_summary,
+        [
+            "Use predictable structure, explicit transitions, and low sensory clutter.",
+            "Keep language literal and examples stable before introducing variation.",
+        ],
+    )
+    settings.source_anchors = _merge_unique(
+        settings.source_anchors,
+        [
+            "cdc-autism-treatment-and-intervention",
+            "rutherford-visual-supports-autism-scoping-review",
+            "arthur-kelly-visual-supports-autism-issues",
+        ],
+    )
+    return settings
+
+
 def derive_response_settings(
     profile: LearnerProfile, signal_profile: SupportSignalProfile
 ) -> TutorResponseSettings:
@@ -224,6 +269,8 @@ def derive_response_settings(
         settings = _apply_dyscalculia_support(settings)
     if signal_profile.dyslexia_aware_support in {"declared", "highly_relevant"}:
         settings = _apply_dyslexia_support(settings)
+    if signal_profile.autism_spectrum_aware_support in {"declared", "highly_relevant"}:
+        settings = _apply_autism_support(settings)
     if signal_profile.language_sensitive_support in {"possible", "declared", "highly_relevant"}:
         settings.language_support = "key_terms_and_syntax_support"
         settings.source_anchors = _merge_unique(

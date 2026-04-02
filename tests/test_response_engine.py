@@ -66,3 +66,25 @@ def test_response_engine_dyslexia_profile() -> None:
     assert response_settings.error_response_style == "clarify_reading_load_before_math_correction"
     assert "key_term_highlighting" in response_settings.external_scaffolds
     assert "shaywitz-dyslexia-specific-reading-disability" in response_settings.source_anchors
+
+
+def test_response_engine_autism_profile() -> None:
+    profile = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="medium",
+        preferred_pace="balanced",
+        language="de",
+        wants_visuals=True,
+        wants_history=False,
+        declared_support_needs=["autism_spectrum_aware_support"],
+    )
+
+    signal_profile, response_settings = build_support_response(profile)
+
+    assert signal_profile.autism_spectrum_aware_support == "declared"
+    assert signal_profile.attention_regulation == "supported"
+    assert response_settings.sensory_load_level == "minimal_and_high_contrast"
+    assert response_settings.language_support == "explicit_literal_instructions"
+    assert "consistent_session_structure" in response_settings.external_scaffolds
+    assert "rutherford-visual-supports-autism-scoping-review" in response_settings.source_anchors

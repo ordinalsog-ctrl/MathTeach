@@ -232,6 +232,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append("Use short blocks, explicit transitions, and fast feedback.")
     if "dyscalculia_aware_support" in response_settings.active_supports:
         teaching_pattern.append("Keep quantity meaning visible before compressing into symbols.")
+    if "dyslexia_aware_support" in response_settings.active_supports:
+        teaching_pattern.append("Reduce reading burden before concluding a math misunderstanding.")
+    if "autism_spectrum_aware_support" in response_settings.active_supports:
+        teaching_pattern.append("Keep structure predictable, explicit, and low in sensory clutter.")
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,

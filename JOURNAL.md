@@ -23,6 +23,7 @@ Neue Referenzdokumente aus dieser Review-Einarbeitung:
 - [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
 - [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
 - [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md)
+- [docs/support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md)
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
 
 ## Review-Einarbeitung 2026-04-02
@@ -260,6 +261,7 @@ Seit dem letzten operativen Schritt existiert nun auch ein erster
   - `ADHD-aware support`
   - `dyscalculia-aware support`
   - `dyslexia-aware support`
+  - `autism-spectrum-aware support`
 - `TeachingPlan` liefert diese Settings jetzt direkt mit aus
 - neue Service- und API-Tests sichern den Pfad ab
 
@@ -337,9 +339,8 @@ Empfohlene erste Ausbaureihenfolge:
 
 1. `response_engine` weiter entlang aller Response Dimensions ausbauen
 2. Planner staerker response-aware machen
-3. danach `autism-spectrum-aware support`
-4. danach `ELL / language-sensitive support`
-5. danach `scarcity-aware support`
+3. danach `language-sensitive support`
+4. danach `scarcity-aware support`
 
 Direkt vorbereitete naechste Arbeitsartefakte:
 

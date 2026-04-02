@@ -183,3 +183,29 @@ def test_tutoring_plan_declared_dyslexia_support() -> None:
         "glossary_plus_key_terms_plus_simplified_syntax"
     )
     assert "key_term_highlighting" in payload["response_settings"]["external_scaffolds"]
+
+
+def test_tutoring_plan_declared_autism_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir das bitte sehr klar und Schritt fuer Schritt.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["autism_spectrum_aware_support"],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["support_signal_profile"]["autism_spectrum_aware_support"] == "declared"
+    assert payload["response_settings"]["sensory_load_level"] == "minimal_and_high_contrast"
+    assert payload["response_settings"]["language_support"] == "explicit_literal_instructions"
+    assert "consistent_session_structure" in payload["response_settings"]["external_scaffolds"]

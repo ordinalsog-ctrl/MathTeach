@@ -80,6 +80,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md): Erste operative Matrix fuer ADHD-aware support
 - [docs/support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md): Erste operative Matrix fuer dyscalculia-aware support
 - [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md): Dritte operative Matrix fuer dyslexia-aware support
+- [docs/support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md): Vierte operative Matrix fuer autism-spectrum-aware support
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -188,4 +189,4 @@ Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 Im Code existiert dazu jetzt bereits ein erster `response_engine`, der
 `support signal profile` und `response settings` in die Tutoring-Planung
 einspeist. Dazu kommt jetzt auch ein eigenes Modellmodul `response_matrix.py`
-sowie ein erster operativer Codepfad fuer `dyslexia-aware support`.
+sowie operative Codepfade fuer `dyslexia-aware support` und `autism-spectrum-aware support`.

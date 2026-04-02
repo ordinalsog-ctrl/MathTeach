@@ -7,6 +7,7 @@ from mathteach.models import (
     StackResponse,
     TeachingPlan,
 )
+from mathteach.services.response_engine import build_support_response
 
 
 AUDIENCE_MODES = {
@@ -203,6 +204,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     response_arc = _mode_response_arc(lesson_mode)
     include_history, history_mode = _mode_history_strategy(lesson_mode, profile.wants_history)
     network_focus = _mode_network_focus(lesson_mode)
+    support_signal_profile, response_settings = build_support_response(profile)
 
     teaching_pattern = [
         "Start from the learner objective before introducing formal notation.",
@@ -222,6 +224,14 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append("Keep each algebraic move local, explicit, and checkable.")
     if lesson_mode == "origin_then_example":
         teaching_pattern.append("Bridge from historical motivation into the learner's own example.")
+    if response_settings.active_supports:
+        teaching_pattern.append(
+            "Adapt pacing, notation, and scaffolds to the active support profile."
+        )
+    if "adhd_aware_support" in response_settings.active_supports:
+        teaching_pattern.append("Use short blocks, explicit transitions, and fast feedback.")
+    if "dyscalculia_aware_support" in response_settings.active_supports:
+        teaching_pattern.append("Keep quantity meaning visible before compressing into symbols.")
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,
@@ -241,6 +251,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
 
     evaluation_focus = [
         "Did the answer choose the right lesson mode for the learner request?",
+        "Did the plan align response settings to the learner support profile?",
         "Did the explanation respect prerequisites?",
         "Was the mathematical claim sourceable?",
         "Was the difficulty level appropriate for the learner?",
@@ -251,6 +262,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         "State assumptions about the learner openly.",
         "Name the central idea before details.",
         "Keep notation load proportional to the learner level.",
+        "Keep support adaptations explicit and non-diagnostic.",
         "Cite or reference source families for nontrivial claims.",
     ]
 
@@ -260,6 +272,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         tone=tone,
         teaching_pattern=teaching_pattern,
         response_arc=response_arc,
+        support_signal_profile=support_signal_profile,
+        response_settings=response_settings,
         retrieval_plan=retrieval_plan,
         evaluation_focus=evaluation_focus,
         next_turn_contract=next_turn_contract,

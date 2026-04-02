@@ -139,6 +139,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/corpus.py](/Users/jonasweiss/MathTeach/src/mathteach/services/corpus.py): Blueprint-Service fuer die Mathe-Datenbank
 - [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
+- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Minimale regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings
 
 ## Schnellstart
 
@@ -181,3 +182,7 @@ Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 - `ADHD-aware support`
 - `dyscalculia-aware support`
 - der erste `Implementation Plan` fuer Code-Skeleton, Planner-Integration und spaetere Validierung
+
+Im Code existiert dazu jetzt bereits ein erster `response_engine`, der
+`support signal profile` und `response settings` in die Tutoring-Planung
+einspeist.

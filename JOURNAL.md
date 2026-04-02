@@ -249,6 +249,17 @@ Neben dem Dokumentationsstand gibt es jetzt auch einen ersten offenen Runtime-Zw
 - erweiterte `TeachingPlan`- und `RetrievalPlan`-Modelle
 - erste API-Tests fuer den Unterschied zwischen Beispielmodus und Ursprungserklaerung
 
+Seit dem letzten operativen Schritt existiert nun auch ein erster
+`response_engine` im Code:
+
+- `support signal profile` als eigenes Datenmodell
+- `response settings` als eigenes Datenmodell
+- erste regelbasierte Ableitung fuer:
+  - `ADHD-aware support`
+  - `dyscalculia-aware support`
+- `TeachingPlan` liefert diese Settings jetzt direkt mit aus
+- neue Service- und API-Tests sichern den Pfad ab
+
 Betroffene Dateien:
 
 - [docs/tutor-runtime-modes.md](/Users/jonasweiss/MathTeach/docs/tutor-runtime-modes.md)
@@ -256,7 +267,9 @@ Betroffene Dateien:
 - [docs/roadmap.md](/Users/jonasweiss/MathTeach/docs/roadmap.md)
 - [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [tests/test_response_engine.py](/Users/jonasweiss/MathTeach/tests/test_response_engine.py)
 
 ## Wichtige Spannung im Repo
 
@@ -292,8 +305,8 @@ Mit dem Review vom `2026-04-02` ist diese Spannung jetzt enger gefasst:
 
 Der logisch naechste starke Schritt ist:
 
-- keine neue allgemeine Literatur-Runde
-- sondern die erste echte `Support Response Matrix`
+- kein neuer Theorieblock
+- sondern die naechste Code-Stufe der `Support Response Matrix`
 
 also die Uebersetzung von:
 
@@ -317,12 +330,13 @@ in konkrete Tutorentscheidungen ueber:
 
 Empfohlene erste Ausbaureihenfolge:
 
-1. `ADHD-aware support`
-2. `dyscalculia-aware support`
-3. `dyslexia-aware support`
-4. `autism-spectrum-aware support`
-5. `ELL / language-sensitive support`
-6. `scarcity-aware support`
+1. `response_matrix.py` als eigenes Modellmodul
+2. `response_engine` weiter ausbauen
+3. Planner staerker response-aware machen
+4. danach `dyslexia-aware support`
+5. danach `autism-spectrum-aware support`
+6. danach `ELL / language-sensitive support`
+7. danach `scarcity-aware support`
 
 Direkt vorbereitete naechste Arbeitsartefakte:
 

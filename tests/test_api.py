@@ -101,6 +101,8 @@ def test_tutoring_plan_endpoint() -> None:
     payload = response.json()
     assert payload["lesson_mode"] == "guided_concept_explanation"
     assert payload["audience_mode"] == "teen"
+    assert payload["support_signal_profile"]["active_supports"] == []
+    assert payload["response_settings"]["session_duration"] == "25_to_35_minute_guided_block"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "supporting_only"
 
@@ -125,6 +127,32 @@ def test_tutoring_plan_origin_story_mode() -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["lesson_mode"] == "origin_story_explanation"
+    assert payload["response_settings"]["error_response_style"] == "gentle_normalize_then_strategy"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "origin_first"
     assert "application_bridge" in payload["retrieval_plan"]["network_focus"]
+
+
+def test_tutoring_plan_declared_adhd_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["adhd_aware_support"],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["support_signal_profile"]["adhd_aware_support"] == "declared"
+    assert payload["response_settings"]["session_duration"] == "12_to_15_minute_focus_blocks"
+    assert "step_labels" in payload["response_settings"]["external_scaffolds"]

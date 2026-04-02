@@ -2,6 +2,35 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Session-Resume 2026-04-02
+
+Der erste H.1-Block-Loop kann jetzt nicht nur mehrere Bloecke in einer
+Vorschau simulieren, sondern auch mit einem bestehenden
+`mode_adaptation_state` fortgesetzt werden.
+
+Wichtigste Konsequenzen:
+
+- `SessionRequest` kann jetzt einen bestehenden `mode_adaptation_state`
+  wieder aufnehmen
+- der Planner setzt dann im aktuellen Runtime-Modus fort statt wieder bei der
+  reinen Startwahl von Phase `G` zu beginnen
+- laengere Blockfolgen mit Mehrfachwechseln sind jetzt testbar abgesichert
+- Cooldown- und Resume-Verhalten sind jetzt ueber API und Planner-Tests
+  abgedeckt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `53 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Block-Loop 2026-04-02
 
 Die vertiefte Planner-Integration fuer Phase `H.1` ist jetzt als erster

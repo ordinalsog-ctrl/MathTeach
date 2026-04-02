@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -49,6 +51,7 @@ class SessionRequest(BaseModel):
     objective: str = Field(min_length=5, max_length=500)
     learner_profile: LearnerProfile
     runtime_observations: list[RuntimeObservationInput] = Field(default_factory=list)
+    mode_adaptation_state: ModeAdaptationState | None = None
 
 
 class RetrievalPlan(BaseModel):

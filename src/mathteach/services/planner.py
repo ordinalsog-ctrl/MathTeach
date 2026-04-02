@@ -246,12 +246,17 @@ def _simulate_runtime_blocks(
     objective: str,
     initial_mode: str,
     runtime_observations: list[RuntimeObservationInput],
+    initial_state: ModeAdaptationState | None,
     support_signal_profile,
     response_settings,
 ) -> tuple[list[PlannedTeachingBlock], list[ModeAdaptationTraceEntry], ModeAdaptationState]:
     adapter = RuntimeModeAdapter()
-    current_mode = initial_mode
-    state = ModeAdaptationState(current_mode=current_mode)
+    if initial_state is not None:
+        state = initial_state.model_copy(deep=True)
+        current_mode = initial_state.current_mode
+    else:
+        current_mode = initial_mode
+        state = ModeAdaptationState(current_mode=current_mode)
     planned_blocks: list[PlannedTeachingBlock] = []
     adaptation_trace: list[ModeAdaptationTraceEntry] = []
     pending_transition_message: str | None = None
@@ -371,6 +376,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         response_settings,
     )
     lesson_mode = mode_selection.selected_mode
+    if request.mode_adaptation_state is not None:
+        lesson_mode = request.mode_adaptation_state.current_mode
     response_arc = _mode_response_arc(lesson_mode)
     include_history, history_mode = _mode_history_strategy(lesson_mode, profile.wants_history)
     if "short_origin_bridge" in mode_selection.constraints or "micro_origin_bridge" in mode_selection.constraints:
@@ -468,6 +475,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         objective=request.objective,
         initial_mode=lesson_mode,
         runtime_observations=request.runtime_observations,
+        initial_state=request.mode_adaptation_state,
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
     )

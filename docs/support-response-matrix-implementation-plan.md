@@ -135,13 +135,15 @@ Aktueller Stand:
 - `runtime_mode_adapter` und erste H.1-Testfamilien sind operational
 - ein erster echter `planner-level live mode adaptation`-Block-Loop ist jetzt
   operational
-- naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen
+- Session-Resume ueber bestehenden `mode_adaptation_state` ist jetzt moeglich
+- naechster Ausbau ist End-to-End-Vertiefung ueber laengere Blockfolgen und
+  robustere Persistenz
 
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
 - zuerst laengere Blockfolgen und Mehrfachwechsel absichern
-- dann `ModeAdaptationState` robuster ueber Sequenzen und Randfaelle pruefen
+- dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
 - dann End-to-End-Blocksimulationen verbreitern
 - danach Signalabdeckung und Randfaelle verbreitern
 - erst spaeter `history-aware mode adaptation`
@@ -210,7 +212,7 @@ Naechster direkter Coding-Start:
 
 - laengere Planner-Blocksequenzen testen
 - Mehrfachwechsel und Cooldown-Randfaelle absichern
-- spaeter Session-Persistenz fuer `ModeAdaptationState` vorbereiten
+- Persistenzschnittstelle fuer `ModeAdaptationState` spaeter nach aussen ziehen
 
 ## Nicht-Ziele Des Naechsten Sprints
 

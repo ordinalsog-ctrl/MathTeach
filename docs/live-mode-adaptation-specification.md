@@ -107,6 +107,35 @@ class ObservationSignal:
     block_index: int
 ```
 
+### Support-sensitive Interpretation Layer
+
+Rohe Beobachtungen sollen nicht direkt in die Modusentscheidung gehen.
+
+Dazwischen liegt fuer `H.1` ein eigener Interpretationsschritt:
+
+```python
+@dataclass
+class RawBlockObservation:
+    block_index: int
+    evidence: list[str]
+    current_mode: str
+
+
+class SignalInterpreter:
+    def interpret(
+        self,
+        raw_observation: RawBlockObservation,
+        profile: SupportSignalProfile,
+    ) -> list[ObservationSignal]:
+        ...
+```
+
+Die Aufgabe dieses Schritts ist:
+
+- rohe Evidenz sammeln
+- Evidenz support-sensitiv gewichten
+- erst danach formale `ObservationSignal`-Objekte ableiten
+
 ### Primäre Signaltypen
 
 #### 1. `confusion_signal`
@@ -422,6 +451,22 @@ Das System darf also nicht:
 - direkt im naechsten Block wieder zurueckspringen
 - eine Sitzung in staendige Moduskorrektur verwandeln
 
+## MVP Default Calibration Fuer H.1
+
+Fuer die erste Runtime-Implementierung gelten feste Startwerte.
+
+Diese Werte sind bewusst konservativ und spaeter kalibrierbar.
+
+| Parameter | Startwert | Zweck |
+| --- | --- | --- |
+| `observation_window_blocks` | `2` | aktueller Block plus ein Vergleichsblock |
+| `minimum_signal_strength_for_shift` | `meaningful` | einzelne schwache Signale loesen keinen Wechsel aus |
+| `min_blocks_in_mode` | `2` | mindestens zwei Bloecke pro Modus |
+| `cooldown_blocks_after_change` | `1` | kein sofortiger Rueckwechsel |
+| `max_mode_changes_per_session` | `3` | Sitzung bleibt stabil |
+
+Diese Kalibrierung gilt fuer `H.1` als MVP-Default, nicht als Endzustand.
+
 ## Transition Messaging
 
 ### Prinzip
@@ -502,6 +547,57 @@ Die erste Version soll **nicht** frei generiert werden, sondern aus
 regelgebundenen Templates kommen.
 
 Damit bleibt die lokale Architektur gewahrt.
+
+## API Zwischen Phase G, Planner Und Phase H
+
+Die operative Schnittstelle fuer `H.1` soll klein und testbar bleiben.
+
+### Zielobjekte
+
+```python
+@dataclass
+class ModeAdaptationDecision:
+    selected_mode: str
+    changed: bool
+    trigger_signals: list[str]
+    transition_family: str | None
+    transition_message: str | None
+    notes: list[str]
+
+
+class RuntimeModeAdapter:
+    def check_and_adapt_mode(
+        self,
+        state: ModeAdaptationState,
+        current_mode: str,
+        block_observation: RawBlockObservation,
+        profile: SupportSignalProfile,
+    ) -> ModeAdaptationDecision:
+        ...
+```
+
+### Rueckgabe-Faelle
+
+- `changed = False`
+  - derselbe Modus bleibt aktiv
+  - keine Uebergangsmeldung notwendig
+- `changed = True`
+  - ein neuer Modus wird gewaehlt
+  - `transition_family` bestimmt das Template
+  - `transition_message` wird dem naechsten Block vorangestellt
+
+## Planner Integration Flow
+
+Die Integration in `planner.py` soll fuer `H.1` diesem Ablauf folgen:
+
+1. `mode_selector` liefert den Startmodus fuer die Sitzung oder den neuen
+   Anfragekontext
+2. der Planner erzeugt einen ersten Block in diesem Modus
+3. aus dem Blockverlauf wird eine `RawBlockObservation` aufgebaut
+4. `SignalInterpreter` erzeugt daraus support-sensitive `ObservationSignal`
+5. `runtime_mode_adapter` prueft am Blockende `stay` oder `shift`
+6. bei `shift` wird zuerst `transition_message` ausgegeben
+7. der naechste Block wird im neuen Modus geplant
 
 ## Rueckwaertskompatibilitaet mit Phase G
 

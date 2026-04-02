@@ -137,7 +137,9 @@ Aktueller Stand:
 Arbeitsregel fuer den naechsten Ausbau:
 
 - zuerst `block-level adaptation`
+- zuerst eine kleine API zwischen Planner und Runtime-Adapter festziehen
 - dann `hysteresis and stability rules`
+- dann support-sensitive Signalinterpretation sauber einschieben
 - erst spaeter `history-aware mode adaptation`
 
 Programmgrundlage:
@@ -192,10 +194,13 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 8. Triad-Szenarien und Prioritaetsleitern erweitern
 9. planner-level live mode adaptation vorbereiten
 10. `observation signals` operativ spezifizieren
-11. `runtime_mode_adapter` als neue Komponente vorbereiten
-12. `response_matrix.py` weiter stabilisieren
-13. Moduswahl spaeter mit Lernerhistorie koppeln
-14. Wechselregeln gegen hektisches `mode thrashing` definieren
+11. API zwischen `mode_selector`, `planner` und `runtime_mode_adapter` festziehen
+12. `SignalInterpreter` fuer rohe Blockbeobachtungen vorbereiten
+13. `runtime_mode_adapter` als neue Komponente vorbereiten
+14. erste MVP-Schwellen fuer `H.1` fest kalibrieren
+15. `response_matrix.py` weiter stabilisieren
+16. Moduswahl spaeter mit Lernerhistorie koppeln
+17. Wechselregeln gegen hektisches `mode thrashing` definieren
 
 ## Nicht-Ziele Des Naechsten Sprints
 

@@ -157,8 +157,10 @@ Nicht gewollt:
 Die Phase braucht spaeter voraussichtlich:
 
 - `PlannerObservationSignal`
+- `RawBlockObservation`
 - `ModeAdaptationDecision`
 - `ModeAdaptationState`
+- `SignalInterpreter`
 
 Diese sollen tragen:
 
@@ -166,6 +168,7 @@ Diese sollen tragen:
 - zuletzt beobachtete Signale
 - begruendeter Wechsel oder Verbleib
 - Schutzregeln gegen zu haeufige Anpassung
+- support-sensitive Gewichtung roher Beobachtungen
 
 ## H.7 Teststrategie
 
@@ -190,13 +193,14 @@ Die operative Testaufschluesselung liegt jetzt ebenfalls in:
 ## H.8 Reihenfolge
 
 1. `observation signal schema`
-2. `adaptation rule draft`
-3. `hysteresis guard`
-4. `transition message templates`
-5. `runtime_mode_adapter design`
-6. `planner integration`
-7. `tests`
-8. `journal handoff`
+2. `signal interpreter`
+3. `adaptation rule draft`
+4. `hysteresis guard`
+5. `transition message templates`
+6. `runtime_mode_adapter design`
+7. `planner integration`
+8. `tests`
+9. `journal handoff`
 
 ## Nicht-Ziele Von H.1
 
@@ -214,3 +218,12 @@ Phase `H` ist in ihrer ersten Runde erfolgreich, wenn MathTeach:
 - nach einem Block begruendet im Modus bleiben oder wechseln kann
 - Wechsel erklaerbar und ruhig formuliert
 - keine hektischen Rueckwechsel produziert
+
+## Readiness Note
+
+Nach der aktuellen Review-Schaerfung gilt:
+
+- die Architektur von `H.1` ist jetzt weitgehend implementierungsreif
+- offen sind vor allem Kalibrierung und spaetere Feintuning-Fragen
+- die naechste Session soll deshalb nicht mehr primaer spekulieren,
+  sondern direkt die ersten Runtime-Artefakte bauen

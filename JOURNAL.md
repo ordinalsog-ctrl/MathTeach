@@ -2,6 +2,36 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Implementierungsreife 2026-04-02
+
+Der neue Review bestaetigt, dass Phase `H` nicht mehr nur konzeptionell,
+sondern fast direkt codefaehig beschrieben ist.
+
+Wichtigste Konsequenzen:
+
+- die verbleibenden Restluecken sind jetzt auf API, Kalibrierung und
+  Planner-Integration eingegrenzt
+- `runtime_mode_adapter` ist jetzt als naechste konkrete Runtime-Komponente
+  noch klarer positioniert
+- `SignalInterpreter` ist jetzt als eigener Schritt zwischen roher Evidenz
+  und eigentlicher Adaptionsentscheidung festgezogen
+- erste MVP-Defaults fuer `H.1` sind jetzt als Startkalibrierung beschrieben
+- die Planner-Folge `start mode -> block -> observe -> interpret -> adapt`
+  ist jetzt explizit dokumentiert
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/live-mode-adaptation-readiness-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-readiness-review-2026-04-02.md)
+- [docs/live-mode-adaptation-specification.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-specification.md)
+- [docs/live-mode-adaptation-program.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-program.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- reine Doku- und Spezifikationsschaerfung
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-Planungsschaerfung 2026-04-02
 
 Der neue Review hat die entscheidende Frage gestellt, ob Phase `H` schon

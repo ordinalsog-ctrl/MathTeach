@@ -257,3 +257,55 @@ def test_planner_derives_cross_block_breakthrough_on_resume() -> None:
     assert "transfer_success_two_blocks" in plan.planned_blocks[0].observed_evidence
     assert plan.mode_adaptation_trace[0].changed is True
     assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"
+
+
+def test_planner_derives_visible_small_success_from_local_progress() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["scarcity_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["correct_with_guidance"]},
+            ],
+        )
+    )
+
+    assert "visible_small_success" in plan.planned_blocks[0].observed_evidence
+    assert plan.mode_adaptation_trace[0].changed is False
+
+
+def test_planner_derives_missing_success_line_across_blocks() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir die quadratische Gleichung anschaulich.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["scarcity_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["single_concept_error"]},
+                {"evidence": ["single_concept_error"]},
+                {"evidence": ["single_concept_error"]},
+            ],
+        )
+    )
+
+    assert "no_success_visible_two_blocks" in plan.planned_blocks[1].observed_evidence
+    assert plan.mode_adaptation_trace[1].changed is False
+    assert plan.mode_adaptation_trace[2].changed is True
+    assert plan.mode_adaptation_trace[2].mode_after == "worked_example_tutoring"

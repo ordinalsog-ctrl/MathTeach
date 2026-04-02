@@ -2,6 +2,33 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Success-Visibility-Signals 2026-04-02
+
+Die H.1-Runtime-Schicht deckt jetzt zusaetzliche reale Blockmuster ab,
+vor allem sichtbare kleine Erfolge und ausbleibende Erfolgslinien ueber
+mehrere Bloecke.
+
+Wichtigste Konsequenzen:
+
+- der Planner leitet jetzt `visible_small_success` automatisch aus lokalen
+  Fortschrittsindikatoren ab
+- bei wiederholter Schwierigkeit ohne sichtbaren Erfolg entsteht jetzt
+  automatisch `no_success_visible_two_blocks`
+- diese Linie greift jetzt auch direkt im `scarcity_aware_support`-Pfad
+- API- und Planner-Tests sichern diese neuen Signalfenster explizit ab
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `65 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Multi-Block-Observation-Windows 2026-04-02
 
 Die H.1-Runtime-Schicht verdichtet jetzt wiederkehrende Beobachtungsmuster

@@ -141,6 +141,8 @@ Aktueller Stand:
 - resume-faehige `last_observation_evidence` sind jetzt Teil des Runtime-State
 - Mehrblock-Signale werden jetzt im Planner selbst verdichtet statt nur als
   Roh-Input erwartet
+- sichtbare kleine Erfolge und ausbleibende Erfolgslinien werden jetzt
+  ebenfalls direkt im Planner abgeleitet
 - naechster Ausbau ist End-to-End-Vertiefung ueber breitere Signalszenarien,
   robustere Persistenz und spaetere Storage-Anbindung
 

@@ -281,6 +281,37 @@ def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     assert payload["mode_adaptation_state"]["pending_transition_message"] is None
 
 
+def test_tutoring_plan_derives_missing_success_line_for_scarcity_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["scarcity_aware_support"],
+            },
+            "runtime_observations": [
+                {"evidence": ["single_concept_error"]},
+                {"evidence": ["single_concept_error"]},
+                {"evidence": ["single_concept_error"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "no_success_visible_two_blocks" in payload["planned_blocks"][1]["observed_evidence"]
+    assert payload["mode_adaptation_trace"][1]["changed"] is False
+    assert payload["mode_adaptation_trace"][2]["changed"] is True
+    assert payload["mode_adaptation_trace"][2]["mode_after"] == "worked_example_tutoring"
+
+
 def test_tutoring_plan_declared_adhd_support() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

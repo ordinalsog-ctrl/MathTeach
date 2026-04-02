@@ -247,6 +247,9 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
 - automatische Ableitung von Mehrblock-Signalen wie
   `transfer_success_two_blocks` und `no_progress_three_blocks`
+- automatische Ableitung von `visible_small_success` und
+  `no_success_visible_two_blocks` fuer realistischere Erfolgs- und
+  Friktionslinien
 
 Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare

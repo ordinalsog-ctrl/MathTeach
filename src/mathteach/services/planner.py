@@ -255,11 +255,46 @@ def _has_overload_indicator(evidence: set[str]) -> bool:
     )
 
 
+def _has_visible_success_indicator(evidence: set[str]) -> bool:
+    return bool(
+        evidence
+        & {
+            "visible_small_success",
+            "correct_with_guidance",
+            "pattern_recognized",
+            "transfer_success",
+            "transfer_success_two_blocks",
+            "self_correction",
+            "explains_next_step",
+            "active_continue",
+        }
+    )
+
+
+def _has_struggle_indicator(evidence: set[str]) -> bool:
+    return bool(
+        evidence
+        & {
+            "single_concept_error",
+            "repeated_concept_error",
+            "repeated_concept_error_across_blocks",
+            "persistent_same_question",
+            "off_target_response",
+            "no_progress_block",
+            "no_progress_two_blocks",
+            "no_progress_three_blocks",
+        }
+    ) or _has_overload_indicator(evidence)
+
+
 def _augment_observation_evidence(
     raw_evidence: list[str],
     previous_effective_evidence: set[str] | None,
 ) -> list[str]:
     evidence = set(raw_evidence)
+
+    if _has_visible_success_indicator(evidence):
+        evidence.add("visible_small_success")
 
     if previous_effective_evidence:
         if "repeated_concept_error" in evidence and (
@@ -280,11 +315,27 @@ def _augment_observation_evidence(
         ):
             evidence.add("transfer_success_two_blocks")
 
+        if (
+            ("pattern_recognized" in evidence or "transfer_success" in evidence)
+            and "correct_with_guidance" in previous_effective_evidence
+        ):
+            evidence.add("reduced_prompting")
+
         if _has_overload_indicator(evidence) and (
             _has_overload_indicator(previous_effective_evidence)
             or "overload_persisted_after_simplification" in previous_effective_evidence
         ):
             evidence.add("overload_persisted_after_simplification")
+
+        if (
+            not _has_visible_success_indicator(evidence)
+            and not _has_visible_success_indicator(previous_effective_evidence)
+            and (
+                _has_struggle_indicator(evidence)
+                or _has_struggle_indicator(previous_effective_evidence)
+            )
+        ):
+            evidence.add("no_success_visible_two_blocks")
 
     return sorted(evidence)
 

@@ -101,3 +101,12 @@ Offen bleiben:
 - spaetere Feinkalibrierung mit realen Nutzungsdaten
 - tiefere support-spezifische Gewichtung
 - history-aware Mehrsitzungsanpassung in spaeteren Phasen
+
+## Status Nach Der Finalen Bewertung
+
+Die anschliessende Review-Lage bestaetigt:
+
+- diese Restpunkte sind keine Startblocker mehr
+- `H.1` kann jetzt direkt in Code uebersetzt werden
+- der naechste sinnvolle Schritt ist keine weitere Doku-Runde,
+  sondern die erste Runtime-Implementierung

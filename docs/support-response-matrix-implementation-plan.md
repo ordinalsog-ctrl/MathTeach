@@ -136,6 +136,7 @@ Aktueller Stand:
 
 Arbeitsregel fuer den naechsten Ausbau:
 
+- `Phase H.1` gilt jetzt als startbereit fuer Runtime-Code
 - zuerst `block-level adaptation`
 - zuerst eine kleine API zwischen Planner und Runtime-Adapter festziehen
 - dann `hysteresis and stability rules`
@@ -201,6 +202,12 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 15. `response_matrix.py` weiter stabilisieren
 16. Moduswahl spaeter mit Lernerhistorie koppeln
 17. Wechselregeln gegen hektisches `mode thrashing` definieren
+
+Naechster direkter Coding-Start:
+
+- `src/mathteach/services/runtime_mode_adapter.py`
+- Adaptionsmodelle in `src/mathteach/models.py`
+- erste Tests fuer Beobachtung, Hysterese und blockweisen Moduswechsel
 
 ## Nicht-Ziele Des Naechsten Sprints
 

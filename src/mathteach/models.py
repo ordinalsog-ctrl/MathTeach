@@ -19,6 +19,15 @@ MathLevel = Literal[
 ]
 ConfidenceLevel = Literal["low", "medium", "high"]
 Pace = Literal["gentle", "balanced", "intensive"]
+ObservationStrength = Literal["weak", "meaningful", "strong"]
+ObservationSignalType = Literal[
+    "confusion_signal",
+    "overload_signal",
+    "stagnation_signal",
+    "breakthrough_signal",
+    "confidence_recovery_signal",
+]
+TransitionFamily = Literal["simplifying", "reframing", "stretching"]
 
 
 class LearnerProfile(BaseModel):
@@ -55,6 +64,43 @@ class ModeSelection(BaseModel):
     constraints: list[str]
 
 
+class RawBlockObservation(BaseModel):
+    block_index: int = Field(ge=0)
+    current_mode: str = Field(min_length=3)
+    evidence: list[str] = Field(default_factory=list)
+
+
+class ObservationSignal(BaseModel):
+    signal_type: ObservationSignalType
+    strength: ObservationStrength
+    evidence: list[str] = Field(default_factory=list)
+    support_context: list[SupportNeed] = Field(default_factory=list)
+    block_index: int = Field(ge=0)
+
+
+class SignalInterpretationResult(BaseModel):
+    raw_observation: RawBlockObservation
+    signals: list[ObservationSignal] = Field(default_factory=list)
+    notes: list[str] = Field(default_factory=list)
+
+
+class ModeAdaptationState(BaseModel):
+    current_mode: str = Field(min_length=3)
+    blocks_in_current_mode: int = Field(default=0, ge=0)
+    mode_changes_in_session: int = Field(default=0, ge=0)
+    last_change_reason: str | None = None
+    cooldown_blocks_remaining: int = Field(default=0, ge=0)
+
+
+class ModeAdaptationDecision(BaseModel):
+    selected_mode: str
+    changed: bool = False
+    trigger_signals: list[str] = Field(default_factory=list)
+    transition_family: TransitionFamily | None = None
+    transition_message: str | None = None
+    notes: list[str] = Field(default_factory=list)
+
+
 class TeachingPlan(BaseModel):
     lesson_mode: str
     audience_mode: str
@@ -62,6 +108,7 @@ class TeachingPlan(BaseModel):
     teaching_pattern: list[str]
     response_arc: list[str]
     mode_selection: ModeSelection
+    mode_adaptation_state: ModeAdaptationState
     support_signal_profile: SupportSignalProfile
     response_settings: TutorResponseSettings
     retrieval_plan: RetrievalPlan

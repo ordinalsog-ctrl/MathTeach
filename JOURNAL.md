@@ -2,6 +2,40 @@
 
 Stand: 2026-04-02
 
+## Phase-H-H1-Code-Start 2026-04-02
+
+Die erste echte Runtime-Umsetzung fuer Phase `H.1` ist jetzt im Repo
+angekommen.
+
+Wichtigste Konsequenzen:
+
+- `runtime_mode_adapter.py` existiert jetzt als erste operative H-Komponente
+- `SignalInterpreter` sitzt jetzt zwischen roher Blockbeobachtung und
+  Adaptionsentscheidung
+- neue Modelle fuer `RawBlockObservation`, `ObservationSignal`,
+  `SignalInterpretationResult`, `ModeAdaptationState` und
+  `ModeAdaptationDecision` sind jetzt im gemeinsamen Modell-Layer verankert
+- der Planner liefert jetzt bereits einen initialen
+  `mode_adaptation_state` fuer spaetere Blockanpassung mit aus
+- die ersten drei H-Testfamilien sind jetzt real im Code:
+  Beobachtung, Adapterlogik und Transition-Sprache
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_observation_signal_interpretation.py](/Users/jonasweiss/MathTeach/tests/test_observation_signal_interpretation.py)
+- [tests/test_runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/tests/test_runtime_mode_adapter.py)
+- [tests/test_transition_language.py](/Users/jonasweiss/MathTeach/tests/test_transition_language.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `47 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Finalbewertung 2026-04-02
 
 Die neue Review-Lage bestaetigt Phase `H` jetzt nicht mehr nur als

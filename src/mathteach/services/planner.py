@@ -2,6 +2,7 @@ from mathteach.config import Settings
 from mathteach.models import (
     LearnerProfile,
     ModelAssignment,
+    ModeAdaptationState,
     ModeSelection,
     RetrievalPlan,
     SessionRequest,
@@ -288,6 +289,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     evaluation_focus = [
         "Did the answer choose the right lesson mode for the learner request?",
         "Did the plan align response settings to the learner support profile?",
+        "Is the selected mode ready for later block-level live adaptation?",
         "Did the explanation respect prerequisites?",
         "Was the mathematical claim sourceable?",
         "Was the difficulty level appropriate for the learner?",
@@ -299,6 +301,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         "Name the central idea before details.",
         "Keep notation load proportional to the learner level.",
         "Keep support adaptations explicit and non-diagnostic.",
+        "Only adapt live mode at block boundaries, never at every small step.",
         "Cite or reference source families for nontrivial claims.",
     ]
 
@@ -309,6 +312,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern=teaching_pattern,
         response_arc=response_arc,
         mode_selection=mode_selection,
+        mode_adaptation_state=ModeAdaptationState(current_mode=lesson_mode),
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
         retrieval_plan=retrieval_plan,

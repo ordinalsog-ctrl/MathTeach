@@ -154,6 +154,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
 - [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Minimale regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py): Erste H.1-Runtime-Komponente fuer blockweise Modusanpassung mit `SignalInterpreter`, Hysterese und Transition-Templates
 
 ## Schnellstart
 
@@ -207,6 +208,7 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   mit `SignalInterpreter`, Planner-Flow und Startkalibrierung fuer `H.1`
 - `Phase H.1` gilt jetzt abschliessend als `implementation-ready`,
   also bereit fuer die erste Runtime-Umsetzung
+- die ersten H.1-Codeartefakte existieren jetzt bereits im Repo
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -226,6 +228,13 @@ einspeist. Dazu kommt jetzt auch ein eigenes Modellmodul `response_matrix.py`
 sowie operative Codepfade fuer `dyslexia-aware support`,
 `autism-spectrum-aware support`, `language-sensitive support`
 und `scarcity-aware support`.
+
+Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
+
+- `SignalInterpreter` fuer support-sensitive Blocksignale
+- `runtime_mode_adapter` fuer blockweises `stay` oder `shift`
+- erste Hysterese- und Transition-Logik
+- initialer `mode_adaptation_state` direkt im `TeachingPlan`
 
 Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare

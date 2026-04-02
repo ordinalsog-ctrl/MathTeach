@@ -101,6 +101,8 @@ def test_tutoring_plan_endpoint() -> None:
     payload = response.json()
     assert payload["lesson_mode"] == "guided_concept_explanation"
     assert payload["audience_mode"] == "teen"
+    assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+    assert payload["mode_adaptation_state"]["blocks_in_current_mode"] == 0
     assert payload["support_signal_profile"]["active_supports"] == []
     assert payload["response_settings"]["session_duration"] == "25_to_35_minute_guided_block"
     assert payload["retrieval_plan"]["include_history"] is True
@@ -129,6 +131,7 @@ def test_tutoring_plan_origin_story_mode() -> None:
     assert payload["lesson_mode"] == "origin_story_explanation"
     assert payload["mode_selection"]["requested_mode"] == "origin_story_explanation"
     assert payload["mode_selection"]["selected_mode"] == "origin_story_explanation"
+    assert payload["mode_adaptation_state"]["current_mode"] == "origin_story_explanation"
     assert payload["response_settings"]["error_response_style"] == "gentle_normalize_then_strategy"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "origin_first"

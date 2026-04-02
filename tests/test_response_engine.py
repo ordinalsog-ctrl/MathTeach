@@ -112,3 +112,24 @@ def test_response_engine_language_sensitive_profile() -> None:
     )
     assert "key_term_glossary" in response_settings.external_scaffolds
     assert "sharma-sharma-multilingual-math-meta-analysis" in response_settings.source_anchors
+
+
+def test_response_engine_scarcity_profile() -> None:
+    profile = LearnerProfile(
+        age_group="teen",
+        math_level="middle_school",
+        confidence="low",
+        preferred_pace="balanced",
+        language="de",
+        wants_visuals=True,
+        wants_history=False,
+        declared_support_needs=["scarcity_aware_support"],
+    )
+
+    signal_profile, response_settings = build_support_response(profile)
+
+    assert signal_profile.scarcity_aware_support == "declared"
+    assert response_settings.transition_buffer == "brief_explicit_transition_with_goal_reminder"
+    assert response_settings.language_support == "plain_goal_and_relevance_framing"
+    assert "clear_success_criteria" in response_settings.external_scaffolds
+    assert "mani-mullainathan-shafir-zhao-poverty-cognition" in response_settings.source_anchors

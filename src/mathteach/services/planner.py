@@ -240,6 +240,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         teaching_pattern.append(
             "Bridge everyday language and math vocabulary before compressing into formal terms."
         )
+    if "scarcity_aware_support" in response_settings.active_supports:
+        teaching_pattern.append(
+            "Make relevance, success criteria, and visible progress explicit from the start."
+        )
 
     retrieval_plan = RetrievalPlan(
         concept_depth=concept_depth,

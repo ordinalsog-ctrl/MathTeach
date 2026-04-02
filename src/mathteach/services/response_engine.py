@@ -304,6 +304,55 @@ def _apply_language_sensitive_support(settings: TutorResponseSettings) -> TutorR
     return settings
 
 
+def _apply_scarcity_support(settings: TutorResponseSettings) -> TutorResponseSettings:
+    settings.transition_buffer = "brief_explicit_transition_with_goal_reminder"
+    if settings.worked_example_ratio == "balanced_examples_then_practice":
+        settings.worked_example_ratio = "examples_then_quick_success_practice"
+    if settings.symbolic_vs_verbal_balance == "balanced":
+        settings.symbolic_vs_verbal_balance = "meaning_and_relevance_before_dense_formalism"
+    if settings.word_budget_per_chunk == "short_clear_chunks":
+        settings.word_budget_per_chunk = "short_clear_chunks_with_immediate_relevance"
+    if settings.primary_representation in {"verbal_then_symbolic", "visual_plus_verbal"}:
+        settings.primary_representation = "everyday_relevance_then_visual_or_symbolic"
+    if settings.error_response_style in {
+        "gentle_normalize_then_strategy",
+        "direct_with_local_justification",
+    }:
+        settings.error_response_style = "stabilize_then_strategy_with_progress_marker"
+    if settings.check_frequency in {"every_few_steps", "every_major_step"}:
+        settings.check_frequency = "every_major_step_with_progress_confirmation"
+    if settings.language_support == "standard":
+        settings.language_support = "plain_goal_and_relevance_framing"
+    settings.external_scaffolds = _merge_unique(
+        settings.external_scaffolds,
+        [
+            "clear_success_criteria",
+            "visible_progress_markers",
+            "why_this_matters_now",
+            "small_wins_sequence",
+            "re_entry_summary_after_interruption",
+        ],
+    )
+    settings.active_supports = _merge_unique(settings.active_supports, ["scarcity_aware_support"])
+    settings.rationale_summary = _merge_unique(
+        settings.rationale_summary,
+        [
+            "Reduce unnecessary friction and make immediate value visible under constrained bandwidth.",
+            "Use explicit success criteria and small visible wins to protect persistence and dignity.",
+        ],
+    )
+    settings.source_anchors = _merge_unique(
+        settings.source_anchors,
+        [
+            "mani-mullainathan-shafir-zhao-poverty-cognition",
+            "steele-aronson-stereotype-threat",
+            "unesco-gem-inclusion-and-education",
+            "ryan-deci-self-determination-theory",
+        ],
+    )
+    return settings
+
+
 def derive_response_settings(
     profile: LearnerProfile, signal_profile: SupportSignalProfile
 ) -> TutorResponseSettings:
@@ -319,6 +368,8 @@ def derive_response_settings(
         settings = _apply_autism_support(settings)
     if signal_profile.language_sensitive_support in {"possible", "declared", "highly_relevant"}:
         settings = _apply_language_sensitive_support(settings)
+    if signal_profile.scarcity_aware_support in {"declared", "highly_relevant"}:
+        settings = _apply_scarcity_support(settings)
 
     return settings
 

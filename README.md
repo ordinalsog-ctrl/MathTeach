@@ -82,6 +82,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md): Dritte operative Matrix fuer dyslexia-aware support
 - [docs/support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md): Vierte operative Matrix fuer autism-spectrum-aware support
 - [docs/support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md): Fuenfte operative Matrix fuer language-sensitive support
+- [docs/support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md): Sechste operative Matrix fuer scarcity-aware support
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -188,10 +189,12 @@ Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 - `dyslexia-aware support`
 - `autism-spectrum-aware support`
 - `language-sensitive support`
+- `scarcity-aware support`
 - der erste `Implementation Plan` fuer Code-Skeleton, Planner-Integration und spaetere Validierung
 
 Im Code existiert dazu jetzt bereits ein erster `response_engine`, der
 `support signal profile` und `response settings` in die Tutoring-Planung
 einspeist. Dazu kommt jetzt auch ein eigenes Modellmodul `response_matrix.py`
 sowie operative Codepfade fuer `dyslexia-aware support`,
-`autism-spectrum-aware support` und `language-sensitive support`.
+`autism-spectrum-aware support`, `language-sensitive support`
+und `scarcity-aware support`.

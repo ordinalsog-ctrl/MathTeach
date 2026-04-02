@@ -236,3 +236,29 @@ def test_tutoring_plan_language_sensitive_support() -> None:
     )
     assert "key_term_glossary" in payload["response_settings"]["external_scaffolds"]
     assert any("math vocabulary" in item for item in payload["teaching_pattern"])
+
+
+def test_tutoring_plan_declared_scarcity_support() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe klar und nutzbar fuer den Alltag.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["scarcity_aware_support"],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["support_signal_profile"]["scarcity_aware_support"] == "declared"
+    assert payload["response_settings"]["language_support"] == "plain_goal_and_relevance_framing"
+    assert "clear_success_criteria" in payload["response_settings"]["external_scaffolds"]
+    assert any("visible progress" in item for item in payload["teaching_pattern"])

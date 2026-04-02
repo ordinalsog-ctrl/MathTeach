@@ -2,6 +2,31 @@
 
 Stand: 2026-04-02
 
+## Runtime-Ausbau 2026-04-02 D
+
+Die Scarcity-Linie ist jetzt als sechste operative Profilfamilie eingebunden.
+
+Wichtigste Konsequenzen:
+
+- `scarcity-aware support` ist jetzt in Doku, Engine, Planner und API operationalisiert
+- Tutorverhalten priorisiert nun auch Relevanz, Wiedereinstieg und kleine sichtbare Erfolge
+- die naechste echte Engstelle sind jetzt gemischte Supportprofile und Priorisierungsregeln
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_response_engine.py](/Users/jonasweiss/MathTeach/tests/test_response_engine.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `22 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Runtime-Ausbau 2026-04-02 C
 
 Die erste sprachsensible Profilfamilie ist jetzt operativ in Doku, Engine,
@@ -52,6 +77,7 @@ Neue Referenzdokumente aus dieser Review-Einarbeitung:
 - [docs/support-response-matrix-dyslexia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyslexia.md)
 - [docs/support-response-matrix-autism.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-autism.md)
 - [docs/support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md)
+- [docs/support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md)
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
 
 ## Review-Einarbeitung 2026-04-02
@@ -291,6 +317,7 @@ Seit dem letzten operativen Schritt existiert nun auch ein erster
 - `dyslexia-aware support`
 - `autism-spectrum-aware support`
 - `language-sensitive support`
+- `scarcity-aware support`
 - `TeachingPlan` liefert diese Settings jetzt direkt mit aus
 - neue Service- und API-Tests sichern den Pfad ab
 
@@ -368,12 +395,13 @@ Empfohlene erste Ausbaureihenfolge:
 
 1. `response_engine` weiter entlang aller Response Dimensions ausbauen
 2. Planner staerker response-aware machen
-3. danach `scarcity-aware support`
-4. dann gemischte Supportprofile sauber priorisieren
+3. dann gemischte Supportprofile sauber priorisieren
+4. danach support-sensitive Moduswahl im Planner vertiefen
 
 Direkt vorbereitete naechste Arbeitsartefakte:
 
 1. [support-response-matrix-adhd.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-adhd.md)
 2. [support-response-matrix-dyscalculia.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-dyscalculia.md)
 3. [support-response-matrix-language-sensitive.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-language-sensitive.md)
-4. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+4. [support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md)
+5. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)

@@ -1,5 +1,12 @@
 # MathTeach Architektur
 
+## Hinweis
+
+Diese Datei beschreibt weiterhin wichtige Architekturgedanken aus der frueheren
+Systemphase. Die aktive lokale Zielrichtung ist jetzt zusaetzlich in
+[architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md)
+dokumentiert.
+
 ## Nordstern
 
 Der Agent soll Mathematik nicht nur loesen, sondern lehren koennen:

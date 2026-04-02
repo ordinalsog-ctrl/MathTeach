@@ -25,7 +25,15 @@
 - Ontologie fuer Konzepte, Gleichungen, Theoreme, Anwendungen
 - Chunking- und Graph-Build-Pipeline
 
-## Phase 3: Adaptive Lehre
+## Phase 3: Support Response Matrix
+
+- kanonisches `support signal profile` definieren
+- erste `response dimensions` festziehen
+- Einzelprofile fuer ADHD, Dyskalkulie, Dyslexie, Autismusspektrum, ELL und Scarcity ausarbeiten
+- kombinierte Profile spaeter aus stabilen Einzelprofilen ableiten
+- `response_engine` als explizite Regelmaschine vorbereiten
+
+## Phase 4: Adaptive Lehre
 
 - Misskonzept-Erkennung
 - Frustrations- und Motivationssignale
@@ -33,14 +41,14 @@
 - visuelle und textuelle Lehrmodi
 - Routing zwischen Beispielmodus und Ursprung-Erklaermodus
 
-## Phase 4: Expertenmodus
+## Phase 5: Expertenmodus
 
 - formalerer Stil
 - Beweis-Skizzen und Varianten
 - Literaturvergleich
 - Forschungsnahe Hilfestellung mit Quellenketten
 
-## Phase 5: Globalisierung
+## Phase 6: Globalisierung
 
 - mehrsprachige Erklaerungen
 - regionale Curricula

@@ -13,14 +13,42 @@ Der Lehrer darf nie die Mathematik "umbiegen". Er darf nur entscheiden, wie dies
 
 ## Produktthese
 
-Ein wirklich starker Mathe-Agent braucht nicht nur ein grosses Modell. Er braucht:
+Die aktive Produktvision ist inzwischen `lokal-first`, `geschlossen` und `rule-based`.
 
-- ein starkes Reasoning-LLM fuer Unterricht, Planung und Erklaerung,
-- ein kuratiertes Mathematik-Wissenssystem mit Quellen, Herleitungen und Anwendungen,
-- einen paedagogischen Anpassungslayer fuer Alter, Vorwissen, Sprache und Motivation,
-- eine nachvollziehbare Retrieval-Pipeline, damit Antworten nicht nur eloquent, sondern belegbar sind.
+Ein wirklich starker Mathe-Tutor braucht nicht zwingend Cloud-AI. Er braucht:
 
-## Empfohlener Modell-Stack
+- einen lokalen Mathematik-Korpus mit Quellen, Herleitungen und Anwendungen,
+- einen lokalen `Teacher Mind` mit psychologischer und paedagogischer Grundausbildung,
+- eine explizite `Support Response Matrix`, die Lernbedarfe in Tutorentscheidungen uebersetzt,
+- eine nachvollziehbare Retrieval- und Planungslogik,
+- optional spaeter lokale Modelle oder weitere Intelligenzschichten, aber nicht als Grundbedingung.
+
+## Architekturhinweis
+
+`MathTeach` wird aktuell von einer frueheren cloud- und modellzentrierten Beschreibung
+auf eine lokale Zielarchitektur umgestellt.
+
+Aktive Richtung:
+
+- vollstaendig lokal oder lokal-first
+- kein Cloud-Zwang
+- rule-based Teaching Intelligence als Kern
+- lokale Werke, lokale Teacher-Mind-Regeln, lokale Lernerdaten
+
+Fuer die aktive Richtung siehe:
+
+- [JOURNAL.md](/Users/jonasweiss/MathTeach/JOURNAL.md)
+- [docs/architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md)
+- [docs/journal-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/journal-review-triage-2026-04-02.md)
+- [docs/support-response-matrix-structure.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-structure.md)
+
+Legacy- und Explorationsstand:
+
+- fruehere Cloud-LLM-Orientierung
+- modellzentrierte Ingestion- und Orchestrierungsempfehlungen
+- weiterhin als Projekthistorie nutzbar, aber nicht mehr alleinige Zielrichtung
+
+## Legacy Modell-Stack
 
 Stand der Empfehlung: 2026-04-01, auf Basis offizieller Modelldokumentation.
 
@@ -38,12 +66,15 @@ Warum diese Aufteilung:
 
 ## Architektur in einem Satz
 
-MathTeach ist ein `teacher-agent + math knowledge graph + hybrid retrieval + learner-model` System.
+MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teacher Mind + Support Response Matrix + Tutor Runtime`.
 
 ## Repository-Inhalt
 
 - [JOURNAL.md](/Users/jonasweiss/MathTeach/JOURNAL.md): Laufender Session- und Projektstand mit Mathematikwerken, Teacher-Mind-Quellen, Runtime-Handoff und naechsten Schritten
 - [docs/architecture.md](/Users/jonasweiss/MathTeach/docs/architecture.md): Zielarchitektur und Komponenten
+- [docs/architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md): Aktive lokale Zielarchitektur fuer das geschlossene Tutorsystem
+- [docs/journal-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/journal-review-triage-2026-04-02.md): Prioritaetskorrektur nach dem Review des aktuellen Journals
+- [docs/support-response-matrix-structure.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-structure.md): Erste Struktur fuer Learner-Signale, Response Dimensions und Support-Matrizen
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -138,4 +169,4 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Die epochenuebergreifende Vernetzung hat jetzt ein erstes Manifest mit Proof Lines, Equation Lines, Transmission Paths, Domain Lines und Application Bridges.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
-Der naechste grosse Schritt ist der Aufbau des Mathematik-Korpus mit Zitationspflicht, Ontologie, Ingestion-Pipeline und Evaluationssuite.
+Der naechste grosse Schritt ist jetzt die `Support Response Matrix` als operative Bruecke zwischen Learner-Profil, Teacher Mind und Tutor-Runtime.

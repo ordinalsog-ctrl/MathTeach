@@ -1,6 +1,24 @@
 # MathTeach Journal
 
-Stand: 2026-04-01
+Stand: 2026-04-02
+
+## Review-Einarbeitung 2026-04-02
+
+Der externe Journal-Review wurde als naechste Prioritaetskorrektur uebernommen.
+
+Wichtigste Konsequenzen:
+
+- der bisherige Stand wird als `solide und strategisch sauber` bestaetigt
+- die Hauptluecke liegt jetzt in der `Operationalisierung`
+- der naechste Hauptschritt ist nicht neue Allgemeintheorie, sondern die `Support Response Matrix`
+- die aktive Zielarchitektur wird jetzt klarer als `lokal-first`, `geschlossen` und `rule-based` gefasst
+- die Support-Matrix arbeitet mit `support signals` statt mit diagnostischen Prozentmodellen
+
+Neue Referenzdokumente aus dieser Review-Einarbeitung:
+
+- [docs/journal-review-triage-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/journal-review-triage-2026-04-02.md)
+- [docs/support-response-matrix-structure.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-structure.md)
+- [docs/architecture-v2.md](/Users/jonasweiss/MathTeach/docs/architecture-v2.md)
 
 ## Projektkern
 
@@ -227,6 +245,12 @@ Es gibt aktuell noch eine bewusst nicht aufgeloeste Spannung:
 
 Das ist kein Fehler dieses Journal-Schritts, sondern eine offene Architektur-Aufraeumarbeit fuer die naechste oder eine spaetere Session.
 
+Mit dem Review vom `2026-04-02` ist diese Spannung jetzt enger gefasst:
+
+- `architecture-v2` ist die aktive Richtung
+- die aelteren Cloud- und Modellpassagen in der README gelten als `Legacy-/Explorationsstand`
+- die naechste groessere Repo-Bereinigung sollte README und Runtime explizit an die lokale Zielarchitektur angleichen
+
 ## Letzte groessere Commit-Linie
 
 - `7d5ee28` Add universal round U4 program
@@ -246,7 +270,7 @@ Das ist kein Fehler dieses Journal-Schritts, sondern eine offene Architektur-Auf
 
 Der logisch naechste starke Schritt ist:
 
-- keine neue Rundendoku
+- keine neue allgemeine Literatur-Runde
 - sondern die erste echte `Support Response Matrix`
 
 also die Uebersetzung von:
@@ -259,20 +283,21 @@ also die Uebersetzung von:
 
 in konkrete Tutorentscheidungen ueber:
 
-- Tempo
-- Schrittgroesse
-- Notationsdichte
-- Textlast
-- Visualisierung
-- Fehlerbehandlung
-- Sprachentlastung
-- und Selbstcheck-Rhythmus
+- `pacing`
+- `step_size`
+- `notation_density`
+- `text_load`
+- `visualization`
+- `error_handling`
+- `language_support`
+- `self_check_rhythm`
+- `external_scaffolds`
 
-## Status dieses Sicherungsschritts
+Empfohlene erste Ausbaureihenfolge:
 
-Mit dem naechsten Commit soll der gesamte aktuelle Stand gesichert sein, einschliesslich:
-
-- aller bisherigen Teacher-Mind-Runden
-- des stabilen Mathematik-Korpus
-- der offenen Runtime-Vorarbeit
-- und dieses Journals als Session-Handoff
+1. `ADHD-aware support`
+2. `dyscalculia-aware support`
+3. `dyslexia-aware support`
+4. `autism-spectrum-aware support`
+5. `ELL / language-sensitive support`
+6. `scarcity-aware support`

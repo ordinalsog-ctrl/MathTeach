@@ -2,6 +2,38 @@
 
 Stand: 2026-04-02
 
+## Triads-And-Priority-Ladders 2026-04-02 F
+
+Die erste Triad-Schicht ist jetzt auf dem bestehenden `conflict_resolver`
+aufgebaut.
+
+Wichtigste Konsequenzen:
+
+- `triad_groups` und `priority_ladders` sind jetzt Teil der `response settings`
+- erste explizite Triads sind jetzt operationalisiert
+- Priorisierung wird damit nicht nur implizit, sondern sichtbar und testbar
+- die naechste Engstelle verschiebt sich jetzt in die `support-sensitive Moduswahl im Planner`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/profile-prioritization.md](/Users/jonasweiss/MathTeach/docs/profile-prioritization.md)
+- [docs/profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
+- [docs/mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [tests/test_profile_conflicts.py](/Users/jonasweiss/MathTeach/tests/test_profile_conflicts.py)
+
+Zuerst operationalisierte Triads:
+
+- `ADHD + Dyscalculia + Scarcity`
+- `ADHD + Autism + Scarcity`
+- `Dyscalculia + Language-Sensitive + Scarcity`
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `32 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Mixed-Profile-Architektur 2026-04-02 E
 
 Die Reviews zur naechsten Engstelle sind jetzt in eine erste echte

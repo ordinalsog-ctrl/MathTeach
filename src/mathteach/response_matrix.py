@@ -50,3 +50,5 @@ class TutorResponseSettings(BaseModel):
     source_anchors: list[str]
     conflict_pairs: list[str] = Field(default_factory=list)
     conflict_resolution_notes: list[str] = Field(default_factory=list)
+    triad_groups: list[str] = Field(default_factory=list)
+    priority_ladders: list[str] = Field(default_factory=list)

@@ -85,6 +85,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-scarcity.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-scarcity.md): Sechste operative Matrix fuer scarcity-aware support
 - [docs/profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md): Erste Konfliktaufloesungsarchitektur fuer gemischte Supportprofile
 - [docs/mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md): Konkrete Mischprofil-Szenarien als Test- und Review-Basis
+- [docs/profile-prioritization.md](/Users/jonasweiss/MathTeach/docs/profile-prioritization.md): Erste Priority-Ladder-Logik fuer Triads und spaetere groessere Mischlagen
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -182,9 +183,8 @@ Die aktuelle Repo-Version ist bewusst die erste belastbare Basis:
 - Die epochenuebergreifende Vernetzung hat jetzt ein erstes Manifest mit Proof Lines, Equation Lines, Transmission Paths, Domain Lines und Application Bridges.
 - Eine kleine API zeigt schon, wie Wissens- und Lehrlogik getrennt orchestriert werden.
 
-Der naechste grosse Schritt ist jetzt die `Mixed-Profile-Architektur`:
-also Triads, Prioritaetsleitern und spaeter support-sensitive Moduswahl
-im Planner.
+Der naechste grosse Schritt ist jetzt die `support-sensitive Moduswahl im Planner`
+unter gemischten Profilen und expliziten Prioritaetsleitern.
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 
@@ -207,9 +207,13 @@ Darauf aufbauend existiert jetzt auch eine erste `conflict_resolver`-Schicht,
 die gemischte Supportprofile explizit prueft und konfliktbehaftete Profilpaare
 mit nachvollziehbaren Regeln aufloest.
 
-Die naechste Ausbauphase ist damit nicht mehr das einzelne Supportprofil,
-sondern:
+Darauf aufbauend existieren jetzt auch erste `triad_groups` und
+`priority_ladders`, die fuer mehrfache konkurrierende Supportlagen eine
+explizite Reihenfolge sichtbar machen.
 
-- `triads and broader mixed-profile prioritization`
+Die naechste Ausbauphase ist damit:
+
 - `planner-level mode selection under conflict`
+- `triad coverage erweitern`
+- `broader mixed-profile prioritization`
 - spaetere Pilotierung mit echten Mischprofil-Szenarien

@@ -117,6 +117,7 @@ Deliverables:
 
 - [profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
 - [mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
+- [profile-prioritization.md](/Users/jonasweiss/MathTeach/docs/profile-prioritization.md)
 - `src/mathteach/services/conflict_resolver.py`
 - `tests/test_profile_conflicts.py`
 
@@ -125,6 +126,12 @@ Erste Prioritaet:
 - Konfliktpaare vor Triads
 - explizite Resolver-Regeln vor Gewichtungsmodellen
 - transparente API-Sichtbarkeit ueber `conflict_pairs` und `conflict_resolution_notes`
+
+Aktueller Stand:
+
+- Paar-Regeln sind operational
+- erste Triads und `priority_ladders` sind operational
+- naechster Ausbau ist `planner-level mode selection under conflict`
 
 ## Technische Zwischenziele
 
@@ -170,8 +177,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 5. Language-Sensitive-Matrix weiter verfeinern
 6. Scarcity-Matrix weiter verfeinern
 7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
-8. Triad-Szenarien und Prioritaetsleitern definieren
-9. `response_matrix.py` weiter stabilisieren
+8. Triad-Szenarien und Prioritaetsleitern erweitern
+9. support-sensitive Moduswahl im Planner auf Konfliktlagen ausrichten
+10. `response_matrix.py` weiter stabilisieren
 
 ## Nicht-Ziele Des Naechsten Sprints
 

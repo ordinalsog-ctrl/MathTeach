@@ -109,19 +109,64 @@ Lage:
 
 - drei starke Linien greifen gleichzeitig ein
 
-Bedeutung fuer diese Iteration:
+Erwartete Tutorantwort:
 
-- die aktuelle Architektur ist jetzt fuer Paar-Konflikte belastbar
-- Triads werden bewusst als naechste Ausbaustufe markiert
+- `session_duration`: `15_to_18_minute_concrete_success_blocks`
+- `worked_example_ratio`: `high_examples_with_varied_contexts_and_small_success_cycles`
+- `check_frequency`: `after_each_major_micro_step_with_progress_confirmation`
+- `language_support`: `plain_goal_and_relevance_framing`
 
-Aktuelle Erwartung:
+Priority Ladder:
 
-- das System bleibt transparent
-- mehrere `conflict_pairs` koennen sichtbar werden
-- finale Priorisierung ueber mehrere Konfliktpaare folgt in der naechsten Runde
+1. `conceptual_grounding_before_speed`
+2. `visible_progress_before_problem_volume`
+3. `regulation_cadence_before_long_unbroken_work`
+
+Tutorlogik:
+
+- tiefe konkrete Arbeit bleibt
+- Fortschritt wird engmaschig sichtbar gemacht
+- Aufwand wird in regulierbaren Bloecken gehalten
+
+## Szenario 7: ADHD + Autism + Scarcity
+
+Lage:
+
+- Regulation, Struktur und Relevanz muessen gleichzeitig gehalten werden
+
+Erwartete Tutorantwort:
+
+- `session_duration`: `predictable_15_to_18_minute_focus_blocks`
+- `break_pattern`: `predictable_ultradian_regulation_breaks`
+- `check_frequency`: `predictable_progress_confirmation_rhythm`
+- `language_support`: `plain_goal_and_relevance_framing`
+
+Priority Ladder:
+
+1. `predictable_structure_before_novelty`
+2. `sensory_stability_before_task_volume`
+3. `immediate_relevance_before_formal_depth`
+
+## Szenario 8: Dyscalculia + Language-Sensitive + Scarcity
+
+Lage:
+
+- Mengenbedeutung, Sprachbruecke und sichtbarer Erfolg muessen gleichzeitig getragen werden
+
+Erwartete Tutorantwort:
+
+- `primary_representation`: `manipulative_or_quantity_visual_with_term_support`
+- `language_support`: `translated_key_terms_glossary_quantity_language_and_relevance_support`
+- `check_frequency`: `after_each_major_micro_step_with_progress_confirmation`
+
+Priority Ladder:
+
+1. `quantity_meaning_before_symbol_compression`
+2. `language_bridge_before_formal_vocabulary`
+3. `visible_success_before_session_density`
 
 ## Review-Fragen fuer die naechste Runde
 
-- Welche Paar-Regeln kippen bei Triads gegeneinander?
-- Wo brauchen wir echte Prioritaetsleitern statt nur Paar-Regeln?
+- Welche weiteren Triads muessen als naechstes operationalisiert werden?
+- Wo brauchen wir Prioritaetsleitern ueber vier oder mehr aktive Profile?
 - Welche Felder muessen spaeter intensitaetsabhaengig werden?

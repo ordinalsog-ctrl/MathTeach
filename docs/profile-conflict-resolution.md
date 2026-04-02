@@ -31,12 +31,14 @@ MathTeach nutzt in dieser ersten Phase:
 1. `deterministic application order`
 2. `compatibility matrix`
 3. `explicit pairwise conflict rules`
-4. spaeter `triads and broader mixed-profile prioritization`
+4. `triads and priority ladders`
+5. spaeter `broader mixed-profile prioritization`
 
 Die Reihenfolge lautet absichtlich:
 
 - erst Einzelprofile stabilisieren
 - dann Paar-Konflikte explizit aufloesen
+- dann erste Triads mit Priority Ladders tragen
 - erst danach komplexere Mehrfachprofile tiefer operationalisieren
 
 ## Nicht genutzte Strategien
@@ -222,20 +224,38 @@ nachvollziehbar.
 - `safety before acceleration`
 - `small wins must not become patronizing framing`
 
+## Triads and Priority Ladders
+
+In der aktuellen Runde sind jetzt die ersten expliziten Triads operationalisiert.
+
+### Unterstuetzte Triads
+
+| Triad | Priority Ladder |
+| --- | --- |
+| `ADHD + Dyscalculia + Scarcity` | `conceptual_grounding_before_speed`, `visible_progress_before_problem_volume`, `regulation_cadence_before_long_unbroken_work` |
+| `ADHD + Autism + Scarcity` | `predictable_structure_before_novelty`, `sensory_stability_before_task_volume`, `immediate_relevance_before_formal_depth` |
+| `Dyscalculia + Language-Sensitive + Scarcity` | `quantity_meaning_before_symbol_compression`, `language_bridge_before_formal_vocabulary`, `visible_success_before_session_density` |
+
+Resolver-Wirkung:
+
+- `triad_groups` machen die erkannte Triad-Konstellation sichtbar
+- `priority_ladders` machen die Priorisierung explizit
+- Triad-Regeln koennen Paar-Ergebnisse gezielt nachschaerfen
+
 ## Noch offen
 
-Diese erste Runde loest bewusst noch nicht alles:
+Diese Runde loest bewusst noch nicht alles:
 
-- keine tiefen Triad-Regeln
-- keine globale Priorisierung ueber viele gleichzeitige Konflikte
+- keine globale Priorisierung ueber vier oder mehr konkurrierende Profile
 - keine intensitaetsgewichtete Modulation
 - keine echte Pilotvalidierung mit Lernenden
+- noch keine support-sensitive Moduswahl im Planner
 
 ## Naechste Ausbaulinie
 
 Nach dieser ersten Resolver-Runde folgen:
 
-1. `mixed-profile scenarios`
-2. `triads and priority ladders`
+1. `triad coverage erweitern`
+2. `priority ladders fuer weitere Mischlagen`
 3. `planner-level mode selection under conflict`
 4. spaetere Pilotierung

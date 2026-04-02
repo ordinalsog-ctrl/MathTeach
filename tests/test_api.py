@@ -297,3 +297,40 @@ def test_tutoring_plan_mixed_profile_conflict_resolution() -> None:
         "conflict_pairs"
     ]
     assert any("conflict-resolution rules" in item for item in payload["teaching_pattern"])
+
+
+def test_tutoring_plan_triad_priority_ladders() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe klar, Schritt fuer Schritt und mit Sinn.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                    "scarcity_aware_support",
+                ],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["response_settings"]["session_duration"] == (
+        "15_to_18_minute_concrete_success_blocks"
+    )
+    assert (
+        "adhd_aware_support__dyscalculia_aware_support__scarcity_aware_support"
+        in payload["response_settings"]["triad_groups"]
+    )
+    assert "conceptual_grounding_before_speed" in payload["response_settings"][
+        "priority_ladders"
+    ]
+    assert any("priority ladders" in item for item in payload["teaching_pattern"])

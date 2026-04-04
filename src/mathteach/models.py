@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from mathteach.response_matrix import (
     SupportNeed,
@@ -30,6 +30,7 @@ ObservationSignalType = Literal[
     "confidence_recovery_signal",
 ]
 TransitionFamily = Literal["simplifying", "reframing", "stretching"]
+ModeAdaptationCheckpointVersion = Literal["phase_h1_v1"]
 
 
 class LearnerProfile(BaseModel):
@@ -47,12 +48,38 @@ class RuntimeObservationInput(BaseModel):
     evidence: list[str] = Field(default_factory=list)
 
 
+class ModeAdaptationState(BaseModel):
+    current_mode: str = Field(min_length=3)
+    blocks_in_current_mode: int = Field(default=0, ge=0)
+    mode_changes_in_session: int = Field(default=0, ge=0)
+    last_change_reason: str | None = None
+    cooldown_blocks_remaining: int = Field(default=0, ge=0)
+    pending_transition_message: str | None = None
+    last_observation_evidence: list[str] = Field(default_factory=list)
+
+
+class ModeAdaptationCheckpoint(BaseModel):
+    schema_version: ModeAdaptationCheckpointVersion = "phase_h1_v1"
+    mode_adaptation_state: ModeAdaptationState
+
+
 class SessionRequest(BaseModel):
     objective: str = Field(min_length=5, max_length=500)
     learner_profile: LearnerProfile
     runtime_observations: list[RuntimeObservationInput] = Field(default_factory=list)
     mode_adaptation_state: ModeAdaptationState | None = None
+    mode_adaptation_checkpoint: ModeAdaptationCheckpoint | None = None
 
+    @model_validator(mode="after")
+    def validate_runtime_resume_inputs(self) -> SessionRequest:
+        if (
+            self.mode_adaptation_state is not None
+            and self.mode_adaptation_checkpoint is not None
+        ):
+            raise ValueError(
+                "Provide either mode_adaptation_state or mode_adaptation_checkpoint, not both."
+            )
+        return self
 
 class RetrievalPlan(BaseModel):
     concept_depth: str
@@ -92,16 +119,6 @@ class SignalInterpretationResult(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
-class ModeAdaptationState(BaseModel):
-    current_mode: str = Field(min_length=3)
-    blocks_in_current_mode: int = Field(default=0, ge=0)
-    mode_changes_in_session: int = Field(default=0, ge=0)
-    last_change_reason: str | None = None
-    cooldown_blocks_remaining: int = Field(default=0, ge=0)
-    pending_transition_message: str | None = None
-    last_observation_evidence: list[str] = Field(default_factory=list)
-
-
 class ModeAdaptationDecision(BaseModel):
     selected_mode: str
     changed: bool = False
@@ -138,6 +155,7 @@ class TeachingPlan(BaseModel):
     response_arc: list[str]
     mode_selection: ModeSelection
     mode_adaptation_state: ModeAdaptationState
+    mode_adaptation_checkpoint: ModeAdaptationCheckpoint
     planned_blocks: list[PlannedTeachingBlock] = Field(default_factory=list)
     mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
     support_signal_profile: SupportSignalProfile

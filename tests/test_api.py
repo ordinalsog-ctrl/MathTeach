@@ -102,6 +102,11 @@ def test_tutoring_plan_endpoint() -> None:
     assert payload["lesson_mode"] == "guided_concept_explanation"
     assert payload["audience_mode"] == "teen"
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert (
+        payload["mode_adaptation_checkpoint"]["mode_adaptation_state"]["current_mode"]
+        == "guided_concept_explanation"
+    )
     assert payload["mode_adaptation_state"]["blocks_in_current_mode"] == 0
     assert payload["planned_blocks"][0]["mode"] == "guided_concept_explanation"
     assert payload["mode_adaptation_trace"] == []
@@ -209,6 +214,81 @@ def test_tutoring_plan_can_resume_mode_adaptation_state() -> None:
     assert payload["mode_adaptation_trace"][0]["changed"] is True
     assert payload["mode_adaptation_trace"][0]["mode_after"] == "guided_concept_explanation"
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+
+
+def test_tutoring_plan_can_resume_from_mode_adaptation_checkpoint() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "mode_adaptation_checkpoint": {
+                "schema_version": "phase_h1_v1",
+                "mode_adaptation_state": {
+                    "current_mode": "worked_example_tutoring",
+                    "blocks_in_current_mode": 2,
+                    "mode_changes_in_session": 1,
+                    "cooldown_blocks_remaining": 0,
+                },
+            },
+            "runtime_observations": [
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["lesson_mode"] == "worked_example_tutoring"
+    assert payload["planned_blocks"][0]["mode"] == "worked_example_tutoring"
+    assert payload["mode_adaptation_trace"][0]["changed"] is True
+    assert payload["mode_adaptation_trace"][0]["mode_after"] == "guided_concept_explanation"
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert (
+        payload["mode_adaptation_checkpoint"]["mode_adaptation_state"]["current_mode"]
+        == "guided_concept_explanation"
+    )
+
+
+def test_tutoring_plan_rejects_state_and_checkpoint_together() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "mode_adaptation_state": {
+                "current_mode": "guided_concept_explanation",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+            },
+            "mode_adaptation_checkpoint": {
+                "schema_version": "phase_h1_v1",
+                "mode_adaptation_state": {
+                    "current_mode": "guided_concept_explanation",
+                    "blocks_in_current_mode": 1,
+                    "mode_changes_in_session": 0,
+                },
+            },
+        },
+    )
+
+    assert response.status_code == 422
 
 
 def test_tutoring_plan_resume_derives_cross_block_breakthrough() -> None:

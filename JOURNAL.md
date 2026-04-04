@@ -2,6 +2,39 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Checkpoint-Contract 2026-04-04
+
+Die H.1-Runtime hat jetzt nicht nur internen Resume-Zustand, sondern auch
+einen versionierten externen Checkpoint-Vertrag fuer API und spaetere
+Persistenz.
+
+Wichtigste Konsequenzen:
+
+- `ModeAdaptationCheckpoint` ist jetzt als versionierter Wrapper live im
+  Modell-Layer
+- `SessionRequest` akzeptiert jetzt bevorzugt
+  `mode_adaptation_checkpoint` fuer Resume
+- `TeachingPlan` liefert jetzt neben `mode_adaptation_state` auch einen
+  serialisierbaren `mode_adaptation_checkpoint`
+- Legacy-Resume ueber `mode_adaptation_state` bleibt vorerst kompatibel,
+  aber doppelte Runtime-Eingaben werden jetzt explizit abgewiesen
+- Roundtrip-, API- und Planner-Tests sichern den neuen Resume-Vertrag ab
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_mode_adaptation_persistence.py](/Users/jonasweiss/MathTeach/tests/test_mode_adaptation_persistence.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/mode-adaptation-checkpoint-contract.md](/Users/jonasweiss/MathTeach/docs/mode-adaptation-checkpoint-contract.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `70 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-H1-Runtime-Review 2026-04-02
 
 Die neue Review-Lage bestaetigt den qualitativen Sprung von

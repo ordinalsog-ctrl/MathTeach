@@ -122,6 +122,44 @@ def test_planner_can_resume_from_existing_mode_adaptation_state() -> None:
     assert plan.mode_adaptation_trace[0].changed is True
     assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"
     assert plan.mode_adaptation_state.current_mode == "guided_concept_explanation"
+    assert plan.mode_adaptation_checkpoint.mode_adaptation_state.current_mode == (
+        "guided_concept_explanation"
+    )
+
+
+def test_planner_can_resume_from_mode_adaptation_checkpoint() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            mode_adaptation_checkpoint={
+                "schema_version": "phase_h1_v1",
+                "mode_adaptation_state": {
+                    "current_mode": "worked_example_tutoring",
+                    "blocks_in_current_mode": 2,
+                    "mode_changes_in_session": 1,
+                    "cooldown_blocks_remaining": 0,
+                },
+            },
+            runtime_observations=[
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+            ],
+        )
+    )
+
+    assert plan.lesson_mode == "worked_example_tutoring"
+    assert plan.planned_blocks[0].mode == "worked_example_tutoring"
+    assert plan.mode_adaptation_trace[0].changed is True
+    assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"
+    assert plan.mode_adaptation_checkpoint.schema_version == "phase_h1_v1"
 
 
 def test_planner_preserves_pending_transition_message_across_resume() -> None:

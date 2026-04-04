@@ -2,6 +2,7 @@ from mathteach.config import Settings
 from mathteach.models import (
     LearnerProfile,
     ModelAssignment,
+    ModeAdaptationCheckpoint,
     ModeAdaptationTraceEntry,
     ModeAdaptationState,
     ModeSelection,
@@ -442,6 +443,12 @@ def _simulate_runtime_blocks(
     return planned_blocks, adaptation_trace, state
 
 
+def _resolve_resume_state(request: SessionRequest) -> ModeAdaptationState | None:
+    if request.mode_adaptation_checkpoint is not None:
+        return request.mode_adaptation_checkpoint.mode_adaptation_state
+    return request.mode_adaptation_state
+
+
 def build_stack(settings: Settings) -> StackResponse:
     return StackResponse(
         checked_on="2026-04-01",
@@ -481,6 +488,7 @@ def build_stack(settings: Settings) -> StackResponse:
 
 def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     profile: LearnerProfile = request.learner_profile
+    resume_state = _resolve_resume_state(request)
     tone, pattern_hint = AUDIENCE_MODES[profile.age_group]
     concept_depth, include_proof = LEVEL_DEPTH[profile.math_level]
     requested_mode = _infer_lesson_mode(request)
@@ -492,8 +500,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         response_settings,
     )
     lesson_mode = mode_selection.selected_mode
-    if request.mode_adaptation_state is not None:
-        lesson_mode = request.mode_adaptation_state.current_mode
+    if resume_state is not None:
+        lesson_mode = resume_state.current_mode
     response_arc = _mode_response_arc(lesson_mode)
     include_history, history_mode = _mode_history_strategy(lesson_mode, profile.wants_history)
     if "short_origin_bridge" in mode_selection.constraints or "micro_origin_bridge" in mode_selection.constraints:
@@ -591,9 +599,12 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         objective=request.objective,
         initial_mode=lesson_mode,
         runtime_observations=request.runtime_observations,
-        initial_state=request.mode_adaptation_state,
+        initial_state=resume_state,
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
+    )
+    mode_adaptation_checkpoint = ModeAdaptationCheckpoint(
+        mode_adaptation_state=mode_adaptation_state
     )
 
     return TeachingPlan(
@@ -604,6 +615,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         response_arc=response_arc,
         mode_selection=mode_selection,
         mode_adaptation_state=mode_adaptation_state,
+        mode_adaptation_checkpoint=mode_adaptation_checkpoint,
         planned_blocks=planned_blocks,
         mode_adaptation_trace=adaptation_trace,
         support_signal_profile=support_signal_profile,

@@ -93,6 +93,8 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/live-mode-adaptation-readiness-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-readiness-review-2026-04-02.md): Readiness-Triage fuer den Uebergang von Phase-H-Spezifikation zu erster Runtime-Implementierung
 - [docs/live-mode-adaptation-final-assessment-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-final-assessment-2026-04-02.md): Abschlussbewertung, dass Phase `H.1` jetzt startbereit fuer die erste Runtime-Implementierung ist
 - [docs/live-mode-adaptation-h1-code-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-h1-code-review-2026-04-02.md): Review-Triage nach dem ersten H.1-Codecheckpoint mit Fokus auf den naechsten Block-Loop im Planner
+- [docs/live-mode-adaptation-persistence-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-persistence-review-2026-04-02.md): Review-Triage, die den Engpass von Runtime-Logik auf Persistenz und Resume-Semantik verschiebt
+- [docs/mode-adaptation-checkpoint-contract.md](/Users/jonasweiss/MathTeach/docs/mode-adaptation-checkpoint-contract.md): Versionierter API- und Persistenzvertrag fuer `mode_adaptation_checkpoint`
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -240,8 +242,10 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - `runtime_mode_adapter` fuer blockweises `stay` oder `shift`
 - erste Hysterese- und Transition-Logik
 - initialer `mode_adaptation_state` direkt im `TeachingPlan`
+- versionierter `mode_adaptation_checkpoint` als externe Resume- und Persistenzform
 - erster Planner-Block-Loop mit `planned_blocks` und `mode_adaptation_trace`
 - erste Session-Fortsetzung ueber wiederverwendeten `mode_adaptation_state`
+- erste Session-Fortsetzung ueber versionierten `mode_adaptation_checkpoint`
 - Persistenz offener `transition_message` ueber Resume-Pfade
 - Konsumierung angezeigter `transition_message` ohne doppelte Wiederholung
 - resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
@@ -261,9 +265,8 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- Persistenzschnittstellen fuer `mode_adaptation_state` nach aussen robuster machen
-- Serialisierung und Resume-Vertrag ueber API-Grenzen schaerfen
-- danach erste Storage- und History-Schicht vorbereiten
+- Resume- und Serialisierungsgrenzen fuer den neuen Checkpoint weiter haerten
+- danach erste Storage- und History-Schicht auf Basis des Checkpoint-Vertrags vorbereiten
 - spaeter weitere reale Signalszenarien verbreitern und kalibrieren
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`

@@ -143,8 +143,10 @@ Aktueller Stand:
   Roh-Input erwartet
 - sichtbare kleine Erfolge und ausbleibende Erfolgslinien werden jetzt
   ebenfalls direkt im Planner abgeleitet
-- naechster Ausbau ist jetzt primaer robuste Persistenz, klare Resume-Semantik
-  und spaetere Storage-Anbindung
+- ein versionierter `mode_adaptation_checkpoint` ist jetzt als externer
+  Resume- und Persistenzvertrag eingefuehrt
+- naechster Ausbau ist jetzt primaer robuste Checkpoint-Persistenz,
+  klare Resume-Semantik und spaetere Storage-Anbindung
 
 Arbeitsregel fuer den naechsten Ausbau:
 
@@ -198,8 +200,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. Roundtrip-Serialisierung fuer `ModeAdaptationState` absichern
-2. Resume-API-Vertrag fuer `mode_adaptation_state` schaerfen
+1. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` absichern
+2. Resume-API-Vertrag fuer `mode_adaptation_checkpoint` schaerfen
 3. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 4. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
 5. Storage-Handoff fuer spaetere Session-Fortsetzung vorbereiten
@@ -211,9 +213,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- Persistenzschnittstelle fuer `ModeAdaptationState` nach aussen robuster machen
-- Resume- und Serialisierungstests schreiben
+- Checkpoint-Serialisierung und Resume-Tests weiter haerten
 - API-Vertrag fuer echte Sitzungsfortsetzung festziehen
+- spaetere Storage-Huelle mit Session-ID und Versionierung vorbereiten
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints

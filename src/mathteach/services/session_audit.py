@@ -12,6 +12,8 @@ AuditEventType = Literal[
     "checkpoint_migrated",
     "checkpoint_invalid",
     "checkpoint_migration_failed",
+    "checkpoint_restored",
+    "checkpoint_discarded",
 ]
 
 
@@ -41,11 +43,14 @@ class SessionAuditLogger:
             handle.write(event.model_dump_json())
             handle.write("\n")
 
-    def read_events(self) -> list[SessionAuditEvent]:
+    def read_events(self, session_id: str | None = None) -> list[SessionAuditEvent]:
         if not self.log_path.exists():
             return []
-        return [
+        events = [
             SessionAuditEvent.model_validate_json(line)
             for line in self.log_path.read_text(encoding="utf-8").splitlines()
             if line.strip()
         ]
+        if session_id is None:
+            return events
+        return [event for event in events if event.session_id == session_id]

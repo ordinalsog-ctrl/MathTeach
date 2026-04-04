@@ -15,3 +15,26 @@ def test_session_audit_logger_records_and_reads_events(tmp_path) -> None:
     restored = logger.read_events()
 
     assert restored == [event]
+
+
+def test_session_audit_logger_filters_by_session_id(tmp_path) -> None:
+    logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    logger.record(
+        SessionAuditEvent(
+            event_type="checkpoint_migrated",
+            session_id="session-a",
+            detail="A",
+        )
+    )
+    logger.record(
+        SessionAuditEvent(
+            event_type="checkpoint_invalid",
+            session_id="session-b",
+            detail="B",
+        )
+    )
+
+    filtered = logger.read_events(session_id="session-b")
+
+    assert len(filtered) == 1
+    assert filtered[0].session_id == "session-b"

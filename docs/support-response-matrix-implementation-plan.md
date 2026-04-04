@@ -162,7 +162,7 @@ Aktueller Stand:
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst sichtbare Repair-/Admin-Pfade, Audit-Kopplung und spaetere
+- zuerst Repair-/Admin-Pfade, Audit-Kopplung und spaetere
   Mehrschritt-Migrationen weiter haerten
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
 - dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
@@ -213,7 +213,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 ## Unmittelbar Naechste Aufgaben
 
 1. Mehrschritt-Migrationen fuer spaetere Schema-Upgrades vorbereiten
-2. sichtbare Repair- oder Admin-Pfade fuer quarantainierte Sessions vorbereiten
+2. Repair- oder Admin-Pfade fuer quarantainierte Sessions weiter haerten
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
@@ -225,7 +225,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- Session-Repair-/Admin-Hooks fuer defekte Persistenz vorbereiten
+- Session-Repair-/Admin-Hooks fuer defekte Persistenz weiter haerten
 - Audit-Trail spaeter an History oder Monitoring anbinden
 - Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten

@@ -2,6 +2,43 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Admin-Repair-Paths 2026-04-04
+
+Die Session-Betriebshaertung hat jetzt eine sichtbare Admin-Oberflaeche:
+quarantainierte Sessions koennen nicht mehr nur intern isoliert, sondern
+jetzt auch gelistet, inspiziert, wiederhergestellt oder verworfen werden.
+
+Wichtigste Konsequenzen:
+
+- der API-Pfad hat jetzt erste Admin-Endpunkte fuer Quarantaene-Sessions
+- `SessionManager` kapselt jetzt auch `list`, `inspect`, `restore` und
+  `discard` fuer quarantainierte Sessions
+- `SessionQuarantine` traegt jetzt echte Admin-Operationen statt nur
+  `quarantine_file`
+- nach Quarantaene ist jetzt explizit getestet, dass dieselbe `session_id`
+  spaeter wieder sauber als neue Session starten kann
+- manuell reparierte Quarantaene-Dateien koennen jetzt in den aktiven Store
+  zurueckgeschrieben werden
+- der naechste direkte Ausbau ist jetzt nicht mehr nur Sichtbarkeit,
+  sondern spaeter Monitoring-/Repair-Workflows und Mehrschritt-Migrationen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/services/session_quarantine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_quarantine.py)
+- [src/mathteach/services/session_audit.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_audit.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [tests/test_session_quarantine.py](/Users/jonasweiss/MathTeach/tests/test_session_quarantine.py)
+- [tests/test_session_audit.py](/Users/jonasweiss/MathTeach/tests/test_session_audit.py)
+- [docs/session-quarantine-and-audit.md](/Users/jonasweiss/MathTeach/docs/session-quarantine-and-audit.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `102 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Session-Quarantine-And-Audit 2026-04-04
 
 Die Session-Migration hat jetzt ihre erste Betriebs-Haertung:

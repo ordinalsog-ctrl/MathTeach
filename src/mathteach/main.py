@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from mathteach.config import get_settings
 from mathteach.models import SessionRequest
@@ -70,3 +70,39 @@ def tutoring_plan(request: SessionRequest):
         CheckpointMigrationRequired,
     ) as exc:
         raise as_http_error(exc) from exc
+
+
+@app.get("/api/v1/admin/quarantine/sessions")
+def admin_list_quarantined_sessions():
+    return {"sessions": session_manager.list_quarantined_sessions()}
+
+
+@app.get("/api/v1/admin/quarantine/{session_id}")
+def admin_inspect_quarantined_session(session_id: str):
+    inspection = session_manager.inspect_quarantined_session(session_id)
+    if inspection is None:
+        raise HTTPException(status_code=404, detail="No quarantined session found.")
+    return inspection
+
+
+@app.post("/api/v1/admin/quarantine/{session_id}/restore")
+def admin_restore_quarantined_session(session_id: str):
+    try:
+        restored = session_manager.restore_quarantined_session(session_id)
+    except (
+        SessionConflictError,
+        SessionValidationError,
+        CheckpointMigrationRequired,
+    ) as exc:
+        raise as_http_error(exc) from exc
+    if restored is None:
+        raise HTTPException(status_code=404, detail="No quarantined session found.")
+    return restored
+
+
+@app.post("/api/v1/admin/quarantine/{session_id}/discard")
+def admin_discard_quarantined_session(session_id: str):
+    discarded = session_manager.discard_quarantined_session(session_id)
+    if discarded is None:
+        raise HTTPException(status_code=404, detail="No quarantined session found.")
+    return discarded

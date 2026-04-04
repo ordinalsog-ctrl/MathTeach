@@ -59,3 +59,57 @@ class SessionQuarantine:
             encoding="utf-8",
         )
         return record
+
+    def list_records(self, session_id: str | None = None) -> list[SessionQuarantineRecord]:
+        records = [
+            SessionQuarantineRecord.model_validate_json(
+                metadata_path.read_text(encoding="utf-8")
+            )
+            for metadata_path in sorted(self.base_dir.glob("*.meta.json"))
+        ]
+        if session_id is not None:
+            records = [record for record in records if record.session_id == session_id]
+        return sorted(records, key=lambda record: record.timestamp, reverse=True)
+
+    def latest_record(self, session_id: str) -> SessionQuarantineRecord | None:
+        records = self.list_records(session_id=session_id)
+        if not records:
+            return None
+        return records[0]
+
+    def read_quarantined_text(self, session_id: str) -> tuple[SessionQuarantineRecord, str] | None:
+        record = self.latest_record(session_id)
+        if record is None:
+            return None
+        quarantine_path = Path(record.quarantine_path)
+        if not quarantine_path.exists():
+            return None
+        return record, quarantine_path.read_text(encoding="utf-8")
+
+    def restore_latest(
+        self,
+        session_id: str,
+        target_path: str | Path,
+    ) -> SessionQuarantineRecord | None:
+        record = self.latest_record(session_id)
+        if record is None:
+            return None
+        quarantine_path = Path(record.quarantine_path)
+        metadata_path = Path(record.metadata_path)
+        if not quarantine_path.exists():
+            metadata_path.unlink(missing_ok=True)
+            return None
+
+        target = Path(target_path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(quarantine_path), target)
+        metadata_path.unlink(missing_ok=True)
+        return record
+
+    def discard_latest(self, session_id: str) -> SessionQuarantineRecord | None:
+        record = self.latest_record(session_id)
+        if record is None:
+            return None
+        Path(record.quarantine_path).unlink(missing_ok=True)
+        Path(record.metadata_path).unlink(missing_ok=True)
+        return record

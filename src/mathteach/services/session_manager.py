@@ -89,6 +89,111 @@ class SessionManager:
         self.store.save_checkpoint(session_id, plan.mode_adaptation_checkpoint)
         return plan.model_copy(update={"session_id": session_id})
 
+    def list_quarantined_sessions(self) -> list[dict[str, object]]:
+        return [
+            {
+                "session_id": record.session_id,
+                "reason": record.reason,
+                "detail": record.detail,
+                "timestamp": record.timestamp,
+                "quarantine_path": record.quarantine_path,
+                "metadata_path": record.metadata_path,
+            }
+            for record in self.quarantine.list_records()
+        ]
+
+    def inspect_quarantined_session(self, session_id: str) -> dict[str, object] | None:
+        quarantined = self.quarantine.read_quarantined_text(session_id)
+        if quarantined is None:
+            return None
+        record, raw_checkpoint = quarantined
+        audit_events = [event.model_dump(mode="json") for event in self.audit_logger.read_events(session_id)]
+
+        parsed_checkpoint: dict[str, object] | None = None
+        preview_status = "unparseable"
+        preview_detail: str | None = None
+        try:
+            checkpoint = ModeAdaptationCheckpoint.model_validate_json(raw_checkpoint)
+            parsed_checkpoint = checkpoint.model_dump(mode="json")
+            try:
+                validate_checkpoint_for_resume(checkpoint)
+                preview_status = "valid_current"
+            except CheckpointMigrationRequired as exc:
+                preview_status = "migration_required"
+                preview_detail = str(exc)
+            except SessionValidationError as exc:
+                preview_status = "invalid"
+                preview_detail = str(exc)
+        except ValidationError as exc:
+            preview_detail = str(exc)
+
+        return {
+            "session": record.model_dump(mode="json"),
+            "audit_events": audit_events,
+            "preview_status": preview_status,
+            "preview_detail": preview_detail,
+            "checkpoint_preview": parsed_checkpoint,
+            "raw_checkpoint": raw_checkpoint,
+        }
+
+    def restore_quarantined_session(self, session_id: str) -> dict[str, object] | None:
+        quarantined = self.quarantine.read_quarantined_text(session_id)
+        if quarantined is None:
+            return None
+        record, raw_checkpoint = quarantined
+
+        try:
+            checkpoint = ModeAdaptationCheckpoint.model_validate_json(raw_checkpoint)
+        except ValidationError as exc:
+            raise SessionValidationError(
+                f"Quarantined checkpoint for session {session_id} could not be parsed."
+            ) from exc
+
+        try:
+            validate_checkpoint_for_resume(checkpoint)
+            restored_checkpoint = checkpoint
+        except CheckpointMigrationRequired:
+            try:
+                restored_checkpoint = self.migrator.migrate_checkpoint(checkpoint)
+            except CheckpointMigrationError as exc:
+                raise CheckpointMigrationRequired(
+                    f"Quarantined checkpoint for session {session_id} still requires unsupported migration."
+                ) from exc
+            validate_checkpoint_for_resume(restored_checkpoint)
+        except SessionValidationError as exc:
+            raise SessionValidationError(
+                f"Quarantined checkpoint for session {session_id} is still invalid. {exc}"
+            ) from exc
+
+        validate_checkpoint_for_persist(restored_checkpoint)
+        self.store.save_checkpoint(session_id, restored_checkpoint)
+        self.quarantine.discard_latest(session_id)
+        self.audit_logger.record(
+            SessionAuditEvent(
+                event_type="checkpoint_restored",
+                session_id=session_id,
+                detail="Quarantined checkpoint restored to active session storage.",
+                target_version=restored_checkpoint.schema_version,
+            )
+        )
+        return {
+            "session_id": session_id,
+            "restored_checkpoint": restored_checkpoint.model_dump(mode="json"),
+        }
+
+    def discard_quarantined_session(self, session_id: str) -> dict[str, object] | None:
+        record = self.quarantine.discard_latest(session_id)
+        if record is None:
+            return None
+        self.audit_logger.record(
+            SessionAuditEvent(
+                event_type="checkpoint_discarded",
+                session_id=session_id,
+                detail="Quarantined checkpoint discarded by admin action.",
+            )
+        )
+        return {"session_id": session_id, "discarded": True, "reason": record.reason}
+
     def validate_session_state(
         self,
         checkpoint: ModeAdaptationCheckpoint,

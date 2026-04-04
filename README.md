@@ -188,6 +188,10 @@ Danach:
 - `GET /api/v1/corpus/source-access`
 - `GET /api/v1/corpus/network`
 - `POST /api/v1/tutoring/plan`
+- `GET /api/v1/admin/quarantine/sessions`
+- `GET /api/v1/admin/quarantine/{session_id}`
+- `POST /api/v1/admin/quarantine/{session_id}/restore`
+- `POST /api/v1/admin/quarantine/{session_id}/discard`
 
 ## Naechste Produktstufe
 
@@ -232,8 +236,12 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   und hebt bekannte Alt-Checkpoints automatisch auf den H.1-Stand
 - defekte oder nicht migrierbare Sessions werden jetzt ausserdem
   quarantainiert und auditiert, statt im aktiven Resume-Pfad zu bleiben
+- erste Admin-/Repair-Pfade fuer quarantainierte Sessions sind jetzt
+  ebenfalls live, inklusive `list`, `inspect`, `restore` und `discard`
+- derselbe `session_id`-Wert startet nach Quarantaene jetzt auch explizit
+  wieder sauber neu, wenn kein aktiver Checkpoint mehr vorhanden ist
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern sichtbarere Admin-/Repair-Pfade, spaetere Mehrschritt-
+  sondern haertere Repair-/Monitoring-Workflows, spaetere Mehrschritt-
   Migrationen und History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:

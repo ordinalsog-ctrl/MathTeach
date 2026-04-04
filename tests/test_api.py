@@ -1,3 +1,4 @@
+from pathlib import Path
 import uuid
 
 from fastapi.testclient import TestClient
@@ -523,6 +524,187 @@ def test_tutoring_plan_returns_400_for_invalid_stored_checkpoint() -> None:
     assert response.status_code == 400
     assert "could not be resumed" in response.json()["detail"]
     assert session_store.load_checkpoint(session_id) is None
+    session_store.delete_checkpoint(session_id)
+
+
+def test_tutoring_plan_starts_clean_after_quarantine_for_same_session_id() -> None:
+    session_id = f"api-session-clean-restart-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    invalid_path = session_store.session_path(session_id)
+    invalid_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": -2,\n'
+        '    "mode_changes_in_session": 0,\n'
+        '    "cooldown_blocks_remaining": 0,\n'
+        '    "last_observation_evidence": []\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    first_response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+    second_response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert first_response.status_code == 400
+    assert second_response.status_code == 200
+    assert second_response.json()["session_id"] == session_id
+    assert session_store.load_checkpoint(session_id) is not None
+    session_store.delete_checkpoint(session_id)
+
+
+def test_admin_quarantine_list_and_inspect_session() -> None:
+    session_id = f"api-session-inspect-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    invalid_path = session_store.session_path(session_id)
+    invalid_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": -2,\n'
+        '    "mode_changes_in_session": 0,\n'
+        '    "cooldown_blocks_remaining": 0,\n'
+        '    "last_observation_evidence": []\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    list_response = client.get("/api/v1/admin/quarantine/sessions")
+    inspect_response = client.get(f"/api/v1/admin/quarantine/{session_id}")
+
+    assert list_response.status_code == 200
+    assert any(
+        item["session_id"] == session_id for item in list_response.json()["sessions"]
+    )
+    assert inspect_response.status_code == 200
+    assert inspect_response.json()["session"]["session_id"] == session_id
+    assert inspect_response.json()["preview_status"] == "unparseable"
+
+
+def test_admin_can_restore_quarantined_session_after_manual_repair() -> None:
+    session_id = f"api-session-restore-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    invalid_path = session_store.session_path(session_id)
+    invalid_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": -2,\n'
+        '    "mode_changes_in_session": 0,\n'
+        '    "cooldown_blocks_remaining": 0,\n'
+        '    "last_observation_evidence": []\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+    inspect_response = client.get(f"/api/v1/admin/quarantine/{session_id}")
+    quarantine_path = Path(inspect_response.json()["session"]["quarantine_path"])
+    quarantine_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": 1,\n'
+        '    "mode_changes_in_session": 0,\n'
+        '    "cooldown_blocks_remaining": 0,\n'
+        '    "last_observation_evidence": []\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    restore_response = client.post(f"/api/v1/admin/quarantine/{session_id}/restore")
+    resume_response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert restore_response.status_code == 200
+    assert restore_response.json()["session_id"] == session_id
+    assert resume_response.status_code == 200
+    assert resume_response.json()["session_id"] == session_id
+    assert session_store.load_checkpoint(session_id) is not None
     session_store.delete_checkpoint(session_id)
 
 

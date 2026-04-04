@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 AuditEventType = Literal[
     "checkpoint_migrated",
+    "checkpoint_migration_chain",
     "checkpoint_invalid",
     "checkpoint_migration_failed",
     "checkpoint_restored",
@@ -27,6 +28,7 @@ class SessionAuditEvent(BaseModel):
     source_version: str | None = None
     target_version: str | None = None
     quarantine_path: str | None = None
+    migration_steps: list[str] = Field(default_factory=list)
 
 
 class SessionAuditLogger:

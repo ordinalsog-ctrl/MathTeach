@@ -298,6 +298,42 @@ def test_tutoring_plan_auto_migrates_inline_mode_adaptation_checkpoint() -> None
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
 
 
+def test_tutoring_plan_auto_migrates_inline_mode_adaptation_checkpoint_across_multiple_steps() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "mode_adaptation_checkpoint": {
+                "schema_version": "phase_h0_v0",
+                "mode_adaptation_state": {
+                    "current_mode": "worked_example_tutoring",
+                    "blocks_in_current_mode": 2,
+                    "mode_changes_in_session": 1,
+                    "cooldown_blocks_remaining": 0,
+                    "last_observation_evidence": ["legacy_signal_should_be_reset"],
+                },
+            },
+            "runtime_observations": [
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+
+
 def test_tutoring_plan_rejects_state_and_checkpoint_together() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",
@@ -484,6 +520,51 @@ def test_tutoring_plan_auto_migrates_stored_session_checkpoint() -> None:
     assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
     assert stored is not None
     assert stored.schema_version == "phase_h1_v1"
+    session_store.delete_checkpoint(session_id)
+
+
+def test_tutoring_plan_auto_migrates_stored_session_checkpoint_across_multiple_steps() -> None:
+    session_id = f"api-session-chain-migration-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    session_store.save_checkpoint(
+        session_id,
+        ModeAdaptationCheckpoint(
+            schema_version="phase_h0_v0",
+            mode_adaptation_state=ModeAdaptationState(
+                current_mode="guided_concept_explanation",
+                blocks_in_current_mode=1,
+                mode_changes_in_session=0,
+                cooldown_blocks_remaining=0,
+                last_observation_evidence=["legacy_signal_should_be_reset"],
+            ),
+        ),
+    )
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    stored = session_store.load_checkpoint(session_id)
+
+    assert payload["session_id"] == session_id
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert stored is not None
+    assert stored.schema_version == "phase_h1_v1"
+    assert stored.mode_adaptation_state.last_observation_evidence == []
     session_store.delete_checkpoint(session_id)
 
 

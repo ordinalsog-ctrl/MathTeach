@@ -37,6 +37,20 @@ def test_validate_checkpoint_for_resume_requires_migration_for_known_old_version
         validate_checkpoint_for_resume(checkpoint)
 
 
+def test_validate_checkpoint_for_resume_requires_migration_for_known_legacy_chain_version() -> None:
+    checkpoint = ModeAdaptationCheckpoint(
+        schema_version="phase_h0_v0",
+        mode_adaptation_state=ModeAdaptationState(
+            current_mode="guided_concept_explanation",
+            blocks_in_current_mode=1,
+            mode_changes_in_session=0,
+        ),
+    )
+
+    with pytest.raises(CheckpointMigrationRequired):
+        validate_checkpoint_for_resume(checkpoint)
+
+
 def test_validate_checkpoint_for_resume_rejects_unknown_version() -> None:
     checkpoint = ModeAdaptationCheckpoint(
         schema_version="phase_future_v99",

@@ -2,6 +2,49 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Multi-Step-Checkpoint-Migration 2026-04-04
+
+Die Session-Haertung ist jetzt nicht mehr auf einen einzelnen
+Versionssprung beschraenkt: der `CheckpointMigrator` kann jetzt
+bekannte Legacy-Pfade iterativ bis zur aktuellen H.1-Version
+durchlaufen.
+
+Wichtigste Konsequenzen:
+
+- `phase_h0_v0 -> phase_h0_v1 -> phase_h1_v1` ist jetzt als echte
+  Migrationskette live
+- `CheckpointMigrator` gibt jetzt nicht nur den neuen Checkpoint,
+  sondern auch die vollstaendige Schrittfolge zurueck
+- `SessionManager` protokolliert Einzelschritt- und Mehrschritt-
+  Migrationen jetzt bewusst getrennt
+- der Audit-Trail kennt jetzt neben `checkpoint_migrated` auch
+  `checkpoint_migration_chain`
+- gespeicherte und inline uebergebene Legacy-Checkpoints koennen jetzt
+  ueber mehrere bekannte Altstufen hinweg weitergefuehrt werden
+- der naechste direkte Ausbau ist jetzt nicht mehr die Migrationskette
+  selbst, sondern spaetere Rollenhaertung fuer Admin-Pfade und danach
+  echte H.2+-Schemaentwicklung
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py)
+- [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/services/session_audit.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_audit.py)
+- [tests/test_checkpoint_validation.py](/Users/jonasweiss/MathTeach/tests/test_checkpoint_validation.py)
+- [tests/test_checkpoint_migrator.py](/Users/jonasweiss/MathTeach/tests/test_checkpoint_migrator.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [tests/test_session_audit.py](/Users/jonasweiss/MathTeach/tests/test_session_audit.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/checkpoint-migrator.md](/Users/jonasweiss/MathTeach/docs/checkpoint-migrator.md)
+- [docs/session-validation-and-migration.md](/Users/jonasweiss/MathTeach/docs/session-validation-and-migration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `109 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Admin-Repair-Paths 2026-04-04
 
 Die Session-Betriebshaertung hat jetzt eine sichtbare Admin-Oberflaeche:

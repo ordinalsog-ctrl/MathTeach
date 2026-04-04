@@ -165,7 +165,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py): Erste file-backed Persistenz-Huelle fuer `session_id`-Resume und `mode_adaptation_checkpoint`
 - [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py): Koordinationsschicht fuer `session_id`, Resume-Konflikte und schlankeren API-Glue-Code
 - [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py): H.1-Validierungs- und Versionslogik fuer `mode_adaptation_checkpoint`
-- [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py): Erste automatische Migration von `phase_h0_v1` nach `phase_h1_v1`
+- [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py): Automatische Einzelschritt- und Mehrschritt-Migration fuer bekannte Legacy-Checkpoints bis `phase_h1_v1`
 - [src/mathteach/services/session_quarantine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_quarantine.py): Erste Quarantaene-Huelle fuer defekte Session-Dateien
 - [src/mathteach/services/session_audit.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_audit.py): JSONL-Audit-Trail fuer Migrationen und Resume-Fehler
 
@@ -233,7 +233,8 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - eine erste Validierungs- und Migrationskante fuer Sessions ist jetzt
   ebenfalls operational, inklusive `400/410/422`-Semantik im API-Pfad
 - ein erster echter `checkpoint_migrator` ist jetzt ebenfalls operational
-  und hebt bekannte Alt-Checkpoints automatisch auf den H.1-Stand
+  und hebt bekannte Alt-Checkpoints jetzt auch ueber mehrere bekannte
+  Zwischenstufen automatisch auf den H.1-Stand
 - defekte oder nicht migrierbare Sessions werden jetzt ausserdem
   quarantainiert und auditiert, statt im aktiven Resume-Pfad zu bleiben
 - erste Admin-/Repair-Pfade fuer quarantainierte Sessions sind jetzt
@@ -241,8 +242,8 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - derselbe `session_id`-Wert startet nach Quarantaene jetzt auch explizit
   wieder sauber neu, wenn kein aktiver Checkpoint mehr vorhanden ist
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern haertere Repair-/Monitoring-Workflows, spaetere Mehrschritt-
-  Migrationen und History-Anbindung
+  sondern haertere Repair-/Monitoring-Workflows, spaetere Rollenlogik
+  fuer Admin-Pfade und danach echte H.2+-Schemaentwicklung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

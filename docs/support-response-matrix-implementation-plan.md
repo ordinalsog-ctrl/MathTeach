@@ -154,16 +154,16 @@ Aktueller Stand:
   operational und entlastet den API-Pfad
 - eine erste H.1-Validierungs- und Migrationskante fuer Checkpoints ist jetzt
   operational
-- der erste automatische `checkpoint_migrator` fuer `phase_h0_v1` ist jetzt
-  ebenfalls operational
+- der automatische `checkpoint_migrator` traegt jetzt auch erste
+  Mehrschritt-Ketten bis `phase_h1_v1`
 - eine erste Quarantaene- und Audit-Schicht fuer defekte Sessions ist jetzt
   ebenfalls operational
 
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst Repair-/Admin-Pfade, Audit-Kopplung und spaetere
-  Mehrschritt-Migrationen weiter haerten
+- zuerst Repair-/Admin-Pfade, Audit-Kopplung und spaetere H.2+-
+  Schemawechsel auf die neue Migrationskette setzen
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
 - dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
 - dann End-to-End-Blocksimulationen verbreitern

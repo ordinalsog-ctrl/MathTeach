@@ -46,8 +46,9 @@ Ziel ist die klare Unterscheidung zwischen:
 
 ```python
 CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION = "phase_h1_v1"
-MIGRATABLE_MODE_ADAPTATION_CHECKPOINT_VERSIONS = {"phase_h0_v1"}
+MIGRATABLE_MODE_ADAPTATION_CHECKPOINT_VERSIONS = {"phase_h0_v0", "phase_h0_v1"}
 KNOWN_MODE_ADAPTATION_CHECKPOINT_VERSIONS = {
+    "phase_h0_v0",
     "phase_h0_v1",
     "phase_h1_v1",
 }
@@ -74,19 +75,22 @@ Aktuelle Fehlerabbildung:
 
 Jetzt bereits live:
 
+- `phase_h0_v0 -> phase_h0_v1 -> phase_h1_v1`
 - `phase_h0_v1 -> phase_h1_v1`
 - gespeicherte Alt-Checkpoints werden beim Resume automatisch migriert und
   direkt wieder als aktuelle Version gespeichert
 - inline Alt-Checkpoints werden vor dem Planner-Aufruf normalisiert
+- Mehrschritt-Migrationen werden im Audit-Trail jetzt explizit als
+  `checkpoint_migration_chain` sichtbar
 - defekte gespeicherte Sessions werden ausserdem jetzt quarantainiert und
   mit Audit-Ereignissen versehen
 
 ## Naechster Ausbau
 
-Die aktuelle Haertung ist jetzt die erste echte Migration-Engine.
+Die aktuelle Haertung ist jetzt die erste echte Ketten-Migration-Engine.
 Der naechste logische Schritt ist:
 
-1. mehr als ein Migrationsschritt
-2. sichtbarere Repair- oder Admin-Pfade fuer quarantainierte Sessions
+1. spaetere H.2+-Schemawechsel auf dieselbe Migrationskette setzen
+2. sichtbarere Repair- oder Admin-Pfade fuer quarantainierte Sessions haerten
 3. Audit-Trail spaeter mit Session-History koppeln
 4. spaetere History-Schicht auf Basis nur validierter Checkpoints

@@ -166,6 +166,49 @@ def test_session_manager_auto_migrates_stored_checkpoint_and_persists_it(tmp_pat
     assert audit_events[-1].target_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
 
 
+def test_session_manager_auto_migrates_stored_checkpoint_across_multiple_steps(tmp_path) -> None:
+    store = SessionStore(tmp_path / "store")
+    audit_logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    manager = SessionManager(store, audit_logger=audit_logger)
+    checkpoint = ModeAdaptationCheckpoint(
+        schema_version="phase_h0_v0",
+        mode_adaptation_state=ModeAdaptationState(
+            current_mode="guided_concept_explanation",
+            blocks_in_current_mode=1,
+            mode_changes_in_session=0,
+            cooldown_blocks_remaining=1,
+            last_observation_evidence=["legacy_signal_should_be_reset"],
+        ),
+    )
+    store.save_checkpoint("session-needs-chain-migration", checkpoint)
+
+    planner_request, session_id = manager.prepare_planner_request(
+        _request("session-needs-chain-migration")
+    )
+    stored_after = store.load_checkpoint("session-needs-chain-migration")
+    audit_events = audit_logger.read_events()
+
+    assert session_id == "session-needs-chain-migration"
+    assert planner_request.mode_adaptation_checkpoint is not None
+    assert (
+        planner_request.mode_adaptation_checkpoint.schema_version
+        == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    )
+    assert (
+        planner_request.mode_adaptation_checkpoint.mode_adaptation_state.last_observation_evidence
+        == []
+    )
+    assert stored_after is not None
+    assert stored_after.schema_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    assert audit_events[-1].event_type == "checkpoint_migration_chain"
+    assert audit_events[-1].source_version == "phase_h0_v0"
+    assert audit_events[-1].target_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    assert audit_events[-1].migration_steps == [
+        "phase_h0_v0->phase_h0_v1",
+        f"phase_h0_v1->{CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION}",
+    ]
+
+
 def test_session_manager_rejects_corrupted_stored_checkpoint(tmp_path) -> None:
     store = SessionStore(tmp_path / "store")
     audit_logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
@@ -246,6 +289,35 @@ def test_session_manager_auto_migrates_inline_checkpoint() -> None:
     assert (
         planner_request.mode_adaptation_checkpoint.schema_version
         == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    )
+
+
+def test_session_manager_auto_migrates_inline_checkpoint_across_multiple_steps() -> None:
+    manager = SessionManager(SessionStore())
+
+    planner_request, session_id = manager.prepare_planner_request(
+        _request(
+            checkpoint=ModeAdaptationCheckpoint(
+                schema_version="phase_h0_v0",
+                mode_adaptation_state=ModeAdaptationState(
+                    current_mode="guided_concept_explanation",
+                    blocks_in_current_mode=1,
+                    mode_changes_in_session=0,
+                    last_observation_evidence=["legacy_signal_should_be_reset"],
+                ),
+            )
+        )
+    )
+
+    assert session_id is None
+    assert planner_request.mode_adaptation_checkpoint is not None
+    assert (
+        planner_request.mode_adaptation_checkpoint.schema_version
+        == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    )
+    assert (
+        planner_request.mode_adaptation_checkpoint.mode_adaptation_state.last_observation_evidence
+        == []
     )
 
 

@@ -17,6 +17,7 @@ from mathteach.services.checkpoint_validation import (
 from mathteach.services.checkpoint_migrator import (
     CheckpointMigrationError,
     CheckpointMigrator,
+    CheckpointMigrationResult,
 )
 from mathteach.services.session_audit import SessionAuditEvent, SessionAuditLogger
 from mathteach.services.session_quarantine import SessionQuarantine
@@ -141,6 +142,7 @@ class SessionManager:
         if quarantined is None:
             return None
         record, raw_checkpoint = quarantined
+        migration_result: CheckpointMigrationResult | None = None
 
         try:
             checkpoint = ModeAdaptationCheckpoint.model_validate_json(raw_checkpoint)
@@ -154,7 +156,8 @@ class SessionManager:
             restored_checkpoint = checkpoint
         except CheckpointMigrationRequired:
             try:
-                restored_checkpoint = self.migrator.migrate_checkpoint(checkpoint)
+                migration_result = self.migrator.migrate_checkpoint(checkpoint)
+                restored_checkpoint = migration_result.checkpoint
             except CheckpointMigrationError as exc:
                 raise CheckpointMigrationRequired(
                     f"Quarantined checkpoint for session {session_id} still requires unsupported migration."
@@ -168,6 +171,8 @@ class SessionManager:
         validate_checkpoint_for_persist(restored_checkpoint)
         self.store.save_checkpoint(session_id, restored_checkpoint)
         self.quarantine.discard_latest(session_id)
+        if migration_result is not None:
+            self._record_migration_event(session_id, migration_result)
         self.audit_logger.record(
             SessionAuditEvent(
                 event_type="checkpoint_restored",
@@ -220,7 +225,8 @@ class SessionManager:
             return checkpoint
         except CheckpointMigrationRequired as exc:
             try:
-                migrated = self.migrator.migrate_checkpoint(checkpoint)
+                migration_result = self.migrator.migrate_checkpoint(checkpoint)
+                migrated = migration_result.checkpoint
             except CheckpointMigrationError as migration_exc:
                 raise CheckpointMigrationRequired(
                     "Inline mode adaptation checkpoint requires migration before resume. "
@@ -260,7 +266,8 @@ class SessionManager:
             return checkpoint
         except CheckpointMigrationRequired as exc:
             try:
-                migrated = self.migrator.migrate_checkpoint(checkpoint)
+                migration_result = self.migrator.migrate_checkpoint(checkpoint)
+                migrated = migration_result.checkpoint
             except CheckpointMigrationError as migration_exc:
                 self._quarantine_invalid_session(
                     session_id,
@@ -274,18 +281,7 @@ class SessionManager:
                 ) from exc
             validate_checkpoint_for_resume(migrated)
             self.store.save_checkpoint(session_id, migrated)
-            self.audit_logger.record(
-                SessionAuditEvent(
-                    event_type="checkpoint_migrated",
-                    session_id=session_id,
-                    detail=(
-                        f"Checkpoint migrated from {checkpoint.schema_version} to "
-                        f"{migrated.schema_version}."
-                    ),
-                    source_version=checkpoint.schema_version,
-                    target_version=migrated.schema_version,
-                )
-            )
+            self._record_migration_event(session_id, migration_result)
             return migrated
         except SessionValidationError as exc:
             self._quarantine_invalid_session(
@@ -319,6 +315,41 @@ class SessionManager:
                 detail=detail,
                 source_version=source_version,
                 quarantine_path=record.quarantine_path if record is not None else None,
+            )
+        )
+
+    def _record_migration_event(
+        self,
+        session_id: str,
+        migration_result: CheckpointMigrationResult,
+    ) -> None:
+        if not migration_result.steps:
+            return
+
+        source_version = migration_result.steps[0].source_version
+        target_version = migration_result.steps[-1].target_version
+        migration_steps = [
+            f"{step.source_version}->{step.target_version}"
+            for step in migration_result.steps
+        ]
+        if len(migration_result.steps) == 1:
+            event_type = "checkpoint_migrated"
+            detail = f"Checkpoint migrated from {source_version} to {target_version}."
+        else:
+            event_type = "checkpoint_migration_chain"
+            detail = (
+                f"Checkpoint migrated from {source_version} to {target_version} via "
+                f"{len(migration_result.steps)} steps."
+            )
+
+        self.audit_logger.record(
+            SessionAuditEvent(
+                event_type=event_type,
+                session_id=session_id,
+                detail=detail,
+                source_version=source_version,
+                target_version=target_version,
+                migration_steps=migration_steps,
             )
         )
 

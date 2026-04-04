@@ -38,3 +38,23 @@ def test_session_audit_logger_filters_by_session_id(tmp_path) -> None:
 
     assert len(filtered) == 1
     assert filtered[0].session_id == "session-b"
+
+
+def test_session_audit_logger_records_migration_chain_steps(tmp_path) -> None:
+    logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    event = SessionAuditEvent(
+        event_type="checkpoint_migration_chain",
+        session_id="session-chain",
+        detail="Checkpoint migrated across multiple schema steps.",
+        source_version="phase_h0_v0",
+        target_version="phase_h1_v1",
+        migration_steps=[
+            "phase_h0_v0->phase_h0_v1",
+            "phase_h0_v1->phase_h1_v1",
+        ],
+    )
+
+    logger.record(event)
+    restored = logger.read_events(session_id="session-chain")
+
+    assert restored == [event]

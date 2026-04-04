@@ -75,5 +75,6 @@ Jetzt bereits live:
 
 1. sichtbare Admin-Pfade spaeter mit Repair-Workflow oder Rollenmodell haerten
 2. Audit-Trail spaeter mit Session-History koppeln
-3. Mehrschritt-Migrationen spaeter ebenfalls auditierbar machen
+3. Mehrschritt-Migrationen sind jetzt auditierbar; naechst spaetere H.2+-
+   Spruenge auf dieselbe Auditspur setzen
 4. Reparatur- oder Reimport-Hooks fuer manuell gepruefte Sessions erweitern

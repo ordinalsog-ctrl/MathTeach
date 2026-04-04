@@ -143,7 +143,8 @@ Jetzt bereits umgesetzt:
 8. API-seitige Trennung zwischen `unknown`, `invalid` und
    `migration-required`
 9. [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py)
-10. automatische Migration von `phase_h0_v1` nach `phase_h1_v1`
+10. automatische Einzelschritt- und Mehrschritt-Migration von bekannten
+    Legacy-Versionen bis `phase_h1_v1`
 11. erste Quarantaene- und Audit-Schicht fuer defekte Sessions
 12. erste Admin-Endpunkte fuer `list`, `inspect`, `restore` und `discard`
 
@@ -154,4 +155,4 @@ Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 1. haertere Repair- oder Rollenlogik fuer Admin-Pfade
 2. Audit-Trail spaeter mit History-/Analytics-Schicht koppeln
 3. spaetere Trennung von Session-Store und History-/Analytics-Schicht
-4. danach Storage-Haertung und History-Anbindung
+4. danach echte H.2+-Schemaerweiterungen auf die Migrationskette setzen

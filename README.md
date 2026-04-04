@@ -160,6 +160,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Minimale regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings
 - [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py): Erste H.1-Runtime-Komponente fuer blockweise Modusanpassung mit `SignalInterpreter`, Hysterese und Transition-Templates
 - [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py): Erste file-backed Persistenz-Huelle fuer `session_id`-Resume und `mode_adaptation_checkpoint`
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py): Koordinationsschicht fuer `session_id`, Resume-Konflikte und schlankeren API-Glue-Code
 
 ## Schnellstart
 
@@ -216,8 +217,11 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   als erste Runtime-Stufe umgesetzt
 - die H.1-Codeartefakte tragen jetzt auch Resume-Pfade,
   Transition-Konsumierung und Mehrblock-Signalverdichtung
+- `SessionStore` und `SessionManager` sind jetzt als erste Persistenz- und
+  Koordinationsschicht operational
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern `Persistence`, `Resume-Semantik` und spaetere History-Anbindung
+  sondern robustere Version-Haertung, externe Session-Semantik und spaetere
+  History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

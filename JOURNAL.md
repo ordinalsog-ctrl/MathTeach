@@ -2,6 +2,42 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Session-Manager 2026-04-04
+
+Die Session-Persistenz hat jetzt ihre erste echte Koordinationsschicht:
+`SessionManager` sitzt zwischen API, `SessionStore` und Planner und zieht
+die Resume-Regeln aus `main.py` heraus.
+
+Wichtigste Konsequenzen:
+
+- `SessionManager` koordiniert jetzt `session_id`, gespeicherte Checkpoints
+  und inline Resume-Daten zentral
+- Konflikte zwischen `session_id` und direkter Runtime-Eingabe werden jetzt
+  nicht mehr implizit im API-Pfad, sondern explizit in der neuen
+  Koordinationsschicht behandelt
+- `main.py` ist wieder deutlich schlanker und delegiert Laden, Resume und
+  Persistieren an den Manager
+- `SessionRequest` bleibt fuer Legacy- und Testpfade flexibel, waehrend die
+  Konfliktregel jetzt an der Session-Grenze erzwungen wird
+- der file-backed `SessionStore` bleibt MVP, aber der naechste Ausbaupfad
+  heisst jetzt klar: Version-Haertung, unbekannte Session-Semantik und
+  spaetere `SessionManager`-Erweiterung statt weiterer API-Glue-Code
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/config.py](/Users/jonasweiss/MathTeach/src/mathteach/config.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `80 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Session-Store-MVP 2026-04-04
 
 Die erste echte Storage-Stufe fuer `Phase H` ist jetzt im Repo

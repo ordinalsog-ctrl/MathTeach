@@ -10,11 +10,13 @@ from mathteach.services.corpus import (
 )
 from mathteach.services.foundation import build_foundation
 from mathteach.services.planner import build_stack, build_teaching_plan
+from mathteach.services.session_manager import SessionManager, SessionConflictError, as_http_conflict
 from mathteach.services.session_store import SessionStore
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0")
 session_store = SessionStore(settings.session_store_dir)
+session_manager = SessionManager(session_store)
 
 
 @app.get("/health")
@@ -54,22 +56,9 @@ def corpus_network():
 
 @app.post("/api/v1/tutoring/plan")
 def tutoring_plan(request: SessionRequest):
-    planner_request = request
-
-    if request.session_id is not None:
-        stored_checkpoint = session_store.load_checkpoint(request.session_id)
-        if stored_checkpoint is not None:
-            planner_request = request.model_copy(
-                update={
-                    "session_id": None,
-                    "mode_adaptation_checkpoint": stored_checkpoint,
-                }
-            )
-
-    plan = build_teaching_plan(planner_request)
-
-    if request.session_id is not None:
-        session_store.save_checkpoint(request.session_id, plan.mode_adaptation_checkpoint)
-        plan = plan.model_copy(update={"session_id": request.session_id})
-
-    return plan
+    try:
+        planner_request, session_id = session_manager.prepare_planner_request(request)
+        plan = build_teaching_plan(planner_request)
+        return session_manager.persist_plan_result(session_id, plan)
+    except SessionConflictError as exc:
+        raise as_http_conflict(exc) from exc

@@ -136,13 +136,16 @@ Jetzt bereits umgesetzt:
 1. [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py)
 2. file-backed MVP-Implementierung
 3. API-Test fuer `session_id`-Resume
+4. [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+5. zentrale Resume-Koordination zwischen API, Store und Planner
+6. explizite Konfliktbehandlung fuer `session_id` versus inline Resume-Daten
 
 ## Naechster Coding-Schritt
 
 Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 
-1. `src/mathteach/services/session_manager.py`
-2. saubere Trennung zwischen API-Huelle und Resume-Koordination
-3. Konfliktregeln zwischen unbekannter Session, vorhandenem Checkpoint und
-   spaeteren Versionen
-4. spaeter Storage-Haertung und History-Anbindung
+1. Session-Haertung fuer unbekannte, veraltete oder spaeter migrierte
+   Checkpoints
+2. explizitere Version- und Validierungsregeln im `SessionManager`
+3. spaetere Trennung von Session-Store und History-/Analytics-Schicht
+4. danach Storage-Haertung und History-Anbindung

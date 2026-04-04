@@ -80,14 +80,8 @@ class SessionRequest(BaseModel):
             raise ValueError(
                 "Provide either mode_adaptation_state or mode_adaptation_checkpoint, not both."
             )
-        if self.session_id is not None and (
-            self.mode_adaptation_state is not None
-            or self.mode_adaptation_checkpoint is not None
-        ):
-            raise ValueError(
-                "Provide either session_id or inline mode adaptation resume data, not both."
-            )
         return self
+
 
 class RetrievalPlan(BaseModel):
     concept_depth: str

@@ -159,8 +159,8 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/response_matrix.py](/Users/jonasweiss/MathTeach/src/mathteach/response_matrix.py): Eigenes Modellmodul fuer Support-Signale und Tutor-Response-Settings
 - [src/mathteach/services/corpus.py](/Users/jonasweiss/MathTeach/src/mathteach/services/corpus.py): Blueprint-Service fuer die Mathe-Datenbank
 - [src/mathteach/services/foundation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/foundation.py): Datenfundament fuer Wissenskern und Lehrerfigur
-- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
-- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Minimale regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Planungslogik fuer Tutor-Sessions mit blockweiser Runtime-Adaption und sichtbaren Support-Moves je Block
+- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings fuer Einzel- und Mischprofile
 - [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py): Erste H.1-Runtime-Komponente fuer blockweise Modusanpassung mit `SignalInterpreter`, Hysterese und Transition-Templates
 - [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py): Erste file-backed Persistenz-Huelle fuer `session_id`-Resume und `mode_adaptation_checkpoint`
 - [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py): Koordinationsschicht fuer `session_id`, Resume-Konflikte und schlankeren API-Glue-Code
@@ -241,9 +241,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   ebenfalls live, inklusive `list`, `inspect`, `restore` und `discard`
 - derselbe `session_id`-Wert startet nach Quarantaene jetzt auch explizit
   wieder sauber neu, wenn kein aktiver Checkpoint mehr vorhanden ist
-- der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern haertere Repair-/Monitoring-Workflows, spaetere Rollenlogik
-  fuer Admin-Pfade und danach echte H.2+-Schemaentwicklung
+- die Support Response Matrix wirkt jetzt nicht mehr nur global ueber
+  `response_settings`, sondern sichtbar ueber `support_moves` und
+  `support_scaffolds` in jedem `planned_block`
+- der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
+  sondern tiefere support-aware Blockgenerierung, spaetere
+  runtime-sensitive Response-Anpassung und danach punktuelle
+  Rollen-/Monitoring-Haertung fuer Admin-Pfade
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

@@ -21,7 +21,37 @@ def test_planner_builds_preview_block_without_runtime_observations() -> None:
     assert len(plan.planned_blocks) == 1
     assert plan.planned_blocks[0].block_index == 1
     assert plan.planned_blocks[0].mode == "guided_concept_explanation"
+    assert "insert_frequent_understanding_checks" in plan.planned_blocks[0].support_moves
+    assert "clear_step_boundary" in plan.planned_blocks[0].support_scaffolds
     assert plan.mode_adaptation_trace == []
+
+
+def test_planner_exposes_block_level_support_moves_for_adhd_and_dyscalculia() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert "announce_short_goal_before_block" in first_block.support_moves
+    assert "keep_quantity_representation_visible" in first_block.support_moves
+    assert "step_labels" in first_block.support_scaffolds
+    assert "number_lines" in first_block.support_scaffolds
 
 
 def test_planner_carries_mode_change_into_next_preview_block() -> None:

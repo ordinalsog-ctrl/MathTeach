@@ -135,6 +135,8 @@ class PlannedTeachingBlock(BaseModel):
     mode: str
     goal: str
     focus: list[str] = Field(default_factory=list)
+    support_moves: list[str] = Field(default_factory=list)
+    support_scaffolds: list[str] = Field(default_factory=list)
     transition_message: str | None = None
     observed_evidence: list[str] = Field(default_factory=list)
 

@@ -913,6 +913,8 @@ def test_tutoring_plan_declared_adhd_support() -> None:
     assert payload["support_signal_profile"]["adhd_aware_support"] == "declared"
     assert payload["response_settings"]["session_duration"] == "12_to_15_minute_focus_blocks"
     assert "step_labels" in payload["response_settings"]["external_scaffolds"]
+    assert "announce_short_goal_before_block" in payload["planned_blocks"][0]["support_moves"]
+    assert "step_labels" in payload["planned_blocks"][0]["support_scaffolds"]
 
 
 def test_tutoring_plan_declared_dyslexia_support() -> None:
@@ -940,6 +942,7 @@ def test_tutoring_plan_declared_dyslexia_support() -> None:
         "glossary_plus_key_terms_plus_simplified_syntax"
     )
     assert "key_term_highlighting" in payload["response_settings"]["external_scaffolds"]
+    assert "reduce_text_load_before_problem_solving" in payload["planned_blocks"][0]["support_moves"]
 
 
 def test_tutoring_plan_declared_autism_support() -> None:
@@ -966,6 +969,7 @@ def test_tutoring_plan_declared_autism_support() -> None:
     assert payload["response_settings"]["sensory_load_level"] == "minimal_and_high_contrast"
     assert payload["response_settings"]["language_support"] == "explicit_literal_instructions"
     assert "consistent_session_structure" in payload["response_settings"]["external_scaffolds"]
+    assert "keep_structure_predictable_and_literal" in payload["planned_blocks"][0]["support_moves"]
 
 
 def test_tutoring_plan_language_sensitive_support() -> None:
@@ -992,6 +996,7 @@ def test_tutoring_plan_language_sensitive_support() -> None:
         "translated_key_terms_glossary_and_simplified_syntax"
     )
     assert "key_term_glossary" in payload["response_settings"]["external_scaffolds"]
+    assert "bridge_everyday_language_and_math_terms" in payload["planned_blocks"][0]["support_moves"]
     assert any("math vocabulary" in item for item in payload["teaching_pattern"])
 
 
@@ -1018,6 +1023,7 @@ def test_tutoring_plan_declared_scarcity_support() -> None:
     assert payload["support_signal_profile"]["scarcity_aware_support"] == "declared"
     assert payload["response_settings"]["language_support"] == "plain_goal_and_relevance_framing"
     assert "clear_success_criteria" in payload["response_settings"]["external_scaffolds"]
+    assert "mark_small_visible_wins" in payload["planned_blocks"][0]["support_moves"]
     assert any("visible progress" in item for item in payload["teaching_pattern"])
 
 
@@ -1053,6 +1059,8 @@ def test_tutoring_plan_mixed_profile_conflict_resolution() -> None:
     assert "adhd_aware_support__dyscalculia_aware_support" in payload["response_settings"][
         "conflict_pairs"
     ]
+    assert "announce_short_goal_before_block" in payload["planned_blocks"][0]["support_moves"]
+    assert "keep_quantity_representation_visible" in payload["planned_blocks"][0]["support_moves"]
     assert payload["mode_selection"]["selected_mode"] == "worked_example_tutoring"
     assert "low_notation_density" in payload["mode_selection"]["constraints"]
     assert any("conflict-resolution rules" in item for item in payload["teaching_pattern"])

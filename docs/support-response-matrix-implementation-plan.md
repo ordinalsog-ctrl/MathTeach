@@ -83,6 +83,15 @@ Geplante Wirkung:
 - Runtime-Modi werden nicht nur thematisch, sondern auch support-sensitiv gewaehlt
 - `TeachingPlan` bekommt spaeter konkrete Response-Felder
 
+Aktueller Stand:
+
+- `TeachingPlan.response_settings` ist operational
+- support-sensitive Moduswahl ist operational
+- `planned_blocks` tragen jetzt konkrete `support_moves` und
+  `support_scaffolds`
+- erste Einzelprofile und Mischprofile wirken damit sichtbar bis in die
+  Blockvorschau hinein
+
 ## Phase D: Pilot and Validation
 
 Zeitrahmen:
@@ -162,9 +171,10 @@ Aktueller Stand:
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst Repair-/Admin-Pfade, Audit-Kopplung und spaetere H.2+-
-  Schemawechsel auf die neue Migrationskette setzen
+- zuerst support-aware Blockgenerierung vertiefen statt neue reine
+  Infrastrukturlagen vorzuziehen
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
+- danach punktuelle Repair-/Admin-Pfade und Audit-Kopplung weiter haerten
 - dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
 - dann End-to-End-Blocksimulationen verbreitern
 - danach Signalabdeckung und Randfaelle verbreitern
@@ -212,8 +222,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. Mehrschritt-Migrationen fuer spaetere Schema-Upgrades vorbereiten
-2. Repair- oder Admin-Pfade fuer quarantainierte Sessions weiter haerten
+1. `support_moves` je Modus und Support-Profil noch topic-sensitiver machen
+2. `support_scaffolds` spaeter an Blocktyp und Runtime-Signal koppeln
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
@@ -225,8 +235,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- Session-Repair-/Admin-Hooks fuer defekte Persistenz weiter haerten
-- Audit-Trail spaeter an History oder Monitoring anbinden
+- blockweise Support-Moves noch naeher an Mode und Beobachtung koppeln
+- Scaffold-Auswahl spaeter dynamisch nach Runtime-Signal staffeln
 - Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 

@@ -225,6 +225,139 @@ def _block_focus(
     return focus
 
 
+def _block_support_moves(response_settings) -> list[str]:
+    moves: list[str] = []
+
+    if response_settings.transition_buffer != "brief_explicit_transition":
+        moves.append("mark_transition_explicitly")
+    if response_settings.check_frequency != "every_few_steps":
+        moves.append("insert_frequent_understanding_checks")
+    if response_settings.worked_example_ratio != "balanced_examples_then_practice":
+        moves.append("model_before_independent_attempt")
+    if response_settings.language_support != "standard":
+        moves.append("carry_language_bridge_into_prompt")
+    if response_settings.sensory_load_level != "standard":
+        moves.append("keep_visual_field_low_clutter")
+
+    active_supports = set(response_settings.active_supports)
+    if "adhd_aware_support" in active_supports:
+        moves.extend(
+            [
+                "announce_short_goal_before_block",
+                "use_step_labels_and_micro_checkpoints",
+                "keep_feedback_near_immediate",
+            ]
+        )
+    if "dyscalculia_aware_support" in active_supports:
+        moves.extend(
+            [
+                "keep_quantity_representation_visible",
+                "delay_dense_symbolic_compression",
+                "rebuild_errors_from_quantity_model",
+            ]
+        )
+    if "dyslexia_aware_support" in active_supports:
+        moves.extend(
+            [
+                "reduce_text_load_before_problem_solving",
+                "check_reading_load_before_math_correction",
+            ]
+        )
+    if "autism_spectrum_aware_support" in active_supports:
+        moves.extend(
+            [
+                "keep_structure_predictable_and_literal",
+                "stabilize_layout_before_variation",
+            ]
+        )
+    if "language_sensitive_support" in active_supports:
+        moves.extend(
+            [
+                "bridge_everyday_language_and_math_terms",
+                "confirm_term_meaning_at_major_steps",
+            ]
+        )
+    if "scarcity_aware_support" in active_supports:
+        moves.extend(
+            [
+                "state_success_criteria_up_front",
+                "mark_small_visible_wins",
+            ]
+        )
+
+    unique_moves: list[str] = []
+    seen: set[str] = set()
+    for move in moves:
+        if move not in seen:
+            unique_moves.append(move)
+            seen.add(move)
+    return unique_moves
+
+
+def _block_support_scaffolds(response_settings) -> list[str]:
+    selected: list[str] = []
+    seen: set[str] = set()
+    support_priorities = {
+        "adhd_aware_support": [
+            "step_labels",
+            "micro_checkpoints",
+            "visible_progress_markers",
+            "short_goal_for_this_block",
+        ],
+        "dyscalculia_aware_support": [
+            "number_lines",
+            "ten_frames_or_quantity_grids",
+            "counters_or_token_like_objects",
+            "visible_link_between_quantity_and_symbol",
+            "explicit_step_labels",
+        ],
+        "dyslexia_aware_support": [
+            "key_term_highlighting",
+            "symbol_reading_support",
+            "short_sentence_chunks",
+            "step_labels",
+        ],
+        "autism_spectrum_aware_support": [
+            "consistent_session_structure",
+            "explicit_transition_cues",
+            "stable_visual_layout",
+            "visible_progress_markers",
+        ],
+        "language_sensitive_support": [
+            "key_term_glossary",
+            "everyday_to_math_language_bridge",
+            "translated_key_terms_when_needed",
+            "term_confirmation_checks",
+        ],
+        "scarcity_aware_support": [
+            "clear_success_criteria",
+            "visible_progress_markers",
+            "why_this_matters_now",
+            "small_wins_sequence",
+        ],
+    }
+
+    for support_need in response_settings.active_supports:
+        per_support_added = 0
+        for scaffold in support_priorities.get(support_need, []):
+            if scaffold in response_settings.external_scaffolds and scaffold not in seen:
+                selected.append(scaffold)
+                seen.add(scaffold)
+                per_support_added += 1
+            if per_support_added == 2 or len(selected) == 4:
+                break
+        if len(selected) == 4:
+            break
+
+    for scaffold in response_settings.external_scaffolds:
+        if scaffold not in seen:
+            selected.append(scaffold)
+            seen.add(scaffold)
+        if len(selected) == 4:
+            break
+    return selected
+
+
 def _build_planned_block(
     block_index: int,
     lesson_mode: str,
@@ -238,6 +371,8 @@ def _build_planned_block(
         mode=lesson_mode,
         goal=_block_goal(lesson_mode, objective),
         focus=_block_focus(lesson_mode, response_settings),
+        support_moves=_block_support_moves(response_settings),
+        support_scaffolds=_block_support_scaffolds(response_settings),
         transition_message=transition_message,
         observed_evidence=observed_evidence,
     )

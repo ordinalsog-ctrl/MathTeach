@@ -2,6 +2,41 @@
 
 Stand: 2026-04-02
 
+## Phase-Support-Block-Level-Response-Integration 2026-04-04
+
+Die Support Response Matrix ist jetzt nicht mehr nur global im
+`TeachingPlan` sichtbar, sondern greift direkt in die geplanten
+Unterrichtsbloecke hinein.
+
+Wichtigste Konsequenzen:
+
+- `planned_blocks` tragen jetzt konkrete `support_moves` und
+  `support_scaffolds`
+- ADHD-, Dyscalculia-, Dyslexia-, Autism-, Language-Sensitive- und
+  Scarcity-Support werden jetzt als blockweise Tutorhandlungen sichtbar
+- Mischprofile bekommen auf Blockebene jetzt nicht nur globale
+  `response_settings`, sondern eine faire Scaffold-Auswahl ueber mehrere
+  aktive Supports
+- der Planner uebersetzt Support-Profile damit klarer in operative
+  Tutorentscheidungen statt nur in Hintergrundparameter
+- der naechste direkte Ausbau ist jetzt nicht mehr Phase-A-Dokumentation,
+  sondern tiefere support-aware Blockgenerierung und spaeter
+  runtime-sensitive Response-Anpassung ueber Sitzungsverlaeufe
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `110 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Multi-Step-Checkpoint-Migration 2026-04-04
 
 Die Session-Haertung ist jetzt nicht mehr auf einen einzelnen

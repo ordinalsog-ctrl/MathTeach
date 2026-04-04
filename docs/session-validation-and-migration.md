@@ -78,6 +78,8 @@ Jetzt bereits live:
 - gespeicherte Alt-Checkpoints werden beim Resume automatisch migriert und
   direkt wieder als aktuelle Version gespeichert
 - inline Alt-Checkpoints werden vor dem Planner-Aufruf normalisiert
+- defekte gespeicherte Sessions werden ausserdem jetzt quarantainiert und
+  mit Audit-Ereignissen versehen
 
 ## Naechster Ausbau
 
@@ -85,6 +87,6 @@ Die aktuelle Haertung ist jetzt die erste echte Migration-Engine.
 Der naechste logische Schritt ist:
 
 1. mehr als ein Migrationsschritt
-2. spaetere Quarantaene fuer ungueltige Session-Dateien
-3. Audit-Trail fuer Migrations- und Validierungsfehler
+2. sichtbarere Repair- oder Admin-Pfade fuer quarantainierte Sessions
+3. Audit-Trail spaeter mit Session-History koppeln
 4. spaetere History-Schicht auf Basis nur validierter Checkpoints

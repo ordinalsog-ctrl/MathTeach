@@ -98,6 +98,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md): Anschlussarchitektur fuer `session_id`, `SessionStore` und spaeter `SessionManager`
 - [docs/session-validation-and-migration.md](/Users/jonasweiss/MathTeach/docs/session-validation-and-migration.md): Erste Validierungs- und Fehlersemantik fuer unbekannte, ungueltige und migrationsbeduerftige Sessions
 - [docs/checkpoint-migrator.md](/Users/jonasweiss/MathTeach/docs/checkpoint-migrator.md): Erste echte Migrationslogik fuer bekannte Alt-Checkpoints
+- [docs/session-quarantine-and-audit.md](/Users/jonasweiss/MathTeach/docs/session-quarantine-and-audit.md): Erste Betriebs-Haertung fuer defekte Sessions und Audit-Trail
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -165,6 +166,8 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py): Koordinationsschicht fuer `session_id`, Resume-Konflikte und schlankeren API-Glue-Code
 - [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py): H.1-Validierungs- und Versionslogik fuer `mode_adaptation_checkpoint`
 - [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py): Erste automatische Migration von `phase_h0_v1` nach `phase_h1_v1`
+- [src/mathteach/services/session_quarantine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_quarantine.py): Erste Quarantaene-Huelle fuer defekte Session-Dateien
+- [src/mathteach/services/session_audit.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_audit.py): JSONL-Audit-Trail fuer Migrationen und Resume-Fehler
 
 ## Schnellstart
 
@@ -227,9 +230,11 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   ebenfalls operational, inklusive `400/410/422`-Semantik im API-Pfad
 - ein erster echter `checkpoint_migrator` ist jetzt ebenfalls operational
   und hebt bekannte Alt-Checkpoints automatisch auf den H.1-Stand
+- defekte oder nicht migrierbare Sessions werden jetzt ausserdem
+  quarantainiert und auditiert, statt im aktiven Resume-Pfad zu bleiben
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern Quarantaene/Audit-Trail fuer defekte Sessions, spaetere
-  Mehrschritt-Migrationen und History-Anbindung
+  sondern sichtbarere Admin-/Repair-Pfade, spaetere Mehrschritt-
+  Migrationen und History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

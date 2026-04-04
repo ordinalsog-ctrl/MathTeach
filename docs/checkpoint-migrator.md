@@ -53,6 +53,6 @@ Der aktuelle Stand ist bewusst nur die erste sichere Stufe.
 Der naechste logische Ausbau ist:
 
 1. mehr als ein Migrationsschritt
-2. Quarantaene fuer nicht reparierbare Session-Dateien
-3. Audit-Trail fuer Migrationen und Fehler
+2. sichtbarer Reparaturpfad fuer quarantainierte Sessions
+3. Audit-Trail fuer Migrationen und Fehler spaeter mit History koppeln
 4. spaetere Kopplung an History- und Analytics-Schichten

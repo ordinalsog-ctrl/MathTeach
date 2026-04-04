@@ -18,6 +18,8 @@ from mathteach.services.checkpoint_migrator import (
     CheckpointMigrationError,
     CheckpointMigrator,
 )
+from mathteach.services.session_audit import SessionAuditEvent, SessionAuditLogger
+from mathteach.services.session_quarantine import SessionQuarantine
 from mathteach.services.session_store import SessionStore
 
 
@@ -30,9 +32,17 @@ class SessionManager:
         self,
         store: SessionStore,
         migrator: CheckpointMigrator | None = None,
+        audit_logger: SessionAuditLogger | None = None,
+        quarantine: SessionQuarantine | None = None,
     ) -> None:
         self.store = store
         self.migrator = migrator or CheckpointMigrator()
+        self.audit_logger = audit_logger or SessionAuditLogger(
+            self.store.base_dir / "_audit" / "session_audit.jsonl"
+        )
+        self.quarantine = quarantine or SessionQuarantine(
+            self.store.base_dir / "_quarantine"
+        )
 
     def prepare_planner_request(
         self,
@@ -125,6 +135,14 @@ class SessionManager:
         try:
             checkpoint = self.store.load_checkpoint(session_id)
         except ValidationError as exc:
+            self._quarantine_invalid_session(
+                session_id,
+                reason="invalid-checkpoint",
+                detail=(
+                    f"Stored checkpoint for session {session_id} is invalid and could not be resumed."
+                ),
+                source_version=None,
+            )
             raise SessionValidationError(
                 f"Stored checkpoint for session {session_id} is invalid and could not be resumed."
             ) from exc
@@ -139,16 +157,65 @@ class SessionManager:
             try:
                 migrated = self.migrator.migrate_checkpoint(checkpoint)
             except CheckpointMigrationError as migration_exc:
+                self._quarantine_invalid_session(
+                    session_id,
+                    reason="migration-failed",
+                    detail=str(migration_exc),
+                    source_version=checkpoint.schema_version,
+                    audit_event_type="checkpoint_migration_failed",
+                )
                 raise CheckpointMigrationRequired(
                     f"Checkpoint for session {session_id} requires migration. {migration_exc}"
                 ) from exc
             validate_checkpoint_for_resume(migrated)
             self.store.save_checkpoint(session_id, migrated)
+            self.audit_logger.record(
+                SessionAuditEvent(
+                    event_type="checkpoint_migrated",
+                    session_id=session_id,
+                    detail=(
+                        f"Checkpoint migrated from {checkpoint.schema_version} to "
+                        f"{migrated.schema_version}."
+                    ),
+                    source_version=checkpoint.schema_version,
+                    target_version=migrated.schema_version,
+                )
+            )
             return migrated
         except SessionValidationError as exc:
+            self._quarantine_invalid_session(
+                session_id,
+                reason="invalid-checkpoint",
+                detail=str(exc),
+                source_version=checkpoint.schema_version,
+            )
             raise SessionValidationError(
                 f"Stored checkpoint for session {session_id} is invalid. {exc}"
             ) from exc
+
+    def _quarantine_invalid_session(
+        self,
+        session_id: str,
+        reason: str,
+        detail: str,
+        source_version: str | None,
+        audit_event_type: str = "checkpoint_invalid",
+    ) -> None:
+        record = self.quarantine.quarantine_file(
+            session_id=session_id,
+            source_path=self.store.session_path(session_id),
+            reason=reason,
+            detail=detail,
+        )
+        self.audit_logger.record(
+            SessionAuditEvent(
+                event_type=audit_event_type,
+                session_id=session_id,
+                detail=detail,
+                source_version=source_version,
+                quarantine_path=record.quarantine_path if record is not None else None,
+            )
+        )
 
 
 def as_http_error(

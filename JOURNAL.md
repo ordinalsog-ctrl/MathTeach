@@ -2,6 +2,44 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Session-Quarantine-And-Audit 2026-04-04
+
+Die Session-Migration hat jetzt ihre erste Betriebs-Haertung:
+defekte oder nicht migrierbare Sessions bleiben nicht mehr im aktiven
+Resume-Pfad liegen, sondern werden jetzt quarantainiert und auditiert.
+
+Wichtigste Konsequenzen:
+
+- `SessionQuarantine` verschiebt defekte Checkpoints aus dem aktiven Store in
+  einen separaten Quarantaene-Bereich
+- `SessionAuditLogger` protokolliert jetzt erfolgreiche Migrationen,
+  invalide Sessions und fehlgeschlagene Migrationen
+- gespeicherte Sessions, die beim Laden oder Validieren scheitern, fuehren
+  nicht mehr zu endlosen Wiederholungsfehlern auf derselben Datei
+- nach Quarantaene wird ein spaeterer Request mit derselben `session_id`
+  sauber als neuer Start behandelt
+- der naechste direkte Ausbau ist jetzt nicht mehr die Betriebsgrundlage,
+  sondern sichtbarere Admin-/Repair-Pfade und spaetere Mehrschritt-
+  Migrationen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/session_quarantine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_quarantine.py)
+- [src/mathteach/services/session_audit.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_audit.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py)
+- [tests/test_session_quarantine.py](/Users/jonasweiss/MathTeach/tests/test_session_quarantine.py)
+- [tests/test_session_audit.py](/Users/jonasweiss/MathTeach/tests/test_session_audit.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/session-quarantine-and-audit.md](/Users/jonasweiss/MathTeach/docs/session-quarantine-and-audit.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `94 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Checkpoint-Migrator 2026-04-04
 
 Die Session-Haertung hat jetzt nicht mehr nur Migrationserkennung,

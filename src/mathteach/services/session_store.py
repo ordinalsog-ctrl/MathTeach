@@ -21,7 +21,7 @@ class SessionStore:
         session_id: str,
         checkpoint: ModeAdaptationCheckpoint,
     ) -> None:
-        session_path = self._session_path(session_id)
+        session_path = self.session_path(session_id)
         session_path.write_text(
             checkpoint.model_dump_json(indent=2),
             encoding="utf-8",
@@ -31,7 +31,7 @@ class SessionStore:
         self,
         session_id: str,
     ) -> ModeAdaptationCheckpoint | None:
-        session_path = self._session_path(session_id)
+        session_path = self.session_path(session_id)
         if not session_path.exists():
             return None
         return ModeAdaptationCheckpoint.model_validate_json(
@@ -39,10 +39,10 @@ class SessionStore:
         )
 
     def delete_checkpoint(self, session_id: str) -> None:
-        session_path = self._session_path(session_id)
+        session_path = self.session_path(session_id)
         session_path.unlink(missing_ok=True)
 
-    def _session_path(self, session_id: str) -> Path:
+    def session_path(self, session_id: str) -> Path:
         normalized = self._normalize_session_id(session_id)
         readable_prefix = re.sub(r"[^A-Za-z0-9._-]+", "_", normalized).strip("._-")
         if not readable_prefix:

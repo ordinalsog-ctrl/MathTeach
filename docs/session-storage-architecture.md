@@ -144,12 +144,13 @@ Jetzt bereits umgesetzt:
    `migration-required`
 9. [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py)
 10. automatische Migration von `phase_h0_v1` nach `phase_h1_v1`
+11. erste Quarantaene- und Audit-Schicht fuer defekte Sessions
 
 ## Naechster Coding-Schritt
 
 Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 
-1. Quarantaene- oder Reparaturpfad fuer defekte Session-Dateien
-2. Audit-Trail fuer Migrationen und Validierungsfehler
+1. sichtbarer Reparatur- oder Admin-Pfad fuer quarantainierte Sessions
+2. Audit-Trail spaeter mit History-/Analytics-Schicht koppeln
 3. spaetere Trennung von Session-Store und History-/Analytics-Schicht
 4. danach Storage-Haertung und History-Anbindung

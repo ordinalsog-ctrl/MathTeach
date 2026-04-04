@@ -489,7 +489,7 @@ def test_tutoring_plan_auto_migrates_stored_session_checkpoint() -> None:
 def test_tutoring_plan_returns_400_for_invalid_stored_checkpoint() -> None:
     session_id = f"api-session-invalid-{uuid.uuid4()}"
     session_store.delete_checkpoint(session_id)
-    invalid_path = session_store._session_path(session_id)
+    invalid_path = session_store.session_path(session_id)
     invalid_path.write_text(
         '{\n'
         '  "schema_version": "phase_h1_v1",\n'
@@ -522,6 +522,7 @@ def test_tutoring_plan_returns_400_for_invalid_stored_checkpoint() -> None:
 
     assert response.status_code == 400
     assert "could not be resumed" in response.json()["detail"]
+    assert session_store.load_checkpoint(session_id) is None
     session_store.delete_checkpoint(session_id)
 
 

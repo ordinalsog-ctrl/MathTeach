@@ -11,10 +11,14 @@ from mathteach.models import (
 )
 from mathteach.services.checkpoint_validation import (
     CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION,
+    CheckpointMigrationRequired,
     SessionValidationError,
 )
+from mathteach.services.checkpoint_migrator import CheckpointMigrationError
+from mathteach.services.session_audit import SessionAuditLogger
 from mathteach.services.session_manager import SessionConflictError, SessionManager
 from mathteach.services.planner import build_teaching_plan
+from mathteach.services.session_quarantine import SessionQuarantine
 from mathteach.services.session_store import SessionStore
 
 
@@ -51,6 +55,16 @@ def _request(session_id: str | None = None, checkpoint=None) -> SessionRequest:
         session_id=session_id,
         mode_adaptation_checkpoint=checkpoint,
     )
+
+
+class _FailingMigrator:
+    def migrate_checkpoint(
+        self,
+        checkpoint: ModeAdaptationCheckpoint,
+    ) -> ModeAdaptationCheckpoint:
+        raise CheckpointMigrationError(
+            f"Simulated migration failure for {checkpoint.schema_version}."
+        )
 
 
 def test_session_manager_loads_existing_session(tmp_path) -> None:
@@ -120,8 +134,9 @@ def test_session_manager_rejects_unknown_schema_version(tmp_path) -> None:
 
 
 def test_session_manager_auto_migrates_stored_checkpoint_and_persists_it(tmp_path) -> None:
-    store = SessionStore(tmp_path)
-    manager = SessionManager(store)
+    store = SessionStore(tmp_path / "store")
+    audit_logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    manager = SessionManager(store, audit_logger=audit_logger)
     checkpoint = ModeAdaptationCheckpoint(
         schema_version="phase_h0_v1",
         mode_adaptation_state=ModeAdaptationState(
@@ -136,6 +151,7 @@ def test_session_manager_auto_migrates_stored_checkpoint_and_persists_it(tmp_pat
         _request("session-needs-migration")
     )
     stored_after = store.load_checkpoint("session-needs-migration")
+    audit_events = audit_logger.read_events()
 
     assert session_id == "session-needs-migration"
     assert planner_request.mode_adaptation_checkpoint is not None
@@ -145,11 +161,16 @@ def test_session_manager_auto_migrates_stored_checkpoint_and_persists_it(tmp_pat
     )
     assert stored_after is not None
     assert stored_after.schema_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    assert audit_events[-1].event_type == "checkpoint_migrated"
+    assert audit_events[-1].source_version == "phase_h0_v1"
+    assert audit_events[-1].target_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
 
 
 def test_session_manager_rejects_corrupted_stored_checkpoint(tmp_path) -> None:
-    store = SessionStore(tmp_path)
-    manager = SessionManager(store)
+    store = SessionStore(tmp_path / "store")
+    audit_logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    quarantine = SessionQuarantine(tmp_path / "quarantine")
+    manager = SessionManager(store, audit_logger=audit_logger, quarantine=quarantine)
     checkpoint = ModeAdaptationCheckpoint.model_construct(
         schema_version=CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION,
         mode_adaptation_state=ModeAdaptationState.model_construct(
@@ -168,6 +189,40 @@ def test_session_manager_rejects_corrupted_stored_checkpoint(tmp_path) -> None:
         manager.prepare_planner_request(_request("session-corrupted"))
 
     assert "could not be resumed" in str(exc_info.value)
+    assert store.load_checkpoint("session-corrupted") is None
+    audit_events = audit_logger.read_events()
+    assert audit_events[-1].event_type == "checkpoint_invalid"
+    assert audit_events[-1].quarantine_path is not None
+
+
+def test_session_manager_quarantines_unmigratable_checkpoint(tmp_path) -> None:
+    store = SessionStore(tmp_path / "store")
+    audit_logger = SessionAuditLogger(tmp_path / "audit" / "events.jsonl")
+    quarantine = SessionQuarantine(tmp_path / "quarantine")
+    manager = SessionManager(
+        store,
+        migrator=_FailingMigrator(),
+        audit_logger=audit_logger,
+        quarantine=quarantine,
+    )
+    checkpoint = ModeAdaptationCheckpoint(
+        schema_version="phase_h0_v1",
+        mode_adaptation_state=ModeAdaptationState(
+            current_mode="guided_concept_explanation",
+            blocks_in_current_mode=1,
+            mode_changes_in_session=0,
+        ),
+    )
+    store.save_checkpoint("session-unmigratable", checkpoint)
+
+    with pytest.raises(CheckpointMigrationRequired) as exc_info:
+        manager.prepare_planner_request(_request("session-unmigratable"))
+
+    assert "requires migration" in str(exc_info.value)
+    assert store.load_checkpoint("session-unmigratable") is None
+    audit_events = audit_logger.read_events()
+    assert audit_events[-1].event_type == "checkpoint_migration_failed"
+    assert audit_events[-1].quarantine_path is not None
 
 
 def test_session_manager_auto_migrates_inline_checkpoint() -> None:

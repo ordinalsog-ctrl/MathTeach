@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from itertools import combinations
 
+from mathteach.models import ConflictResolutionSummary
 from mathteach.response_matrix import SupportNeed, TutorResponseSettings
 
 
@@ -116,6 +117,104 @@ TRIAD_PRIORITY_LADDERS: dict[frozenset[SupportNeed], dict[str, tuple[str, ...]]]
     },
 }
 
+BLOCK_TRIAD_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ...]] = {
+    frozenset(
+        {
+            "adhd_aware_support",
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+        }
+    ): (
+        "dyscalculia_aware_support",
+        "language_sensitive_support",
+        "adhd_aware_support",
+    ),
+    frozenset(
+        {
+            "adhd_aware_support",
+            "autism_spectrum_aware_support",
+            "dyslexia_aware_support",
+        }
+    ): (
+        "autism_spectrum_aware_support",
+        "dyslexia_aware_support",
+        "adhd_aware_support",
+    ),
+    frozenset(
+        {
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+            "scarcity_aware_support",
+        }
+    ): (
+        "scarcity_aware_support",
+        "dyscalculia_aware_support",
+        "language_sensitive_support",
+    ),
+}
+
+BLOCK_PAIR_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ...]] = {
+    frozenset({"adhd_aware_support", "dyscalculia_aware_support"}): (
+        "dyscalculia_aware_support",
+        "adhd_aware_support",
+    ),
+    frozenset({"adhd_aware_support", "language_sensitive_support"}): (
+        "language_sensitive_support",
+        "adhd_aware_support",
+    ),
+    frozenset({"dyscalculia_aware_support", "autism_spectrum_aware_support"}): (
+        "autism_spectrum_aware_support",
+        "dyscalculia_aware_support",
+    ),
+}
+
+MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
+    "adhd_aware_support": {
+        "announce_short_goal_before_block",
+        "use_step_labels_and_micro_checkpoints",
+        "keep_feedback_near_immediate",
+        "tighten_attention_window_after_drift",
+        "increase_pacing_after_stable_success",
+        "increase_pacing_monitor_only_after_concept_recovery",
+        "increase_pacing_gently_after_language_clarification",
+        "fade_one_scaffold_after_stable_success",
+        "offer_more_independent_challenge",
+    },
+    "dyscalculia_aware_support": {
+        "keep_quantity_representation_visible",
+        "delay_dense_symbolic_compression",
+        "rebuild_errors_from_quantity_model",
+        "return_to_quantity_model_before_symbols",
+        "stop_retry_loop_and_reframe_concept",
+        "switch_from_attempt_counting_to_model_rebuild",
+    },
+    "dyslexia_aware_support": {
+        "reduce_text_load_before_problem_solving",
+        "check_reading_load_before_math_correction",
+        "split_problem_text_into_shorter_chunks",
+    },
+    "autism_spectrum_aware_support": {
+        "keep_structure_predictable_and_literal",
+        "stabilize_layout_before_variation",
+        "freeze_format_changes_until_reorientation",
+        "stabilize_layout_before_new_quantity_variation",
+    },
+    "language_sensitive_support": {
+        "bridge_everyday_language_and_math_terms",
+        "confirm_term_meaning_at_major_steps",
+        "clarify_terms_before_retrying_math_step",
+        "keep_glossary_visible_across_blocks",
+        "restate_key_term_before_new_symbolic_step",
+    },
+    "scarcity_aware_support": {
+        "state_success_criteria_up_front",
+        "mark_small_visible_wins",
+        "protect_momentum_with_near_term_success_target",
+        "shrink_goal_to_single_recoverable_win",
+        "reset_success_criteria_for_next_attempt",
+    },
+}
+
 
 @dataclass(frozen=True)
 class DetectedProfileConflict:
@@ -178,6 +277,209 @@ def detect_profile_triads(active_supports: list[SupportNeed]) -> list[DetectedPr
                 )
             )
     return triads
+
+
+def resolve_block_support_conflicts(
+    support_moves: list[str],
+    active_supports: list[SupportNeed],
+    evidence: list[str],
+) -> tuple[list[str], ConflictResolutionSummary | None]:
+    ordered_supports = ordered_active_supports(active_supports)
+    pair_conflicts = detect_profile_conflicts(ordered_supports)
+    triad_slug, priority_ladder = _resolve_block_priority_ladder(ordered_supports, evidence)
+
+    summary = ConflictResolutionSummary(
+        pair_conflicts=[conflict.slug for conflict in pair_conflicts],
+        triad_group=triad_slug,
+        priority_ladder=list(priority_ladder),
+        evidence_used=sorted(evidence),
+    )
+
+    resolved_moves = list(support_moves)
+    evidence_set = set(evidence)
+
+    if {
+        "adhd_aware_support",
+        "dyscalculia_aware_support",
+    }.issubset(ordered_supports) and evidence_set & {
+        "repeated_attempt_three_plus",
+        "repeated_concept_error",
+        "repeated_concept_error_across_blocks",
+    }:
+        if evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            resolved_moves = _replace_move(
+                resolved_moves,
+                "increase_pacing_after_stable_success",
+                "increase_pacing_monitor_only_after_concept_recovery",
+                summary,
+            )
+            resolved_moves = _remove_move(
+                resolved_moves,
+                "offer_more_independent_challenge",
+                summary,
+                (
+                    "Suppressed independent challenge while dyscalculia-oriented concept repair "
+                    "has priority for this block."
+                ),
+            )
+
+    if {
+        "adhd_aware_support",
+        "language_sensitive_support",
+    }.issubset(ordered_supports) and evidence_set & {
+        "text_overload",
+        "vocabulary_request",
+        "vocabulary_request_again",
+    }:
+        if evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            resolved_moves = _replace_move(
+                resolved_moves,
+                "increase_pacing_after_stable_success",
+                "increase_pacing_gently_after_language_clarification",
+                summary,
+            )
+            resolved_moves = _remove_move(
+                resolved_moves,
+                "offer_more_independent_challenge",
+                summary,
+                (
+                    "Suppressed independent challenge until language load is clarified for this "
+                    "block."
+                ),
+            )
+
+    if {
+        "dyscalculia_aware_support",
+        "autism_spectrum_aware_support",
+    }.issubset(ordered_supports) and evidence_set & {
+        "repeated_attempt_three_plus",
+        "structure_break",
+        "repeated_concept_error",
+    }:
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "stabilize_layout_before_variation",
+            "stabilize_layout_before_new_quantity_variation",
+            summary,
+        )
+
+    resolved_moves = _sort_moves_by_priority_ladder(
+        resolved_moves,
+        active_supports=ordered_supports,
+        priority_ladder=priority_ladder,
+    )
+
+    if (
+        not summary.pair_conflicts
+        and summary.triad_group is None
+        and not summary.suppressed_moves
+        and not summary.adapted_moves
+    ):
+        return resolved_moves, None
+    return resolved_moves, summary
+
+
+def _resolve_block_priority_ladder(
+    active_supports: list[SupportNeed],
+    evidence: list[str],
+) -> tuple[str | None, tuple[SupportNeed, ...]]:
+    active_support_set = frozenset(active_supports)
+    evidence_set = set(evidence)
+
+    triad_ladder = BLOCK_TRIAD_PRIORITY_LADDERS.get(active_support_set)
+    if triad_ladder is not None:
+        triad_slug = "__".join(triad_ladder)
+        if "repeated_attempt_three_plus" in evidence_set:
+            triad_ladder = _move_support_to_front(
+                triad_ladder, "dyscalculia_aware_support"
+            )
+        elif evidence_set & {"text_overload", "vocabulary_request_again"}:
+            triad_ladder = _move_support_to_front(
+                triad_ladder, "language_sensitive_support"
+            )
+        elif evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            triad_ladder = _move_support_to_front(triad_ladder, "adhd_aware_support")
+        return triad_slug, triad_ladder
+
+    for pair in combinations(active_supports, 2):
+        pair_ladder = BLOCK_PAIR_PRIORITY_LADDERS.get(frozenset(pair))
+        if pair_ladder is None:
+            continue
+        if (
+            frozenset(pair)
+            == frozenset({"adhd_aware_support", "language_sensitive_support"})
+            and evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}
+            and not evidence_set & {"text_overload", "vocabulary_request_again"}
+        ):
+            pair_ladder = _move_support_to_front(pair_ladder, "adhd_aware_support")
+        return None, pair_ladder
+
+    return None, tuple(active_supports)
+
+
+def _move_support_to_front(
+    ladder: tuple[SupportNeed, ...],
+    support_need: SupportNeed,
+) -> tuple[SupportNeed, ...]:
+    if support_need not in ladder:
+        return ladder
+    return (support_need, *tuple(item for item in ladder if item != support_need))
+
+
+def _replace_move(
+    moves: list[str],
+    original: str,
+    replacement: str,
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    if original not in moves:
+        return moves
+    summary.adapted_moves.append(f"{original} -> {replacement}")
+    summary.resolution_notes.append(
+        f"Adapted {original} to {replacement} for the current evidence mix."
+    )
+    return [replacement if move == original else move for move in moves]
+
+
+def _remove_move(
+    moves: list[str],
+    move_to_remove: str,
+    summary: ConflictResolutionSummary,
+    note: str,
+) -> list[str]:
+    if move_to_remove not in moves:
+        return moves
+    summary.suppressed_moves.append(move_to_remove)
+    summary.resolution_notes.append(note)
+    return [move for move in moves if move != move_to_remove]
+
+
+def _sort_moves_by_priority_ladder(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    priority_ladder: tuple[SupportNeed, ...],
+) -> list[str]:
+    if not priority_ladder:
+        return moves
+
+    ranks = {support: index for index, support in enumerate(priority_ladder)}
+
+    def sort_key(indexed_move: tuple[int, str]) -> tuple[int, int]:
+        original_index, move = indexed_move
+        owner = _infer_move_owner(move, active_supports)
+        return (ranks.get(owner, len(ranks)), original_index)
+
+    return [move for _, move in sorted(enumerate(moves), key=sort_key)]
+
+
+def _infer_move_owner(
+    move: str,
+    active_supports: list[SupportNeed],
+) -> SupportNeed | None:
+    for support_need in active_supports:
+        if move in MOVE_OWNER_HINTS.get(support_need, set()):
+            return support_need
+    return None
 
 
 def _register_resolution(

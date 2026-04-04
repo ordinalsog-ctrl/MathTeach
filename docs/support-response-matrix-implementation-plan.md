@@ -109,6 +109,10 @@ Aktueller Stand:
   `repeated_attempt_three_plus` und `mixed_success_inconsistent`
 - diese Signale greifen jetzt bereits in `support_moves`,
   Scaffold-Priorisierung und `SignalInterpreter` ein
+- H.2d integriert jetzt eine blockweise Konfliktaufloesung:
+  `planned_blocks` tragen bei Mischprofilen eine
+  `conflict_resolution_summary` mit `pair_conflicts`, optionaler
+  `triad_group`, `priority_ladder`, unterdrueckten und adaptierten Moves
 
 ## Phase D: Pilot and Validation
 
@@ -246,17 +250,16 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
 6. Signalabdeckung spaeter weiter verbreitern und kalibrieren
-7. `conflict_resolver` fuer gemischte Profile spaeter weiter ausbauen
-8. Triad-Szenarien und Prioritaetsleitern spaeter erweitern
+7. `conflict_resolver` fuer gemischte Profile weiter ausbauen
+8. Triad-Szenarien und Prioritaetsleitern weiter verbreitern
 9. Moduswahl spaeter mit Lernerhistorie koppeln
 10. Wechselregeln spaeter gegen weiteres `mode thrashing` absichern
 
 Naechster direkter Coding-Start:
 
-- H.2d-Triad-Resolver auf Basis der jetzt breiteren Evidence-Palette
-  vorbereiten
+- H.2e-Triad- und Mehrprofil-Aufloesung auf weitere Gruppen ausdehnen
 - blockweise Support-Moves weiter an Konfliktlagen zwischen Profilen und
-  Evidence koppeln
+  Evidence koppeln und mehr Moves adaptiv abschwaechen statt nur sortieren
 - Scaffold-Auswahl weiter dynamisch nach konkurrierenden Signalen staffeln
 - spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung
   vorbereiten

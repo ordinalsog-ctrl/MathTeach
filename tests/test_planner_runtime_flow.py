@@ -462,6 +462,123 @@ def test_planner_derives_rapid_success_signals_across_multiple_blocks() -> None:
     assert "offer_more_independent_challenge" in plan.planned_blocks[2].support_moves
 
 
+def test_planner_emits_conflict_resolution_summary_for_pair_conflict() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "transfer_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                    ]
+                },
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[2]
+
+    assert second_block.conflict_resolution_summary is not None
+    assert (
+        "adhd_aware_support__dyscalculia_aware_support"
+        in second_block.conflict_resolution_summary.pair_conflicts
+    )
+    assert second_block.conflict_resolution_summary.priority_ladder == [
+        "dyscalculia_aware_support",
+        "adhd_aware_support",
+    ]
+    assert "offer_more_independent_challenge" in (
+        second_block.conflict_resolution_summary.suppressed_moves
+    )
+    assert any(
+        "increase_pacing_after_stable_success" in item
+        for item in second_block.conflict_resolution_summary.adapted_moves
+    )
+    assert (
+        "increase_pacing_monitor_only_after_concept_recovery"
+        in second_block.support_moves
+    )
+    assert "offer_more_independent_challenge" not in second_block.support_moves
+    assert (
+        second_block.support_moves.index("stop_retry_loop_and_reframe_concept")
+        < second_block.support_moves.index(
+            "increase_pacing_monitor_only_after_concept_recovery"
+        )
+    )
+
+
+def test_planner_emits_conflict_resolution_summary_for_triad_conflict() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem with clear examples.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "transfer_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                        "text_overload",
+                    ]
+                },
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[2]
+
+    assert second_block.conflict_resolution_summary is not None
+    assert (
+        second_block.conflict_resolution_summary.triad_group
+        == "dyscalculia_aware_support__language_sensitive_support__adhd_aware_support"
+    )
+    assert second_block.conflict_resolution_summary.priority_ladder == [
+        "dyscalculia_aware_support",
+        "language_sensitive_support",
+        "adhd_aware_support",
+    ]
+    assert (
+        second_block.support_moves.index("stop_retry_loop_and_reframe_concept")
+        < second_block.support_moves.index("clarify_terms_before_retrying_math_step")
+        < second_block.support_moves.index(
+            "increase_pacing_monitor_only_after_concept_recovery"
+        )
+    )
+
+
 def test_planner_derives_repeated_vocabulary_need_across_blocks() -> None:
     plan = build_teaching_plan(
         SessionRequest(

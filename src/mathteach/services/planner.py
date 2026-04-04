@@ -17,6 +17,7 @@ from mathteach.models import (
     TeachingPlan,
 )
 from mathteach.services.mode_selector import select_mode
+from mathteach.services.conflict_resolver import resolve_block_support_conflicts
 from mathteach.services.response_engine import build_support_response
 from mathteach.services.runtime_mode_adapter import RuntimeModeAdapter
 
@@ -638,17 +639,24 @@ def _build_planned_block(
     transition_message: str | None,
     observed_evidence: list[str],
 ) -> PlannedTeachingBlock:
+    support_moves = _block_support_moves(
+        lesson_mode, response_settings, observed_evidence
+    )
+    resolved_support_moves, conflict_resolution_summary = resolve_block_support_conflicts(
+        support_moves=support_moves,
+        active_supports=response_settings.active_supports,
+        evidence=observed_evidence,
+    )
     return PlannedTeachingBlock(
         block_index=block_index,
         mode=lesson_mode,
         goal=_block_goal(lesson_mode, objective),
         focus=_block_focus(lesson_mode, response_settings),
-        support_moves=_block_support_moves(
-            lesson_mode, response_settings, observed_evidence
-        ),
+        support_moves=resolved_support_moves,
         support_scaffolds=_block_support_scaffolds(
             lesson_mode, response_settings, observed_evidence
         ),
+        conflict_resolution_summary=conflict_resolution_summary,
         transition_message=transition_message,
         observed_evidence=observed_evidence,
     )

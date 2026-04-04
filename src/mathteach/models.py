@@ -144,6 +144,7 @@ class PlannedTeachingBlock(BaseModel):
     focus: list[str] = Field(default_factory=list)
     support_moves: list[str] = Field(default_factory=list)
     support_scaffolds: list[str] = Field(default_factory=list)
+    conflict_resolution_summary: ConflictResolutionSummary | None = None
     transition_message: str | None = None
     observed_evidence: list[str] = Field(default_factory=list)
 
@@ -165,6 +166,16 @@ class ResumeContext(BaseModel):
     used_carried_observation_evidence: bool = False
     pending_transition_message_carried: bool = False
     pending_transition_message_consumed: bool = False
+
+
+class ConflictResolutionSummary(BaseModel):
+    pair_conflicts: list[str] = Field(default_factory=list)
+    triad_group: str | None = None
+    priority_ladder: list[str] = Field(default_factory=list)
+    suppressed_moves: list[str] = Field(default_factory=list)
+    adapted_moves: list[str] = Field(default_factory=list)
+    resolution_notes: list[str] = Field(default_factory=list)
+    evidence_used: list[str] = Field(default_factory=list)
 
 
 class TeachingPlan(BaseModel):

@@ -2,6 +2,47 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2d-Block-Conflict-Resolution 2026-04-04
+
+Die Support-Moves sind jetzt bei Mischprofilen nicht mehr nur eine
+flache Sammlung paralleler Empfehlungen, sondern werden blockweise ueber
+eine echte Konfliktaufloesung geordnet und begruendet.
+
+Wichtigste Konsequenzen:
+
+- `planned_blocks` tragen jetzt eine sichtbare
+  `conflict_resolution_summary`
+- der `conflict_resolver` wird jetzt nicht mehr nur fuer globale
+  `response_settings`, sondern auch direkt im Blockpfad benutzt
+- bekannte Paar-Konflikte wie `ADHD + Dyscalculia`,
+  `ADHD + Language-Sensitive` und `Dyscalculia + Autism-Spectrum`
+  koennen jetzt konkrete Moves unterdruecken oder abschwaechen
+- die erste Triad-Gruppe
+  `adhd_aware_support__dyscalculia_aware_support__language_sensitive_support`
+  ist jetzt blockweise sichtbar inklusive `priority_ladder`
+- konfliktive Moves werden jetzt fuer den Block nicht nur geordnet,
+  sondern auf Wunsch auch adaptiv ersetzt, z.B.
+  `increase_pacing_after_stable_success` →
+  `increase_pacing_monitor_only_after_concept_recovery`
+- API-Antworten machen diese Block-Entscheidung jetzt nachvollziehbar,
+  statt dass konkurrierende Moves still nebeneinander stehen bleiben
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_block_conflict_resolution.py](/Users/jonasweiss/MathTeach/tests/test_block_conflict_resolution.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `67 passed, 1 warning`
+- Full-Suite: `136 passed, 1 warning`
+
 ## Phase-H.2c-Evidence-Expansion 2026-04-04
 
 Die H.2c-Signalpalette ist jetzt verbreitert: der Planner leitet neben

@@ -260,6 +260,9 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - die Signalpalette ist jetzt ausserdem um erste H.2c-Typen erweitert,
   darunter `rapid_success_three_blocks`, `vocabulary_request_again`,
   `error_recovery_with_hint` und `mixed_success_inconsistent`
+- Mischprofile bekommen jetzt auf Blockebene ausserdem eine sichtbare
+  `conflict_resolution_summary`, statt konkurrierende `support_moves`
+  nur roh nebeneinander zu sehen
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
@@ -307,6 +310,8 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
   `transfer_success_two_blocks` und `no_progress_three_blocks`
 - erste H.2c-Signale fuer stabile Erfolge, wiederholte Vokabularlast,
   Hint-Erholung und inkonsistente Erfolgswechsel
+- blockweise Konfliktaufloesung fuer Paar- und erste Triad-Konstellationen
+  mit sichtbarer `priority_ladder`
 - automatische Ableitung von `visible_small_success` und
   `no_success_visible_two_blocks` fuer realistischere Erfolgs- und
   Friktionslinien

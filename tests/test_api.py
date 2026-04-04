@@ -971,6 +971,64 @@ def test_tutoring_plan_exposes_rapid_success_evidence_and_moves() -> None:
     assert "offer_more_independent_challenge" in payload["planned_blocks"][2]["support_moves"]
 
 
+def test_tutoring_plan_exposes_block_conflict_resolution_summary() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this word problem with clear examples.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "runtime_observations": [
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "transfer_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                        "text_overload",
+                    ]
+                },
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    second_block = payload["planned_blocks"][2]
+    assert second_block["conflict_resolution_summary"] is not None
+    assert (
+        second_block["conflict_resolution_summary"]["triad_group"]
+        == "dyscalculia_aware_support__language_sensitive_support__adhd_aware_support"
+    )
+    assert second_block["conflict_resolution_summary"]["priority_ladder"] == [
+        "dyscalculia_aware_support",
+        "language_sensitive_support",
+        "adhd_aware_support",
+    ]
+    assert "offer_more_independent_challenge" in second_block[
+        "conflict_resolution_summary"
+    ]["suppressed_moves"]
+    assert (
+        second_block["support_moves"].index("stop_retry_loop_and_reframe_concept")
+        < second_block["support_moves"].index(
+            "increase_pacing_monitor_only_after_concept_recovery"
+        )
+    )
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

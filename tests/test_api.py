@@ -1,6 +1,8 @@
+import uuid
+
 from fastapi.testclient import TestClient
 
-from mathteach.main import app
+from mathteach.main import app, session_store
 
 
 client = TestClient(app)
@@ -114,6 +116,7 @@ def test_tutoring_plan_endpoint() -> None:
     assert payload["response_settings"]["session_duration"] == "25_to_35_minute_guided_block"
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "supporting_only"
+    assert payload["session_id"] is None
 
 
 def test_tutoring_plan_origin_story_mode() -> None:
@@ -276,6 +279,119 @@ def test_tutoring_plan_rejects_state_and_checkpoint_together() -> None:
                 "current_mode": "guided_concept_explanation",
                 "blocks_in_current_mode": 1,
                 "mode_changes_in_session": 0,
+            },
+            "mode_adaptation_checkpoint": {
+                "schema_version": "phase_h1_v1",
+                "mode_adaptation_state": {
+                    "current_mode": "guided_concept_explanation",
+                    "blocks_in_current_mode": 1,
+                    "mode_changes_in_session": 0,
+                },
+            },
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_tutoring_plan_stores_checkpoint_under_session_id() -> None:
+    session_id = f"api-session-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    stored = session_store.load_checkpoint(session_id)
+
+    assert payload["session_id"] == session_id
+    assert stored is not None
+    assert stored.mode_adaptation_state.current_mode == "guided_concept_explanation"
+
+
+def test_tutoring_plan_resumes_from_session_id_store() -> None:
+    session_id = f"api-session-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+
+    first_response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "runtime_observations": [
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["repeated_concept_error"]},
+            ],
+        },
+    )
+
+    assert first_response.status_code == 200
+    first_payload = first_response.json()
+    assert first_payload["mode_adaptation_state"]["current_mode"] == "worked_example_tutoring"
+
+    resume_response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert resume_response.status_code == 200
+    resume_payload = resume_response.json()
+    assert resume_payload["session_id"] == session_id
+    assert resume_payload["lesson_mode"] == "worked_example_tutoring"
+    assert resume_payload["planned_blocks"][0]["mode"] == "worked_example_tutoring"
+
+
+def test_tutoring_plan_rejects_session_id_and_inline_checkpoint_together() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": "sess-conflict",
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
             },
             "mode_adaptation_checkpoint": {
                 "schema_version": "phase_h1_v1",

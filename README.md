@@ -159,6 +159,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py): Erste Planungslogik fuer Tutor-Sessions
 - [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py): Minimale regelbasierte Ableitung von Support-Signalen zu Tutor-Response-Settings
 - [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py): Erste H.1-Runtime-Komponente fuer blockweise Modusanpassung mit `SignalInterpreter`, Hysterese und Transition-Templates
+- [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py): Erste file-backed Persistenz-Huelle fuer `session_id`-Resume und `mode_adaptation_checkpoint`
 
 ## Schnellstart
 
@@ -244,9 +245,11 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - erste Hysterese- und Transition-Logik
 - initialer `mode_adaptation_state` direkt im `TeachingPlan`
 - versionierter `mode_adaptation_checkpoint` als externe Resume- und Persistenzform
+- `SessionStore` als erste file-backed Storage-Huelle fuer Checkpoints
 - erster Planner-Block-Loop mit `planned_blocks` und `mode_adaptation_trace`
 - erste Session-Fortsetzung ueber wiederverwendeten `mode_adaptation_state`
 - erste Session-Fortsetzung ueber versionierten `mode_adaptation_checkpoint`
+- erste Session-Fortsetzung ueber `session_id` und gespeicherten Checkpoint
 - Persistenz offener `transition_message` ueber Resume-Pfade
 - Konsumierung angezeigter `transition_message` ohne doppelte Wiederholung
 - resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
@@ -266,8 +269,8 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
-- `SessionStore` auf Basis des Checkpoint-Vertrags einfuehren
-- danach API-Huelle mit `session_id` und spaeter `SessionManager` vorbereiten
+- `SessionManager` als Koordinationsschicht ueber `SessionStore` vorbereiten
+- Storage-Semantik fuer unbekannte, alte oder spaetere Checkpoint-Versionen haerten
 - Resume- und Serialisierungsgrenzen fuer den neuen Checkpoint weiter haerten
 - spaeter weitere reale Signalszenarien verbreitern und kalibrieren
 - `triad coverage erweitern`

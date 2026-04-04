@@ -149,6 +149,7 @@ Aktueller Stand:
   klare Resume-Semantik und spaetere Storage-Anbindung
 - die Anschlussarchitektur fuer `SessionStore`, `session_id` und spaeteren
   `SessionManager` ist jetzt als naechste Bruecke dokumentiert
+- `SessionStore` und erster `session_id`-Resume-Pfad sind jetzt operational
 
 Arbeitsregel fuer den naechsten Ausbau:
 
@@ -202,8 +203,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. `SessionStore` als erste Persistenz-Huelle einfuehren
-2. `session_id`-Pfad fuer Resume vorbereiten
+1. `SessionManager` als Koordinationsschicht ueber `SessionStore` vorbereiten
+2. `session_id`-Semantik gegen alte oder unbekannte Sessions haerten
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
@@ -215,9 +216,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- `src/mathteach/services/session_store.py` als erste Persistenz-Huelle
-- API-Vertrag fuer `session_id`-Resume vorbereiten
-- Checkpoint-Serialisierung und Resume-Tests weiter haerten
+- `src/mathteach/services/session_manager.py` als naechste Koordinationsschicht
+- API-Vertrag fuer `session_id`-Resume weiter haerten
+- Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints

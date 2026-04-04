@@ -129,11 +129,20 @@ Die erste Storage-Stufe sollte mindestens testen:
 4. Cooldown und Change-Budget bleiben ueber Neustart erhalten
 5. unbekannte `session_id` fuehrt zu sauberem Neustart statt inkonsistentem Zustand
 
+## Aktueller Stand
+
+Jetzt bereits umgesetzt:
+
+1. [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py)
+2. file-backed MVP-Implementierung
+3. API-Test fuer `session_id`-Resume
+
 ## Naechster Coding-Schritt
 
 Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 
-1. `src/mathteach/services/session_store.py`
-2. erste in-memory oder file-backed MVP-Implementierung
-3. API-Test fuer `session_id`-Resume
-4. spaeter Trennung in `SessionStore` und `SessionManager`
+1. `src/mathteach/services/session_manager.py`
+2. saubere Trennung zwischen API-Huelle und Resume-Koordination
+3. Konfliktregeln zwischen unbekannter Session, vorhandenem Checkpoint und
+   spaeteren Versionen
+4. spaeter Storage-Haertung und History-Anbindung

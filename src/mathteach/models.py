@@ -66,6 +66,7 @@ class ModeAdaptationCheckpoint(BaseModel):
 class SessionRequest(BaseModel):
     objective: str = Field(min_length=5, max_length=500)
     learner_profile: LearnerProfile
+    session_id: str | None = Field(default=None, min_length=3, max_length=128)
     runtime_observations: list[RuntimeObservationInput] = Field(default_factory=list)
     mode_adaptation_state: ModeAdaptationState | None = None
     mode_adaptation_checkpoint: ModeAdaptationCheckpoint | None = None
@@ -78,6 +79,13 @@ class SessionRequest(BaseModel):
         ):
             raise ValueError(
                 "Provide either mode_adaptation_state or mode_adaptation_checkpoint, not both."
+            )
+        if self.session_id is not None and (
+            self.mode_adaptation_state is not None
+            or self.mode_adaptation_checkpoint is not None
+        ):
+            raise ValueError(
+                "Provide either session_id or inline mode adaptation resume data, not both."
             )
         return self
 
@@ -148,6 +156,7 @@ class ModeAdaptationTraceEntry(BaseModel):
 
 
 class TeachingPlan(BaseModel):
+    session_id: str | None = None
     lesson_mode: str
     audience_mode: str
     tone: str

@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_name: str = "MathTeach API"
     environment: str = "development"
+    session_store_dir: str | None = None
     primary_reasoner_model: str = "gpt-5.4"
     fast_path_model: str = "gpt-5.4-mini"
     ingestion_model: str = "gemini-2.5-pro"

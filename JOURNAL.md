@@ -2,6 +2,39 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Session-Store-MVP 2026-04-04
+
+Die erste echte Storage-Stufe fuer `Phase H` ist jetzt im Repo
+angekommen: `SessionStore` plus `session_id`-Resume ueber den API-Pfad.
+
+Wichtigste Konsequenzen:
+
+- `SessionStore` existiert jetzt als file-backed MVP-Huelle
+- `SessionRequest` kann jetzt optional mit `session_id` arbeiten
+- der API-Pfad laedt bei bekannter `session_id` den gespeicherten
+  `mode_adaptation_checkpoint`
+- der API-Pfad speichert nach jeder Planerzeugung den neuen Checkpoint
+  wieder zur Session ab
+- Konflikte zwischen `session_id` und inline Resume-Daten werden jetzt
+  explizit mit `422` abgewiesen
+- der naechste direkte Schritt ist jetzt nicht mehr `SessionStore`,
+  sondern spaeter `SessionManager` und robustere Storage-Semantik
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_session_store.py](/Users/jonasweiss/MathTeach/tests/test_session_store.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `76 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Storage-Bridge 2026-04-04
 
 Die neue Review-Lage bestaetigt, dass der Checkpoint-Vertrag jetzt stark

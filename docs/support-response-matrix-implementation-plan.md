@@ -154,12 +154,14 @@ Aktueller Stand:
   operational und entlastet den API-Pfad
 - eine erste H.1-Validierungs- und Migrationskante fuer Checkpoints ist jetzt
   operational
+- der erste automatische `checkpoint_migrator` fuer `phase_h0_v1` ist jetzt
+  ebenfalls operational
 
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst echte Migrationseintrittspunkte und defekte Session-Dateien weiter
-  haerten
+- zuerst defekte Session-Dateien, Audit-Trail und spaetere Mehrschritt-
+  Migrationen weiter haerten
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
 - dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
 - dann End-to-End-Blocksimulationen verbreitern
@@ -208,7 +210,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. echten `checkpoint_migrator` fuer spaetere Schema-Upgrades vorbereiten
+1. Mehrschritt-Migrationen fuer spaetere Schema-Upgrades vorbereiten
 2. defekte Session-Dateien erkennbar quarantainieren oder reparierbar machen
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
@@ -221,8 +223,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- `checkpoint_migrator` als naechste Stufe nach der jetzigen Erkennung
 - Session-Quarantaene oder Repair-Hooks fuer defekte Persistenz vorbereiten
+- Audit-Trail fuer Migrationen und Validierungsfehler vorbereiten
 - Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 

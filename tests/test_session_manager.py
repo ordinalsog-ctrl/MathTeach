@@ -11,7 +11,6 @@ from mathteach.models import (
 )
 from mathteach.services.checkpoint_validation import (
     CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION,
-    CheckpointMigrationRequired,
     SessionValidationError,
 )
 from mathteach.services.session_manager import SessionConflictError, SessionManager
@@ -120,7 +119,7 @@ def test_session_manager_rejects_unknown_schema_version(tmp_path) -> None:
     assert "Unknown schema_version" in str(exc_info.value)
 
 
-def test_session_manager_detects_migration_need(tmp_path) -> None:
+def test_session_manager_auto_migrates_stored_checkpoint_and_persists_it(tmp_path) -> None:
     store = SessionStore(tmp_path)
     manager = SessionManager(store)
     checkpoint = ModeAdaptationCheckpoint(
@@ -133,11 +132,19 @@ def test_session_manager_detects_migration_need(tmp_path) -> None:
     )
     store.save_checkpoint("session-needs-migration", checkpoint)
 
-    with pytest.raises(CheckpointMigrationRequired) as exc_info:
-        manager.prepare_planner_request(_request("session-needs-migration"))
+    planner_request, session_id = manager.prepare_planner_request(
+        _request("session-needs-migration")
+    )
+    stored_after = store.load_checkpoint("session-needs-migration")
 
-    assert "requires migration" in str(exc_info.value)
-    assert CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION in str(exc_info.value)
+    assert session_id == "session-needs-migration"
+    assert planner_request.mode_adaptation_checkpoint is not None
+    assert (
+        planner_request.mode_adaptation_checkpoint.schema_version
+        == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    )
+    assert stored_after is not None
+    assert stored_after.schema_version == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
 
 
 def test_session_manager_rejects_corrupted_stored_checkpoint(tmp_path) -> None:
@@ -163,24 +170,28 @@ def test_session_manager_rejects_corrupted_stored_checkpoint(tmp_path) -> None:
     assert "could not be resumed" in str(exc_info.value)
 
 
-def test_session_manager_rejects_inline_checkpoint_that_requires_migration() -> None:
+def test_session_manager_auto_migrates_inline_checkpoint() -> None:
     manager = SessionManager(SessionStore())
 
-    with pytest.raises(CheckpointMigrationRequired) as exc_info:
-        manager.prepare_planner_request(
-            _request(
-                checkpoint=ModeAdaptationCheckpoint(
-                    schema_version="phase_h0_v1",
-                    mode_adaptation_state=ModeAdaptationState(
-                        current_mode="guided_concept_explanation",
-                        blocks_in_current_mode=1,
-                        mode_changes_in_session=0,
-                    ),
-                )
+    planner_request, session_id = manager.prepare_planner_request(
+        _request(
+            checkpoint=ModeAdaptationCheckpoint(
+                schema_version="phase_h0_v1",
+                mode_adaptation_state=ModeAdaptationState(
+                    current_mode="guided_concept_explanation",
+                    blocks_in_current_mode=1,
+                    mode_changes_in_session=0,
+                ),
             )
         )
+    )
 
-    assert "Inline mode adaptation checkpoint requires migration" in str(exc_info.value)
+    assert session_id is None
+    assert planner_request.mode_adaptation_checkpoint is not None
+    assert (
+        planner_request.mode_adaptation_checkpoint.schema_version
+        == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
+    )
 
 
 def test_session_manager_persists_new_checkpoint(tmp_path) -> None:

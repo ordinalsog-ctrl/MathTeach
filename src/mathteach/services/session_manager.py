@@ -14,6 +14,10 @@ from mathteach.services.checkpoint_validation import (
     validate_checkpoint_for_persist,
     validate_checkpoint_for_resume,
 )
+from mathteach.services.checkpoint_migrator import (
+    CheckpointMigrationError,
+    CheckpointMigrator,
+)
 from mathteach.services.session_store import SessionStore
 
 
@@ -22,18 +26,32 @@ class SessionConflictError(ValueError):
 
 
 class SessionManager:
-    def __init__(self, store: SessionStore) -> None:
+    def __init__(
+        self,
+        store: SessionStore,
+        migrator: CheckpointMigrator | None = None,
+    ) -> None:
         self.store = store
+        self.migrator = migrator or CheckpointMigrator()
 
     def prepare_planner_request(
         self,
         request: SessionRequest,
     ) -> tuple[SessionRequest, str | None]:
         self._ensure_non_conflicting_resume_input(request)
-        self._validate_inline_checkpoint(request.mode_adaptation_checkpoint)
+        inline_checkpoint = self._validate_inline_checkpoint(
+            request.mode_adaptation_checkpoint
+        )
 
         if request.session_id is None:
-            return request, None
+            if inline_checkpoint is None:
+                return request, None
+            return (
+                request.model_copy(
+                    update={"mode_adaptation_checkpoint": inline_checkpoint}
+                ),
+                None,
+            )
 
         stored_checkpoint = self._load_stored_checkpoint(request.session_id)
         if stored_checkpoint is None:
@@ -79,16 +97,22 @@ class SessionManager:
     def _validate_inline_checkpoint(
         self,
         checkpoint: ModeAdaptationCheckpoint | None,
-    ) -> None:
+    ) -> ModeAdaptationCheckpoint | None:
         if checkpoint is None:
-            return
+            return None
         try:
             validate_checkpoint_for_resume(checkpoint)
+            return checkpoint
         except CheckpointMigrationRequired as exc:
-            raise CheckpointMigrationRequired(
-                "Inline mode adaptation checkpoint requires migration before resume. "
-                f"{exc}"
-            ) from exc
+            try:
+                migrated = self.migrator.migrate_checkpoint(checkpoint)
+            except CheckpointMigrationError as migration_exc:
+                raise CheckpointMigrationRequired(
+                    "Inline mode adaptation checkpoint requires migration before resume. "
+                    f"{migration_exc}"
+                ) from exc
+            validate_checkpoint_for_resume(migrated)
+            return migrated
         except SessionValidationError as exc:
             raise SessionValidationError(
                 f"Inline mode adaptation checkpoint is invalid. {exc}"
@@ -110,16 +134,21 @@ class SessionManager:
 
         try:
             validate_checkpoint_for_resume(checkpoint)
+            return checkpoint
         except CheckpointMigrationRequired as exc:
-            raise CheckpointMigrationRequired(
-                f"Checkpoint for session {session_id} requires migration. {exc}"
-            ) from exc
+            try:
+                migrated = self.migrator.migrate_checkpoint(checkpoint)
+            except CheckpointMigrationError as migration_exc:
+                raise CheckpointMigrationRequired(
+                    f"Checkpoint for session {session_id} requires migration. {migration_exc}"
+                ) from exc
+            validate_checkpoint_for_resume(migrated)
+            self.store.save_checkpoint(session_id, migrated)
+            return migrated
         except SessionValidationError as exc:
             raise SessionValidationError(
                 f"Stored checkpoint for session {session_id} is invalid. {exc}"
             ) from exc
-
-        return checkpoint
 
 
 def as_http_error(

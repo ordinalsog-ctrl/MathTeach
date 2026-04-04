@@ -142,12 +142,14 @@ Jetzt bereits umgesetzt:
 7. [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py)
 8. API-seitige Trennung zwischen `unknown`, `invalid` und
    `migration-required`
+9. [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py)
+10. automatische Migration von `phase_h0_v1` nach `phase_h1_v1`
 
 ## Naechster Coding-Schritt
 
 Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 
-1. echter `checkpoint_migrator` statt nur Migrations-Erkennung
-2. Quarantaene- oder Reparaturpfad fuer defekte Session-Dateien
+1. Quarantaene- oder Reparaturpfad fuer defekte Session-Dateien
+2. Audit-Trail fuer Migrationen und Validierungsfehler
 3. spaetere Trennung von Session-Store und History-/Analytics-Schicht
 4. danach Storage-Haertung und History-Anbindung

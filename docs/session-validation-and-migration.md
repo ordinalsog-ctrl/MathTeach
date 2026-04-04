@@ -32,8 +32,10 @@ Ziel ist die klare Unterscheidung zwischen:
 ### Migration Required
 
 - `schema_version` ist bekannt, aber nicht mehr aktuell
-- aktueller H.1-Pfad erkennt dafuer zunaechst `phase_h0_v1`
-- Ergebnis: `410` ueber API
+- wenn ein automatischer Migrationspfad existiert, wird der Checkpoint
+  vor Resume auf die aktuelle Version gehoben
+- wenn kein automatischer Migrationspfad existiert, bleibt das Ergebnis
+  `410` ueber API
 
 ### Resume Conflict
 
@@ -66,14 +68,23 @@ Aktuelle Fehlerabbildung:
 
 - `422`: Resume-Konflikt
 - `400`: invalid session / invalid checkpoint
-- `410`: bekannte, aber migrationsbeduerftige Session
+- `410`: bekannte, aber nicht automatisch migrierbare Session
+
+## Aktueller Migrationsstand
+
+Jetzt bereits live:
+
+- `phase_h0_v1 -> phase_h1_v1`
+- gespeicherte Alt-Checkpoints werden beim Resume automatisch migriert und
+  direkt wieder als aktuelle Version gespeichert
+- inline Alt-Checkpoints werden vor dem Planner-Aufruf normalisiert
 
 ## Naechster Ausbau
 
-Die aktuelle Haertung ist noch keine echte Migration-Engine.
+Die aktuelle Haertung ist jetzt die erste echte Migration-Engine.
 Der naechste logische Schritt ist:
 
-1. expliziter `checkpoint_migrator`
+1. mehr als ein Migrationsschritt
 2. spaetere Quarantaene fuer ungueltige Session-Dateien
 3. Audit-Trail fuer Migrations- und Validierungsfehler
 4. spaetere History-Schicht auf Basis nur validierter Checkpoints

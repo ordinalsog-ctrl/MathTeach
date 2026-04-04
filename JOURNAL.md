@@ -2,6 +2,41 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Checkpoint-Migrator 2026-04-04
+
+Die Session-Haertung hat jetzt nicht mehr nur Migrationserkennung,
+sondern einen ersten echten Migrationspfad: bekannte `phase_h0_v1`
+Checkpoints werden jetzt automatisch nach `phase_h1_v1` gehoben.
+
+Wichtigste Konsequenzen:
+
+- `CheckpointMigrator` ist jetzt als eigene Schicht live im Repo
+- gespeicherte `phase_h0_v1`-Checkpoints werden beim Resume automatisch
+  migriert und direkt wieder im Store als `phase_h1_v1` gespeichert
+- inline uebergebene Alt-Checkpoints werden vor dem Planner-Aufruf auf die
+  aktuelle Version normalisiert
+- der Planner sieht damit nur noch aktuelle Checkpoints
+- die `410 migration-required`-Semantik bleibt fuer spaetere bekannte, aber
+  nicht automatisch migrierbare Versionen erhalten
+- der naechste echte Ausbau ist jetzt nicht mehr die Migration selbst,
+  sondern Quarantaene/Audit-Trail fuer defekte Sessions und spaetere
+  Mehrschritt-Migrationen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/checkpoint_migrator.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_migrator.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [tests/test_checkpoint_migrator.py](/Users/jonasweiss/MathTeach/tests/test_checkpoint_migrator.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/checkpoint-migrator.md](/Users/jonasweiss/MathTeach/docs/checkpoint-migrator.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `94 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Session-Validation-And-Migration-Gate 2026-04-04
 
 Die Session-Persistenz hat jetzt ihre erste echte Validierungskante:

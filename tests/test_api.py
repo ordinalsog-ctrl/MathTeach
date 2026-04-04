@@ -262,6 +262,41 @@ def test_tutoring_plan_can_resume_from_mode_adaptation_checkpoint() -> None:
     )
 
 
+def test_tutoring_plan_auto_migrates_inline_mode_adaptation_checkpoint() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir mit Beispiel, warum die quadratische Gleichung so funktioniert.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+            "mode_adaptation_checkpoint": {
+                "schema_version": "phase_h0_v1",
+                "mode_adaptation_state": {
+                    "current_mode": "worked_example_tutoring",
+                    "blocks_in_current_mode": 2,
+                    "mode_changes_in_session": 1,
+                    "cooldown_blocks_remaining": 0,
+                },
+            },
+            "runtime_observations": [
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+
+
 def test_tutoring_plan_rejects_state_and_checkpoint_together() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",
@@ -408,7 +443,7 @@ def test_tutoring_plan_rejects_session_id_and_inline_checkpoint_together() -> No
     assert response.status_code == 422
 
 
-def test_tutoring_plan_returns_410_for_session_checkpoint_that_needs_migration() -> None:
+def test_tutoring_plan_auto_migrates_stored_session_checkpoint() -> None:
     session_id = f"api-session-migration-{uuid.uuid4()}"
     session_store.delete_checkpoint(session_id)
     session_store.save_checkpoint(
@@ -440,8 +475,14 @@ def test_tutoring_plan_returns_410_for_session_checkpoint_that_needs_migration()
         },
     )
 
-    assert response.status_code == 410
-    assert "requires migration" in response.json()["detail"]
+    assert response.status_code == 200
+    payload = response.json()
+    stored = session_store.load_checkpoint(session_id)
+
+    assert payload["session_id"] == session_id
+    assert payload["mode_adaptation_checkpoint"]["schema_version"] == "phase_h1_v1"
+    assert stored is not None
+    assert stored.schema_version == "phase_h1_v1"
     session_store.delete_checkpoint(session_id)
 
 

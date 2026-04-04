@@ -22,6 +22,9 @@ Wichtigste Konsequenzen:
   Textueberlastung, Stagnation oder sichtbaren Erfolg
 - die Symbol-Mengen-Bruecke fuer Dyscalculia-Support ist jetzt auch als
   operative Scaffold-Ausgabe im Runtime-Pfad angekommen
+- Resume-Previews ohne neue `runtime_observations` nutzen jetzt ebenfalls
+  `last_observation_evidence`, statt beim naechsten Block auf leere Evidenz
+  zurueckzufallen
 - der Planner uebersetzt Support-Profile damit klarer in operative
   Tutorentscheidungen statt nur in Hintergrundparameter
 - der naechste direkte Ausbau ist jetzt nicht mehr Phase-A-Dokumentation,
@@ -41,7 +44,7 @@ Neue oder aktualisierte Referenzartefakte:
 Verifikation:
 
 - `ruff`: bestanden
-- `pytest`: `114 passed, 1 warning`
+- `pytest`: `116 passed, 1 warning`
 - Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
 
 ## Phase-H-Multi-Step-Checkpoint-Migration 2026-04-04

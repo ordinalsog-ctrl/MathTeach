@@ -247,6 +247,9 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - diese Blockausgabe reagiert jetzt auch auf Modus und Runtime-Evidenz,
   also z.B. anders bei Verwirrung, Textueberlastung, Stagnation oder
   sichtbarem Erfolg
+- Resume-Previews koennen dabei jetzt auch ohne neue Runtime-Inputs an
+  `last_observation_evidence` anknuepfen, statt mit leerer Evidenz neu
+  anzusetzen
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle

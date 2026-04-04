@@ -284,6 +284,39 @@ def test_planner_preserves_pending_transition_message_across_resume() -> None:
     assert plan.mode_adaptation_state.pending_transition_message is None
 
 
+def test_planner_resume_preview_reuses_last_observation_evidence_for_support() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem in small clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyslexia_aware_support"],
+            },
+            mode_adaptation_state={
+                "current_mode": "guided_concept_explanation",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 0,
+                "last_observation_evidence": ["text_overload", "vocabulary_request"],
+            },
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert "text_overload" in first_block.observed_evidence
+    assert "vocabulary_request" in first_block.observed_evidence
+    assert "split_problem_text_into_shorter_chunks" in first_block.support_moves
+    assert "clarify_terms_before_retrying_math_step" in first_block.support_moves
+    assert "key_term_glossary" in first_block.support_scaffolds
+
+
 def test_planner_blocks_fourth_change_when_budget_is_exhausted() -> None:
     plan = build_teaching_plan(
         SessionRequest(

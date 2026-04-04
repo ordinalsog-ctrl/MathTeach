@@ -709,6 +709,11 @@ def _simulate_runtime_blocks(
 
     if not runtime_observations:
         displayed_transition_message = pending_transition_message
+        preview_evidence = (
+            list(state.last_observation_evidence)
+            if state.last_observation_evidence
+            else []
+        )
         planned_blocks.append(
             _build_planned_block(
                 block_index=1,
@@ -716,7 +721,7 @@ def _simulate_runtime_blocks(
                 objective=objective,
                 response_settings=response_settings,
                 transition_message=displayed_transition_message,
-                observed_evidence=[],
+                observed_evidence=preview_evidence,
             )
         )
         if displayed_transition_message is not None:

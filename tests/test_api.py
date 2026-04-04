@@ -859,6 +859,51 @@ def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     assert payload["mode_adaptation_state"]["pending_transition_message"] is None
 
 
+def test_tutoring_plan_session_resume_reuses_last_observation_evidence_for_preview_support() -> None:
+    session_id = f"api-session-evidence-preview-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    session_store.save_checkpoint(
+        session_id,
+        ModeAdaptationCheckpoint(
+            mode_adaptation_state=ModeAdaptationState(
+                current_mode="guided_concept_explanation",
+                blocks_in_current_mode=1,
+                mode_changes_in_session=0,
+                cooldown_blocks_remaining=0,
+                last_observation_evidence=["text_overload", "vocabulary_request"],
+            ),
+        ),
+    )
+
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Explain this word problem in small clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyslexia_aware_support"],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["planned_blocks"][0]["observed_evidence"] == [
+        "text_overload",
+        "vocabulary_request",
+    ]
+    assert "split_problem_text_into_shorter_chunks" in payload["planned_blocks"][0]["support_moves"]
+    assert "key_term_glossary" in payload["planned_blocks"][0]["support_scaffolds"]
+    session_store.delete_checkpoint(session_id)
+
+
 def test_tutoring_plan_derives_missing_success_line_for_scarcity_support() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

@@ -93,6 +93,8 @@ Aktueller Stand:
   Blockvorschau hinein
 - `support_moves` und `support_scaffolds` reagieren jetzt auch auf
   `lesson_mode` und blockweise Beobachtungsevidenz
+- Resume-Previews koennen jetzt auch getragene `last_observation_evidence`
+  direkt wieder in Support-Ausgaben uebersetzen
 
 ## Phase D: Pilot and Validation
 

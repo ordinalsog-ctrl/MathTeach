@@ -270,6 +270,11 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   semantisch umformen, z.B. zu
   `reframe_concept_with_simple_language_and_quantity_support` oder
   `use_predictable_visual_reading_sequence`
+- H.2f koppelt diese Mehrprofil-Regeln jetzt zusaetzlich an
+  `lesson_mode`, sodass dieselbe Triad in
+  `worked_example_tutoring`, `origin_story_explanation` und
+  `guided_concept_explanation` unterschiedliche angepasste Moves
+  liefern kann
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle

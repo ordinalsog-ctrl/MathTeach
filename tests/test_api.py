@@ -1023,10 +1023,10 @@ def test_tutoring_plan_exposes_block_conflict_resolution_summary() -> None:
     ]["suppressed_moves"]
     assert (
         second_block["support_moves"].index(
-            "reframe_concept_with_simple_language_and_quantity_support"
+            "worked_example_visual_concept_with_minimal_text"
         )
         < second_block["support_moves"].index(
-            "increase_pacing_after_concept_and_language_stabilize"
+            "worked_example_release_after_concept_check"
         )
     )
 
@@ -1081,15 +1081,58 @@ def test_tutoring_plan_exposes_adapted_block_conflict_resolution_detail() -> Non
         "reframe_concept_with_simple_language_and_quantity_support" in item
         for item in summary["adapted_moves"]
     )
-    assert (
-        "reframe_concept_with_simple_language_and_quantity_support"
-        in second_block["support_moves"]
-    )
+    assert "worked_example_visual_concept_with_minimal_text" in second_block["support_moves"]
     assert "pair_visual_explanation_with_simple_language" in second_block["support_moves"]
-    assert (
-        "increase_pacing_after_concept_and_language_stabilize"
-        in second_block["support_moves"]
+    assert "worked_example_release_after_concept_check" in second_block["support_moves"]
+
+
+def test_tutoring_plan_exposes_mode_evidence_coupling_for_worked_example_block() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this word problem with a clear example.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "mode_adaptation_state": {
+                "current_mode": "worked_example_tutoring",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 1,
+            },
+            "runtime_observations": [
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                        "text_overload",
+                        "vocabulary_request",
+                    ]
+                }
+            ],
+        },
     )
+
+    assert response.status_code == 200
+    payload = response.json()
+    first_block = payload["planned_blocks"][0]
+    summary = first_block["conflict_resolution_summary"]
+
+    assert summary is not None
+    assert summary["lesson_mode_applied"] == "worked_example_tutoring"
+    assert summary["mode_evidence_adjustments"]
+    assert "worked_example_visual_concept_with_minimal_text" in first_block["support_moves"]
 
 
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:

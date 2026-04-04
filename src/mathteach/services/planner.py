@@ -646,6 +646,7 @@ def _build_planned_block(
         support_moves=support_moves,
         active_supports=response_settings.active_supports,
         evidence=observed_evidence,
+        lesson_mode=lesson_mode,
     )
     return PlannedTeachingBlock(
         block_index=block_index,

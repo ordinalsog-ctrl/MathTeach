@@ -115,6 +115,55 @@ def test_planner_adapts_block_support_to_text_overload_evidence() -> None:
     assert "short_sentence_chunks" in first_block.support_scaffolds
 
 
+def test_planner_applies_worked_example_mode_evidence_coupling_for_triad() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem with a clear example.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            mode_adaptation_state={
+                "current_mode": "worked_example_tutoring",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 1,
+            },
+            runtime_observations=[
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                        "text_overload",
+                        "vocabulary_request",
+                    ]
+                },
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert first_block.mode == "worked_example_tutoring"
+    assert first_block.conflict_resolution_summary is not None
+    assert (
+        first_block.conflict_resolution_summary.lesson_mode_applied
+        == "worked_example_tutoring"
+    )
+    assert "worked_example_visual_concept_with_minimal_text" in first_block.support_moves
+    assert first_block.conflict_resolution_summary.mode_evidence_adjustments
+
+
 def test_planner_carries_mode_change_into_next_preview_block() -> None:
     plan = build_teaching_plan(
         SessionRequest(
@@ -512,16 +561,12 @@ def test_planner_emits_conflict_resolution_summary_for_pair_conflict() -> None:
         "increase_pacing_after_stable_success" in item
         for item in second_block.conflict_resolution_summary.adapted_moves
     )
-    assert (
-        "increase_pacing_monitor_only_after_concept_recovery"
-        in second_block.support_moves
-    )
+    assert "worked_example_rebuild_with_pacing_pause" in second_block.support_moves
+    assert "worked_example_release_after_two_stable_steps" in second_block.support_moves
     assert "offer_more_independent_challenge" not in second_block.support_moves
     assert (
-        second_block.support_moves.index("stop_retry_loop_and_reframe_concept")
-        < second_block.support_moves.index(
-            "increase_pacing_monitor_only_after_concept_recovery"
-        )
+        second_block.support_moves.index("worked_example_rebuild_with_pacing_pause")
+        < second_block.support_moves.index("worked_example_release_after_two_stable_steps")
     )
 
 
@@ -572,11 +617,11 @@ def test_planner_emits_conflict_resolution_summary_for_triad_conflict() -> None:
     ]
     assert (
         second_block.support_moves.index(
-            "reframe_concept_with_simple_language_and_quantity_support"
+            "worked_example_visual_concept_with_minimal_text"
         )
         < second_block.support_moves.index("clarify_terms_inside_quantity_rebuild")
         < second_block.support_moves.index(
-            "increase_pacing_after_concept_and_language_stabilize"
+            "worked_example_release_after_concept_check"
         )
     )
 
@@ -618,27 +663,19 @@ def test_planner_emits_adapted_moves_not_only_reordered_for_h2e_triad() -> None:
     second_block = plan.planned_blocks[2]
 
     assert second_block.conflict_resolution_summary is not None
-    assert (
-        "reframe_concept_with_simple_language_and_quantity_support"
-        in second_block.support_moves
-    )
+    assert "worked_example_visual_concept_with_minimal_text" in second_block.support_moves
     assert "pair_visual_explanation_with_simple_language" in second_block.support_moves
-    assert (
-        "increase_pacing_after_concept_and_language_stabilize"
-        in second_block.support_moves
-    )
+    assert "worked_example_release_after_concept_check" in second_block.support_moves
     assert "pair_visual_explanation_with_simple_language" in (
         second_block.conflict_resolution_summary.generated_moves
     )
     assert second_block.conflict_resolution_summary.move_dependencies_applied
     assert (
         second_block.support_moves.index(
-            "reframe_concept_with_simple_language_and_quantity_support"
+            "worked_example_visual_concept_with_minimal_text"
         )
         < second_block.support_moves.index("pair_visual_explanation_with_simple_language")
-        < second_block.support_moves.index(
-            "increase_pacing_after_concept_and_language_stabilize"
-        )
+        < second_block.support_moves.index("worked_example_release_after_concept_check")
     )
 
 

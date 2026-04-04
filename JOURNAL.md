@@ -2,6 +2,47 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2f-Mode-Evidence-Coupling 2026-04-04
+
+Die H.2e-Mehrprofil-Regeln sind jetzt enger an `lesson_mode` und
+feinere Evidence-Kombinationen gekoppelt. Dieselbe Profilkombination
+liefert damit in `worked_example_tutoring`,
+`guided_concept_explanation` und `origin_story_explanation` nicht mehr
+dieselben Block-Moves.
+
+Wichtigste Konsequenzen:
+
+- `conflict_resolution_summary` traegt jetzt
+  `lesson_mode_applied` und `mode_evidence_adjustments`
+- der Block-Resolver bekommt den aktuellen `lesson_mode` direkt aus dem
+  Planner uebergeben
+- bekannte Mehrprofil-Regeln koennen jetzt je Modus unterschiedlich
+  adaptieren, z.B.
+  `worked_example_visual_concept_with_minimal_text`,
+  `worked_example_release_after_concept_check`,
+  `origin_story_bridge_with_concise_math_language` oder
+  `guided_concept_rebuild_with_simple_language`
+- dieselbe Triad kann damit jetzt je Modus unterschiedlich reagieren,
+  statt nur ueber aktive Supports und allgemeine Evidence zu laufen
+- API-Antworten machen diese Kontextkopplung jetzt sichtbar, ohne einen
+  zweiten Parallelpfad neben `conflict_resolution_summary` aufzubauen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_mode_evidence_coupling.py](/Users/jonasweiss/MathTeach/tests/test_mode_evidence_coupling.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/mode-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/mode-evidence-coupling.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `79 passed, 1 warning`
+- Full-Suite: `148 passed, 1 warning`
+
 ## Phase-H.2e-Adaptive-Triad-Move-Transformation 2026-04-04
 
 Die Block-Konfliktaufloesung ist jetzt einen Schritt weiter: Mischprofile

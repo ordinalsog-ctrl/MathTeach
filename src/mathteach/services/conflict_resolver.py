@@ -192,9 +192,15 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "increase_pacing_after_text_clarity",
         "increase_pacing_after_concept_and_language_stabilize",
         "increase_pacing_only_with_predictable_sequence",
+        "worked_example_release_after_two_stable_steps",
+        "worked_example_release_after_concept_check",
+        "worked_example_release_after_readable_step",
+        "delay_pacing_until_story_bridge_lands",
         "fade_one_scaffold_after_stable_success",
         "offer_more_independent_challenge",
         "pair_shorter_text_with_clear_reading_path",
+        "worked_example_check_after_each_micro_step",
+        "guided_concept_single_check_after_rebuild",
     },
     "dyscalculia_aware_support": {
         "keep_quantity_representation_visible",
@@ -207,6 +213,11 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "reframe_concept_with_simple_language_and_quantity_support",
         "reframe_concept_with_minimal_language_overhead",
         "pair_visual_explanation_with_simple_language",
+        "worked_example_rebuild_with_pacing_pause",
+        "worked_example_visual_concept_with_minimal_text",
+        "origin_story_bridge_with_concise_math_language",
+        "guided_concept_rebuild_with_simple_language",
+        "guided_concept_rebuild_with_tiny_language_load",
     },
     "dyslexia_aware_support": {
         "reduce_text_load_before_problem_solving",
@@ -215,6 +226,8 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "reduce_text_load_with_readaloud_anchor",
         "split_problem_text_into_shorter_predictable_chunks",
         "use_predictable_visual_reading_sequence",
+        "worked_example_readaloud_step_strip",
+        "worked_example_predictable_visual_reading_sequence",
     },
     "autism_spectrum_aware_support": {
         "keep_structure_predictable_and_literal",
@@ -316,6 +329,7 @@ def resolve_block_support_conflicts(
     support_moves: list[str],
     active_supports: list[SupportNeed],
     evidence: list[str],
+    lesson_mode: str | None = None,
 ) -> tuple[list[str], ConflictResolutionSummary | None]:
     ordered_supports = ordered_active_supports(active_supports)
     pair_conflicts = detect_profile_conflicts(ordered_supports)
@@ -326,6 +340,7 @@ def resolve_block_support_conflicts(
         triad_group=triad_slug,
         priority_ladder=list(priority_ladder),
         evidence_used=sorted(evidence),
+        lesson_mode_applied=lesson_mode,
     )
 
     resolved_moves = list(support_moves)
@@ -340,6 +355,13 @@ def resolve_block_support_conflicts(
     resolved_moves = _apply_triad_level_move_adaptations(
         resolved_moves,
         ordered_supports,
+        evidence_set,
+        summary,
+    )
+    resolved_moves = _apply_lesson_mode_evidence_adjustments(
+        resolved_moves,
+        ordered_supports,
+        lesson_mode,
         evidence_set,
         summary,
     )
@@ -730,6 +752,246 @@ def _apply_triad_level_move_adaptations(
     return resolved_moves
 
 
+def _apply_lesson_mode_evidence_adjustments(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    lesson_mode: str | None,
+    evidence: set[str],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    if lesson_mode is None:
+        return moves
+
+    resolved_moves = list(moves)
+    active_support_set = frozenset(active_supports)
+
+    if lesson_mode == "worked_example_tutoring":
+        if active_support_set == frozenset(
+            {"adhd_aware_support", "dyscalculia_aware_support"}
+        ) and evidence & {
+            "repeated_attempt_three_plus",
+            "repeated_concept_error",
+            "repeated_concept_error_across_blocks",
+        }:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "stop_retry_loop_and_reframe_concept",
+                    "reframe_concept_with_everyday_language_bridge",
+                    "reframe_concept_with_simple_language_and_quantity_support",
+                ),
+                "worked_example_rebuild_with_pacing_pause",
+                summary,
+            )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied worked_example_tutoring repair pacing for ADHD + Dyscalculia.",
+            )
+            if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+                resolved_moves = _replace_first_available_move(
+                    resolved_moves,
+                    (
+                        "increase_pacing_monitor_only_after_concept_recovery",
+                        "increase_pacing_after_stable_success",
+                    ),
+                    "worked_example_release_after_two_stable_steps",
+                    summary,
+                )
+                _note_mode_evidence_adjustment(
+                    summary,
+                    "Used rapid-success worked-example release after two stable steps.",
+                )
+
+        if active_support_set == frozenset(
+            {
+                "adhd_aware_support",
+                "dyscalculia_aware_support",
+                "language_sensitive_support",
+            }
+        ) and evidence & {
+            "repeated_attempt_three_plus",
+            "repeated_concept_error",
+            "text_overload",
+            "vocabulary_request",
+            "vocabulary_request_again",
+        }:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "reframe_concept_with_simple_language_and_quantity_support",
+                    "reframe_concept_with_everyday_language_bridge",
+                    "worked_example_rebuild_with_pacing_pause",
+                ),
+                "worked_example_visual_concept_with_minimal_text",
+                summary,
+            )
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "increase_pacing_after_concept_and_language_stabilize",
+                    "increase_pacing_monitor_only_after_concept_recovery",
+                    "increase_pacing_gently_after_language_clarification",
+                ),
+                "worked_example_release_after_concept_check",
+                summary,
+            )
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "worked_example_check_after_each_micro_step",
+                summary,
+                (
+                    "Generated worked_example_check_after_each_micro_step for "
+                    "worked_example_tutoring after concept+language repair."
+                ),
+            )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied worked_example_tutoring triad adaptation for ADHD + Dyscalculia + Language-Sensitive.",
+            )
+
+        if active_support_set == frozenset(
+            {
+                "adhd_aware_support",
+                "dyslexia_aware_support",
+                "autism_spectrum_aware_support",
+            }
+        ) and evidence & {"text_overload", "reading_load_issue", "structure_break"}:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "split_problem_text_into_shorter_predictable_chunks",
+                    "reduce_text_load_with_readaloud_anchor",
+                    "split_problem_text_into_shorter_chunks",
+                ),
+                "worked_example_predictable_visual_reading_sequence",
+                summary,
+            )
+            if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+                resolved_moves = _replace_first_available_move(
+                    resolved_moves,
+                    (
+                        "increase_pacing_only_with_predictable_sequence",
+                        "increase_pacing_after_text_clarity",
+                        "increase_pacing_after_stable_success",
+                    ),
+                    "worked_example_release_after_readable_step",
+                    summary,
+                )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied worked_example_tutoring readable-structure coupling for ADHD + Dyslexia + Autism-Spectrum.",
+            )
+
+    if lesson_mode == "origin_story_explanation":
+        if active_support_set == frozenset(
+            {
+                "adhd_aware_support",
+                "dyscalculia_aware_support",
+                "language_sensitive_support",
+            }
+        ) and evidence & {
+            "repeated_attempt_three_plus",
+            "text_overload",
+            "vocabulary_request_again",
+        }:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "reframe_concept_with_simple_language_and_quantity_support",
+                    "reframe_concept_with_everyday_language_bridge",
+                ),
+                "origin_story_bridge_with_concise_math_language",
+                summary,
+            )
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "increase_pacing_after_concept_and_language_stabilize",
+                    "increase_pacing_gently_after_language_clarification",
+                    "increase_pacing_monitor_only_after_concept_recovery",
+                ),
+                "delay_pacing_until_story_bridge_lands",
+                summary,
+            )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied origin_story_explanation bridge-first pacing delay for ADHD + Dyscalculia + Language-Sensitive.",
+            )
+
+    if lesson_mode == "guided_concept_explanation":
+        if active_support_set == frozenset(
+            {
+                "adhd_aware_support",
+                "dyscalculia_aware_support",
+                "language_sensitive_support",
+            }
+        ) and evidence & {
+            "repeated_attempt_three_plus",
+            "text_overload",
+            "vocabulary_request_again",
+        }:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "reframe_concept_with_simple_language_and_quantity_support",
+                    "reframe_concept_with_everyday_language_bridge",
+                ),
+                "guided_concept_rebuild_with_simple_language",
+                summary,
+            )
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "guided_concept_single_check_after_rebuild",
+                summary,
+                (
+                    "Generated guided_concept_single_check_after_rebuild for "
+                    "guided_concept_explanation after concept-language repair."
+                ),
+            )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied guided_concept_explanation rebuild tightening for ADHD + Dyscalculia + Language-Sensitive.",
+            )
+
+        if active_support_set == frozenset(
+            {
+                "dyscalculia_aware_support",
+                "language_sensitive_support",
+                "scarcity_aware_support",
+            }
+        ) and evidence & {
+            "repeated_attempt_three_plus",
+            "no_progress_two_blocks",
+            "no_progress_three_blocks",
+            "text_overload",
+            "vocabulary_request_again",
+        }:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "reframe_concept_with_minimal_language_overhead",
+                    "reframe_concept_with_everyday_language_bridge",
+                ),
+                "guided_concept_rebuild_with_tiny_language_load",
+                summary,
+            )
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "guided_concept_single_check_after_rebuild",
+                summary,
+                (
+                    "Generated guided_concept_single_check_after_rebuild for "
+                    "guided_concept_explanation with scarcity-aware concept repair."
+                ),
+            )
+            _note_mode_evidence_adjustment(
+                summary,
+                "Applied guided_concept_explanation minimal-language rebuild for Dyscalculia + Language-Sensitive + Scarcity.",
+            )
+
+    return resolved_moves
+
+
 def _apply_move_dependency_graph(
     moves: list[str],
     evidence: set[str],
@@ -776,6 +1038,34 @@ def _apply_move_dependency_graph(
             (
                 "Generated use_predictable_visual_reading_sequence from predictable "
                 "chunking plus stable reading anchors."
+            ),
+        )
+
+    if {
+        "worked_example_visual_concept_with_minimal_text",
+        "worked_example_release_after_concept_check",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "worked_example_check_after_each_micro_step",
+            summary,
+            (
+                "Generated worked_example_check_after_each_micro_step from worked-example "
+                "concept repair plus release gating."
+            ),
+        )
+
+    if {
+        "guided_concept_rebuild_with_simple_language",
+        "keep_quantity_representation_visible",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "guided_concept_single_check_after_rebuild",
+            summary,
+            (
+                "Generated guided_concept_single_check_after_rebuild from guided concept "
+                "rebuild plus visible quantity support."
             ),
         )
 
@@ -953,6 +1243,16 @@ def _append_generated_move(
     summary.move_dependencies_applied.append(note)
     summary.resolution_notes.append(note)
     return [*moves, move_to_add]
+
+
+def _note_mode_evidence_adjustment(
+    summary: ConflictResolutionSummary,
+    note: str,
+) -> None:
+    if note not in summary.mode_evidence_adjustments:
+        summary.mode_evidence_adjustments.append(note)
+    if note not in summary.resolution_notes:
+        summary.resolution_notes.append(note)
 
 
 def _sort_moves_by_priority_ladder(

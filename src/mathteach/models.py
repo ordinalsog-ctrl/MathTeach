@@ -176,6 +176,8 @@ class ConflictResolutionSummary(BaseModel):
     adapted_moves: list[str] = Field(default_factory=list)
     generated_moves: list[str] = Field(default_factory=list)
     move_dependencies_applied: list[str] = Field(default_factory=list)
+    lesson_mode_applied: str | None = None
+    mode_evidence_adjustments: list[str] = Field(default_factory=list)
     resolution_notes: list[str] = Field(default_factory=list)
     evidence_used: list[str] = Field(default_factory=list)
 

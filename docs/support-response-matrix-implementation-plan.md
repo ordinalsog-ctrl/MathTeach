@@ -118,6 +118,11 @@ Aktueller Stand:
   `generated_moves` und `move_dependencies_applied` machen sichtbar,
   wenn Pair-/Triad-Regeln Moves semantisch umbauen oder gezielt neue
   Kombinations-Moves erzeugen
+- H.2f koppelt diese Blockauflosung jetzt zusaetzlich an
+  `lesson_mode`:
+  `conflict_resolution_summary` traegt dafuer
+  `lesson_mode_applied` und `mode_evidence_adjustments`, sodass dieselbe
+  Triad je Modus unterschiedlich eingreifen kann
 
 ## Phase D: Pilot and Validation
 
@@ -262,8 +267,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.2f die neuen H.2e-Adaptationen noch feiner an Evidenz und Lesson
-  Mode koppeln, statt sie nur auf Support-Gruppen zu gruenden
+- H.2g die H.2f-Regeln noch staerker an konkrete Evidence-Kombinationen
+  und spaetere Blocktypen koppeln, statt nur am `lesson_mode`
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

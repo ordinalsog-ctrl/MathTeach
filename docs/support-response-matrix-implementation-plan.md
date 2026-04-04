@@ -100,6 +100,9 @@ Aktueller Stand:
   `stored_checkpoint` fortgesetzt wird
 - getragene Evidenz und konsumierte `pending_transition_message` sind
   jetzt auch als explizite Resume-Semantik im API-Output sichtbar
+- Resume-Roundtrips ueber partielle Checkpoints sind jetzt als eigener
+  Haertungspfad dokumentiert in
+  [resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
 
 ## Phase D: Pilot and Validation
 

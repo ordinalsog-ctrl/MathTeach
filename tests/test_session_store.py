@@ -53,3 +53,25 @@ def test_session_store_persists_pending_transition_and_cooldown(tmp_path) -> Non
     assert restored.mode_adaptation_state.last_observation_evidence == [
         "no_progress_three_blocks"
     ]
+
+
+def test_session_store_loads_partial_checkpoint_with_defaults(tmp_path) -> None:
+    store = SessionStore(tmp_path)
+    store.session_path("session-gamma").write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": 1,\n'
+        '    "mode_changes_in_session": 0\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    restored = store.load_checkpoint("session-gamma")
+
+    assert restored is not None
+    assert restored.mode_adaptation_state.cooldown_blocks_remaining == 0
+    assert restored.mode_adaptation_state.pending_transition_message is None
+    assert restored.mode_adaptation_state.last_observation_evidence == []

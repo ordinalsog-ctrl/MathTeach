@@ -2,6 +2,43 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2b.3-Checkpoint-Roundtrip-Hardening 2026-04-04
+
+Die sichtbare Resume-Semantik ist jetzt auch unter der Haube robuster
+abgesichert: volle Checkpoint-Roundtrips und partielle H.1-Checkpoints
+werden jetzt bewusst auf Resume-Sicherheit getestet.
+
+Wichtigste Konsequenzen:
+
+- `ModeAdaptationCheckpoint` ist jetzt nicht nur fuer den Idealpfad,
+  sondern auch fuer partielle JSON-Roundtrips testseitig gehaertet
+- fehlende optionale State-Felder fallen jetzt kontrolliert auf
+  Modell-Defaults zurueck, statt spaet still als Resume-Risiko zu bleiben
+- `SessionStore` ist jetzt auch fuer partielle H.1-Checkpoint-Dateien
+  explizit abgesichert
+- der API-Resume-Pfad ist jetzt auch gegen partielle gespeicherte
+  Checkpoints getestet
+- Admin-Inspection zeigt bei parsebaren Quarantaene-Checkpoints jetzt
+  eine kompakte `resume_state_summary` statt nur Roh-JSON
+- der neue Referenzanker
+  [resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
+  dokumentiert jetzt, welche Felder wirklich Lernadaptation tragen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [tests/test_mode_adaptation_persistence.py](/Users/jonasweiss/MathTeach/tests/test_mode_adaptation_persistence.py)
+- [tests/test_session_store.py](/Users/jonasweiss/MathTeach/tests/test_session_store.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `47 passed, 1 warning`
+- Full-Suite: `121 passed, 1 warning`
+
 ## Phase-H.2b-Resume-Context-Visibility 2026-04-04
 
 Die Resume-Semantik ist jetzt nicht mehr nur implizit im Verhalten des

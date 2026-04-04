@@ -120,11 +120,13 @@ class SessionManager:
         audit_events = [event.model_dump(mode="json") for event in self.audit_logger.read_events(session_id)]
 
         parsed_checkpoint: dict[str, object] | None = None
+        resume_state_summary: dict[str, object] | None = None
         preview_status = "unparseable"
         preview_detail: str | None = None
         try:
             checkpoint = ModeAdaptationCheckpoint.model_validate_json(raw_checkpoint)
             parsed_checkpoint = checkpoint.model_dump(mode="json")
+            resume_state_summary = self._resume_state_summary(checkpoint)
             try:
                 validate_checkpoint_for_resume(checkpoint)
                 preview_status = "valid_current"
@@ -142,6 +144,7 @@ class SessionManager:
             "audit_events": audit_events,
             "preview_status": preview_status,
             "preview_detail": preview_detail,
+            "resume_state_summary": resume_state_summary,
             "checkpoint_preview": parsed_checkpoint,
             "raw_checkpoint": raw_checkpoint,
         }
@@ -361,6 +364,25 @@ class SessionManager:
                 migration_steps=migration_steps,
             )
         )
+
+    def _resume_state_summary(
+        self,
+        checkpoint: ModeAdaptationCheckpoint,
+    ) -> dict[str, object]:
+        state = checkpoint.mode_adaptation_state
+        return {
+            "schema_version": checkpoint.schema_version,
+            "current_mode": state.current_mode,
+            "blocks_in_current_mode": state.blocks_in_current_mode,
+            "mode_changes_in_session": state.mode_changes_in_session,
+            "last_change_reason": state.last_change_reason,
+            "cooldown_blocks_remaining": state.cooldown_blocks_remaining,
+            "carried_observation_evidence": list(state.last_observation_evidence),
+            "pending_transition_message_present": (
+                state.pending_transition_message is not None
+            ),
+            "pending_transition_message": state.pending_transition_message,
+        }
 
 
 def as_http_error(

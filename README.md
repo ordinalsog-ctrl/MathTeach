@@ -254,6 +254,9 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   `resume_context` sichtbar, inklusive `resume_source`,
   `carried_observation_evidence` und konsumierter
   `pending_transition_message`
+- partielle H.1-Checkpoints mit fehlenden Optionalfeldern bleiben dabei
+  resume-faehig, weil fehlende Felder kontrolliert auf Defaults
+  zurueckfallen
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
@@ -295,6 +298,8 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
 - expliziter `resume_context` im `TeachingPlan` fuer sichtbare
   Resume-Herkunft und Evidenz-Nutzung
+- dokumentierte Resume-Semantik in
+  [resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
 - automatische Ableitung von Mehrblock-Signalen wie
   `transfer_success_two_blocks` und `no_progress_three_blocks`
 - automatische Ableitung von `visible_small_success` und

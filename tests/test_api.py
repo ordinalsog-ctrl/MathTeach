@@ -717,6 +717,117 @@ def test_admin_quarantine_list_and_inspect_session() -> None:
     assert inspect_response.status_code == 200
     assert inspect_response.json()["session"]["session_id"] == session_id
     assert inspect_response.json()["preview_status"] == "unparseable"
+    assert inspect_response.json()["resume_state_summary"] is None
+
+
+def test_admin_inspection_exposes_resume_state_summary_for_parseable_quarantine() -> None:
+    session_id = f"api-session-parseable-inspect-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    invalid_path = session_store.session_path(session_id)
+    invalid_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_future_v99",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "worked_example_tutoring",\n'
+        '    "blocks_in_current_mode": 2,\n'
+        '    "mode_changes_in_session": 1,\n'
+        '    "cooldown_blocks_remaining": 1,\n'
+        '    "pending_transition_message": "Wir gehen jetzt in kleineren Schritten weiter.",\n'
+        '    "last_observation_evidence": ["text_overload", "vocabulary_request"]\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Explain this word problem in small clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+        },
+    )
+    inspect_response = client.get(f"/api/v1/admin/quarantine/{session_id}")
+
+    assert response.status_code == 400
+    assert inspect_response.status_code == 200
+    assert inspect_response.json()["preview_status"] == "invalid"
+    assert inspect_response.json()["resume_state_summary"] == {
+        "schema_version": "phase_future_v99",
+        "current_mode": "worked_example_tutoring",
+        "blocks_in_current_mode": 2,
+        "mode_changes_in_session": 1,
+        "last_change_reason": None,
+        "cooldown_blocks_remaining": 1,
+        "carried_observation_evidence": [
+            "text_overload",
+            "vocabulary_request",
+        ],
+        "pending_transition_message_present": True,
+        "pending_transition_message": "Wir gehen jetzt in kleineren Schritten weiter.",
+    }
+
+
+def test_tutoring_plan_resumes_from_partial_stored_checkpoint_with_defaults() -> None:
+    session_id = f"api-session-partial-checkpoint-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    partial_path = session_store.session_path(session_id)
+    partial_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": 1,\n'
+        '    "mode_changes_in_session": 0\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["session_id"] == session_id
+    assert payload["resume_context"]["resume_source"] == "stored_checkpoint"
+    assert payload["resume_context"]["resume_active"] is True
+    assert payload["resume_context"]["carried_observation_evidence"] == []
+    assert payload["mode_adaptation_checkpoint"]["mode_adaptation_state"][
+        "cooldown_blocks_remaining"
+    ] == 0
+    assert (
+        payload["mode_adaptation_checkpoint"]["mode_adaptation_state"][
+            "pending_transition_message"
+        ]
+        is None
+    )
+    assert payload["mode_adaptation_checkpoint"]["mode_adaptation_state"][
+        "last_observation_evidence"
+    ] == []
+    session_store.delete_checkpoint(session_id)
 
 
 def test_admin_can_restore_quarantined_session_after_manual_repair() -> None:

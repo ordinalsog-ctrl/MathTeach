@@ -23,6 +23,30 @@ def test_mode_adaptation_checkpoint_roundtrip_json() -> None:
     ]
 
 
+def test_mode_adaptation_checkpoint_partial_json_backfills_defaults() -> None:
+    restored = ModeAdaptationCheckpoint.model_validate_json(
+        """
+        {
+          "schema_version": "phase_h1_v1",
+          "mode_adaptation_state": {
+            "current_mode": "guided_concept_explanation",
+            "blocks_in_current_mode": 1,
+            "mode_changes_in_session": 0
+          }
+        }
+        """
+    )
+
+    assert restored.schema_version == "phase_h1_v1"
+    assert restored.mode_adaptation_state.current_mode == "guided_concept_explanation"
+    assert restored.mode_adaptation_state.blocks_in_current_mode == 1
+    assert restored.mode_adaptation_state.mode_changes_in_session == 0
+    assert restored.mode_adaptation_state.last_change_reason is None
+    assert restored.mode_adaptation_state.cooldown_blocks_remaining == 0
+    assert restored.mode_adaptation_state.pending_transition_message is None
+    assert restored.mode_adaptation_state.last_observation_evidence == []
+
+
 def test_session_request_rejects_state_and_checkpoint_together() -> None:
     try:
         SessionRequest.model_validate(

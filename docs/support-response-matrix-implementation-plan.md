@@ -123,6 +123,15 @@ Aktueller Stand:
   `conflict_resolution_summary` traegt dafuer
   `lesson_mode_applied` und `mode_evidence_adjustments`, sodass dieselbe
   Triad je Modus unterschiedlich eingreifen kann
+- H.2g koppelt diese Blockauflosung jetzt zusaetzlich an explizite
+  `block_type`-Heuristiken und verdichtete
+  `EvidenceCombinationPattern`-Muster:
+  `planned_blocks` tragen dafuer `block_type` und
+  `evidence_combination`, waehrend
+  `conflict_resolution_summary` jetzt auch
+  `block_type_applied`, `evidence_patterns_applied`,
+  `evidence_combination_rules_applied` und
+  `blocktype_adjustments_applied` sichtbar macht
 
 ## Phase D: Pilot and Validation
 
@@ -267,8 +276,10 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.2g die H.2f-Regeln noch staerker an konkrete Evidence-Kombinationen
-  und spaetere Blocktypen koppeln, statt nur am `lesson_mode`
+- H.3 die jetzt expliziten `block_type`- und
+  `evidence_combination`-Signale in eine echte blocksequenzielle
+  Planung ziehen, sodass nicht nur Block-Moves, sondern auch die Wahl
+  des naechsten Blocktyps adaptiv wird
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

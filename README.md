@@ -100,6 +100,8 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/checkpoint-migrator.md](/Users/jonasweiss/MathTeach/docs/checkpoint-migrator.md): Erste echte Migrationslogik fuer bekannte Alt-Checkpoints
 - [docs/session-quarantine-and-audit.md](/Users/jonasweiss/MathTeach/docs/session-quarantine-and-audit.md): Erste Betriebs-Haertung fuer defekte Sessions und Audit-Trail
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
+- [docs/mode-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/mode-evidence-coupling.md): H.2f-Ausbau fuer modus-sensible Pair-/Triad-Regeln
+- [docs/blocktype-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/blocktype-evidence-coupling.md): H.2g-Ausbau fuer blocktyp- und evidence-kombinationssensible Blockauflosung
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -275,8 +277,14 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   `worked_example_tutoring`, `origin_story_explanation` und
   `guided_concept_explanation` unterschiedliche angepasste Moves
   liefern kann
+- H.2g koppelt dieselben Regeln jetzt zusaetzlich an explizite
+  `block_type`-Heuristiken und verdichtete
+  `evidence_combination.patterns`, sodass z.B. ein
+  `worked_example`-Block mit `rapid_consecutive_success` andere
+  Support-Moves traegt als ein `error_recovery`-Block mit
+  `stagnation_pattern`
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern tiefere support-aware Blockgenerierung, spaetere
+  sondern blocksequenzielle Support-Planung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade
 

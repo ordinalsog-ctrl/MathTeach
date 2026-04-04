@@ -1135,6 +1135,90 @@ def test_tutoring_plan_exposes_mode_evidence_coupling_for_worked_example_block()
     assert "worked_example_visual_concept_with_minimal_text" in first_block["support_moves"]
 
 
+def test_tutoring_plan_exposes_blocktype_and_evidence_combination_for_worked_example() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this example in clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "runtime_observations": [
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    third_block = payload["planned_blocks"][2]
+    summary = third_block["conflict_resolution_summary"]
+
+    assert third_block["block_type"] == "worked_example"
+    assert (
+        "rapid_consecutive_success"
+        in third_block["evidence_combination"]["patterns"]
+    )
+    assert summary["block_type_applied"] == "worked_example"
+    assert (
+        "rapid_consecutive_success" in summary["evidence_patterns_applied"]
+    )
+    assert summary["blocktype_adjustments_applied"]
+    assert "worked_example_accelerated_with_pacing_checks" in third_block["support_moves"]
+    assert "use_concrete_example_as_anchor" in third_block["support_moves"]
+
+
+def test_tutoring_plan_exposes_concept_intro_vocabulary_gap_blocktype() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Warum braucht man Brueche eigentlich?",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": True,
+                "declared_support_needs": ["dyscalculia_aware_support"],
+            },
+            "mode_adaptation_state": {
+                "current_mode": "origin_story_explanation",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 1,
+            },
+            "runtime_observations": [
+                {"evidence": ["text_overload", "vocabulary_request"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    first_block = payload["planned_blocks"][0]
+    summary = first_block["conflict_resolution_summary"]
+
+    assert first_block["block_type"] == "concept_introduction"
+    assert "vocabulary_gap" in first_block["evidence_combination"]["patterns"]
+    assert summary["block_type_applied"] == "concept_introduction"
+    assert "vocabulary_gap" in summary["evidence_patterns_applied"]
+    assert "visual_concept_intro_minimal_text" in first_block["support_moves"]
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

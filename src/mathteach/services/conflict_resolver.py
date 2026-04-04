@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 from itertools import combinations
 
-from mathteach.models import ConflictResolutionSummary
+from mathteach.models import (
+    BlockType,
+    ConflictResolutionSummary,
+    EvidenceCombinationPattern,
+)
 from mathteach.response_matrix import SupportNeed, TutorResponseSettings
 
 
@@ -180,6 +184,37 @@ BLOCK_PAIR_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ...
     ),
 }
 
+EVIDENCE_COMBINATION_NOTES: dict[
+    frozenset[EvidenceCombinationPattern], str
+] = {
+    frozenset(
+        {
+            EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS,
+            EvidenceCombinationPattern.VOCABULARY_GAP,
+        }
+    ): (
+        "Rapid success with simultaneous vocabulary load calls for keeping pacing alive "
+        "while stripping language density."
+    ),
+    frozenset(
+        {
+            EvidenceCombinationPattern.CONCEPT_CONFUSION,
+            EvidenceCombinationPattern.VOCABULARY_GAP,
+        }
+    ): (
+        "Concept confusion plus vocabulary friction suggests pre-clarifying math terms "
+        "inside the repair move."
+    ),
+    frozenset(
+        {
+            EvidenceCombinationPattern.INCONSISTENT_SUCCESS,
+            EvidenceCombinationPattern.STAGNATION_PATTERN,
+        }
+    ): (
+        "Mixed recovery plus stagnation should emphasize pattern finding over raw retry volume."
+    ),
+}
+
 MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
     "adhd_aware_support": {
         "announce_short_goal_before_block",
@@ -330,10 +365,13 @@ def resolve_block_support_conflicts(
     active_supports: list[SupportNeed],
     evidence: list[str],
     lesson_mode: str | None = None,
+    block_type: BlockType | None = None,
+    evidence_patterns: list[EvidenceCombinationPattern] | None = None,
 ) -> tuple[list[str], ConflictResolutionSummary | None]:
     ordered_supports = ordered_active_supports(active_supports)
     pair_conflicts = detect_profile_conflicts(ordered_supports)
     triad_slug, priority_ladder = _resolve_block_priority_ladder(ordered_supports, evidence)
+    resolved_patterns = list(evidence_patterns or [])
 
     summary = ConflictResolutionSummary(
         pair_conflicts=[conflict.slug for conflict in pair_conflicts],
@@ -341,6 +379,8 @@ def resolve_block_support_conflicts(
         priority_ladder=list(priority_ladder),
         evidence_used=sorted(evidence),
         lesson_mode_applied=lesson_mode,
+        block_type_applied=block_type,
+        evidence_patterns_applied=resolved_patterns,
     )
 
     resolved_moves = list(support_moves)
@@ -365,6 +405,19 @@ def resolve_block_support_conflicts(
         evidence_set,
         summary,
     )
+    resolved_moves = _apply_evidence_combination_adjustments(
+        resolved_moves,
+        ordered_supports,
+        resolved_patterns,
+        summary,
+    )
+    resolved_moves = _apply_block_type_adjustments(
+        resolved_moves,
+        ordered_supports,
+        block_type,
+        resolved_patterns,
+        summary,
+    )
     resolved_moves = _apply_move_dependency_graph(
         resolved_moves,
         evidence_set,
@@ -384,6 +437,8 @@ def resolve_block_support_conflicts(
         and not summary.adapted_moves
         and not summary.generated_moves
         and not summary.move_dependencies_applied
+        and not summary.evidence_combination_rules_applied
+        and not summary.blocktype_adjustments_applied
     ):
         return resolved_moves, None
     return resolved_moves, summary
@@ -992,6 +1047,282 @@ def _apply_lesson_mode_evidence_adjustments(
     return resolved_moves
 
 
+def _apply_evidence_combination_adjustments(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    evidence_patterns: list[EvidenceCombinationPattern],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    if not evidence_patterns:
+        return moves
+
+    resolved_moves = list(moves)
+    pattern_set = set(evidence_patterns)
+    active_support_set = frozenset(active_supports)
+
+    if {
+        EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS,
+        EvidenceCombinationPattern.VOCABULARY_GAP,
+    }.issubset(pattern_set):
+        _register_evidence_combination_rule(
+            summary,
+            EVIDENCE_COMBINATION_NOTES[
+                frozenset(
+                    {
+                        EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS,
+                        EvidenceCombinationPattern.VOCABULARY_GAP,
+                    }
+                )
+            ],
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "reduce_text_density_while_maintaining_pacing",
+            summary,
+            (
+                "Generated reduce_text_density_while_maintaining_pacing from rapid "
+                "consecutive success plus vocabulary load."
+            ),
+        )
+        if active_support_set & {
+            "language_sensitive_support",
+            "dyslexia_aware_support",
+        }:
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "embed_vocabulary_in_rapid_flow",
+                summary,
+                (
+                    "Generated embed_vocabulary_in_rapid_flow because language support "
+                    "must stay visible inside a fast sequence."
+                ),
+            )
+
+    if {
+        EvidenceCombinationPattern.CONCEPT_CONFUSION,
+        EvidenceCombinationPattern.VOCABULARY_GAP,
+    }.issubset(pattern_set):
+        _register_evidence_combination_rule(
+            summary,
+            EVIDENCE_COMBINATION_NOTES[
+                frozenset(
+                    {
+                        EvidenceCombinationPattern.CONCEPT_CONFUSION,
+                        EvidenceCombinationPattern.VOCABULARY_GAP,
+                    }
+                )
+            ],
+        )
+        if {
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+        }.issubset(active_support_set):
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "preemptively_clarify_key_terms",
+                summary,
+                (
+                    "Generated preemptively_clarify_key_terms for concept confusion plus "
+                    "vocabulary friction."
+                ),
+            )
+
+    if {
+        EvidenceCombinationPattern.INCONSISTENT_SUCCESS,
+        EvidenceCombinationPattern.STAGNATION_PATTERN,
+    }.issubset(pattern_set):
+        _register_evidence_combination_rule(
+            summary,
+            EVIDENCE_COMBINATION_NOTES[
+                frozenset(
+                    {
+                        EvidenceCombinationPattern.INCONSISTENT_SUCCESS,
+                        EvidenceCombinationPattern.STAGNATION_PATTERN,
+                    }
+                )
+            ],
+        )
+        if {
+            "adhd_aware_support",
+            "dyscalculia_aware_support",
+        }.issubset(active_support_set):
+            resolved_moves = _append_generated_move(
+                resolved_moves,
+                "identify_and_reinforce_success_patterns",
+                summary,
+                (
+                    "Generated identify_and_reinforce_success_patterns from stagnation "
+                    "plus inconsistent recovery."
+                ),
+            )
+
+    return resolved_moves
+
+
+def _apply_block_type_adjustments(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    block_type: BlockType | None,
+    evidence_patterns: list[EvidenceCombinationPattern],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    if block_type is None or not evidence_patterns:
+        return moves
+
+    resolved_moves = list(moves)
+    pattern_set = set(evidence_patterns)
+    active_support_set = frozenset(active_supports)
+
+    if (
+        block_type == BlockType.WORKED_EXAMPLE
+        and EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS in pattern_set
+        and {
+            "adhd_aware_support",
+            "dyscalculia_aware_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied worked_example block adjustment for ADHD + Dyscalculia under rapid consecutive success.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "worked_example_accelerated_with_pacing_checks",
+            summary,
+            (
+                "Generated worked_example_accelerated_with_pacing_checks for a worked "
+                "example block under rapid consecutive success."
+            ),
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "use_concrete_example_as_anchor",
+            summary,
+            "Generated use_concrete_example_as_anchor for a worked example block.",
+        )
+
+    if (
+        block_type == BlockType.WORKED_EXAMPLE
+        and {
+            EvidenceCombinationPattern.CONCEPT_CONFUSION,
+            EvidenceCombinationPattern.VOCABULARY_GAP,
+        }.issubset(pattern_set)
+        and {
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied worked_example block adjustment for concept confusion plus vocabulary gap.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "worked_example_concept_clarification_sequence",
+            summary,
+            (
+                "Generated worked_example_concept_clarification_sequence for a worked "
+                "example block with concept confusion and vocabulary gap."
+            ),
+        )
+
+    if (
+        block_type == BlockType.ERROR_RECOVERY
+        and EvidenceCombinationPattern.STAGNATION_PATTERN in pattern_set
+        and {
+            "dyscalculia_aware_support",
+            "autism_spectrum_aware_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied error_recovery block adjustment for Dyscalculia + Autism-Spectrum under stagnation.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "structured_error_analysis_with_prediction",
+            summary,
+            (
+                "Generated structured_error_analysis_with_prediction for an "
+                "error-recovery block under stagnation."
+            ),
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "error_recovery_with_concept_reframing",
+            summary,
+            "Generated error_recovery_with_concept_reframing for an error-recovery block.",
+        )
+
+    if (
+        block_type == BlockType.CONCEPT_INTRODUCTION
+        and EvidenceCombinationPattern.VOCABULARY_GAP in pattern_set
+        and {
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied concept_introduction block adjustment for vocabulary-heavy concept entry.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "visual_concept_intro_minimal_text",
+            summary,
+            (
+                "Generated visual_concept_intro_minimal_text for a concept-introduction "
+                "block under vocabulary load."
+            ),
+        )
+
+    if (
+        block_type == BlockType.GUIDED_PRACTICE
+        and EvidenceCombinationPattern.INCONSISTENT_SUCCESS in pattern_set
+        and {
+            "adhd_aware_support",
+            "dyscalculia_aware_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied guided_practice block adjustment for inconsistent success.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "practice_with_embedded_concept_checks",
+            summary,
+            (
+                "Generated practice_with_embedded_concept_checks for a guided-practice "
+                "block under inconsistent success."
+            ),
+        )
+
+    if (
+        block_type == BlockType.CONCEPT_CHECK
+        and EvidenceCombinationPattern.CONFIDENCE_BUILDUP in pattern_set
+        and {
+            "adhd_aware_support",
+            "autism_spectrum_aware_support",
+        }.issubset(active_support_set)
+    ):
+        _register_blocktype_adjustment(
+            summary,
+            "Applied concept_check block adjustment for growing confidence with predictable structure.",
+        )
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "extended_concept_check_with_positive_feedback",
+            summary,
+            (
+                "Generated extended_concept_check_with_positive_feedback for a "
+                "concept-check block under confidence buildup."
+            ),
+        )
+
+    return resolved_moves
+
+
 def _apply_move_dependency_graph(
     moves: list[str],
     evidence: set[str],
@@ -1251,6 +1582,26 @@ def _note_mode_evidence_adjustment(
 ) -> None:
     if note not in summary.mode_evidence_adjustments:
         summary.mode_evidence_adjustments.append(note)
+    if note not in summary.resolution_notes:
+        summary.resolution_notes.append(note)
+
+
+def _register_evidence_combination_rule(
+    summary: ConflictResolutionSummary,
+    note: str,
+) -> None:
+    if note not in summary.evidence_combination_rules_applied:
+        summary.evidence_combination_rules_applied.append(note)
+    if note not in summary.resolution_notes:
+        summary.resolution_notes.append(note)
+
+
+def _register_blocktype_adjustment(
+    summary: ConflictResolutionSummary,
+    note: str,
+) -> None:
+    if note not in summary.blocktype_adjustments_applied:
+        summary.blocktype_adjustments_applied.append(note)
     if note not in summary.resolution_notes:
         summary.resolution_notes.append(note)
 

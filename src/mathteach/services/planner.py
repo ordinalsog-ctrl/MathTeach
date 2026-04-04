@@ -1,5 +1,6 @@
 from mathteach.config import Settings
 from mathteach.models import (
+    BlockType,
     LearnerProfile,
     ModelAssignment,
     ModeAdaptationCheckpoint,
@@ -18,6 +19,7 @@ from mathteach.models import (
 )
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.conflict_resolver import resolve_block_support_conflicts
+from mathteach.services.evidence_pattern_detector import build_evidence_combination
 from mathteach.services.response_engine import build_support_response
 from mathteach.services.runtime_mode_adapter import RuntimeModeAdapter
 
@@ -226,6 +228,39 @@ def _block_focus(
         focus.append("sichtbaren kleinen Erfolg markieren")
 
     return focus
+
+
+def _infer_block_type(
+    lesson_mode: str,
+    observed_evidence: list[str],
+    previous_evidence: list[str] | None = None,
+) -> BlockType:
+    evidence = set(observed_evidence)
+    previous = set(previous_evidence or [])
+
+    if evidence & {
+        "repeated_concept_error",
+        "repeated_attempt_three_plus",
+        "error_recovery_with_hint",
+        "no_progress_two_blocks",
+        "no_progress_three_blocks",
+        "no_success_visible_two_blocks",
+    }:
+        return BlockType.ERROR_RECOVERY
+    if lesson_mode == "worked_example_tutoring":
+        return BlockType.WORKED_EXAMPLE
+    if lesson_mode == "origin_story_explanation":
+        return BlockType.CONCEPT_INTRODUCTION
+    if lesson_mode == "origin_then_example":
+        return BlockType.BRIDGE_TO_APPLICATION
+    if evidence & {"transfer_success_two_blocks", "reduced_prompting"}:
+        return BlockType.CONCEPT_CHECK
+    if evidence & {"mixed_success_inconsistent", "text_overload"} or previous & {
+        "mixed_success_inconsistent",
+        "error_recovery_with_hint",
+    }:
+        return BlockType.GUIDED_PRACTICE
+    return BlockType.REFLECTION
 
 
 def _block_support_moves(
@@ -638,7 +673,15 @@ def _build_planned_block(
     response_settings,
     transition_message: str | None,
     observed_evidence: list[str],
+    previous_evidence: list[str] | None = None,
 ) -> PlannedTeachingBlock:
+    block_type = _infer_block_type(lesson_mode, observed_evidence, previous_evidence)
+    evidence_combination = build_evidence_combination(
+        current_evidence=observed_evidence,
+        block_type=block_type,
+        block_sequence=block_index,
+        previous_evidence=previous_evidence,
+    )
     support_moves = _block_support_moves(
         lesson_mode, response_settings, observed_evidence
     )
@@ -647,16 +690,20 @@ def _build_planned_block(
         active_supports=response_settings.active_supports,
         evidence=observed_evidence,
         lesson_mode=lesson_mode,
+        block_type=block_type,
+        evidence_patterns=evidence_combination.patterns,
     )
     return PlannedTeachingBlock(
         block_index=block_index,
         mode=lesson_mode,
+        block_type=block_type,
         goal=_block_goal(lesson_mode, objective),
         focus=_block_focus(lesson_mode, response_settings),
         support_moves=resolved_support_moves,
         support_scaffolds=_block_support_scaffolds(
             lesson_mode, response_settings, observed_evidence
         ),
+        evidence_combination=evidence_combination,
         conflict_resolution_summary=conflict_resolution_summary,
         transition_message=transition_message,
         observed_evidence=observed_evidence,
@@ -845,6 +892,7 @@ def _simulate_runtime_blocks(
                 response_settings=response_settings,
                 transition_message=displayed_transition_message,
                 observed_evidence=preview_evidence,
+                previous_evidence=None,
             )
         )
         if displayed_transition_message is not None:
@@ -865,6 +913,7 @@ def _simulate_runtime_blocks(
                 response_settings=response_settings,
                 transition_message=displayed_transition_message,
                 observed_evidence=effective_evidence,
+                previous_evidence=sorted(previous_effective_evidence or set()),
             )
         )
 
@@ -908,6 +957,7 @@ def _simulate_runtime_blocks(
             response_settings=response_settings,
             transition_message=pending_transition_message,
             observed_evidence=[],
+            previous_evidence=sorted(previous_effective_evidence or set()),
         )
     )
 

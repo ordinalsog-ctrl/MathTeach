@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -37,6 +38,25 @@ ResumeSource = Literal[
     "inline_checkpoint",
     "stored_checkpoint",
 ]
+
+
+class BlockType(StrEnum):
+    CONCEPT_INTRODUCTION = "concept_introduction"
+    WORKED_EXAMPLE = "worked_example"
+    GUIDED_PRACTICE = "guided_practice"
+    ERROR_RECOVERY = "error_recovery"
+    CONCEPT_CHECK = "concept_check"
+    BRIDGE_TO_APPLICATION = "bridge_to_application"
+    REFLECTION = "reflection"
+
+
+class EvidenceCombinationPattern(StrEnum):
+    RAPID_CONSECUTIVE_SUCCESS = "rapid_consecutive_success"
+    STAGNATION_PATTERN = "stagnation_pattern"
+    INCONSISTENT_SUCCESS = "inconsistent_success"
+    VOCABULARY_GAP = "vocabulary_gap"
+    CONFIDENCE_BUILDUP = "confidence_buildup"
+    CONCEPT_CONFUSION = "concept_confusion"
 
 
 class LearnerProfile(BaseModel):
@@ -137,13 +157,23 @@ class ModeAdaptationDecision(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
+class EvidenceCombination(BaseModel):
+    patterns: list[EvidenceCombinationPattern] = Field(default_factory=list)
+    current_evidence: list[str] = Field(default_factory=list)
+    previous_evidence: list[str] = Field(default_factory=list)
+    block_type: BlockType
+    block_sequence: int = Field(ge=1)
+
+
 class PlannedTeachingBlock(BaseModel):
     block_index: int = Field(ge=1)
     mode: str
+    block_type: BlockType | None = None
     goal: str
     focus: list[str] = Field(default_factory=list)
     support_moves: list[str] = Field(default_factory=list)
     support_scaffolds: list[str] = Field(default_factory=list)
+    evidence_combination: EvidenceCombination | None = None
     conflict_resolution_summary: ConflictResolutionSummary | None = None
     transition_message: str | None = None
     observed_evidence: list[str] = Field(default_factory=list)
@@ -178,6 +208,12 @@ class ConflictResolutionSummary(BaseModel):
     move_dependencies_applied: list[str] = Field(default_factory=list)
     lesson_mode_applied: str | None = None
     mode_evidence_adjustments: list[str] = Field(default_factory=list)
+    block_type_applied: BlockType | None = None
+    evidence_patterns_applied: list[EvidenceCombinationPattern] = Field(
+        default_factory=list
+    )
+    evidence_combination_rules_applied: list[str] = Field(default_factory=list)
+    blocktype_adjustments_applied: list[str] = Field(default_factory=list)
     resolution_notes: list[str] = Field(default_factory=list)
     evidence_used: list[str] = Field(default_factory=list)
 

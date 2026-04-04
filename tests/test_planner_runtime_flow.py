@@ -1,4 +1,4 @@
-from mathteach.models import SessionRequest
+from mathteach.models import BlockType, EvidenceCombinationPattern, SessionRequest
 from mathteach.services.planner import build_teaching_plan
 
 
@@ -162,6 +162,85 @@ def test_planner_applies_worked_example_mode_evidence_coupling_for_triad() -> No
     )
     assert "worked_example_visual_concept_with_minimal_text" in first_block.support_moves
     assert first_block.conflict_resolution_summary.mode_evidence_adjustments
+
+
+def test_planner_exposes_worked_example_blocktype_and_patterns() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this example in clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        )
+    )
+
+    third_block = plan.planned_blocks[2]
+
+    assert third_block.block_type == BlockType.WORKED_EXAMPLE
+    assert third_block.evidence_combination is not None
+    assert (
+        EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS
+        in third_block.evidence_combination.patterns
+    )
+    assert third_block.conflict_resolution_summary is not None
+    assert third_block.conflict_resolution_summary.block_type_applied == (
+        BlockType.WORKED_EXAMPLE
+    )
+    assert "worked_example_accelerated_with_pacing_checks" in third_block.support_moves
+    assert "use_concrete_example_as_anchor" in third_block.support_moves
+
+
+def test_planner_exposes_concept_intro_vocabulary_gap_blocktype() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Warum braucht man Brueche eigentlich?",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": True,
+                "declared_support_needs": ["dyscalculia_aware_support"],
+            },
+            mode_adaptation_state={
+                "current_mode": "origin_story_explanation",
+                "blocks_in_current_mode": 1,
+                "mode_changes_in_session": 0,
+                "cooldown_blocks_remaining": 1,
+            },
+            runtime_observations=[
+                {"evidence": ["text_overload", "vocabulary_request"]},
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert first_block.block_type == BlockType.CONCEPT_INTRODUCTION
+    assert first_block.evidence_combination is not None
+    assert (
+        EvidenceCombinationPattern.VOCABULARY_GAP
+        in first_block.evidence_combination.patterns
+    )
+    assert first_block.conflict_resolution_summary is not None
+    assert "visual_concept_intro_minimal_text" in first_block.support_moves
 
 
 def test_planner_carries_mode_change_into_next_preview_block() -> None:

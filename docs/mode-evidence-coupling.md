@@ -87,8 +87,9 @@ passiert ist.
 - noch keine sequentielle Move-Ausfuehrung ueber mehrere Bloecke
 - noch keine Confidence-gewichtete Ausloesung
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.2g soll diese Regeln feiner an konkrete Evidence-Kombinationen und
-spaetere Blocktypen koppeln, damit z.B. ein Error-Recovery-Block andere
-Move-Anpassungen bekommt als ein Summary- oder Transfer-Block.
+H.2g ist jetzt als eigene Folgeschicht umgesetzt und koppelt diese
+modus-sensitiven Regeln weiter an explizite Blocktypen und
+Evidence-Kombinationsmuster. Der Anschluss ist dokumentiert in
+[blocktype-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/blocktype-evidence-coupling.md).

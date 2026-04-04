@@ -2,6 +2,55 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2g-Blocktype-Evidence-Coupling 2026-04-04
+
+Die H.2f-Mehrprofil-Regeln haengen jetzt nicht mehr primaer am
+`lesson_mode`, sondern zusaetzlich an expliziten Blocktypen und
+verdichteten Evidence-Kombinationsmustern. Damit kann derselbe
+Support-Mix in einem `worked_example`-, `error_recovery`- oder
+`concept_introduction`-Block sichtbar andere Moves erzeugen.
+
+Wichtigste Konsequenzen:
+
+- `PlannedTeachingBlock` traegt jetzt `block_type` und
+  `evidence_combination`
+- `EvidenceCombinationPattern` verdichtet Mehrblock- und Mischsignale zu
+  wiederverwendbaren Mustern wie
+  `rapid_consecutive_success`, `vocabulary_gap`,
+  `stagnation_pattern`, `inconsistent_success`,
+  `confidence_buildup` und `concept_confusion`
+- der Planner leitet diese Muster jetzt blockweise ueber einen neuen
+  `EvidencePatternDetector` ab, statt Blockkontext nur indirekt ueber
+  `lesson_mode` zu approximieren
+- `conflict_resolution_summary` macht H.2g jetzt sichtbar ueber
+  `block_type_applied`, `evidence_patterns_applied`,
+  `evidence_combination_rules_applied` und
+  `blocktype_adjustments_applied`
+- bekannte Kombinationen erzeugen jetzt gezielte neue Moves, z.B.
+  `worked_example_accelerated_with_pacing_checks`,
+  `reduce_text_density_while_maintaining_pacing`,
+  `worked_example_concept_clarification_sequence`,
+  `structured_error_analysis_with_prediction` oder
+  `visual_concept_intro_minimal_text`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/evidence_pattern_detector.py](/Users/jonasweiss/MathTeach/src/mathteach/services/evidence_pattern_detector.py)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_evidence_pattern_detector.py](/Users/jonasweiss/MathTeach/tests/test_evidence_pattern_detector.py)
+- [tests/test_blocktype_evidence_coupling.py](/Users/jonasweiss/MathTeach/tests/test_blocktype_evidence_coupling.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/blocktype-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/blocktype-evidence-coupling.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `80 passed, 1 warning`
+- Full-Suite: ausstehend in diesem Schritt
+
 ## Phase-H.2f-Mode-Evidence-Coupling 2026-04-04
 
 Die H.2e-Mehrprofil-Regeln sind jetzt enger an `lesson_mode` und

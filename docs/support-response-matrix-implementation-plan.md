@@ -113,6 +113,11 @@ Aktueller Stand:
   `planned_blocks` tragen bei Mischprofilen eine
   `conflict_resolution_summary` mit `pair_conflicts`, optionaler
   `triad_group`, `priority_ladder`, unterdrueckten und adaptierten Moves
+- H.2e erweitert diese Blockauflosung jetzt um echte
+  Move-Transformation:
+  `generated_moves` und `move_dependencies_applied` machen sichtbar,
+  wenn Pair-/Triad-Regeln Moves semantisch umbauen oder gezielt neue
+  Kombinations-Moves erzeugen
 
 ## Phase D: Pilot and Validation
 
@@ -257,10 +262,13 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.2e-Triad- und Mehrprofil-Aufloesung auf weitere Gruppen ausdehnen
-- blockweise Support-Moves weiter an Konfliktlagen zwischen Profilen und
-  Evidence koppeln und mehr Moves adaptiv abschwaechen statt nur sortieren
-- Scaffold-Auswahl weiter dynamisch nach konkurrierenden Signalen staffeln
+- H.2f die neuen H.2e-Adaptationen noch feiner an Evidenz und Lesson
+  Mode koppeln, statt sie nur auf Support-Gruppen zu gruenden
+- weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
+  ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
+  werden
+- Scaffold-Auswahl weiter dynamisch nach konkurrierenden Signalen
+  staffeln, passend zu den jetzt reicheren `support_moves`
 - spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung
   vorbereiten
 

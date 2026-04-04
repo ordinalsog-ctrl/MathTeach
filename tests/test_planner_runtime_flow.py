@@ -571,10 +571,73 @@ def test_planner_emits_conflict_resolution_summary_for_triad_conflict() -> None:
         "adhd_aware_support",
     ]
     assert (
-        second_block.support_moves.index("stop_retry_loop_and_reframe_concept")
-        < second_block.support_moves.index("clarify_terms_before_retrying_math_step")
+        second_block.support_moves.index(
+            "reframe_concept_with_simple_language_and_quantity_support"
+        )
+        < second_block.support_moves.index("clarify_terms_inside_quantity_rebuild")
         < second_block.support_moves.index(
-            "increase_pacing_monitor_only_after_concept_recovery"
+            "increase_pacing_after_concept_and_language_stabilize"
+        )
+    )
+
+
+def test_planner_emits_adapted_moves_not_only_reordered_for_h2e_triad() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem with clear examples.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {
+                    "evidence": [
+                        "rapid_success",
+                        "transfer_success",
+                        "repeated_concept_error",
+                        "attempt_count_three_plus",
+                        "text_overload",
+                        "vocabulary_request",
+                    ]
+                },
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[2]
+
+    assert second_block.conflict_resolution_summary is not None
+    assert (
+        "reframe_concept_with_simple_language_and_quantity_support"
+        in second_block.support_moves
+    )
+    assert "pair_visual_explanation_with_simple_language" in second_block.support_moves
+    assert (
+        "increase_pacing_after_concept_and_language_stabilize"
+        in second_block.support_moves
+    )
+    assert "pair_visual_explanation_with_simple_language" in (
+        second_block.conflict_resolution_summary.generated_moves
+    )
+    assert second_block.conflict_resolution_summary.move_dependencies_applied
+    assert (
+        second_block.support_moves.index(
+            "reframe_concept_with_simple_language_and_quantity_support"
+        )
+        < second_block.support_moves.index("pair_visual_explanation_with_simple_language")
+        < second_block.support_moves.index(
+            "increase_pacing_after_concept_and_language_stabilize"
         )
     )
 

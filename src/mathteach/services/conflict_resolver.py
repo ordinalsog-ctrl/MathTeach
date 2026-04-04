@@ -136,8 +136,8 @@ BLOCK_TRIAD_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ..
             "dyslexia_aware_support",
         }
     ): (
-        "autism_spectrum_aware_support",
         "dyslexia_aware_support",
+        "autism_spectrum_aware_support",
         "adhd_aware_support",
     ),
     frozenset(
@@ -147,9 +147,9 @@ BLOCK_TRIAD_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ..
             "scarcity_aware_support",
         }
     ): (
-        "scarcity_aware_support",
         "dyscalculia_aware_support",
         "language_sensitive_support",
+        "scarcity_aware_support",
     ),
 }
 
@@ -166,6 +166,18 @@ BLOCK_PAIR_PRIORITY_LADDERS: dict[frozenset[SupportNeed], tuple[SupportNeed, ...
         "autism_spectrum_aware_support",
         "dyscalculia_aware_support",
     ),
+    frozenset({"adhd_aware_support", "dyslexia_aware_support"}): (
+        "dyslexia_aware_support",
+        "adhd_aware_support",
+    ),
+    frozenset({"dyscalculia_aware_support", "language_sensitive_support"}): (
+        "language_sensitive_support",
+        "dyscalculia_aware_support",
+    ),
+    frozenset({"autism_spectrum_aware_support", "language_sensitive_support"}): (
+        "autism_spectrum_aware_support",
+        "language_sensitive_support",
+    ),
 }
 
 MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
@@ -177,8 +189,12 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "increase_pacing_after_stable_success",
         "increase_pacing_monitor_only_after_concept_recovery",
         "increase_pacing_gently_after_language_clarification",
+        "increase_pacing_after_text_clarity",
+        "increase_pacing_after_concept_and_language_stabilize",
+        "increase_pacing_only_with_predictable_sequence",
         "fade_one_scaffold_after_stable_success",
         "offer_more_independent_challenge",
+        "pair_shorter_text_with_clear_reading_path",
     },
     "dyscalculia_aware_support": {
         "keep_quantity_representation_visible",
@@ -187,17 +203,28 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "return_to_quantity_model_before_symbols",
         "stop_retry_loop_and_reframe_concept",
         "switch_from_attempt_counting_to_model_rebuild",
+        "reframe_concept_with_everyday_language_bridge",
+        "reframe_concept_with_simple_language_and_quantity_support",
+        "reframe_concept_with_minimal_language_overhead",
+        "pair_visual_explanation_with_simple_language",
     },
     "dyslexia_aware_support": {
         "reduce_text_load_before_problem_solving",
         "check_reading_load_before_math_correction",
         "split_problem_text_into_shorter_chunks",
+        "reduce_text_load_with_readaloud_anchor",
+        "split_problem_text_into_shorter_predictable_chunks",
+        "use_predictable_visual_reading_sequence",
     },
     "autism_spectrum_aware_support": {
         "keep_structure_predictable_and_literal",
         "stabilize_layout_before_variation",
         "freeze_format_changes_until_reorientation",
         "stabilize_layout_before_new_quantity_variation",
+        "bridge_language_with_consistent_patterning",
+        "clarify_terms_with_literal_consistent_frame",
+        "keep_structure_predictable_with_visual_reading_anchors",
+        "use_consistent_bilingual_patterns",
     },
     "language_sensitive_support": {
         "bridge_everyday_language_and_math_terms",
@@ -205,6 +232,10 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "clarify_terms_before_retrying_math_step",
         "keep_glossary_visible_across_blocks",
         "restate_key_term_before_new_symbolic_step",
+        "clarify_terms_inside_quantity_rebuild",
+        "pair_visual_explanation_with_simple_language",
+        "bridge_language_with_consistent_patterning",
+        "clarify_terms_with_literal_consistent_frame",
     },
     "scarcity_aware_support": {
         "state_success_criteria_up_front",
@@ -212,6 +243,8 @@ MOVE_OWNER_HINTS: dict[SupportNeed, set[str]] = {
         "protect_momentum_with_near_term_success_target",
         "shrink_goal_to_single_recoverable_win",
         "reset_success_criteria_for_next_attempt",
+        "state_tiny_success_criteria_before_concept_repair",
+        "keep_concept_repair_within_visible_resource_limits",
     },
 }
 
@@ -298,15 +331,151 @@ def resolve_block_support_conflicts(
     resolved_moves = list(support_moves)
     evidence_set = set(evidence)
 
+    resolved_moves = _apply_pair_level_move_adaptations(
+        resolved_moves,
+        ordered_supports,
+        evidence_set,
+        summary,
+    )
+    resolved_moves = _apply_triad_level_move_adaptations(
+        resolved_moves,
+        ordered_supports,
+        evidence_set,
+        summary,
+    )
+    resolved_moves = _apply_move_dependency_graph(
+        resolved_moves,
+        evidence_set,
+        summary,
+    )
+
+    resolved_moves = _sort_moves_by_priority_ladder(
+        resolved_moves,
+        active_supports=ordered_supports,
+        priority_ladder=priority_ladder,
+    )
+
+    if (
+        not summary.pair_conflicts
+        and summary.triad_group is None
+        and not summary.suppressed_moves
+        and not summary.adapted_moves
+        and not summary.generated_moves
+        and not summary.move_dependencies_applied
+    ):
+        return resolved_moves, None
+    return resolved_moves, summary
+
+
+def _resolve_block_priority_ladder(
+    active_supports: list[SupportNeed],
+    evidence: list[str],
+) -> tuple[str | None, tuple[SupportNeed, ...]]:
+    active_support_set = frozenset(active_supports)
+    evidence_set = set(evidence)
+
+    triad_ladder = BLOCK_TRIAD_PRIORITY_LADDERS.get(active_support_set)
+    if triad_ladder is not None:
+        triad_slug = "__".join(triad_ladder)
+        if evidence_set & {
+            "repeated_attempt_three_plus",
+            "repeated_concept_error",
+            "repeated_concept_error_across_blocks",
+        }:
+            triad_ladder = _move_support_to_front(
+                triad_ladder, "dyscalculia_aware_support"
+            )
+        elif evidence_set & {
+            "text_overload",
+            "vocabulary_request",
+            "vocabulary_request_again",
+        }:
+            triad_ladder = _move_support_to_front(
+                triad_ladder, "language_sensitive_support"
+            )
+        elif evidence_set & {"reading_load_issue"}:
+            triad_ladder = _move_support_to_front(triad_ladder, "dyslexia_aware_support")
+        elif evidence_set & {"structure_break", "answer_abandoned"}:
+            triad_ladder = _move_support_to_front(
+                triad_ladder, "autism_spectrum_aware_support"
+            )
+        elif evidence_set & {
+            "no_progress_two_blocks",
+            "no_progress_three_blocks",
+            "no_success_visible_two_blocks",
+        }:
+            triad_ladder = _move_support_to_front(triad_ladder, "scarcity_aware_support")
+        elif evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            triad_ladder = _move_support_to_front(triad_ladder, "adhd_aware_support")
+        return triad_slug, triad_ladder
+
+    for pair in combinations(active_supports, 2):
+        pair_ladder = BLOCK_PAIR_PRIORITY_LADDERS.get(frozenset(pair))
+        if pair_ladder is None:
+            continue
+        pair_set = frozenset(pair)
+        if (
+            pair_set == frozenset({"adhd_aware_support", "language_sensitive_support"})
+            and evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}
+            and not evidence_set
+            & {"text_overload", "vocabulary_request", "vocabulary_request_again"}
+        ):
+            pair_ladder = _move_support_to_front(pair_ladder, "adhd_aware_support")
+        elif (
+            pair_set == frozenset({"adhd_aware_support", "dyslexia_aware_support"})
+            and evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}
+            and not evidence_set & {"text_overload", "reading_load_issue"}
+        ):
+            pair_ladder = _move_support_to_front(pair_ladder, "adhd_aware_support")
+        elif (
+            pair_set == frozenset({"dyscalculia_aware_support", "language_sensitive_support"})
+            and evidence_set
+            & {
+                "repeated_attempt_three_plus",
+                "repeated_concept_error",
+                "repeated_concept_error_across_blocks",
+            }
+        ):
+            pair_ladder = _move_support_to_front(pair_ladder, "dyscalculia_aware_support")
+        elif (
+            pair_set == frozenset({"autism_spectrum_aware_support", "language_sensitive_support"})
+            and evidence_set & {"vocabulary_request", "vocabulary_request_again"}
+            and not evidence_set & {"structure_break", "text_overload"}
+        ):
+            pair_ladder = _move_support_to_front(
+                pair_ladder, "language_sensitive_support"
+            )
+        return None, pair_ladder
+
+    return None, tuple(active_supports)
+
+
+def _move_support_to_front(
+    ladder: tuple[SupportNeed, ...],
+    support_need: SupportNeed,
+) -> tuple[SupportNeed, ...]:
+    if support_need not in ladder:
+        return ladder
+    return (support_need, *tuple(item for item in ladder if item != support_need))
+
+
+def _apply_pair_level_move_adaptations(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    evidence: set[str],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    resolved_moves = list(moves)
+
     if {
         "adhd_aware_support",
         "dyscalculia_aware_support",
-    }.issubset(ordered_supports) and evidence_set & {
+    }.issubset(active_supports) and evidence & {
         "repeated_attempt_three_plus",
         "repeated_concept_error",
         "repeated_concept_error_across_blocks",
     }:
-        if evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+        if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
             resolved_moves = _replace_move(
                 resolved_moves,
                 "increase_pacing_after_stable_success",
@@ -326,12 +495,12 @@ def resolve_block_support_conflicts(
     if {
         "adhd_aware_support",
         "language_sensitive_support",
-    }.issubset(ordered_supports) and evidence_set & {
+    }.issubset(active_supports) and evidence & {
         "text_overload",
         "vocabulary_request",
         "vocabulary_request_again",
     }:
-        if evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+        if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
             resolved_moves = _replace_move(
                 resolved_moves,
                 "increase_pacing_after_stable_success",
@@ -351,7 +520,7 @@ def resolve_block_support_conflicts(
     if {
         "dyscalculia_aware_support",
         "autism_spectrum_aware_support",
-    }.issubset(ordered_supports) and evidence_set & {
+    }.issubset(active_supports) and evidence & {
         "repeated_attempt_three_plus",
         "structure_break",
         "repeated_concept_error",
@@ -363,67 +532,372 @@ def resolve_block_support_conflicts(
             summary,
         )
 
-    resolved_moves = _sort_moves_by_priority_ladder(
-        resolved_moves,
-        active_supports=ordered_supports,
-        priority_ladder=priority_ladder,
-    )
+    if {
+        "adhd_aware_support",
+        "dyslexia_aware_support",
+    }.issubset(active_supports) and evidence & {
+        "text_overload",
+        "reading_load_issue",
+    }:
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "reduce_text_load_before_problem_solving",
+            "reduce_text_load_with_readaloud_anchor",
+            summary,
+        )
+        if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            resolved_moves = _replace_move(
+                resolved_moves,
+                "increase_pacing_after_stable_success",
+                "increase_pacing_after_text_clarity",
+                summary,
+            )
+            resolved_moves = _remove_move(
+                resolved_moves,
+                "offer_more_independent_challenge",
+                summary,
+                (
+                    "Suppressed independent challenge until dyslexia-aware readability "
+                    "supports have stabilized this block."
+                ),
+            )
+
+    if {
+        "dyscalculia_aware_support",
+        "language_sensitive_support",
+    }.issubset(active_supports) and evidence & {
+        "repeated_attempt_three_plus",
+        "repeated_concept_error",
+        "repeated_concept_error_across_blocks",
+        "text_overload",
+        "vocabulary_request",
+        "vocabulary_request_again",
+    }:
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "stop_retry_loop_and_reframe_concept",
+            "reframe_concept_with_everyday_language_bridge",
+            summary,
+        )
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "clarify_terms_before_retrying_math_step",
+            "clarify_terms_inside_quantity_rebuild",
+            summary,
+        )
+
+    if {
+        "autism_spectrum_aware_support",
+        "language_sensitive_support",
+    }.issubset(active_supports) and evidence & {
+        "text_overload",
+        "structure_break",
+        "vocabulary_request_again",
+    }:
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "bridge_everyday_language_and_math_terms",
+            "bridge_language_with_consistent_patterning",
+            summary,
+        )
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "clarify_terms_before_retrying_math_step",
+            "clarify_terms_with_literal_consistent_frame",
+            summary,
+        )
+
+    return resolved_moves
+
+
+def _apply_triad_level_move_adaptations(
+    moves: list[str],
+    active_supports: list[SupportNeed],
+    evidence: set[str],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    active_support_set = frozenset(active_supports)
+    resolved_moves = list(moves)
+
+    if active_support_set == frozenset(
+        {
+            "adhd_aware_support",
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+        }
+    ) and evidence & {
+        "repeated_attempt_three_plus",
+        "text_overload",
+        "vocabulary_request_again",
+    }:
+        resolved_moves = _replace_first_available_move(
+            resolved_moves,
+            (
+                "reframe_concept_with_everyday_language_bridge",
+                "stop_retry_loop_and_reframe_concept",
+            ),
+            "reframe_concept_with_simple_language_and_quantity_support",
+            summary,
+        )
+        resolved_moves = _replace_first_available_move(
+            resolved_moves,
+            (
+                "increase_pacing_monitor_only_after_concept_recovery",
+                "increase_pacing_gently_after_language_clarification",
+                "increase_pacing_after_stable_success",
+            ),
+            "increase_pacing_after_concept_and_language_stabilize",
+            summary,
+        )
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "offer_more_independent_challenge",
+            summary,
+            (
+                "Suppressed independent challenge until concept repair and language "
+                "clarification stabilize together."
+            ),
+        )
+
+    if active_support_set == frozenset(
+        {
+            "adhd_aware_support",
+            "autism_spectrum_aware_support",
+            "dyslexia_aware_support",
+        }
+    ) and evidence & {"text_overload", "reading_load_issue", "structure_break"}:
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "split_problem_text_into_shorter_chunks",
+            "split_problem_text_into_shorter_predictable_chunks",
+            summary,
+        )
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "keep_structure_predictable_and_literal",
+            "keep_structure_predictable_with_visual_reading_anchors",
+            summary,
+        )
+        if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+            resolved_moves = _replace_first_available_move(
+                resolved_moves,
+                (
+                    "increase_pacing_after_text_clarity",
+                    "increase_pacing_after_stable_success",
+                ),
+                "increase_pacing_only_with_predictable_sequence",
+                summary,
+            )
+            resolved_moves = _remove_move(
+                resolved_moves,
+                "offer_more_independent_challenge",
+                summary,
+                (
+                    "Suppressed independent challenge until readable and predictable "
+                    "sequencing stay stable together."
+                ),
+            )
+
+    if active_support_set == frozenset(
+        {
+            "dyscalculia_aware_support",
+            "language_sensitive_support",
+            "scarcity_aware_support",
+        }
+    ) and evidence & {
+        "repeated_attempt_three_plus",
+        "no_progress_two_blocks",
+        "no_progress_three_blocks",
+        "text_overload",
+        "vocabulary_request_again",
+    }:
+        resolved_moves = _replace_first_available_move(
+            resolved_moves,
+            (
+                "reframe_concept_with_everyday_language_bridge",
+                "stop_retry_loop_and_reframe_concept",
+            ),
+            "reframe_concept_with_minimal_language_overhead",
+            summary,
+        )
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "state_success_criteria_up_front",
+            "state_tiny_success_criteria_before_concept_repair",
+            summary,
+        )
+
+    return resolved_moves
+
+
+def _apply_move_dependency_graph(
+    moves: list[str],
+    evidence: set[str],
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    resolved_moves = list(moves)
+
+    if {
+        "keep_quantity_representation_visible",
+        "clarify_terms_inside_quantity_rebuild",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "pair_visual_explanation_with_simple_language",
+            summary,
+            (
+                "Generated pair_visual_explanation_with_simple_language from quantity "
+                "support plus language clarification."
+            ),
+        )
+
+    if {
+        "reduce_text_load_with_readaloud_anchor",
+        "use_step_labels_and_micro_checkpoints",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "pair_shorter_text_with_clear_reading_path",
+            summary,
+            (
+                "Generated pair_shorter_text_with_clear_reading_path from readability "
+                "support plus ADHD micro-checkpoints."
+            ),
+        )
+
+    if {
+        "split_problem_text_into_shorter_predictable_chunks",
+        "keep_structure_predictable_with_visual_reading_anchors",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "use_predictable_visual_reading_sequence",
+            summary,
+            (
+                "Generated use_predictable_visual_reading_sequence from predictable "
+                "chunking plus stable reading anchors."
+            ),
+        )
+
+    if {
+        "bridge_language_with_consistent_patterning",
+        "clarify_terms_with_literal_consistent_frame",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "use_consistent_bilingual_patterns",
+            summary,
+            (
+                "Generated use_consistent_bilingual_patterns from language bridging plus "
+                "literal consistent framing."
+            ),
+        )
+
+    if {
+        "reframe_concept_with_minimal_language_overhead",
+        "state_tiny_success_criteria_before_concept_repair",
+    }.issubset(resolved_moves):
+        resolved_moves = _append_generated_move(
+            resolved_moves,
+            "keep_concept_repair_within_visible_resource_limits",
+            summary,
+            (
+                "Generated keep_concept_repair_within_visible_resource_limits from "
+                "scarcity-aware success framing plus minimal-language concept repair."
+            ),
+        )
+
+    if "increase_pacing_after_concept_and_language_stabilize" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "increase_pacing_monitor_only_after_concept_recovery",
+            summary,
+            "Suppressed the weaker pacing monitor move because a stronger stabilized pacing move was generated.",
+        )
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "increase_pacing_gently_after_language_clarification",
+            summary,
+            "Suppressed the language-only pacing move because concept and language stabilization now gate pacing together.",
+        )
+
+    if "increase_pacing_after_text_clarity" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "increase_pacing_after_stable_success",
+            summary,
+            "Suppressed generic pacing because dyslexia-aware readability now gates pacing.",
+        )
+
+    if "increase_pacing_only_with_predictable_sequence" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "increase_pacing_after_stable_success",
+            summary,
+            "Suppressed generic pacing because predictable sequencing must hold first.",
+        )
+
+    if "reframe_concept_with_simple_language_and_quantity_support" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "reframe_concept_with_everyday_language_bridge",
+            summary,
+            "Suppressed the narrower language bridge because the triad-specific concept repair move supersedes it.",
+        )
+
+    if "reframe_concept_with_minimal_language_overhead" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "reframe_concept_with_everyday_language_bridge",
+            summary,
+            "Suppressed the broader language bridge because the scarcity-aware minimal-language repair move supersedes it.",
+        )
+
+    if "split_problem_text_into_shorter_predictable_chunks" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "split_problem_text_into_shorter_chunks",
+            summary,
+            "Suppressed plain text chunking because predictable chunking is now active.",
+        )
+
+    if "keep_structure_predictable_with_visual_reading_anchors" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "keep_structure_predictable_and_literal",
+            summary,
+            "Suppressed generic predictable structure because the reading-anchor variant is now active.",
+        )
+
+    if "bridge_language_with_consistent_patterning" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "bridge_everyday_language_and_math_terms",
+            summary,
+            "Suppressed the generic language bridge because consistent patterning is now active.",
+        )
+
+    if "clarify_terms_with_literal_consistent_frame" in resolved_moves:
+        resolved_moves = _remove_move(
+            resolved_moves,
+            "clarify_terms_before_retrying_math_step",
+            summary,
+            "Suppressed generic term clarification because the literal consistent variant is now active.",
+        )
 
     if (
-        not summary.pair_conflicts
-        and summary.triad_group is None
-        and not summary.suppressed_moves
-        and not summary.adapted_moves
+        "increase_pacing_after_concept_and_language_stabilize" in resolved_moves
+        and "pair_visual_explanation_with_simple_language" in resolved_moves
+        and not evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}
     ):
-        return resolved_moves, None
-    return resolved_moves, summary
+        resolved_moves = _replace_move(
+            resolved_moves,
+            "increase_pacing_after_concept_and_language_stabilize",
+            "increase_pacing_monitor_only_after_concept_recovery",
+            summary,
+        )
 
-
-def _resolve_block_priority_ladder(
-    active_supports: list[SupportNeed],
-    evidence: list[str],
-) -> tuple[str | None, tuple[SupportNeed, ...]]:
-    active_support_set = frozenset(active_supports)
-    evidence_set = set(evidence)
-
-    triad_ladder = BLOCK_TRIAD_PRIORITY_LADDERS.get(active_support_set)
-    if triad_ladder is not None:
-        triad_slug = "__".join(triad_ladder)
-        if "repeated_attempt_three_plus" in evidence_set:
-            triad_ladder = _move_support_to_front(
-                triad_ladder, "dyscalculia_aware_support"
-            )
-        elif evidence_set & {"text_overload", "vocabulary_request_again"}:
-            triad_ladder = _move_support_to_front(
-                triad_ladder, "language_sensitive_support"
-            )
-        elif evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
-            triad_ladder = _move_support_to_front(triad_ladder, "adhd_aware_support")
-        return triad_slug, triad_ladder
-
-    for pair in combinations(active_supports, 2):
-        pair_ladder = BLOCK_PAIR_PRIORITY_LADDERS.get(frozenset(pair))
-        if pair_ladder is None:
-            continue
-        if (
-            frozenset(pair)
-            == frozenset({"adhd_aware_support", "language_sensitive_support"})
-            and evidence_set & {"rapid_success_two_blocks", "rapid_success_three_blocks"}
-            and not evidence_set & {"text_overload", "vocabulary_request_again"}
-        ):
-            pair_ladder = _move_support_to_front(pair_ladder, "adhd_aware_support")
-        return None, pair_ladder
-
-    return None, tuple(active_supports)
-
-
-def _move_support_to_front(
-    ladder: tuple[SupportNeed, ...],
-    support_need: SupportNeed,
-) -> tuple[SupportNeed, ...]:
-    if support_need not in ladder:
-        return ladder
-    return (support_need, *tuple(item for item in ladder if item != support_need))
+    return resolved_moves
 
 
 def _replace_move(
@@ -441,6 +915,19 @@ def _replace_move(
     return [replacement if move == original else move for move in moves]
 
 
+def _replace_first_available_move(
+    moves: list[str],
+    originals: tuple[str, ...],
+    replacement: str,
+    summary: ConflictResolutionSummary,
+) -> list[str]:
+    resolved_moves = list(moves)
+    for original in originals:
+        if original in resolved_moves:
+            return _replace_move(resolved_moves, original, replacement, summary)
+    return resolved_moves
+
+
 def _remove_move(
     moves: list[str],
     move_to_remove: str,
@@ -452,6 +939,20 @@ def _remove_move(
     summary.suppressed_moves.append(move_to_remove)
     summary.resolution_notes.append(note)
     return [move for move in moves if move != move_to_remove]
+
+
+def _append_generated_move(
+    moves: list[str],
+    move_to_add: str,
+    summary: ConflictResolutionSummary,
+    note: str,
+) -> list[str]:
+    if move_to_add in moves:
+        return moves
+    summary.generated_moves.append(move_to_add)
+    summary.move_dependencies_applied.append(note)
+    summary.resolution_notes.append(note)
+    return [*moves, move_to_add]
 
 
 def _sort_moves_by_priority_ladder(

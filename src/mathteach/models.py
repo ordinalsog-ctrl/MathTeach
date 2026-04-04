@@ -174,6 +174,8 @@ class ConflictResolutionSummary(BaseModel):
     priority_ladder: list[str] = Field(default_factory=list)
     suppressed_moves: list[str] = Field(default_factory=list)
     adapted_moves: list[str] = Field(default_factory=list)
+    generated_moves: list[str] = Field(default_factory=list)
+    move_dependencies_applied: list[str] = Field(default_factory=list)
     resolution_notes: list[str] = Field(default_factory=list)
     evidence_used: list[str] = Field(default_factory=list)
 

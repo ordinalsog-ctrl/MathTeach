@@ -263,6 +263,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - Mischprofile bekommen jetzt auf Blockebene ausserdem eine sichtbare
   `conflict_resolution_summary`, statt konkurrierende `support_moves`
   nur roh nebeneinander zu sehen
+- diese Block-Zusammenfassung traegt jetzt auch `generated_moves` und
+  `move_dependencies_applied`, sodass Triad-/Pair-Aufloesung nicht nur
+  sortierte, sondern auch explizit neu kombinierte Moves sichtbar macht
+- bekannte Mehrprofil-Konstellationen koennen dadurch jetzt Moves
+  semantisch umformen, z.B. zu
+  `reframe_concept_with_simple_language_and_quantity_support` oder
+  `use_predictable_visual_reading_sequence`
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle

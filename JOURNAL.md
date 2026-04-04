@@ -2,6 +2,51 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2e-Adaptive-Triad-Move-Transformation 2026-04-04
+
+Die Block-Konfliktaufloesung ist jetzt einen Schritt weiter: Mischprofile
+werden nicht mehr nur ueber `priority_ladder` geordnet, sondern bekannte
+Pair- und Triad-Konstellationen koennen jetzt auch semantisch angepasste
+Moves erzeugen.
+
+Wichtigste Konsequenzen:
+
+- `conflict_resolution_summary` traegt jetzt neben unterdrueckten und
+  adaptierten Moves auch `generated_moves` und
+  `move_dependencies_applied`
+- bekannte neue Pair-Konstellationen wie `ADHD + Dyslexia`,
+  `Dyscalculia + Language-Sensitive` und
+  `Language-Sensitive + Autism-Spectrum` koennen jetzt blockweise
+  gezielt umformen statt nur sortieren
+- bekannte Triads wie
+  `adhd_aware_support__dyscalculia_aware_support__language_sensitive_support`,
+  `adhd_aware_support__dyslexia_aware_support__autism_spectrum_aware_support`
+  und
+  `dyscalculia_aware_support__language_sensitive_support__scarcity_aware_support`
+  tragen jetzt eigene Move-Transformationen
+- der Resolver kann jetzt komplementaere Moves erzeugen, z.B.
+  `pair_visual_explanation_with_simple_language` oder
+  `use_predictable_visual_reading_sequence`, wenn mehrere angepasste
+  Moves sich gegenseitig sinnvoll ergaenzen
+- API-Antworten machen damit nicht nur Priorisierung, sondern erstmals
+  auch adaptive Move-Generierung transparent
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/conflict_resolver.py](/Users/jonasweiss/MathTeach/src/mathteach/services/conflict_resolver.py)
+- [tests/test_block_conflict_resolution.py](/Users/jonasweiss/MathTeach/tests/test_block_conflict_resolution.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/triad-conflict-resolution-rules.md](/Users/jonasweiss/MathTeach/docs/triad-conflict-resolution-rules.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `73 passed, 1 warning`
+- Full-Suite: `142 passed, 1 warning`
+
 ## Phase-H.2d-Block-Conflict-Resolution 2026-04-04
 
 Die Support-Moves sind jetzt bei Mischprofilen nicht mehr nur eine

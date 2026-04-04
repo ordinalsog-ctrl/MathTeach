@@ -95,6 +95,11 @@ Aktueller Stand:
   `lesson_mode` und blockweise Beobachtungsevidenz
 - Resume-Previews koennen jetzt auch getragene `last_observation_evidence`
   direkt wieder in Support-Ausgaben uebersetzen
+- `TeachingPlan.resume_context` macht jetzt sichtbar, ob ein Plan frisch
+  startet oder aus `inline_state`, `inline_checkpoint` oder
+  `stored_checkpoint` fortgesetzt wird
+- getragene Evidenz und konsumierte `pending_transition_message` sind
+  jetzt auch als explizite Resume-Semantik im API-Output sichtbar
 
 ## Phase D: Pilot and Validation
 

@@ -2,6 +2,44 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2b-Resume-Context-Visibility 2026-04-04
+
+Die Resume-Semantik ist jetzt nicht mehr nur implizit im Verhalten des
+Planners versteckt, sondern wird als eigener `resume_context` im
+`TeachingPlan` und damit auch im API-Output sichtbar.
+
+Wichtigste Konsequenzen:
+
+- `SessionManager` markiert Resume-Herkunft jetzt explizit als
+  `fresh_start`, `inline_state`, `inline_checkpoint` oder
+  `stored_checkpoint`
+- `TeachingPlan.resume_context` zeigt jetzt sichtbar an, ob ein Plan
+  wirklich auf einer Fortsetzung basiert oder frisch startet
+- getragene `last_observation_evidence` sind jetzt nicht nur wirksam,
+  sondern auch als `carried_observation_evidence` offen sichtbar
+- Resume-Previews koennen damit explizit ausweisen, ob getragene Evidenz
+  wirklich in `support_moves` und `support_scaffolds` eingeflossen ist
+- offene `pending_transition_message` werden jetzt nicht nur konsumiert,
+  sondern auch als `carried` und `consumed` nachvollziehbar gemacht
+- die Resume-Semantik ist damit testbarer, debugbarer und spaeter auch
+  besser anschlussfaehig fuer Admin-Diagnostik und Learning Analytics
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `65 passed, 1 warning`
+- Full-Suite: `117 passed, 1 warning`
+
 ## Phase-Support-Block-Level-Response-Integration 2026-04-04
 
 Die Support Response Matrix ist jetzt nicht mehr nur global im

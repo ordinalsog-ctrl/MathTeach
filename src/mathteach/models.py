@@ -31,6 +31,12 @@ ObservationSignalType = Literal[
 ]
 TransitionFamily = Literal["simplifying", "reframing", "stretching"]
 ModeAdaptationCheckpointVersion = str
+ResumeSource = Literal[
+    "fresh_start",
+    "inline_state",
+    "inline_checkpoint",
+    "stored_checkpoint",
+]
 
 
 class LearnerProfile(BaseModel):
@@ -67,6 +73,7 @@ class SessionRequest(BaseModel):
     objective: str = Field(min_length=5, max_length=500)
     learner_profile: LearnerProfile
     session_id: str | None = Field(default=None, min_length=3, max_length=128)
+    resume_source: ResumeSource | None = None
     runtime_observations: list[RuntimeObservationInput] = Field(default_factory=list)
     mode_adaptation_state: ModeAdaptationState | None = None
     mode_adaptation_checkpoint: ModeAdaptationCheckpoint | None = None
@@ -151,6 +158,15 @@ class ModeAdaptationTraceEntry(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
+class ResumeContext(BaseModel):
+    resume_source: ResumeSource = "fresh_start"
+    resume_active: bool = False
+    carried_observation_evidence: list[str] = Field(default_factory=list)
+    used_carried_observation_evidence: bool = False
+    pending_transition_message_carried: bool = False
+    pending_transition_message_consumed: bool = False
+
+
 class TeachingPlan(BaseModel):
     session_id: str | None = None
     lesson_mode: str
@@ -163,6 +179,7 @@ class TeachingPlan(BaseModel):
     mode_adaptation_checkpoint: ModeAdaptationCheckpoint
     planned_blocks: list[PlannedTeachingBlock] = Field(default_factory=list)
     mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
+    resume_context: ResumeContext
     support_signal_profile: SupportSignalProfile
     response_settings: TutorResponseSettings
     retrieval_plan: RetrievalPlan

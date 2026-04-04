@@ -119,6 +119,8 @@ def test_tutoring_plan_endpoint() -> None:
     assert payload["retrieval_plan"]["include_history"] is True
     assert payload["retrieval_plan"]["history_mode"] == "supporting_only"
     assert payload["session_id"] is None
+    assert payload["resume_context"]["resume_source"] == "fresh_start"
+    assert payload["resume_context"]["resume_active"] is False
 
 
 def test_tutoring_plan_origin_story_mode() -> None:
@@ -219,6 +221,8 @@ def test_tutoring_plan_can_resume_mode_adaptation_state() -> None:
     assert payload["mode_adaptation_trace"][0]["changed"] is True
     assert payload["mode_adaptation_trace"][0]["mode_after"] == "guided_concept_explanation"
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
+    assert payload["resume_context"]["resume_source"] == "inline_state"
+    assert payload["resume_context"]["resume_active"] is True
 
 
 def test_tutoring_plan_can_resume_from_mode_adaptation_checkpoint() -> None:
@@ -261,6 +265,8 @@ def test_tutoring_plan_can_resume_from_mode_adaptation_checkpoint() -> None:
         payload["mode_adaptation_checkpoint"]["mode_adaptation_state"]["current_mode"]
         == "guided_concept_explanation"
     )
+    assert payload["resume_context"]["resume_source"] == "inline_checkpoint"
+    assert payload["resume_context"]["resume_active"] is True
 
 
 def test_tutoring_plan_auto_migrates_inline_mode_adaptation_checkpoint() -> None:
@@ -857,6 +863,8 @@ def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     assert payload["planned_blocks"][0]["transition_message"] is not None
     assert "kleineren Schritten" in payload["planned_blocks"][0]["transition_message"]
     assert payload["mode_adaptation_state"]["pending_transition_message"] is None
+    assert payload["resume_context"]["pending_transition_message_carried"] is True
+    assert payload["resume_context"]["pending_transition_message_consumed"] is True
 
 
 def test_tutoring_plan_session_resume_reuses_last_observation_evidence_for_preview_support() -> None:
@@ -901,6 +909,13 @@ def test_tutoring_plan_session_resume_reuses_last_observation_evidence_for_previ
     ]
     assert "split_problem_text_into_shorter_chunks" in payload["planned_blocks"][0]["support_moves"]
     assert "key_term_glossary" in payload["planned_blocks"][0]["support_scaffolds"]
+    assert payload["resume_context"]["resume_source"] == "stored_checkpoint"
+    assert payload["resume_context"]["resume_active"] is True
+    assert payload["resume_context"]["carried_observation_evidence"] == [
+        "text_overload",
+        "vocabulary_request",
+    ]
+    assert payload["resume_context"]["used_carried_observation_evidence"] is True
     session_store.delete_checkpoint(session_id)
 
 

@@ -56,23 +56,32 @@ class SessionManager:
 
         if request.session_id is None:
             if inline_checkpoint is None:
-                return request, None
+                if request.mode_adaptation_state is not None:
+                    return request.model_copy(update={"resume_source": "inline_state"}), None
+                return request.model_copy(update={"resume_source": "fresh_start"}), None
             return (
                 request.model_copy(
-                    update={"mode_adaptation_checkpoint": inline_checkpoint}
+                    update={
+                        "mode_adaptation_checkpoint": inline_checkpoint,
+                        "resume_source": "inline_checkpoint",
+                    }
                 ),
                 None,
             )
 
         stored_checkpoint = self._load_stored_checkpoint(request.session_id)
         if stored_checkpoint is None:
-            return request.model_copy(update={"session_id": None}), request.session_id
+            return (
+                request.model_copy(update={"session_id": None, "resume_source": "fresh_start"}),
+                request.session_id,
+            )
 
         return (
             request.model_copy(
                 update={
                     "session_id": None,
                     "mode_adaptation_checkpoint": stored_checkpoint,
+                    "resume_source": "stored_checkpoint",
                 }
             ),
             request.session_id,

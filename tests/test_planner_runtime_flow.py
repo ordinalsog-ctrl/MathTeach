@@ -24,6 +24,8 @@ def test_planner_builds_preview_block_without_runtime_observations() -> None:
     assert "insert_frequent_understanding_checks" in plan.planned_blocks[0].support_moves
     assert "clear_step_boundary" in plan.planned_blocks[0].support_scaffolds
     assert plan.mode_adaptation_trace == []
+    assert plan.resume_context.resume_source == "fresh_start"
+    assert plan.resume_context.resume_active is False
 
 
 def test_planner_exposes_block_level_support_moves_for_adhd_and_dyscalculia() -> None:
@@ -214,6 +216,8 @@ def test_planner_can_resume_from_existing_mode_adaptation_state() -> None:
     assert plan.mode_adaptation_checkpoint.mode_adaptation_state.current_mode == (
         "guided_concept_explanation"
     )
+    assert plan.resume_context.resume_source == "inline_state"
+    assert plan.resume_context.resume_active is True
 
 
 def test_planner_can_resume_from_mode_adaptation_checkpoint() -> None:
@@ -249,6 +253,8 @@ def test_planner_can_resume_from_mode_adaptation_checkpoint() -> None:
     assert plan.mode_adaptation_trace[0].changed is True
     assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"
     assert plan.mode_adaptation_checkpoint.schema_version == "phase_h1_v1"
+    assert plan.resume_context.resume_source == "inline_checkpoint"
+    assert plan.resume_context.resume_active is True
 
 
 def test_planner_preserves_pending_transition_message_across_resume() -> None:
@@ -282,6 +288,8 @@ def test_planner_preserves_pending_transition_message_across_resume() -> None:
     assert plan.planned_blocks[0].transition_message is not None
     assert "kleineren Schritten" in plan.planned_blocks[0].transition_message
     assert plan.mode_adaptation_state.pending_transition_message is None
+    assert plan.resume_context.pending_transition_message_carried is True
+    assert plan.resume_context.pending_transition_message_consumed is True
 
 
 def test_planner_resume_preview_reuses_last_observation_evidence_for_support() -> None:
@@ -315,6 +323,13 @@ def test_planner_resume_preview_reuses_last_observation_evidence_for_support() -
     assert "split_problem_text_into_shorter_chunks" in first_block.support_moves
     assert "clarify_terms_before_retrying_math_step" in first_block.support_moves
     assert "key_term_glossary" in first_block.support_scaffolds
+    assert plan.resume_context.resume_source == "inline_state"
+    assert plan.resume_context.resume_active is True
+    assert plan.resume_context.carried_observation_evidence == [
+        "text_overload",
+        "vocabulary_request",
+    ]
+    assert plan.resume_context.used_carried_observation_evidence is True
 
 
 def test_planner_blocks_fourth_change_when_budget_is_exhausted() -> None:

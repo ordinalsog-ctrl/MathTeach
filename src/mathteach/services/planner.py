@@ -3,6 +3,8 @@ from mathteach.models import (
     LearnerProfile,
     ModelAssignment,
     ModeAdaptationCheckpoint,
+    ResumeContext,
+    ResumeSource,
     ModeAdaptationTraceEntry,
     ModeAdaptationState,
     ModeSelection,
@@ -797,6 +799,70 @@ def _resolve_resume_state(request: SessionRequest) -> ModeAdaptationState | None
     return request.mode_adaptation_state
 
 
+def _resolve_resume_source(request: SessionRequest) -> ResumeSource:
+    if request.resume_source is not None:
+        return request.resume_source
+    if request.mode_adaptation_checkpoint is not None:
+        return "inline_checkpoint"
+    if request.mode_adaptation_state is not None:
+        return "inline_state"
+    return "fresh_start"
+
+
+def _used_carried_observation_evidence(
+    request: SessionRequest,
+    carried_observation_evidence: list[str],
+    planned_blocks: list[PlannedTeachingBlock],
+) -> bool:
+    if not carried_observation_evidence or not planned_blocks:
+        return False
+
+    first_block_evidence = set(planned_blocks[0].observed_evidence)
+    carried_evidence = set(carried_observation_evidence)
+
+    if not request.runtime_observations:
+        return first_block_evidence == carried_evidence
+
+    first_runtime_evidence = set(request.runtime_observations[0].evidence)
+    return bool(first_block_evidence & carried_evidence) or (
+        first_block_evidence != first_runtime_evidence
+    )
+
+
+def _build_resume_context(
+    request: SessionRequest,
+    resume_state: ModeAdaptationState | None,
+    planned_blocks: list[PlannedTeachingBlock],
+    final_state: ModeAdaptationState,
+) -> ResumeContext:
+    carried_observation_evidence = (
+        list(resume_state.last_observation_evidence) if resume_state is not None else []
+    )
+    pending_transition_message_carried = bool(
+        resume_state is not None and resume_state.pending_transition_message is not None
+    )
+    first_block_transition_message = (
+        planned_blocks[0].transition_message if planned_blocks else None
+    )
+
+    return ResumeContext(
+        resume_source=_resolve_resume_source(request),
+        resume_active=resume_state is not None,
+        carried_observation_evidence=carried_observation_evidence,
+        used_carried_observation_evidence=_used_carried_observation_evidence(
+            request=request,
+            carried_observation_evidence=carried_observation_evidence,
+            planned_blocks=planned_blocks,
+        ),
+        pending_transition_message_carried=pending_transition_message_carried,
+        pending_transition_message_consumed=(
+            pending_transition_message_carried
+            and first_block_transition_message is not None
+            and final_state.pending_transition_message is None
+        ),
+    )
+
+
 def build_stack(settings: Settings) -> StackResponse:
     return StackResponse(
         checked_on="2026-04-01",
@@ -954,6 +1020,12 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
     mode_adaptation_checkpoint = ModeAdaptationCheckpoint(
         mode_adaptation_state=mode_adaptation_state
     )
+    resume_context = _build_resume_context(
+        request=request,
+        resume_state=resume_state,
+        planned_blocks=planned_blocks,
+        final_state=mode_adaptation_state,
+    )
 
     return TeachingPlan(
         lesson_mode=lesson_mode,
@@ -966,6 +1038,7 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         mode_adaptation_checkpoint=mode_adaptation_checkpoint,
         planned_blocks=planned_blocks,
         mode_adaptation_trace=adaptation_trace,
+        resume_context=resume_context,
         support_signal_profile=support_signal_profile,
         response_settings=response_settings,
         retrieval_plan=retrieval_plan,

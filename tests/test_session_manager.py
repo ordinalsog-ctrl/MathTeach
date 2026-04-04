@@ -84,6 +84,7 @@ def test_session_manager_loads_existing_session(tmp_path) -> None:
     assert session_id == "session-one"
     assert planner_request.mode_adaptation_checkpoint == checkpoint
     assert planner_request.session_id is None
+    assert planner_request.resume_source == "stored_checkpoint"
 
 
 def test_session_manager_treats_unknown_session_as_new(tmp_path) -> None:
@@ -94,6 +95,7 @@ def test_session_manager_treats_unknown_session_as_new(tmp_path) -> None:
     assert session_id == "unknown-session"
     assert planner_request.mode_adaptation_checkpoint is None
     assert planner_request.session_id is None
+    assert planner_request.resume_source == "fresh_start"
 
 
 def test_session_manager_rejects_dual_input(tmp_path) -> None:
@@ -290,6 +292,7 @@ def test_session_manager_auto_migrates_inline_checkpoint() -> None:
         planner_request.mode_adaptation_checkpoint.schema_version
         == CURRENT_MODE_ADAPTATION_CHECKPOINT_VERSION
     )
+    assert planner_request.resume_source == "inline_checkpoint"
 
 
 def test_session_manager_auto_migrates_inline_checkpoint_across_multiple_steps() -> None:
@@ -319,6 +322,34 @@ def test_session_manager_auto_migrates_inline_checkpoint_across_multiple_steps()
         planner_request.mode_adaptation_checkpoint.mode_adaptation_state.last_observation_evidence
         == []
     )
+    assert planner_request.resume_source == "inline_checkpoint"
+
+
+def test_session_manager_marks_inline_state_resume_source() -> None:
+    manager = SessionManager(SessionStore())
+
+    planner_request, session_id = manager.prepare_planner_request(
+        SessionRequest(
+            objective="Erklaere mir die quadratische Gleichung anschaulich.",
+            learner_profile=LearnerProfile(
+                age_group="teen",
+                math_level="high_school",
+                confidence="low",
+                preferred_pace="balanced",
+                language="de",
+                wants_visuals=True,
+                wants_history=True,
+            ),
+            mode_adaptation_state=ModeAdaptationState(
+                current_mode="guided_concept_explanation",
+                blocks_in_current_mode=1,
+                mode_changes_in_session=0,
+            ),
+        )
+    )
+
+    assert session_id is None
+    assert planner_request.resume_source == "inline_state"
 
 
 def test_session_manager_persists_new_checkpoint(tmp_path) -> None:

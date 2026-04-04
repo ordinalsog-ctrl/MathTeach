@@ -250,6 +250,10 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - Resume-Previews koennen dabei jetzt auch ohne neue Runtime-Inputs an
   `last_observation_evidence` anknuepfen, statt mit leerer Evidenz neu
   anzusetzen
+- der API-Output macht diese Resume-Semantik jetzt auch explizit ueber
+  `resume_context` sichtbar, inklusive `resume_source`,
+  `carried_observation_evidence` und konsumierter
+  `pending_transition_message`
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
@@ -289,6 +293,8 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
 - Persistenz offener `transition_message` ueber Resume-Pfade
 - Konsumierung angezeigter `transition_message` ohne doppelte Wiederholung
 - resume-faehige `last_observation_evidence` fuer echte Beobachtungsfenster
+- expliziter `resume_context` im `TeachingPlan` fuer sichtbare
+  Resume-Herkunft und Evidenz-Nutzung
 - automatische Ableitung von Mehrblock-Signalen wie
   `transfer_success_two_blocks` und `no_progress_three_blocks`
 - automatische Ableitung von `visible_small_success` und

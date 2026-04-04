@@ -95,6 +95,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/live-mode-adaptation-h1-code-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-h1-code-review-2026-04-02.md): Review-Triage nach dem ersten H.1-Codecheckpoint mit Fokus auf den naechsten Block-Loop im Planner
 - [docs/live-mode-adaptation-persistence-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-persistence-review-2026-04-02.md): Review-Triage, die den Engpass von Runtime-Logik auf Persistenz und Resume-Semantik verschiebt
 - [docs/mode-adaptation-checkpoint-contract.md](/Users/jonasweiss/MathTeach/docs/mode-adaptation-checkpoint-contract.md): Versionierter API- und Persistenzvertrag fuer `mode_adaptation_checkpoint`
+- [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md): Anschlussarchitektur fuer `session_id`, `SessionStore` und spaeter `SessionManager`
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -265,8 +266,9 @@ explizite Reihenfolge sichtbar machen.
 
 Die naechste Ausbauphase ist damit:
 
+- `SessionStore` auf Basis des Checkpoint-Vertrags einfuehren
+- danach API-Huelle mit `session_id` und spaeter `SessionManager` vorbereiten
 - Resume- und Serialisierungsgrenzen fuer den neuen Checkpoint weiter haerten
-- danach erste Storage- und History-Schicht auf Basis des Checkpoint-Vertrags vorbereiten
 - spaeter weitere reale Signalszenarien verbreitern und kalibrieren
 - `triad coverage erweitern`
 - `broader mixed-profile prioritization`

@@ -147,6 +147,8 @@ Aktueller Stand:
   Resume- und Persistenzvertrag eingefuehrt
 - naechster Ausbau ist jetzt primaer robuste Checkpoint-Persistenz,
   klare Resume-Semantik und spaetere Storage-Anbindung
+- die Anschlussarchitektur fuer `SessionStore`, `session_id` und spaeteren
+  `SessionManager` ist jetzt als naechste Bruecke dokumentiert
 
 Arbeitsregel fuer den naechsten Ausbau:
 
@@ -200,11 +202,11 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` absichern
-2. Resume-API-Vertrag fuer `mode_adaptation_checkpoint` schaerfen
-3. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
-4. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
-5. Storage-Handoff fuer spaetere Session-Fortsetzung vorbereiten
+1. `SessionStore` als erste Persistenz-Huelle einfuehren
+2. `session_id`-Pfad fuer Resume vorbereiten
+3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
+4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
+5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
 6. Signalabdeckung spaeter weiter verbreitern und kalibrieren
 7. `conflict_resolver` fuer gemischte Profile spaeter weiter ausbauen
 8. Triad-Szenarien und Prioritaetsleitern spaeter erweitern
@@ -213,9 +215,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
+- `src/mathteach/services/session_store.py` als erste Persistenz-Huelle
+- API-Vertrag fuer `session_id`-Resume vorbereiten
 - Checkpoint-Serialisierung und Resume-Tests weiter haerten
-- API-Vertrag fuer echte Sitzungsfortsetzung festziehen
-- spaetere Storage-Huelle mit Session-ID und Versionierung vorbereiten
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints

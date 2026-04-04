@@ -2,6 +2,35 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Storage-Bridge 2026-04-04
+
+Die neue Review-Lage bestaetigt, dass der Checkpoint-Vertrag jetzt stark
+genug ist, um die naechste Schicht nicht mehr als abstrakte Persistenzidee,
+sondern als konkrete `Session Storage`-Bruecke zu formulieren.
+
+Wichtigste Konsequenzen:
+
+- der naechste Engpass heisst jetzt nicht mehr allgemein `Persistence`,
+  sondern konkret `SessionStore` plus spaeter `SessionManager`
+- `mode_adaptation_checkpoint` ist damit offiziell die Ziel-Form fuer
+  spaetere Session-Persistenz
+- die naechste API-Erweiterung soll mit `session_id` arbeiten statt nur mit
+  direkt uebergebenem Runtime-State
+- der Schritt von Blocksimulation zu echter Langzeit-Session ist jetzt als
+  konkrete Anschlussarchitektur beschrieben
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md)
+- [docs/mode-adaptation-checkpoint-contract.md](/Users/jonasweiss/MathTeach/docs/mode-adaptation-checkpoint-contract.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- Review-Triage auf Basis des grünen Checkpoint-Vertrags
+- keine neue Runtime-Logik in diesem Schritt
+
 ## Phase-H-Checkpoint-Contract 2026-04-04
 
 Die H.1-Runtime hat jetzt nicht nur internen Resume-Zustand, sondern auch

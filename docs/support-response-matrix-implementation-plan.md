@@ -152,12 +152,14 @@ Aktueller Stand:
 - `SessionStore` und erster `session_id`-Resume-Pfad sind jetzt operational
 - `SessionManager` ist jetzt als Koordinationsschicht ueber `SessionStore`
   operational und entlastet den API-Pfad
+- eine erste H.1-Validierungs- und Migrationskante fuer Checkpoints ist jetzt
+  operational
 
 Arbeitsregel fuer den naechsten Ausbau:
 
 - `Phase H.1` ist jetzt code-started und testgruen
-- zuerst Session-Versionierung, unbekannte Sessions und Resume-Haertung weiter
-  absichern
+- zuerst echte Migrationseintrittspunkte und defekte Session-Dateien weiter
+  haerten
 - dann `ModeAdaptationState` robuster ueber Sequenzen, Resume und Randfaelle pruefen
 - dann Persistenzfelder fuer offene Uebergaenge und Budgetgrenzen stabil halten
 - dann End-to-End-Blocksimulationen verbreitern
@@ -206,8 +208,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 ## Unmittelbar Naechste Aufgaben
 
-1. `session_id`-Semantik gegen alte oder unbekannte Sessions weiter haerten
-2. Version- und Validierungsregeln fuer `ModeAdaptationCheckpoint` ausbauen
+1. echten `checkpoint_migrator` fuer spaetere Schema-Upgrades vorbereiten
+2. defekte Session-Dateien erkennbar quarantainieren oder reparierbar machen
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
@@ -219,8 +221,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- API-Vertrag fuer `session_id`-Resume weiter haerten
-- Checkpoint-Validierung und spaetere Migrationseintrittspunkte vorbereiten
+- `checkpoint_migrator` als naechste Stufe nach der jetzigen Erkennung
+- Session-Quarantaene oder Repair-Hooks fuer defekte Persistenz vorbereiten
 - Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 

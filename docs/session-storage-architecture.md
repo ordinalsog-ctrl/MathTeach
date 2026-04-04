@@ -139,13 +139,15 @@ Jetzt bereits umgesetzt:
 4. [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
 5. zentrale Resume-Koordination zwischen API, Store und Planner
 6. explizite Konfliktbehandlung fuer `session_id` versus inline Resume-Daten
+7. [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py)
+8. API-seitige Trennung zwischen `unknown`, `invalid` und
+   `migration-required`
 
 ## Naechster Coding-Schritt
 
 Der naechste direkte Ausbau auf Basis dieses Dokuments ist:
 
-1. Session-Haertung fuer unbekannte, veraltete oder spaeter migrierte
-   Checkpoints
-2. explizitere Version- und Validierungsregeln im `SessionManager`
+1. echter `checkpoint_migrator` statt nur Migrations-Erkennung
+2. Quarantaene- oder Reparaturpfad fuer defekte Session-Dateien
 3. spaetere Trennung von Session-Store und History-/Analytics-Schicht
 4. danach Storage-Haertung und History-Anbindung

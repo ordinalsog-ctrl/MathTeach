@@ -96,6 +96,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/live-mode-adaptation-persistence-review-2026-04-02.md](/Users/jonasweiss/MathTeach/docs/live-mode-adaptation-persistence-review-2026-04-02.md): Review-Triage, die den Engpass von Runtime-Logik auf Persistenz und Resume-Semantik verschiebt
 - [docs/mode-adaptation-checkpoint-contract.md](/Users/jonasweiss/MathTeach/docs/mode-adaptation-checkpoint-contract.md): Versionierter API- und Persistenzvertrag fuer `mode_adaptation_checkpoint`
 - [docs/session-storage-architecture.md](/Users/jonasweiss/MathTeach/docs/session-storage-architecture.md): Anschlussarchitektur fuer `session_id`, `SessionStore` und spaeter `SessionManager`
+- [docs/session-validation-and-migration.md](/Users/jonasweiss/MathTeach/docs/session-validation-and-migration.md): Erste Validierungs- und Fehlersemantik fuer unbekannte, ungueltige und migrationsbeduerftige Sessions
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
@@ -161,6 +162,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py): Erste H.1-Runtime-Komponente fuer blockweise Modusanpassung mit `SignalInterpreter`, Hysterese und Transition-Templates
 - [src/mathteach/services/session_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_store.py): Erste file-backed Persistenz-Huelle fuer `session_id`-Resume und `mode_adaptation_checkpoint`
 - [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py): Koordinationsschicht fuer `session_id`, Resume-Konflikte und schlankeren API-Glue-Code
+- [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py): H.1-Validierungs- und Versionslogik fuer `mode_adaptation_checkpoint`
 
 ## Schnellstart
 
@@ -219,9 +221,11 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   Transition-Konsumierung und Mehrblock-Signalverdichtung
 - `SessionStore` und `SessionManager` sind jetzt als erste Persistenz- und
   Koordinationsschicht operational
+- eine erste Validierungs- und Migrationskante fuer Sessions ist jetzt
+  ebenfalls operational, inklusive `400/410/422`-Semantik im API-Pfad
 - der naechste Engpass ist jetzt nicht mehr die Grundintegration,
-  sondern robustere Version-Haertung, externe Session-Semantik und spaetere
-  History-Anbindung
+  sondern echter `checkpoint_migrator`, Quarantaene fuer defekte Sessions
+  und spaetere History-Anbindung
 
 Die ersten direkten Arbeitsdokumente dafuer sind bereits:
 

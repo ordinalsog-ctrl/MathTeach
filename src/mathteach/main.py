@@ -10,7 +10,11 @@ from mathteach.services.corpus import (
 )
 from mathteach.services.foundation import build_foundation
 from mathteach.services.planner import build_stack, build_teaching_plan
-from mathteach.services.session_manager import SessionManager, SessionConflictError, as_http_conflict
+from mathteach.services.checkpoint_validation import (
+    CheckpointMigrationRequired,
+    SessionValidationError,
+)
+from mathteach.services.session_manager import SessionManager, SessionConflictError, as_http_error
 from mathteach.services.session_store import SessionStore
 
 settings = get_settings()
@@ -60,5 +64,9 @@ def tutoring_plan(request: SessionRequest):
         planner_request, session_id = session_manager.prepare_planner_request(request)
         plan = build_teaching_plan(planner_request)
         return session_manager.persist_plan_result(session_id, plan)
-    except SessionConflictError as exc:
-        raise as_http_conflict(exc) from exc
+    except (
+        SessionConflictError,
+        SessionValidationError,
+        CheckpointMigrationRequired,
+    ) as exc:
+        raise as_http_error(exc) from exc

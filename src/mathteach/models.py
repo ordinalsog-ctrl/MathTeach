@@ -30,7 +30,7 @@ ObservationSignalType = Literal[
     "confidence_recovery_signal",
 ]
 TransitionFamily = Literal["simplifying", "reframing", "stretching"]
-ModeAdaptationCheckpointVersion = Literal["phase_h1_v1"]
+ModeAdaptationCheckpointVersion = str
 
 
 class LearnerProfile(BaseModel):

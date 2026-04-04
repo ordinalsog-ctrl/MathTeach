@@ -2,6 +2,45 @@
 
 Stand: 2026-04-02
 
+## Phase-H-Session-Validation-And-Migration-Gate 2026-04-04
+
+Die Session-Persistenz hat jetzt ihre erste echte Validierungskante:
+`SessionManager` unterscheidet nicht mehr nur zwischen Resume und Neustart,
+sondern jetzt explizit zwischen `unknown`, `invalid` und
+`migration-required`.
+
+Wichtigste Konsequenzen:
+
+- eine neue Validierungsschicht prueft `schema_version`,
+  Checkpoint-Zustandsgrenzen und H.1-Budgetregeln
+- unbekannte Sessions bleiben bewusst ein sauberer Neustart
+- bekannte, aber veraltete Checkpoints fuehren jetzt explizit zu
+  `migration-required`
+- korrupt gespeicherte oder semantisch ungueltige Checkpoints fuehren jetzt
+  explizit zu `invalid session`
+- der API-Pfad bildet diese Faelle jetzt sauber auf `400`, `410` und `422`
+  ab
+- der naechste direkte Schritt ist jetzt keine grobe Session-Koordination
+  mehr, sondern ein echter `checkpoint_migrator` und spaetere
+  Quarantaene-/Audit-Logik fuer defekte Sessions
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/checkpoint_validation.py](/Users/jonasweiss/MathTeach/src/mathteach/services/checkpoint_validation.py)
+- [src/mathteach/services/session_manager.py](/Users/jonasweiss/MathTeach/src/mathteach/services/session_manager.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_checkpoint_validation.py](/Users/jonasweiss/MathTeach/tests/test_checkpoint_validation.py)
+- [tests/test_session_manager.py](/Users/jonasweiss/MathTeach/tests/test_session_manager.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/session-validation-and-migration.md](/Users/jonasweiss/MathTeach/docs/session-validation-and-migration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- `pytest`: `90 passed, 1 warning`
+- Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
+
 ## Phase-H-Session-Manager 2026-04-04
 
 Die Session-Persistenz hat jetzt ihre erste echte Koordinationsschicht:

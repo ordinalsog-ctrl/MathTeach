@@ -3,6 +3,7 @@ import uuid
 from fastapi.testclient import TestClient
 
 from mathteach.main import app, session_store
+from mathteach.models import ModeAdaptationCheckpoint, ModeAdaptationState
 
 
 client = TestClient(app)
@@ -405,6 +406,82 @@ def test_tutoring_plan_rejects_session_id_and_inline_checkpoint_together() -> No
     )
 
     assert response.status_code == 422
+
+
+def test_tutoring_plan_returns_410_for_session_checkpoint_that_needs_migration() -> None:
+    session_id = f"api-session-migration-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    session_store.save_checkpoint(
+        session_id,
+        ModeAdaptationCheckpoint(
+            schema_version="phase_h0_v1",
+            mode_adaptation_state=ModeAdaptationState(
+                current_mode="guided_concept_explanation",
+                blocks_in_current_mode=1,
+                mode_changes_in_session=0,
+                cooldown_blocks_remaining=0,
+            ),
+        ),
+    )
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert response.status_code == 410
+    assert "requires migration" in response.json()["detail"]
+    session_store.delete_checkpoint(session_id)
+
+
+def test_tutoring_plan_returns_400_for_invalid_stored_checkpoint() -> None:
+    session_id = f"api-session-invalid-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    invalid_path = session_store._session_path(session_id)
+    invalid_path.write_text(
+        '{\n'
+        '  "schema_version": "phase_h1_v1",\n'
+        '  "mode_adaptation_state": {\n'
+        '    "current_mode": "guided_concept_explanation",\n'
+        '    "blocks_in_current_mode": -2,\n'
+        '    "mode_changes_in_session": 0,\n'
+        '    "cooldown_blocks_remaining": 0,\n'
+        '    "last_observation_evidence": []\n'
+        "  }\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir die quadratische Gleichung anschaulich.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": True,
+            },
+        },
+    )
+
+    assert response.status_code == 400
+    assert "could not be resumed" in response.json()["detail"]
+    session_store.delete_checkpoint(session_id)
 
 
 def test_tutoring_plan_resume_derives_cross_block_breakthrough() -> None:

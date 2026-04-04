@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 from fastapi import HTTPException
+from pydantic import ValidationError
 
 from mathteach.models import (
     ModeAdaptationCheckpoint,
     SessionRequest,
     TeachingPlan,
+)
+from mathteach.services.checkpoint_validation import (
+    CheckpointMigrationRequired,
+    SessionValidationError,
+    validate_checkpoint_for_persist,
+    validate_checkpoint_for_resume,
 )
 from mathteach.services.session_store import SessionStore
 
@@ -23,11 +30,12 @@ class SessionManager:
         request: SessionRequest,
     ) -> tuple[SessionRequest, str | None]:
         self._ensure_non_conflicting_resume_input(request)
+        self._validate_inline_checkpoint(request.mode_adaptation_checkpoint)
 
         if request.session_id is None:
             return request, None
 
-        stored_checkpoint = self.store.load_checkpoint(request.session_id)
+        stored_checkpoint = self._load_stored_checkpoint(request.session_id)
         if stored_checkpoint is None:
             return request.model_copy(update={"session_id": None}), request.session_id
 
@@ -57,10 +65,7 @@ class SessionManager:
         self,
         checkpoint: ModeAdaptationCheckpoint,
     ) -> None:
-        if checkpoint.schema_version != "phase_h1_v1":
-            raise SessionConflictError(
-                f"Unsupported mode adaptation checkpoint version: {checkpoint.schema_version}"
-            )
+        validate_checkpoint_for_persist(checkpoint)
 
     def _ensure_non_conflicting_resume_input(self, request: SessionRequest) -> None:
         if request.session_id is not None and (
@@ -71,6 +76,57 @@ class SessionManager:
                 "Provide either session_id or inline mode adaptation resume data, not both."
             )
 
+    def _validate_inline_checkpoint(
+        self,
+        checkpoint: ModeAdaptationCheckpoint | None,
+    ) -> None:
+        if checkpoint is None:
+            return
+        try:
+            validate_checkpoint_for_resume(checkpoint)
+        except CheckpointMigrationRequired as exc:
+            raise CheckpointMigrationRequired(
+                "Inline mode adaptation checkpoint requires migration before resume. "
+                f"{exc}"
+            ) from exc
+        except SessionValidationError as exc:
+            raise SessionValidationError(
+                f"Inline mode adaptation checkpoint is invalid. {exc}"
+            ) from exc
 
-def as_http_conflict(exc: SessionConflictError) -> HTTPException:
-    return HTTPException(status_code=422, detail=str(exc))
+    def _load_stored_checkpoint(
+        self,
+        session_id: str,
+    ) -> ModeAdaptationCheckpoint | None:
+        try:
+            checkpoint = self.store.load_checkpoint(session_id)
+        except ValidationError as exc:
+            raise SessionValidationError(
+                f"Stored checkpoint for session {session_id} is invalid and could not be resumed."
+            ) from exc
+
+        if checkpoint is None:
+            return None
+
+        try:
+            validate_checkpoint_for_resume(checkpoint)
+        except CheckpointMigrationRequired as exc:
+            raise CheckpointMigrationRequired(
+                f"Checkpoint for session {session_id} requires migration. {exc}"
+            ) from exc
+        except SessionValidationError as exc:
+            raise SessionValidationError(
+                f"Stored checkpoint for session {session_id} is invalid. {exc}"
+            ) from exc
+
+        return checkpoint
+
+
+def as_http_error(
+    exc: SessionConflictError | SessionValidationError | CheckpointMigrationRequired,
+) -> HTTPException:
+    if isinstance(exc, SessionConflictError):
+        return HTTPException(status_code=422, detail=str(exc))
+    if isinstance(exc, CheckpointMigrationRequired):
+        return HTTPException(status_code=410, detail=str(exc))
+    return HTTPException(status_code=400, detail=str(exc))

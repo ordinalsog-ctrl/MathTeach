@@ -59,6 +59,21 @@ class EvidenceCombinationPattern(StrEnum):
     CONCEPT_CONFUSION = "concept_confusion"
 
 
+class BlockTransitionReason(StrEnum):
+    EVIDENCE_PATTERN = "evidence_pattern"
+    SUPPORT_PROFILE = "support_profile"
+    SEQUENCE_BALANCE = "sequence_balance"
+    LOOKAHEAD_FALLBACK = "lookahead_fallback"
+
+
+class BlockSequenceIntent(StrEnum):
+    CONCEPT_BUILDUP = "concept_buildup"
+    CONFIDENCE_BUILDING = "confidence_building"
+    ERROR_RECOVERY_CYCLE = "error_recovery_cycle"
+    MASTERY_PATH = "mastery_path"
+    ADAPTIVE_REMEDIATION = "adaptive_remediation"
+
+
 class LearnerProfile(BaseModel):
     age_group: AgeGroup
     math_level: MathLevel
@@ -165,10 +180,45 @@ class EvidenceCombination(BaseModel):
     block_sequence: int = Field(ge=1)
 
 
+class BlockSequenceDecision(BaseModel):
+    current_block_type: BlockType
+    suggested_next_block_type: BlockType
+    alternative_next_block_types: list[BlockType] = Field(default_factory=list)
+    transition_reason: BlockTransitionReason
+    sequence_intent: BlockSequenceIntent
+    rationale: list[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+    lookahead_block_types: list[BlockType] = Field(default_factory=list)
+
+
+class BlockSequenceState(BaseModel):
+    block_type_history: list[BlockType] = Field(default_factory=list)
+    recent_evidence_patterns: list[EvidenceCombinationPattern] = Field(default_factory=list)
+    active_sequence_intent: BlockSequenceIntent | None = None
+    adaptive_transitions_applied: int = Field(default=0, ge=0)
+    last_recommended_block_type: BlockType | None = None
+    lookahead_block_types: list[BlockType] = Field(default_factory=list)
+
+
+class SequencePlanningMetadata(BaseModel):
+    active_sequence_intent: BlockSequenceIntent | None = None
+    next_block_options: list[BlockType] = Field(default_factory=list)
+    adaptive_transitions_applied: int = Field(default=0, ge=0)
+    last_transition_reason: BlockTransitionReason | None = None
+    last_routing_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    lookahead_block_types: list[BlockType] = Field(default_factory=list)
+
+
 class PlannedTeachingBlock(BaseModel):
     block_index: int = Field(ge=1)
     mode: str
     block_type: BlockType | None = None
+    sequence_intent: BlockSequenceIntent | None = None
+    transition_reason: BlockTransitionReason | None = None
+    next_block_type: BlockType | None = None
+    alternative_next_block_types: list[BlockType] = Field(default_factory=list)
+    routing_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    routing_rationale: list[str] = Field(default_factory=list)
     goal: str
     focus: list[str] = Field(default_factory=list)
     support_moves: list[str] = Field(default_factory=list)
@@ -229,6 +279,8 @@ class TeachingPlan(BaseModel):
     mode_adaptation_state: ModeAdaptationState
     mode_adaptation_checkpoint: ModeAdaptationCheckpoint
     planned_blocks: list[PlannedTeachingBlock] = Field(default_factory=list)
+    block_sequence_state: BlockSequenceState | None = None
+    sequence_planning_metadata: SequencePlanningMetadata | None = None
     mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
     resume_context: ResumeContext
     support_signal_profile: SupportSignalProfile

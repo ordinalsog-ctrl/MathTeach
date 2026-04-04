@@ -1219,6 +1219,78 @@ def test_tutoring_plan_exposes_concept_intro_vocabulary_gap_blocktype() -> None:
     assert "visual_concept_intro_minimal_text" in first_block["support_moves"]
 
 
+def test_tutoring_plan_exposes_sequence_routing_after_rapid_success() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this example in clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "runtime_observations": [
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    third_block = payload["planned_blocks"][2]
+    preview_block = payload["planned_blocks"][3]
+
+    assert third_block["next_block_type"] == "guided_practice"
+    assert third_block["transition_reason"] == "evidence_pattern"
+    assert third_block["sequence_intent"] == "mastery_path"
+    assert preview_block["block_type"] == "guided_practice"
+    assert payload["block_sequence_state"]["adaptive_transitions_applied"] >= 1
+    assert payload["sequence_planning_metadata"]["next_block_options"]
+
+
+def test_tutoring_plan_exposes_error_recovery_routing_back_to_worked_example() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyscalculia_aware_support"],
+            },
+            "runtime_observations": [
+                {"evidence": ["repeated_concept_error", "attempt_count_three_plus"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    first_block = payload["planned_blocks"][0]
+    preview_block = payload["planned_blocks"][1]
+
+    assert first_block["block_type"] == "error_recovery"
+    assert first_block["next_block_type"] == "worked_example"
+    assert first_block["transition_reason"] == "evidence_pattern"
+    assert first_block["sequence_intent"] == "error_recovery_cycle"
+    assert preview_block["block_type"] == "worked_example"
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

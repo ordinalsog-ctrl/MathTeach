@@ -132,6 +132,12 @@ Aktueller Stand:
   `block_type_applied`, `evidence_patterns_applied`,
   `evidence_combination_rules_applied` und
   `blocktype_adjustments_applied` sichtbar macht
+- H.3 zieht diese Signale jetzt in die eigentliche Blocksequenz:
+  `planned_blocks` tragen dafuer
+  `sequence_intent`, `transition_reason`, `next_block_type` und
+  `alternative_next_block_types`, waehrend `TeachingPlan` jetzt auch
+  `block_sequence_state` und `sequence_planning_metadata` sichtbar
+  macht
 
 ## Phase D: Pilot and Validation
 
@@ -276,10 +282,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.3 die jetzt expliziten `block_type`- und
-  `evidence_combination`-Signale in eine echte blocksequenzielle
-  Planung ziehen, sodass nicht nur Block-Moves, sondern auch die Wahl
-  des naechsten Blocktyps adaptiv wird
+- H.4 den neuen H.3-Routingpfad von einer direkten Naechstblock-Wahl zu
+  mehreren bewerteten Lookahead-Pfaden erweitern
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

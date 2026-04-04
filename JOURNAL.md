@@ -2,6 +2,53 @@
 
 Stand: 2026-04-02
 
+## Phase-H.3-Block-Sequential-Planning 2026-04-04
+
+Die Planung springt jetzt ueber H.2g hinaus: jeder Block traegt nicht
+mehr nur seinen eigenen `block_type` und seine lokale
+Conflict-Resolution, sondern auch eine sichtbare Routing-Entscheidung
+fuer den naechsten Blocktyp. Die finale Vorschau kann damit erstmals
+einen anderen Blocktyp zeigen als der aktuelle Modus heuristisch allein
+erwarten liesse.
+
+Wichtigste Konsequenzen:
+
+- neue `BlockSequenceDecision`-, `BlockSequenceState`- und
+  `SequencePlanningMetadata`-Modelle machen H.3 im API-Vertrag sichtbar
+- `PlannedTeachingBlock` traegt jetzt
+  `sequence_intent`, `transition_reason`, `next_block_type`,
+  `alternative_next_block_types`, `routing_confidence` und
+  `routing_rationale`
+- der neue
+  [block_sequence_planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/block_sequence_planner.py)
+  routet den naechsten Blocktyp aus `block_type`,
+  `EvidenceCombinationPattern` und aktiven Support-Profilen
+- bekannte H.3-Pfade sind jetzt operational, z.B.
+  `worked_example -> guided_practice` bei
+  `rapid_consecutive_success`,
+  `guided_practice -> error_recovery` bei
+  `stagnation_pattern` oder
+  `error_recovery -> worked_example` bei `concept_confusion`
+- der Planner nutzt die letzte Routing-Entscheidung jetzt direkt fuer
+  den finalen Preview-Block, sodass der naechste Blocktyp nicht mehr nur
+  dokumentiert, sondern auch sichtbar vorausgeplant ist
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/block_sequence_planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/block_sequence_planner.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_block_sequence_planner.py](/Users/jonasweiss/MathTeach/tests/test_block_sequence_planner.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/block-sequence-planning.md](/Users/jonasweiss/MathTeach/docs/block-sequence-planning.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `81 passed, 1 warning`
+- Full-Suite: `167 passed, 1 warning`
+
 ## Phase-H.2g-Blocktype-Evidence-Coupling 2026-04-04
 
 Die H.2f-Mehrprofil-Regeln haengen jetzt nicht mehr primaer am

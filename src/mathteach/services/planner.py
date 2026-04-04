@@ -1,5 +1,6 @@
 from mathteach.config import Settings
 from mathteach.models import (
+    BlockSequenceState,
     BlockType,
     LearnerProfile,
     ModelAssignment,
@@ -13,9 +14,14 @@ from mathteach.models import (
     RawBlockObservation,
     RetrievalPlan,
     RuntimeObservationInput,
+    SequencePlanningMetadata,
     SessionRequest,
     StackResponse,
     TeachingPlan,
+)
+from mathteach.services.block_sequence_planner import (
+    advance_sequence_state,
+    plan_next_block,
 )
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.conflict_resolver import resolve_block_support_conflicts
@@ -674,8 +680,13 @@ def _build_planned_block(
     transition_message: str | None,
     observed_evidence: list[str],
     previous_evidence: list[str] | None = None,
+    block_type_override: BlockType | None = None,
 ) -> PlannedTeachingBlock:
-    block_type = _infer_block_type(lesson_mode, observed_evidence, previous_evidence)
+    block_type = block_type_override or _infer_block_type(
+        lesson_mode,
+        observed_evidence,
+        previous_evidence,
+    )
     evidence_combination = build_evidence_combination(
         current_evidence=observed_evidence,
         block_type=block_type,
@@ -708,6 +719,39 @@ def _build_planned_block(
         transition_message=transition_message,
         observed_evidence=observed_evidence,
     )
+
+
+def _attach_sequence_decision(
+    planned_block: PlannedTeachingBlock,
+    response_settings,
+    sequence_state: BlockSequenceState,
+) -> tuple[PlannedTeachingBlock, BlockSequenceState]:
+    if planned_block.block_type is None or planned_block.evidence_combination is None:
+        return planned_block, sequence_state
+
+    decision = plan_next_block(
+        current_block_type=planned_block.block_type,
+        evidence_patterns=planned_block.evidence_combination.patterns,
+        active_supports=response_settings.active_supports,
+        recent_block_types=sequence_state.block_type_history,
+    )
+    updated_block = planned_block.model_copy(
+        update={
+            "sequence_intent": decision.sequence_intent,
+            "transition_reason": decision.transition_reason,
+            "next_block_type": decision.suggested_next_block_type,
+            "alternative_next_block_types": decision.alternative_next_block_types,
+            "routing_confidence": decision.confidence,
+            "routing_rationale": decision.rationale,
+        }
+    )
+    updated_state = advance_sequence_state(
+        sequence_state,
+        current_block_type=planned_block.block_type,
+        evidence_patterns=planned_block.evidence_combination.patterns,
+        decision=decision,
+    )
+    return updated_block, updated_state
 
 
 def _has_overload_indicator(evidence: set[str]) -> bool:
@@ -861,7 +905,12 @@ def _simulate_runtime_blocks(
     initial_state: ModeAdaptationState | None,
     support_signal_profile,
     response_settings,
-) -> tuple[list[PlannedTeachingBlock], list[ModeAdaptationTraceEntry], ModeAdaptationState]:
+) -> tuple[
+    list[PlannedTeachingBlock],
+    list[ModeAdaptationTraceEntry],
+    ModeAdaptationState,
+    BlockSequenceState,
+]:
     adapter = RuntimeModeAdapter()
     if initial_state is not None:
         state = initial_state.model_copy(deep=True)
@@ -873,6 +922,7 @@ def _simulate_runtime_blocks(
         pending_transition_message = None
     planned_blocks: list[PlannedTeachingBlock] = []
     adaptation_trace: list[ModeAdaptationTraceEntry] = []
+    sequence_state = BlockSequenceState()
     previous_effective_evidence = (
         set(initial_state.last_observation_evidence) if initial_state else None
     )
@@ -884,7 +934,7 @@ def _simulate_runtime_blocks(
             if state.last_observation_evidence
             else []
         )
-        planned_blocks.append(
+        preview_block, sequence_state = _attach_sequence_decision(
             _build_planned_block(
                 block_index=1,
                 lesson_mode=current_mode,
@@ -893,19 +943,23 @@ def _simulate_runtime_blocks(
                 transition_message=displayed_transition_message,
                 observed_evidence=preview_evidence,
                 previous_evidence=None,
-            )
+            ),
+            response_settings=response_settings,
+            sequence_state=sequence_state,
         )
+        planned_blocks.append(preview_block)
         if displayed_transition_message is not None:
             state = state.model_copy(update={"pending_transition_message": None})
-        return planned_blocks, adaptation_trace, state
+        return planned_blocks, adaptation_trace, state, sequence_state
 
+    last_routed_block_type: BlockType | None = None
     for block_index, observation_input in enumerate(runtime_observations, start=1):
         effective_evidence = _augment_observation_evidence(
             observation_input.evidence,
             previous_effective_evidence,
         )
         displayed_transition_message = pending_transition_message
-        planned_blocks.append(
+        current_block, sequence_state = _attach_sequence_decision(
             _build_planned_block(
                 block_index=block_index,
                 lesson_mode=current_mode,
@@ -914,8 +968,12 @@ def _simulate_runtime_blocks(
                 transition_message=displayed_transition_message,
                 observed_evidence=effective_evidence,
                 previous_evidence=sorted(previous_effective_evidence or set()),
-            )
+            ),
+            response_settings=response_settings,
+            sequence_state=sequence_state,
         )
+        planned_blocks.append(current_block)
+        last_routed_block_type = current_block.next_block_type
 
         decision = adapter.check_and_adapt_mode(
             state=state,
@@ -949,7 +1007,7 @@ def _simulate_runtime_blocks(
         pending_transition_message = state.pending_transition_message
         previous_effective_evidence = set(effective_evidence)
 
-    planned_blocks.append(
+    preview_block, sequence_state = _attach_sequence_decision(
         _build_planned_block(
             block_index=len(runtime_observations) + 1,
             lesson_mode=current_mode,
@@ -958,10 +1016,14 @@ def _simulate_runtime_blocks(
             transition_message=pending_transition_message,
             observed_evidence=[],
             previous_evidence=sorted(previous_effective_evidence or set()),
-        )
+            block_type_override=last_routed_block_type,
+        ),
+        response_settings=response_settings,
+        sequence_state=sequence_state,
     )
+    planned_blocks.append(preview_block)
 
-    return planned_blocks, adaptation_trace, state
+    return planned_blocks, adaptation_trace, state, sequence_state
 
 
 def _resolve_resume_state(request: SessionRequest) -> ModeAdaptationState | None:
@@ -1180,7 +1242,12 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         "Cite or reference source families for nontrivial claims.",
     ]
 
-    planned_blocks, adaptation_trace, mode_adaptation_state = _simulate_runtime_blocks(
+    (
+        planned_blocks,
+        adaptation_trace,
+        mode_adaptation_state,
+        block_sequence_state,
+    ) = _simulate_runtime_blocks(
         objective=request.objective,
         initial_mode=lesson_mode,
         runtime_observations=request.runtime_observations,
@@ -1197,6 +1264,20 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         planned_blocks=planned_blocks,
         final_state=mode_adaptation_state,
     )
+    sequence_planning_metadata = SequencePlanningMetadata(
+        active_sequence_intent=block_sequence_state.active_sequence_intent,
+        next_block_options=(
+            planned_blocks[-1].alternative_next_block_types if planned_blocks else []
+        ),
+        adaptive_transitions_applied=block_sequence_state.adaptive_transitions_applied,
+        last_transition_reason=(
+            planned_blocks[-1].transition_reason if planned_blocks else None
+        ),
+        last_routing_confidence=(
+            planned_blocks[-1].routing_confidence if planned_blocks else None
+        ),
+        lookahead_block_types=block_sequence_state.lookahead_block_types,
+    )
 
     return TeachingPlan(
         lesson_mode=lesson_mode,
@@ -1208,6 +1289,8 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         mode_adaptation_state=mode_adaptation_state,
         mode_adaptation_checkpoint=mode_adaptation_checkpoint,
         planned_blocks=planned_blocks,
+        block_sequence_state=block_sequence_state,
+        sequence_planning_metadata=sequence_planning_metadata,
         mode_adaptation_trace=adaptation_trace,
         resume_context=resume_context,
         support_signal_profile=support_signal_profile,

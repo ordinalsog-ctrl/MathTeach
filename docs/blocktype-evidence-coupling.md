@@ -118,9 +118,9 @@ Die neue Schicht ist aktuell abgesichert ueber:
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.3 soll diese H.2g-Bausteine in echte blocksequenzielle Planung ziehen:
-nicht nur Move-Auswahl pro Block, sondern vorausschauende Wahl des
-naechsten Blocktyps auf Basis von Evidence-Verlauf, Profilmix und
-bereits erreichten Stabilisierungsschritten.
+H.3 ist jetzt als eigene Folgeschicht umgesetzt und nutzt diese
+Blocktyp-/Evidence-Signale fuer die Wahl des naechsten Blocktyps. Der
+Anschluss ist dokumentiert in
+[block-sequence-planning.md](/Users/jonasweiss/MathTeach/docs/block-sequence-planning.md).

@@ -1,4 +1,10 @@
-from mathteach.models import BlockType, EvidenceCombinationPattern, SessionRequest
+from mathteach.models import (
+    BlockSequenceIntent,
+    BlockTransitionReason,
+    BlockType,
+    EvidenceCombinationPattern,
+    SessionRequest,
+)
 from mathteach.services.planner import build_teaching_plan
 
 
@@ -241,6 +247,73 @@ def test_planner_exposes_concept_intro_vocabulary_gap_blocktype() -> None:
     )
     assert first_block.conflict_resolution_summary is not None
     assert "visual_concept_intro_minimal_text" in first_block.support_moves
+
+
+def test_planner_routes_preview_block_type_after_rapid_success() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this example in clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        )
+    )
+
+    third_block = plan.planned_blocks[2]
+    preview_block = plan.planned_blocks[3]
+
+    assert third_block.next_block_type == BlockType.GUIDED_PRACTICE
+    assert third_block.transition_reason == BlockTransitionReason.EVIDENCE_PATTERN
+    assert third_block.sequence_intent == BlockSequenceIntent.MASTERY_PATH
+    assert preview_block.block_type == BlockType.GUIDED_PRACTICE
+    assert plan.block_sequence_state is not None
+    assert plan.sequence_planning_metadata is not None
+    assert plan.sequence_planning_metadata.adaptive_transitions_applied >= 1
+
+
+def test_planner_routes_error_recovery_preview_back_to_worked_example() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyscalculia_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["repeated_concept_error", "attempt_count_three_plus"]},
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+    preview_block = plan.planned_blocks[1]
+
+    assert first_block.block_type == BlockType.ERROR_RECOVERY
+    assert first_block.next_block_type == BlockType.WORKED_EXAMPLE
+    assert first_block.transition_reason == BlockTransitionReason.EVIDENCE_PATTERN
+    assert first_block.sequence_intent == BlockSequenceIntent.ERROR_RECOVERY_CYCLE
+    assert preview_block.block_type == BlockType.WORKED_EXAMPLE
 
 
 def test_planner_carries_mode_change_into_next_preview_block() -> None:

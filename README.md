@@ -102,6 +102,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md): Sprint- und Implementierungsplan fuer Response Engine und Planner-Integration
 - [docs/mode-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/mode-evidence-coupling.md): H.2f-Ausbau fuer modus-sensible Pair-/Triad-Regeln
 - [docs/blocktype-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/blocktype-evidence-coupling.md): H.2g-Ausbau fuer blocktyp- und evidence-kombinationssensible Blockauflosung
+- [docs/block-sequence-planning.md](/Users/jonasweiss/MathTeach/docs/block-sequence-planning.md): H.3-Ausbau fuer adaptive Wahl des naechsten Blocktyps
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -283,8 +284,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   `worked_example`-Block mit `rapid_consecutive_success` andere
   Support-Moves traegt als ein `error_recovery`-Block mit
   `stagnation_pattern`
+- H.3 nutzt diese Blocksignale jetzt fuer echte Sequenzplanung:
+  jeder `planned_block` traegt jetzt sichtbar den empfohlenen
+  `next_block_type`, Alternativen und einen `sequence_intent`, und der
+  finale Preview-Block uebernimmt die letzte Routing-Entscheidung
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern blocksequenzielle Support-Planung, spaetere
+  sondern Lookahead-Planung ueber mehrere moegliche Sequenzpfade,
+  spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade
 

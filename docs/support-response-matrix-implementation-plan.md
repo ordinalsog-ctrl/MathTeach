@@ -91,6 +91,8 @@ Aktueller Stand:
   `support_scaffolds`
 - erste Einzelprofile und Mischprofile wirken damit sichtbar bis in die
   Blockvorschau hinein
+- `support_moves` und `support_scaffolds` reagieren jetzt auch auf
+  `lesson_mode` und blockweise Beobachtungsevidenz
 
 ## Phase D: Pilot and Validation
 
@@ -223,7 +225,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 ## Unmittelbar Naechste Aufgaben
 
 1. `support_moves` je Modus und Support-Profil noch topic-sensitiver machen
-2. `support_scaffolds` spaeter an Blocktyp und Runtime-Signal koppeln
+2. `support_scaffolds` jetzt weiter an Blocktyp und Runtime-Signal verfeinern
 3. Roundtrip-Serialisierung fuer `ModeAdaptationCheckpoint` weiter haerten
 4. Planner-Semantik fuer echte Sitzungsfortsetzung dokumentieren und haerten
 5. Persistenz von `pending_transition_message` und Budgetzustand extern absichern
@@ -236,7 +238,7 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 Naechster direkter Coding-Start:
 
 - blockweise Support-Moves noch naeher an Mode und Beobachtung koppeln
-- Scaffold-Auswahl spaeter dynamisch nach Runtime-Signal staffeln
+- Scaffold-Auswahl jetzt weiter dynamisch nach Runtime-Signal staffeln
 - Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
 - danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
 

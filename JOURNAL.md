@@ -17,6 +17,11 @@ Wichtigste Konsequenzen:
 - Mischprofile bekommen auf Blockebene jetzt nicht nur globale
   `response_settings`, sondern eine faire Scaffold-Auswahl ueber mehrere
   aktive Supports
+- `support_moves` und `support_scaffolds` reagieren jetzt zusaetzlich auf
+  `lesson_mode` und beobachtete Runtime-Evidenz wie Verwirrung,
+  Textueberlastung, Stagnation oder sichtbaren Erfolg
+- die Symbol-Mengen-Bruecke fuer Dyscalculia-Support ist jetzt auch als
+  operative Scaffold-Ausgabe im Runtime-Pfad angekommen
 - der Planner uebersetzt Support-Profile damit klarer in operative
   Tutorentscheidungen statt nur in Hintergrundparameter
 - der naechste direkte Ausbau ist jetzt nicht mehr Phase-A-Dokumentation,
@@ -27,14 +32,16 @@ Neue oder aktualisierte Referenzartefakte:
 
 - [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
 - [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/response_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/response_engine.py)
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [tests/test_response_engine.py](/Users/jonasweiss/MathTeach/tests/test_response_engine.py)
 - [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
 
 Verifikation:
 
 - `ruff`: bestanden
-- `pytest`: `110 passed, 1 warning`
+- `pytest`: `114 passed, 1 warning`
 - Warning weiter nur wegen nicht schreibbarem `pytest`-Cache
 
 ## Phase-H-Multi-Step-Checkpoint-Migration 2026-04-04

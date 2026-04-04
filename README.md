@@ -244,6 +244,9 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - die Support Response Matrix wirkt jetzt nicht mehr nur global ueber
   `response_settings`, sondern sichtbar ueber `support_moves` und
   `support_scaffolds` in jedem `planned_block`
+- diese Blockausgabe reagiert jetzt auch auf Modus und Runtime-Evidenz,
+  also z.B. anders bei Verwirrung, Textueberlastung, Stagnation oder
+  sichtbarem Erfolg
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle

@@ -162,6 +162,7 @@ def _apply_dyscalculia_support(settings: TutorResponseSettings) -> TutorResponse
             "ten_frames_or_quantity_grids",
             "counters_or_token_like_objects",
             "explicit_step_labels",
+            "visible_link_between_quantity_and_symbol",
         ],
     )
     settings.active_supports = _merge_unique(settings.active_supports, ["dyscalculia_aware_support"])

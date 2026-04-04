@@ -44,6 +44,7 @@ def test_response_engine_dyscalculia_profile() -> None:
     assert response_settings.conceptual_increment == "very_small"
     assert response_settings.error_response_style == "explicit_reconstruction"
     assert "number_lines" in response_settings.external_scaffolds
+    assert "visible_link_between_quantity_and_symbol" in response_settings.external_scaffolds
 
 
 def test_response_engine_dyslexia_profile() -> None:

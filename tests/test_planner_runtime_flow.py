@@ -54,6 +54,65 @@ def test_planner_exposes_block_level_support_moves_for_adhd_and_dyscalculia() ->
     assert "number_lines" in first_block.support_scaffolds
 
 
+def test_planner_adapts_block_support_to_confusion_evidence() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["repeated_concept_error"]},
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert "rebuild_last_step_after_confusion" in first_block.support_moves
+    assert "return_to_quantity_model_before_symbols" in first_block.support_moves
+    assert "number_lines" in first_block.support_scaffolds
+    assert "visible_link_between_quantity_and_symbol" in first_block.support_scaffolds
+
+
+def test_planner_adapts_block_support_to_text_overload_evidence() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem in small clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyslexia_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["text_overload", "vocabulary_request"]},
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert "split_problem_text_into_shorter_chunks" in first_block.support_moves
+    assert "clarify_terms_before_retrying_math_step" in first_block.support_moves
+    assert "key_term_glossary" in first_block.support_scaffolds
+    assert "short_sentence_chunks" in first_block.support_scaffolds
+
+
 def test_planner_carries_mode_change_into_next_preview_block() -> None:
     plan = build_teaching_plan(
         SessionRequest(

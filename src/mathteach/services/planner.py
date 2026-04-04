@@ -225,8 +225,13 @@ def _block_focus(
     return focus
 
 
-def _block_support_moves(response_settings) -> list[str]:
+def _block_support_moves(
+    lesson_mode: str,
+    response_settings,
+    observed_evidence: list[str],
+) -> list[str]:
     moves: list[str] = []
+    evidence = set(observed_evidence)
 
     if response_settings.transition_buffer != "brief_explicit_transition":
         moves.append("mark_transition_explicitly")
@@ -239,6 +244,82 @@ def _block_support_moves(response_settings) -> list[str]:
     if response_settings.sensory_load_level != "standard":
         moves.append("keep_visual_field_low_clutter")
 
+    if lesson_mode == "worked_example_tutoring":
+        moves.extend(
+            [
+                "show_one_local_step_before_release",
+                "anchor_next_attempt_to_last_worked_move",
+            ]
+        )
+    elif lesson_mode == "origin_then_example":
+        moves.extend(
+            [
+                "bridge_concept_to_example_with_micro_origin",
+                "reconnect_example_to_core_idea_before_symbolic_push",
+            ]
+        )
+    elif lesson_mode == "origin_story_explanation":
+        moves.extend(
+            [
+                "keep_story_short_and_relevant",
+                "return_from_origin_to_present_problem_fast",
+            ]
+        )
+    elif lesson_mode == "formal_compact_explanation":
+        moves.extend(
+            [
+                "compress_formalism_only_after_checkpoint",
+                "name_symbolic_jump_before_using_it",
+            ]
+        )
+    else:
+        moves.extend(
+            [
+                "state_core_idea_before_symbolic_detail",
+                "keep_explanation_guided_and_local",
+            ]
+        )
+
+    if _has_overload_indicator(evidence):
+        moves.extend(
+            [
+                "reduce_notation_and_restore_structure",
+                "restate_current_goal_before_retry",
+            ]
+        )
+    if evidence & {
+        "single_concept_error",
+        "repeated_concept_error",
+        "repeated_concept_error_across_blocks",
+        "persistent_same_question",
+        "off_target_response",
+    }:
+        moves.extend(
+            [
+                "rebuild_last_step_after_confusion",
+                "contrast_correct_and_incorrect_path_locally",
+            ]
+        )
+    if evidence & {
+        "no_progress_block",
+        "no_progress_two_blocks",
+        "no_progress_three_blocks",
+        "no_success_visible_two_blocks",
+    }:
+        moves.extend(
+            [
+                "shrink_goal_to_single_recoverable_win",
+                "reset_success_criteria_for_next_attempt",
+            ]
+        )
+    if _has_visible_success_indicator(evidence):
+        moves.extend(
+            [
+                "name_and_bank_visible_success",
+                "hand_off_slightly_more_ownership",
+            ]
+        )
+
     active_supports = set(response_settings.active_supports)
     if "adhd_aware_support" in active_supports:
         moves.extend(
@@ -248,6 +329,8 @@ def _block_support_moves(response_settings) -> list[str]:
                 "keep_feedback_near_immediate",
             ]
         )
+        if _has_overload_indicator(evidence):
+            moves.append("tighten_attention_window_after_drift")
     if "dyscalculia_aware_support" in active_supports:
         moves.extend(
             [
@@ -256,6 +339,13 @@ def _block_support_moves(response_settings) -> list[str]:
                 "rebuild_errors_from_quantity_model",
             ]
         )
+        if evidence & {
+            "single_concept_error",
+            "repeated_concept_error",
+            "repeated_concept_error_across_blocks",
+            "no_progress_two_blocks",
+        }:
+            moves.append("return_to_quantity_model_before_symbols")
     if "dyslexia_aware_support" in active_supports:
         moves.extend(
             [
@@ -263,6 +353,8 @@ def _block_support_moves(response_settings) -> list[str]:
                 "check_reading_load_before_math_correction",
             ]
         )
+        if "text_overload" in evidence or "reading_load_issue" in evidence:
+            moves.append("split_problem_text_into_shorter_chunks")
     if "autism_spectrum_aware_support" in active_supports:
         moves.extend(
             [
@@ -270,6 +362,8 @@ def _block_support_moves(response_settings) -> list[str]:
                 "stabilize_layout_before_variation",
             ]
         )
+        if _has_overload_indicator(evidence):
+            moves.append("freeze_format_changes_until_reorientation")
     if "language_sensitive_support" in active_supports:
         moves.extend(
             [
@@ -277,6 +371,8 @@ def _block_support_moves(response_settings) -> list[str]:
                 "confirm_term_meaning_at_major_steps",
             ]
         )
+        if "vocabulary_request" in evidence or "text_overload" in evidence:
+            moves.append("clarify_terms_before_retrying_math_step")
     if "scarcity_aware_support" in active_supports:
         moves.extend(
             [
@@ -284,6 +380,8 @@ def _block_support_moves(response_settings) -> list[str]:
                 "mark_small_visible_wins",
             ]
         )
+        if evidence & {"no_success_visible_two_blocks", "no_progress_two_blocks"}:
+            moves.append("protect_momentum_with_near_term_success_target")
 
     unique_moves: list[str] = []
     seen: set[str] = set()
@@ -294,9 +392,14 @@ def _block_support_moves(response_settings) -> list[str]:
     return unique_moves
 
 
-def _block_support_scaffolds(response_settings) -> list[str]:
+def _block_support_scaffolds(
+    lesson_mode: str,
+    response_settings,
+    observed_evidence: list[str],
+) -> list[str]:
     selected: list[str] = []
     seen: set[str] = set()
+    evidence = set(observed_evidence)
     support_priorities = {
         "adhd_aware_support": [
             "step_labels",
@@ -337,6 +440,107 @@ def _block_support_scaffolds(response_settings) -> list[str]:
         ],
     }
 
+    evidence_priorities: list[str] = []
+    if _has_overload_indicator(evidence):
+        evidence_priorities.extend(
+            [
+                "micro_checkpoints",
+                "explicit_transition_cues",
+                "stable_visual_layout",
+                "short_sentence_chunks",
+            ]
+        )
+    if evidence & {
+        "single_concept_error",
+        "repeated_concept_error",
+        "repeated_concept_error_across_blocks",
+    }:
+        evidence_priorities.extend(
+            [
+                "number_lines",
+                "visible_link_between_quantity_and_symbol",
+                "step_labels",
+            ]
+        )
+    if evidence & {"text_overload", "reading_load_issue", "vocabulary_request"}:
+        evidence_priorities.extend(
+            [
+                "key_term_glossary",
+                "short_sentence_chunks",
+                "translated_key_terms_when_needed",
+            ]
+        )
+    if evidence & {
+        "no_progress_two_blocks",
+        "no_progress_three_blocks",
+        "no_success_visible_two_blocks",
+    }:
+        evidence_priorities.extend(
+            [
+                "clear_success_criteria",
+                "small_wins_sequence",
+                "visible_progress_markers",
+            ]
+        )
+    if _has_visible_success_indicator(evidence):
+        evidence_priorities.extend(
+            [
+                "visible_progress_markers",
+                "small_wins_sequence",
+            ]
+        )
+
+    mode_priorities = {
+        "worked_example_tutoring": [
+            "step_labels",
+            "clear_step_boundary",
+            "micro_checkpoints",
+        ],
+        "origin_then_example": [
+            "why_this_matters_now",
+            "everyday_to_math_language_bridge",
+            "visual_hint",
+        ],
+        "origin_story_explanation": [
+            "why_this_matters_now",
+            "visual_hint",
+            "clear_step_boundary",
+        ],
+        "formal_compact_explanation": [
+            "symbol_reading_support",
+            "clear_step_boundary",
+            "key_term_glossary",
+        ],
+        "guided_concept_explanation": [
+            "clear_step_boundary",
+            "visual_hint",
+            "step_labels",
+        ],
+    }
+
+    for scaffold in evidence_priorities:
+        if scaffold in response_settings.external_scaffolds and scaffold not in seen:
+            selected.append(scaffold)
+            seen.add(scaffold)
+        if len(selected) == 4:
+            return selected
+
+    for support_need in response_settings.active_supports:
+        for scaffold in support_priorities.get(support_need, []):
+            if scaffold in response_settings.external_scaffolds and scaffold not in seen:
+                selected.append(scaffold)
+                seen.add(scaffold)
+                break
+        if len(selected) == 4:
+            return selected
+
+    for scaffold in mode_priorities.get(lesson_mode, []):
+        if scaffold in response_settings.external_scaffolds and scaffold not in seen:
+            selected.append(scaffold)
+            seen.add(scaffold)
+        if len(selected) == 4:
+            return selected
+
     for support_need in response_settings.active_supports:
         per_support_added = 0
         for scaffold in support_priorities.get(support_need, []):
@@ -344,7 +548,7 @@ def _block_support_scaffolds(response_settings) -> list[str]:
                 selected.append(scaffold)
                 seen.add(scaffold)
                 per_support_added += 1
-            if per_support_added == 2 or len(selected) == 4:
+            if per_support_added == 1 or len(selected) == 4:
                 break
         if len(selected) == 4:
             break
@@ -371,8 +575,12 @@ def _build_planned_block(
         mode=lesson_mode,
         goal=_block_goal(lesson_mode, objective),
         focus=_block_focus(lesson_mode, response_settings),
-        support_moves=_block_support_moves(response_settings),
-        support_scaffolds=_block_support_scaffolds(response_settings),
+        support_moves=_block_support_moves(
+            lesson_mode, response_settings, observed_evidence
+        ),
+        support_scaffolds=_block_support_scaffolds(
+            lesson_mode, response_settings, observed_evidence
+        ),
         transition_message=transition_message,
         observed_evidence=observed_evidence,
     )

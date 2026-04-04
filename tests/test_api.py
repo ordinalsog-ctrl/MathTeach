@@ -1027,6 +1027,65 @@ def test_tutoring_plan_declared_scarcity_support() -> None:
     assert any("visible progress" in item for item in payload["teaching_pattern"])
 
 
+def test_tutoring_plan_makes_block_support_runtime_sensitive_under_confusion() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "runtime_observations": [
+                {"evidence": ["repeated_concept_error"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "rebuild_last_step_after_confusion" in payload["planned_blocks"][0]["support_moves"]
+    assert "return_to_quantity_model_before_symbols" in payload["planned_blocks"][0]["support_moves"]
+    assert "number_lines" in payload["planned_blocks"][0]["support_scaffolds"]
+
+
+def test_tutoring_plan_makes_block_support_runtime_sensitive_under_text_overload() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this word problem in small clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyslexia_aware_support"],
+            },
+            "runtime_observations": [
+                {"evidence": ["text_overload", "vocabulary_request"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "split_problem_text_into_shorter_chunks" in payload["planned_blocks"][0]["support_moves"]
+    assert "clarify_terms_before_retrying_math_step" in payload["planned_blocks"][0]["support_moves"]
+    assert "key_term_glossary" in payload["planned_blocks"][0]["support_scaffolds"]
+
+
 def test_tutoring_plan_mixed_profile_conflict_resolution() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

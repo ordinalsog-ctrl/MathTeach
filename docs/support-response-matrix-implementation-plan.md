@@ -103,6 +103,12 @@ Aktueller Stand:
 - Resume-Roundtrips ueber partielle Checkpoints sind jetzt als eigener
   Haertungspfad dokumentiert in
   [resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
+- die H.2c-Signalbasis ist jetzt verbreitert um:
+  `rapid_success_two_blocks`, `rapid_success_three_blocks`,
+  `vocabulary_request_again`, `error_recovery_with_hint`,
+  `repeated_attempt_three_plus` und `mixed_success_inconsistent`
+- diese Signale greifen jetzt bereits in `support_moves`,
+  Scaffold-Priorisierung und `SignalInterpreter` ein
 
 ## Phase D: Pilot and Validation
 
@@ -247,10 +253,13 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- blockweise Support-Moves noch naeher an Mode und Beobachtung koppeln
-- Scaffold-Auswahl jetzt weiter dynamisch nach Runtime-Signal staffeln
-- Checkpoint-Serialisierung und Resume-Tests weiter verbreitern
-- danach History- und Storage-Schicht fuer echte Sitzungsfortsetzung vorbereiten
+- H.2d-Triad-Resolver auf Basis der jetzt breiteren Evidence-Palette
+  vorbereiten
+- blockweise Support-Moves weiter an Konfliktlagen zwischen Profilen und
+  Evidence koppeln
+- Scaffold-Auswahl weiter dynamisch nach konkurrierenden Signalen staffeln
+- spaeter History- und Storage-Schicht fuer echte Sitzungsfortsetzung
+  vorbereiten
 
 ## Nicht-Ziele Des Naechsten Sprints
 

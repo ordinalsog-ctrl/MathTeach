@@ -434,6 +434,149 @@ def test_planner_derives_cross_block_breakthrough_on_resume() -> None:
     assert plan.mode_adaptation_trace[0].mode_after == "guided_concept_explanation"
 
 
+def test_planner_derives_rapid_success_signals_across_multiple_blocks() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        )
+    )
+
+    assert "rapid_success_two_blocks" in plan.planned_blocks[1].observed_evidence
+    assert "rapid_success_three_blocks" in plan.planned_blocks[2].observed_evidence
+    assert "increase_pacing_after_stable_success" in plan.planned_blocks[2].support_moves
+    assert "fade_one_scaffold_after_stable_success" in plan.planned_blocks[2].support_moves
+    assert "offer_more_independent_challenge" in plan.planned_blocks[2].support_moves
+
+
+def test_planner_derives_repeated_vocabulary_need_across_blocks() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this word problem in small clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            runtime_observations=[
+                {"evidence": ["vocabulary_request"]},
+                {"evidence": ["vocabulary_request"]},
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[1]
+
+    assert "vocabulary_request_again" in second_block.observed_evidence
+    assert "keep_glossary_visible_across_blocks" in second_block.support_moves
+    assert "restate_key_term_before_new_symbolic_step" in second_block.support_moves
+    assert "key_term_glossary" in second_block.support_scaffolds
+    assert "term_confirmation_checks" in second_block.support_scaffolds
+
+
+def test_planner_derives_error_recovery_with_hint_after_struggle() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["adhd_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["repeated_concept_error"]},
+                {"evidence": ["hint_used", "correct_with_guidance", "self_correction"]},
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[1]
+
+    assert "error_recovery_with_hint" in second_block.observed_evidence
+    assert "name_why_the_hint_worked" in second_block.support_moves
+    assert "keep_hint_path_available_for_next_attempt" in second_block.support_moves
+    assert "micro_checkpoints" in second_block.support_scaffolds
+
+
+def test_planner_derives_repeated_attempt_three_plus_from_retry_loop() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt mit Beispiel.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "gentle",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["dyscalculia_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["repeated_concept_error", "attempt_count_three_plus"]},
+            ],
+        )
+    )
+
+    first_block = plan.planned_blocks[0]
+
+    assert "repeated_attempt_three_plus" in first_block.observed_evidence
+    assert "stop_retry_loop_and_reframe_concept" in first_block.support_moves
+    assert "switch_from_attempt_counting_to_model_rebuild" in first_block.support_moves
+    assert "number_lines" in first_block.support_scaffolds
+
+
+def test_planner_marks_mixed_success_as_inconsistent_pattern() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Erklaere mir diese Aufgabe Schritt fuer Schritt.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": ["scarcity_aware_support"],
+            },
+            runtime_observations=[
+                {"evidence": ["pattern_recognized", "transfer_success"]},
+                {"evidence": ["single_concept_error"]},
+            ],
+        )
+    )
+
+    second_block = plan.planned_blocks[1]
+
+    assert "mixed_success_inconsistent" in second_block.observed_evidence
+    assert "stabilize_pattern_before_new_variation" in second_block.support_moves
+    assert "contrast_why_this_problem_changed" in second_block.support_moves
+    assert "clear_success_criteria" in second_block.support_scaffolds
+
+
 def test_planner_derives_visible_small_success_from_local_progress() -> None:
     plan = build_teaching_plan(
         SessionRequest(

@@ -257,6 +257,9 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - partielle H.1-Checkpoints mit fehlenden Optionalfeldern bleiben dabei
   resume-faehig, weil fehlende Felder kontrolliert auf Defaults
   zurueckfallen
+- die Signalpalette ist jetzt ausserdem um erste H.2c-Typen erweitert,
+  darunter `rapid_success_three_blocks`, `vocabulary_request_again`,
+  `error_recovery_with_hint` und `mixed_success_inconsistent`
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
   sondern tiefere support-aware Blockgenerierung, spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
@@ -302,6 +305,8 @@ Neu dazu kommt jetzt der erste H.1-Runtime-Kern:
   [resume-semantics.md](/Users/jonasweiss/MathTeach/docs/resume-semantics.md)
 - automatische Ableitung von Mehrblock-Signalen wie
   `transfer_success_two_blocks` und `no_progress_three_blocks`
+- erste H.2c-Signale fuer stabile Erfolge, wiederholte Vokabularlast,
+  Hint-Erholung und inkonsistente Erfolgswechsel
 - automatische Ableitung von `visible_small_success` und
   `no_success_visible_two_blocks` fuer realistischere Erfolgs- und
   Friktionslinien

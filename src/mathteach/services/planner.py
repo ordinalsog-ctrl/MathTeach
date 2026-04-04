@@ -293,6 +293,7 @@ def _block_support_moves(
         "single_concept_error",
         "repeated_concept_error",
         "repeated_concept_error_across_blocks",
+        "repeated_attempt_three_plus",
         "persistent_same_question",
         "off_target_response",
     }:
@@ -300,6 +301,13 @@ def _block_support_moves(
             [
                 "rebuild_last_step_after_confusion",
                 "contrast_correct_and_incorrect_path_locally",
+            ]
+        )
+    if "repeated_attempt_three_plus" in evidence:
+        moves.extend(
+            [
+                "stop_retry_loop_and_reframe_concept",
+                "switch_from_attempt_counting_to_model_rebuild",
             ]
         )
     if evidence & {
@@ -314,11 +322,41 @@ def _block_support_moves(
                 "reset_success_criteria_for_next_attempt",
             ]
         )
+    if "mixed_success_inconsistent" in evidence:
+        moves.extend(
+            [
+                "stabilize_pattern_before_new_variation",
+                "contrast_why_this_problem_changed",
+            ]
+        )
     if _has_visible_success_indicator(evidence):
         moves.extend(
             [
                 "name_and_bank_visible_success",
                 "hand_off_slightly_more_ownership",
+            ]
+        )
+    if evidence & {"rapid_success_two_blocks", "rapid_success_three_blocks"}:
+        moves.extend(
+            [
+                "increase_pacing_after_stable_success",
+                "fade_one_scaffold_after_stable_success",
+            ]
+        )
+    if "rapid_success_three_blocks" in evidence:
+        moves.append("offer_more_independent_challenge")
+    if "vocabulary_request_again" in evidence:
+        moves.extend(
+            [
+                "keep_glossary_visible_across_blocks",
+                "restate_key_term_before_new_symbolic_step",
+            ]
+        )
+    if "error_recovery_with_hint" in evidence:
+        moves.extend(
+            [
+                "name_why_the_hint_worked",
+                "keep_hint_path_available_for_next_attempt",
             ]
         )
 
@@ -373,7 +411,11 @@ def _block_support_moves(
                 "confirm_term_meaning_at_major_steps",
             ]
         )
-        if "vocabulary_request" in evidence or "text_overload" in evidence:
+        if (
+            "vocabulary_request" in evidence
+            or "vocabulary_request_again" in evidence
+            or "text_overload" in evidence
+        ):
             moves.append("clarify_terms_before_retrying_math_step")
     if "scarcity_aware_support" in active_supports:
         moves.extend(
@@ -456,20 +498,44 @@ def _block_support_scaffolds(
         "single_concept_error",
         "repeated_concept_error",
         "repeated_concept_error_across_blocks",
+        "repeated_attempt_three_plus",
     }:
         evidence_priorities.extend(
             [
                 "number_lines",
                 "visible_link_between_quantity_and_symbol",
                 "step_labels",
+                "clear_step_boundary",
             ]
         )
-    if evidence & {"text_overload", "reading_load_issue", "vocabulary_request"}:
+    if evidence & {
+        "text_overload",
+        "reading_load_issue",
+        "vocabulary_request",
+        "vocabulary_request_again",
+    }:
         evidence_priorities.extend(
             [
                 "key_term_glossary",
+                "term_confirmation_checks",
                 "short_sentence_chunks",
                 "translated_key_terms_when_needed",
+            ]
+        )
+    if "error_recovery_with_hint" in evidence:
+        evidence_priorities.extend(
+            [
+                "micro_checkpoints",
+                "step_labels",
+                "visible_progress_markers",
+            ]
+        )
+    if "mixed_success_inconsistent" in evidence:
+        evidence_priorities.extend(
+            [
+                "clear_success_criteria",
+                "step_labels",
+                "visible_progress_markers",
             ]
         )
     if evidence & {
@@ -608,8 +674,12 @@ def _has_visible_success_indicator(evidence: set[str]) -> bool:
             "visible_small_success",
             "correct_with_guidance",
             "pattern_recognized",
+            "rapid_success",
+            "rapid_success_two_blocks",
+            "rapid_success_three_blocks",
             "transfer_success",
             "transfer_success_two_blocks",
+            "error_recovery_with_hint",
             "self_correction",
             "explains_next_step",
             "active_continue",
@@ -624,6 +694,7 @@ def _has_struggle_indicator(evidence: set[str]) -> bool:
             "single_concept_error",
             "repeated_concept_error",
             "repeated_concept_error_across_blocks",
+            "repeated_attempt_three_plus",
             "persistent_same_question",
             "off_target_response",
             "no_progress_block",
@@ -639,8 +710,24 @@ def _augment_observation_evidence(
 ) -> list[str]:
     evidence = set(raw_evidence)
 
+    if "repeated_concept_error" in evidence and "attempt_count_three_plus" in evidence:
+        evidence.add("repeated_attempt_three_plus")
+
     if _has_visible_success_indicator(evidence):
         evidence.add("visible_small_success")
+
+    if (
+        "hint_used" in evidence
+        and evidence & {"correct_with_guidance", "self_correction"}
+        and (
+            evidence & {"single_concept_error", "repeated_concept_error", "repeated_attempt_three_plus"}
+            or (
+                previous_effective_evidence is not None
+                and _has_struggle_indicator(previous_effective_evidence)
+            )
+        )
+    ):
+        evidence.add("error_recovery_with_hint")
 
     if previous_effective_evidence:
         if "repeated_concept_error" in evidence and (
@@ -661,17 +748,42 @@ def _augment_observation_evidence(
         ):
             evidence.add("transfer_success_two_blocks")
 
+        if "rapid_success" in evidence:
+            if previous_effective_evidence & {
+                "rapid_success_two_blocks",
+                "rapid_success_three_blocks",
+            }:
+                evidence.add("rapid_success_two_blocks")
+                evidence.add("rapid_success_three_blocks")
+            elif "rapid_success" in previous_effective_evidence:
+                evidence.add("rapid_success_two_blocks")
+
         if (
             ("pattern_recognized" in evidence or "transfer_success" in evidence)
             and "correct_with_guidance" in previous_effective_evidence
         ):
             evidence.add("reduced_prompting")
 
+        if "vocabulary_request" in evidence and previous_effective_evidence & {
+            "vocabulary_request",
+            "vocabulary_request_again",
+        }:
+            evidence.add("vocabulary_request_again")
+
         if _has_overload_indicator(evidence) and (
             _has_overload_indicator(previous_effective_evidence)
             or "overload_persisted_after_simplification" in previous_effective_evidence
         ):
             evidence.add("overload_persisted_after_simplification")
+
+        if (
+            _has_visible_success_indicator(evidence)
+            and _has_struggle_indicator(previous_effective_evidence)
+        ) or (
+            _has_struggle_indicator(evidence)
+            and _has_visible_success_indicator(previous_effective_evidence)
+        ):
+            evidence.add("mixed_success_inconsistent")
 
         if (
             not _has_visible_success_indicator(evidence)

@@ -2,6 +2,45 @@
 
 Stand: 2026-04-02
 
+## Phase-H.2c-Evidence-Expansion 2026-04-04
+
+Die H.2c-Signalpalette ist jetzt verbreitert: der Planner leitet neben
+den bisherigen H.1-/H.2b-Signalen jetzt auch erste neue
+Triad-vorbereitende Evidence-Typen ab und uebersetzt sie direkt in
+sichtbare Support-Moves.
+
+Wichtigste Konsequenzen:
+
+- neue Mehrblock- und Recovery-Signale sind jetzt operational:
+  `rapid_success_two_blocks`, `rapid_success_three_blocks`,
+  `vocabulary_request_again`, `error_recovery_with_hint`,
+  `repeated_attempt_three_plus` und `mixed_success_inconsistent`
+- diese Signale wirken jetzt nicht nur im Roh-State, sondern direkt in
+  `support_moves` und teilweise auch in der Scaffold-Priorisierung
+- Resume-Vorschauen koennen auch neue Signalsorten wie
+  `rapid_success_three_blocks` jetzt wieder sichtbar aufnehmen
+- `SignalInterpreter` kennt die neuen Evidence-Typen jetzt ebenfalls als
+  staerkere Breakthrough-, Confusion-, Stagnation- oder
+  Confidence-Recovery-Hinweise
+- der naechste direkte Ausbau kann damit realistischer an echte
+  Mischprofil-Konflikte gehen, statt Triad-Regeln nur auf einer zu
+  duennen Signalbasis zu bauen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/runtime_mode_adapter.py](/Users/jonasweiss/MathTeach/src/mathteach/services/runtime_mode_adapter.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_observation_signal_interpretation.py](/Users/jonasweiss/MathTeach/tests/test_observation_signal_interpretation.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `69 passed, 1 warning`
+- Full-Suite: `131 passed, 1 warning`
+
 ## Phase-H.2b.3-Checkpoint-Roundtrip-Hardening 2026-04-04
 
 Die sichtbare Resume-Semantik ist jetzt auch unter der Haube robuster

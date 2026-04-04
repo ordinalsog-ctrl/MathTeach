@@ -941,6 +941,36 @@ def test_tutoring_plan_resume_derives_cross_block_breakthrough() -> None:
     assert payload["mode_adaptation_state"]["current_mode"] == "guided_concept_explanation"
 
 
+def test_tutoring_plan_exposes_rapid_success_evidence_and_moves() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Erklaere mir diese Aufgabe mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            "runtime_observations": [
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "rapid_success_two_blocks" in payload["planned_blocks"][1]["observed_evidence"]
+    assert "rapid_success_three_blocks" in payload["planned_blocks"][2]["observed_evidence"]
+    assert "increase_pacing_after_stable_success" in payload["planned_blocks"][2]["support_moves"]
+    assert "offer_more_independent_challenge" in payload["planned_blocks"][2]["support_moves"]
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",
@@ -1027,6 +1057,52 @@ def test_tutoring_plan_session_resume_reuses_last_observation_evidence_for_previ
         "vocabulary_request",
     ]
     assert payload["resume_context"]["used_carried_observation_evidence"] is True
+    session_store.delete_checkpoint(session_id)
+
+
+def test_tutoring_plan_session_resume_reuses_rapid_success_evidence_for_preview_support() -> None:
+    session_id = f"api-session-rapid-success-preview-{uuid.uuid4()}"
+    session_store.delete_checkpoint(session_id)
+    session_store.save_checkpoint(
+        session_id,
+        ModeAdaptationCheckpoint(
+            mode_adaptation_state=ModeAdaptationState(
+                current_mode="guided_concept_explanation",
+                blocks_in_current_mode=1,
+                mode_changes_in_session=0,
+                cooldown_blocks_remaining=0,
+                last_observation_evidence=["rapid_success_three_blocks"],
+            ),
+        ),
+    )
+
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "session_id": session_id,
+            "objective": "Erklaere mir diese Aufgabe mit Beispiel.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "high_school",
+                "confidence": "medium",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["planned_blocks"][0]["observed_evidence"] == [
+        "rapid_success_three_blocks"
+    ]
+    assert "increase_pacing_after_stable_success" in payload["planned_blocks"][0]["support_moves"]
+    assert "offer_more_independent_challenge" in payload["planned_blocks"][0]["support_moves"]
+    assert payload["resume_context"]["carried_observation_evidence"] == [
+        "rapid_success_three_blocks"
+    ]
     session_store.delete_checkpoint(session_id)
 
 

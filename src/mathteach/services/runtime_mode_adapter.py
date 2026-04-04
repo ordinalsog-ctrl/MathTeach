@@ -100,10 +100,12 @@ class SignalInterpreter:
                             "single_concept_error",
                             "repeated_concept_error",
                             "repeated_concept_error_across_blocks",
+                            "repeated_attempt_three_plus",
                             "persistent_same_question",
                             "off_target_response",
                             "reading_load_issue",
                             "vocabulary_request",
+                            "vocabulary_request_again",
                         }
                     ),
                     support_context=support_context,
@@ -160,6 +162,7 @@ class SignalInterpreter:
                             "no_progress_two_blocks",
                             "no_progress_three_blocks",
                             "no_success_visible_two_blocks",
+                            "mixed_success_inconsistent",
                         }
                     ),
                     support_context=support_context,
@@ -184,6 +187,8 @@ class SignalInterpreter:
                         evidence
                         & {
                             "correct_with_guidance",
+                            "rapid_success_two_blocks",
+                            "rapid_success_three_blocks",
                             "pattern_recognized",
                             "reduced_prompting",
                             "transfer_success",
@@ -212,6 +217,7 @@ class SignalInterpreter:
                         evidence
                         & {
                             "less_withdrawal_language",
+                            "error_recovery_with_hint",
                             "self_correction",
                             "active_continue",
                             "explains_next_step",
@@ -231,11 +237,18 @@ class SignalInterpreter:
         )
 
     def _interpret_confusion(self, evidence: set[str]) -> ObservationStrength | None:
-        if "repeated_concept_error_across_blocks" in evidence:
+        if (
+            "repeated_concept_error_across_blocks" in evidence
+            or "repeated_attempt_three_plus" in evidence
+        ):
             return "strong"
         if "repeated_concept_error" in evidence or "persistent_same_question" in evidence:
             return "meaningful"
-        if "single_concept_error" in evidence or "off_target_response" in evidence:
+        if (
+            "single_concept_error" in evidence
+            or "off_target_response" in evidence
+            or "vocabulary_request_again" in evidence
+        ):
             return "weak"
         return None
 
@@ -259,22 +272,38 @@ class SignalInterpreter:
         return None
 
     def _interpret_stagnation(self, evidence: set[str]) -> ObservationStrength | None:
-        if "no_progress_three_blocks" in evidence:
+        if (
+            "no_progress_three_blocks" in evidence
+            or "repeated_attempt_three_plus" in evidence
+        ):
             return "strong"
-        if "no_progress_two_blocks" in evidence or "no_success_visible_two_blocks" in evidence:
+        if (
+            "no_progress_two_blocks" in evidence
+            or "no_success_visible_two_blocks" in evidence
+            or "mixed_success_inconsistent" in evidence
+        ):
             return "meaningful"
         if "no_progress_block" in evidence:
             return "weak"
         return None
 
     def _interpret_breakthrough(self, evidence: set[str]) -> ObservationStrength | None:
-        if "transfer_success_two_blocks" in evidence or (
-            "pattern_recognized" in evidence and "transfer_success" in evidence
+        if (
+            "rapid_success_three_blocks" in evidence
+            or "transfer_success_two_blocks" in evidence
+            or (
+                "pattern_recognized" in evidence and "transfer_success" in evidence
+            )
         ):
             return "strong"
         if (
-            "transfer_success" in evidence
-            or ("pattern_recognized" in evidence and "reduced_prompting" in evidence)
+            "rapid_success_two_blocks" in evidence
+            or "error_recovery_with_hint" in evidence
+            or "transfer_success" in evidence
+            or (
+                "pattern_recognized" in evidence
+                and "reduced_prompting" in evidence
+            )
         ):
             return "meaningful"
         if "correct_with_guidance" in evidence:
@@ -285,6 +314,8 @@ class SignalInterpreter:
         self,
         evidence: set[str],
     ) -> ObservationStrength | None:
+        if "error_recovery_with_hint" in evidence:
+            return "meaningful"
         if "explains_next_step" in evidence and "active_continue" in evidence:
             return "strong"
         if (

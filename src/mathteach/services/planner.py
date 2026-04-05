@@ -904,6 +904,11 @@ def _log_path_decision(
         chosen_path_score_breakdown=enriched_paths[0].score_breakdown,
         calibration_profile_id=enriched_paths[0].calibration_profile_id,
         calibration_profile_confidence=enriched_paths[0].calibration_profile_confidence,
+        meta_transfer_strength=enriched_paths[0].meta_transfer_strength,
+        meta_transfer_source_profiles=enriched_paths[0].meta_transfer_source_profiles,
+        meta_transfer_source_shares=enriched_paths[0].meta_transfer_source_shares,
+        meta_transfer_weight_delta=enriched_paths[0].meta_transfer_weight_delta,
+        meta_transfer_was_effective=enriched_paths[0].meta_transfer_was_effective,
         calibration_stratification_dimensions={
             key: value
             for key, value in {
@@ -1007,6 +1012,31 @@ def _build_calibration_context(
             selected_path.profile_weight_blend_ratio
             if selected_path is not None
             else None
+        ),
+        meta_transfer_strength=(
+            selected_path.meta_transfer_strength
+            if selected_path is not None
+            else None
+        ),
+        meta_transfer_source_profiles=(
+            selected_path.meta_transfer_source_profiles
+            if selected_path is not None
+            else []
+        ),
+        meta_transfer_source_shares=(
+            selected_path.meta_transfer_source_shares
+            if selected_path is not None
+            else {}
+        ),
+        meta_transfer_weight_delta=(
+            selected_path.meta_transfer_weight_delta
+            if selected_path is not None
+            else None
+        ),
+        meta_transfer_was_effective=(
+            selected_path.meta_transfer_was_effective
+            if selected_path is not None
+            else False
         ),
         stratification_dimensions=(
             selected_profile.stratification_dimensions

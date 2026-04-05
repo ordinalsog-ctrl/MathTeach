@@ -85,6 +85,18 @@ Heute bereits im Code:
   Outcome-Logging, persistente Gewichte ueber Sessions hinweg und
   profilspezifische Kalibrierung nach Support-Mix, Intent, Evidence und
   Blocktyp
+- erster H.9-Start:
+  datenarme exakte Profile koennen jetzt kontrolliert von aehnlichen,
+  staerker gelernten Profilen profitieren; diese Transfers werden jetzt
+  auch mit Quellanteilen, echter Gewichtsveraenderung und sauberer
+  Outcome-Attribution historisiert
+- H.9.1 Monitoring:
+  Transfer-Netzwerk, schwache Transfer-Kanten, Profil-Dichte sowie
+  profilbezogene Transfer-Historie und Transfer-Kandidaten sind jetzt
+  ueber Admin-Endpunkte sichtbar; Donor-Ranking und `top_donors`
+  werden dabei aus effektiver Transfer-Historie statt aus rohen
+  Linkaggregaten abgeleitet, und `weak-transfers` respektiert seine
+  Query-Schwellen jetzt auch wirklich zur Laufzeit
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -93,11 +105,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `190 passed, 1 warning`
+- `pytest -q` -> `203 passed, 1 warning`
 
-Der naechste groessere technische Schritt ist `H.9`: Meta-Kalibrierung
-zwischen verwandten H.8-Profilen, damit duenne oder neue Profile von
-aehnlichen, staerker gelernten Profilen profitieren koennen.
+Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
+der Ausbau dieses Meta-Transfers von Monitoring zu aktiver
+Meta-Steuerung: also schwache Kanten automatisch de-priorisieren,
+Transfer-Netzwerke ueber Zeit beobachten und spaeter hierarchische
+Aggregation bzw. H.9.2-Transferpolitik aufbauen.
 
 ## Repository-Inhalt
 
@@ -139,6 +153,7 @@ aehnlichen, staerker gelernten Profilen profitieren koennen.
 - [docs/h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md): H.6-Ausbau fuer Entscheidungs-Logging, Outcome-Updates und empirische Gewichtsanpassung
 - [docs/h7-persistent-calibration.md](/Users/jonasweiss/MathTeach/docs/h7-persistent-calibration.md): H.7-Ausbau fuer persistente Kalibrierung ueber Sessions und Prozessstarts hinweg
 - [docs/h8-profile-calibration.md](/Users/jonasweiss/MathTeach/docs/h8-profile-calibration.md): H.8-Ausbau fuer profilspezifische und kontextsensitive Gewichtsanpassung
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md): H.9-Start fuer Transfer zwischen verwandten Kalibrierungsprofilen
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik

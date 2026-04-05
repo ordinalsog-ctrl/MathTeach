@@ -1,6 +1,128 @@
 # MathTeach Journal
 
-Stand: 2026-04-05
+Stand: 2026-04-06
+
+## Phase-H.9.1-Monitoring-Hardening 2026-04-06
+
+Die erste H.9.1-Monitoring-Schicht ist jetzt noch einmal an zwei
+Integrationspunkten gehaertet worden, damit sie auch unter gemischten
+oder aelteren Kalibrierungsdaten verlässlich bleibt.
+
+Wichtigste Konsequenzen:
+
+- Donor-Ranking, `top_donors` und `profiles_with_transfer` werden jetzt
+  aus effektiver `meta_transfer_history` statt aus rohen
+  `meta_transfer_links` abgeleitet
+- dadurch koennen alte, vor dem Attribution-Hardening gespeicherte
+  Linkaggregate nicht mehr still in neue Monitoring-Empfehlungen
+  hineinbluten
+- `GET /api/v1/admin/calibration/weak-transfers` wertet seine
+  Query-Schwellen jetzt gegen den vollstaendigen effektiven Edge-Satz
+  aus; gelockerte Parameter koennen also das Resultatset wirklich
+  erweitern
+- neue Tests pinnen sowohl den Legacy-Link-Fall als auch die echte
+  Parametrierbarkeit des Weak-Transfer-Endpunkts fest
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [tests/test_h9_meta_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h9_meta_calibration.py)
+- [tests/test_h9_meta_monitoring.py](/Users/jonasweiss/MathTeach/tests/test_h9_meta_monitoring.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `65 passed, 1 warning`
+- Full-Suite: `203 passed, 1 warning`
+
+## Phase-H.9.1-Meta-Transfer-Monitoring 2026-04-05
+
+Auf Basis der gehaerteten H.9-Attribution ist die Meta-Transfer-Schicht
+jetzt nicht mehr nur intern nachvollziehbar, sondern auch ueber Admin-
+Inspektion sichtbar.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine` aggregiert jetzt effektive Transfer-Kanten aus der
+  persistierten Meta-Historie statt nur rohe Profil-Links zu zeigen
+- die API zeigt jetzt ein Transfer-Netzwerk mit Knoten und Kanten ueber
+  `GET /api/v1/admin/calibration/transfer-network`
+- schwache Transfer-Kanten lassen sich gezielt ueber
+  `GET /api/v1/admin/calibration/weak-transfers` inspizieren
+- Profil-Dichte und isolierte Profile mit moeglichen Donoren werden
+  ueber `GET /api/v1/admin/calibration/profile-density` sichtbar
+- fuer einzelne Profile koennen jetzt sowohl Transfer-Historie als auch
+  aktuelle Donor-Kandidaten separat abgefragt werden
+- die neue Monitoring-Schicht baut nur auf effektiven Transfers auf:
+  Phantom-Transfer wird nicht als wirksame Kante gezaehlt, und
+  Multi-Source-Attribution bleibt proportional ueber `source_shares`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [tests/test_h9_meta_monitoring.py](/Users/jonasweiss/MathTeach/tests/test_h9_meta_monitoring.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `63 passed, 1 warning`
+- Full-Suite: `201 passed, 1 warning`
+
+## Phase-H.9-Meta-Calibration-Start 2026-04-05
+
+Mit dem ersten H.9-Schritt lernt die Kalibrierung jetzt nicht mehr nur
+innerhalb eines einzelnen H.8-Profils oder ueber dessen direkte
+Fallback-Kette. Datenarme exakte Profile koennen jetzt kontrolliert von
+aehnlichen, staerker kalibrierten Nachbarprofilen profitieren.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine` berechnet jetzt Aehnlichkeit zwischen
+  Profil-Slices entlang von Support-Mix, Sequenz-Intent,
+  Evidence-Muster und Blocktyp
+- fuer duenne exakte Profile kann jetzt ein begrenzter Meta-Prior aus
+  verwandten Profilen gebildet werden, bevor die exakte H.8-Schicht
+  daruebergelegt wird
+- Transfer greift nur bei echter Kontextnaehe und bleibt bewusst
+  gedeckelt, damit H.8 nicht wieder zu einer unscharfen globalen
+  Gewichtung zurueckfaellt
+- Outcome-Updates buchen jetzt ausserdem persistent zurueck, welche
+  Meta-Transfer-Quellprofile fuer ein Zielprofil genutzt wurden, mit
+  welchen `source_shares` sie beteiligt waren und welche
+  Gewichtsdifferenz der Transfer real verursacht hat
+- `enriched_paths` und `calibration_context` zeigen jetzt sichtbar, ob
+  Meta-Transfer aktiv war, mit welcher Blend-Staerke er angeboten
+  wurde, aus welchen Quellprofilen er kam und ob dieser Transfer
+  tatsaechlich wirksam war
+- die Admin-Profil-Details zeigen jetzt ausserdem passende
+  Meta-Transfer-Kandidaten fuer ein Profil, zusammen mit erster
+  Link-Historie und aktuellen Transfer-Spuren
+- Phantom-Transfer wird jetzt nicht mehr auf Transfer-Links
+  gutgeschrieben: Ein sichtbarer Meta-Prior ohne reale
+  Gewichtsveraenderung bleibt diagnostisch sichtbar, zaehlt aber nicht
+  als wirksamer historischer Transfer
+- bei mehreren Quellprofilen wird Outcome-Kredit jetzt proportional auf
+  Donoren verteilt statt denselben Outcome mehrfach voll anzurechnen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_h9_meta_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h9_meta_calibration.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `94 passed, 1 warning`
+- Full-Suite: `197 passed, 1 warning`
 
 ## Phase-H.8-Profile-Aware-Calibration 2026-04-05
 

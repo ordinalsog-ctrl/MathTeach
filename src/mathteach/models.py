@@ -334,6 +334,49 @@ class CalibrationWeightsSnapshot(BaseModel):
     adjustment_reason: str = ""
 
 
+class MetaTransferLink(BaseModel):
+    source_profile_id: str = Field(min_length=3)
+    use_count: int = Field(default=0, ge=0)
+    cumulative_outcome_score: float = Field(default=0.0, ge=0.0)
+    average_outcome_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    last_similarity_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    last_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
+    last_outcome_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    last_used: datetime | None = None
+
+    def record_outcome(
+        self,
+        *,
+        outcome_score: float,
+        similarity_score: float,
+        transfer_strength: float,
+        timestamp: datetime,
+    ) -> None:
+        self.use_count += 1
+        self.cumulative_outcome_score += outcome_score
+        self.average_outcome_score = (
+            self.cumulative_outcome_score / self.use_count
+            if self.use_count > 0
+            else 0.0
+        )
+        self.last_similarity_score = similarity_score
+        self.last_transfer_strength = transfer_strength
+        self.last_outcome_score = outcome_score
+        self.last_used = timestamp
+
+
+class MetaTransferHistoryEntry(BaseModel):
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    target_profile_id: str = Field(min_length=3)
+    source_profile_ids: list[str] = Field(default_factory=list)
+    decision_id: str | None = None
+    transfer_strength: float = Field(default=0.0, ge=0.0, le=1.0)
+    outcome_score: float = Field(ge=0.0, le=1.0)
+    similarity_by_source: dict[str, float] = Field(default_factory=dict)
+    source_shares: dict[str, float] = Field(default_factory=dict)
+    effective_weight_delta: float = Field(default=0.0, ge=0.0, le=1.0)
+
+
 class CalibrationProfile(BaseModel):
     profile_id: str = Field(min_length=3)
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
@@ -345,6 +388,8 @@ class CalibrationProfile(BaseModel):
     confidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
     last_calibration: datetime | None = None
     weights_history: list[CalibrationWeightsSnapshot] = Field(default_factory=list)
+    meta_transfer_links: dict[str, MetaTransferLink] = Field(default_factory=dict)
+    meta_transfer_history: list[MetaTransferHistoryEntry] = Field(default_factory=list)
 
     def refresh_counts(self) -> None:
         self.sample_size = len(self.decision_ids)
@@ -370,6 +415,11 @@ class DecisionRecord(BaseModel):
     calibration_profile_id: str | None = None
     calibration_profile_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     calibration_stratification_dimensions: dict[str, str] = Field(default_factory=dict)
+    meta_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_source_profiles: list[str] = Field(default_factory=list)
+    meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
+    meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_was_effective: bool = False
     alternative_paths: list[DecisionAlternative] = Field(default_factory=list)
     observed_outcome: OutcomeMetrics | None = None
     outcome_timestamp: datetime | None = None
@@ -392,6 +442,11 @@ class CalibrationContext(BaseModel):
     profile_sample_size: int = Field(default=0, ge=0)
     profile_outcome_count: int = Field(default=0, ge=0)
     profile_weight_blend_ratio: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_source_profiles: list[str] = Field(default_factory=list)
+    meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
+    meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_was_effective: bool = False
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
 
@@ -433,6 +488,11 @@ class EnrichedPathEvaluation(BaseModel):
     calibration_profile_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     calibration_profile_sample_size: int = Field(default=0, ge=0)
     profile_weight_blend_ratio: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_source_profiles: list[str] = Field(default_factory=list)
+    meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
+    meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_was_effective: bool = False
     calibration_weights_used: dict[str, float] = Field(default_factory=dict)
     score_breakdown: dict[str, float] = Field(default_factory=dict)
     goal_alignment_explanation: str = ""

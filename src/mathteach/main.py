@@ -187,6 +187,68 @@ def admin_calibration_profile_detail(
     return profile
 
 
+@app.get("/api/v1/admin/calibration/profiles/{profile_id}/transfer-candidates")
+def admin_calibration_profile_transfer_candidates(
+    profile_id: str,
+    store_path: str | None = Query(default=None),
+    limit: int = Query(default=5, ge=1, le=20),
+):
+    engine = _resolve_calibration_engine(store_path)
+    profile = engine.get_profile(profile_id)
+    if profile is None:
+        raise HTTPException(status_code=404, detail="No calibration profile found.")
+    return {
+        "profile_id": profile_id,
+        "transfer_candidates": engine.profile_transfer_candidates(profile_id, limit=limit),
+    }
+
+
+@app.get("/api/v1/admin/calibration/profiles/{profile_id}/transfer-history")
+def admin_calibration_profile_transfer_history(
+    profile_id: str,
+    store_path: str | None = Query(default=None),
+    limit: int = Query(default=10, ge=1, le=50),
+):
+    engine = _resolve_calibration_engine(store_path)
+    history = engine.get_profile_transfer_history(profile_id, limit=limit)
+    if history is None:
+        raise HTTPException(status_code=404, detail="No calibration profile found.")
+    return history
+
+
+@app.get("/api/v1/admin/calibration/transfer-network")
+def admin_calibration_transfer_network(
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    return engine.compute_transfer_network_summary()
+
+
+@app.get("/api/v1/admin/calibration/weak-transfers")
+def admin_calibration_weak_transfers(
+    store_path: str | None = Query(default=None),
+    min_average_strength: float = Query(default=0.05, ge=0.0, le=1.0),
+    max_average_outcome: float = Query(default=0.12, ge=0.0, le=1.0),
+):
+    engine = _resolve_calibration_engine(store_path)
+    weak_edges = engine.compute_weak_transfers(
+        min_average_strength=min_average_strength,
+        max_average_outcome=max_average_outcome,
+    )
+    return {
+        "weak_edges": weak_edges,
+        "count": len(weak_edges),
+    }
+
+
+@app.get("/api/v1/admin/calibration/profile-density")
+def admin_calibration_profile_density(
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    return engine.profile_density_summary()
+
+
 @app.get("/api/v1/admin/quarantine/sessions")
 def admin_list_quarantined_sessions():
     return {"sessions": session_manager.list_quarantined_sessions()}

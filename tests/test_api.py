@@ -5,6 +5,12 @@ from fastapi.testclient import TestClient
 
 from mathteach.main import app, session_store
 from mathteach.models import (
+    BlockSequenceIntent,
+    BlockType,
+    DecisionRecord,
+    EvidenceCombinationPattern,
+    MetaTransferHistoryEntry,
+    MetaTransferLink,
     ModeAdaptationCheckpoint,
     ModeAdaptationState,
     RawBlockObservation,
@@ -1979,3 +1985,226 @@ def test_profile_calibration_endpoints_expose_profile_specific_data(tmp_path: Pa
     support_profile = detail_response.json()["stratification_dimensions"]["support_profile"]
     assert "adhd_aware_support" in support_profile
     assert "dyscalculia_aware_support" in support_profile
+
+
+def test_h9_monitoring_endpoints_expose_transfer_network_and_density(tmp_path: Path) -> None:
+    store_path = tmp_path / "calibration.json"
+    engine = CalibrationEngine(
+        store=CalibrationStore(store_path),
+        autosave_threshold=1,
+        min_samples_for_calibration=999,
+    )
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+dyscalculia_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_strong = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_weak = engine._get_or_create_profile(
+        {
+            "support_profile": "dyscalculia_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.CONCEPT_CHECK.value,
+        }
+    )
+    donor_relaxed_only = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.BRIDGE_TO_APPLICATION.value,
+        }
+    )
+    sparse_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.CONFIDENCE_BUILDING.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.CONCEPT_CHECK.value,
+        }
+    )
+    sparse_donor = engine._get_or_create_profile(
+        {
+            "support_profile": "language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.CONFIDENCE_BUILDING.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_strong.outcome_count = 24
+    donor_weak.outcome_count = 18
+    donor_relaxed_only.outcome_count = 16
+    sparse_profile.outcome_count = 2
+    sparse_donor.outcome_count = 20
+    donor_strong.confidence_score = 0.8
+    donor_weak.confidence_score = 0.7
+    donor_relaxed_only.confidence_score = 0.6
+    sparse_donor.confidence_score = 0.8
+    target_profile.meta_transfer_links[donor_strong.profile_id] = MetaTransferLink(
+        source_profile_id=donor_strong.profile_id,
+        use_count=1,
+        cumulative_outcome_score=0.4,
+        average_outcome_score=0.4,
+    )
+    target_profile.meta_transfer_links[donor_weak.profile_id] = MetaTransferLink(
+        source_profile_id=donor_weak.profile_id,
+        use_count=1,
+        cumulative_outcome_score=0.06,
+        average_outcome_score=0.06,
+    )
+    target_profile.meta_transfer_history = [
+        MetaTransferHistoryEntry(
+            target_profile_id=target_profile.profile_id,
+            source_profile_ids=[donor_strong.profile_id],
+            decision_id="api_strong",
+            transfer_strength=0.3,
+            outcome_score=0.4,
+            similarity_by_source={donor_strong.profile_id: 0.9},
+            source_shares={donor_strong.profile_id: 1.0},
+            effective_weight_delta=0.08,
+        ),
+        MetaTransferHistoryEntry(
+            target_profile_id=target_profile.profile_id,
+            source_profile_ids=[donor_weak.profile_id],
+            decision_id="api_weak",
+            transfer_strength=0.3,
+            outcome_score=0.06,
+            similarity_by_source={donor_weak.profile_id: 0.7},
+            source_shares={donor_weak.profile_id: 1.0},
+            effective_weight_delta=0.09,
+        ),
+        MetaTransferHistoryEntry(
+            target_profile_id=target_profile.profile_id,
+            source_profile_ids=[donor_relaxed_only.profile_id],
+            decision_id="api_relaxed_only",
+            transfer_strength=0.03,
+            outcome_score=0.15,
+            similarity_by_source={donor_relaxed_only.profile_id: 0.65},
+            source_shares={donor_relaxed_only.profile_id: 1.0},
+            effective_weight_delta=0.08,
+        ),
+    ]
+    engine.decision_log = [
+        DecisionRecord(
+            session_id="api_effective",
+            current_block_type=BlockType.WORKED_EXAMPLE,
+            selected_block_type=BlockType.WORKED_EXAMPLE,
+            evidence_patterns=[EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS],
+            active_supports=["adhd_aware_support", "dyscalculia_aware_support"],
+            sequence_intent=BlockSequenceIntent.MASTERY_PATH,
+            available_candidate_paths=["path_effective"],
+            chosen_path_id="path_effective",
+            chosen_path_score=0.7,
+            chosen_path_score_breakdown={"heuristic": 0.7},
+            calibration_profile_id=target_profile.profile_id,
+            meta_transfer_strength=0.3,
+            meta_transfer_source_profiles=[donor_strong.profile_id],
+            meta_transfer_source_shares={donor_strong.profile_id: 1.0},
+            meta_transfer_weight_delta=0.08,
+            meta_transfer_was_effective=True,
+        ),
+        DecisionRecord(
+            session_id="api_phantom",
+            current_block_type=BlockType.WORKED_EXAMPLE,
+            selected_block_type=BlockType.WORKED_EXAMPLE,
+            evidence_patterns=[EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS],
+            active_supports=["adhd_aware_support", "dyscalculia_aware_support"],
+            sequence_intent=BlockSequenceIntent.MASTERY_PATH,
+            available_candidate_paths=["path_phantom"],
+            chosen_path_id="path_phantom",
+            chosen_path_score=0.7,
+            chosen_path_score_breakdown={"heuristic": 0.7},
+            calibration_profile_id=target_profile.profile_id,
+            meta_transfer_strength=0.3,
+            meta_transfer_source_profiles=[donor_weak.profile_id],
+            meta_transfer_source_shares={donor_weak.profile_id: 1.0},
+            meta_transfer_weight_delta=0.0,
+            meta_transfer_was_effective=False,
+        ),
+    ]
+    engine.force_save()
+
+    network_response = client.get(
+        "/api/v1/admin/calibration/transfer-network",
+        params={"store_path": str(store_path)},
+    )
+    weak_response = client.get(
+        "/api/v1/admin/calibration/weak-transfers",
+        params={"store_path": str(store_path)},
+    )
+    weak_relaxed_response = client.get(
+        "/api/v1/admin/calibration/weak-transfers",
+        params={
+            "store_path": str(store_path),
+            "min_average_strength": 0.01,
+            "max_average_outcome": 0.2,
+        },
+    )
+    weak_narrow_response = client.get(
+        "/api/v1/admin/calibration/weak-transfers",
+        params={
+            "store_path": str(store_path),
+            "min_average_strength": 0.1,
+            "max_average_outcome": 0.05,
+        },
+    )
+    density_response = client.get(
+        "/api/v1/admin/calibration/profile-density",
+        params={"store_path": str(store_path)},
+    )
+    history_response = client.get(
+        f"/api/v1/admin/calibration/profiles/{target_profile.profile_id}/transfer-history",
+        params={"store_path": str(store_path)},
+    )
+    candidates_response = client.get(
+        f"/api/v1/admin/calibration/profiles/{sparse_profile.profile_id}/transfer-candidates",
+        params={"store_path": str(store_path)},
+    )
+
+    assert network_response.status_code == 200
+    assert weak_response.status_code == 200
+    assert weak_relaxed_response.status_code == 200
+    assert weak_narrow_response.status_code == 200
+    assert density_response.status_code == 200
+    assert history_response.status_code == 200
+    assert candidates_response.status_code == 200
+
+    network_payload = network_response.json()
+    weak_payload = weak_response.json()
+    weak_relaxed_payload = weak_relaxed_response.json()
+    weak_narrow_payload = weak_narrow_response.json()
+    density_payload = density_response.json()
+    history_payload = history_response.json()
+    candidates_payload = candidates_response.json()
+
+    assert network_payload["profiles_with_transfer"] >= 1
+    assert len(network_payload["edges"]) >= 3
+    assert weak_payload["count"] == 1
+    assert weak_relaxed_payload["count"] == 2
+    assert weak_narrow_payload["count"] == 0
+    assert any(
+        edge["source_profile_id"] == donor_relaxed_only.profile_id
+        for edge in weak_relaxed_payload["weak_edges"]
+    )
+    assert density_payload["sparse_profiles"] >= 1
+    assert any(
+        item["profile_id"] == sparse_profile.profile_id
+        for item in density_payload["isolated_profiles"]
+    )
+    assert history_payload["profile_id"] == target_profile.profile_id
+    assert history_payload["phantom_filters"] == 1
+    assert history_payload["effective_transfers"] == 1
+    assert candidates_payload["profile_id"] == sparse_profile.profile_id
+    assert candidates_payload["transfer_candidates"][0]["profile_id"] == sparse_donor.profile_id

@@ -24,6 +24,15 @@ Wichtigste Konsequenzen:
 - die API zeigt ueber neue Endpunkte die gespeicherten Profile und gibt
   bei Outcome-Updates zurueck, welcher Profil-Slice fortgeschrieben
   wurde
+- die H.8-Review-Fixes stellen jetzt zusaetzlich sicher, dass exakte
+  Profil-Slices vor breiteren Fallback-Profilen bevorzugt werden, statt
+  spaeter von deren groesserem Sample-Volumen verdraengt zu werden
+- die Blocktyp-Stratifizierung wirkt jetzt pro Kandidatenpfad, weil
+  Kalibrierungsprofile pro `enriched_path` anhand des ersten
+  vorgeschlagenen Blocktyps aufgeloest werden
+- `calibration_context.active_weights` zeigt jetzt die tatsaechlich
+  verwendeten gemischten Gewichte der gewaehlten Empfehlung statt nur
+  den globalen H.7-Satz
 
 Neue oder aktualisierte Referenzartefakte:
 
@@ -40,9 +49,9 @@ Neue oder aktualisierte Referenzartefakte:
 
 Verifikation:
 
-- `ruff`: ausstehend in dieser Runde
+- `ruff`: bestanden
 - gezielte Tests: `87 passed, 1 warning`
-- Full-Suite: ausstehend in dieser Runde
+- Full-Suite: `190 passed, 1 warning`
 
 ## Phase-H.7-Persistent-Calibration 2026-04-05
 

@@ -68,6 +68,37 @@ Warum diese Aufteilung:
 
 MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teacher Mind + Support Response Matrix + Tutor Runtime`.
 
+## Aktueller Stand
+
+MathTeach ist aktuell eine belastbare Tutor-Engine-Basis, noch kein
+fertiges Endnutzerprodukt.
+
+Heute bereits im Code:
+
+- lokale, regelbasierte Tutorplanung mit klarer Trennung von
+  Fachwissen und Vermittlungslogik
+- support-sensitive Moduswahl, Mixed-Profile-Konfliktaufloesung und
+  blockweise Runtime-Anpassung innerhalb einer Session
+- mehrstufige Pfadplanung von H.3 bis H.5:
+  Sequenzrouting, Lookahead-Pfade und Langfristziel-Kopplung
+- empirische Kalibrierung von H.6 bis H.8:
+  Outcome-Logging, persistente Gewichte ueber Sessions hinweg und
+  profilspezifische Kalibrierung nach Support-Mix, Intent, Evidence und
+  Blocktyp
+- Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
+  Audit-Pfade fuer defekte Sessions
+- eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
+  und Admin-Inspektion
+
+Verifizierter Stand:
+
+- `ruff check --no-cache src tests`
+- `pytest -q` -> `190 passed, 1 warning`
+
+Der naechste groessere technische Schritt ist `H.9`: Meta-Kalibrierung
+zwischen verwandten H.8-Profilen, damit duenne oder neue Profile von
+aehnlichen, staerker gelernten Profilen profitieren koennen.
+
 ## Repository-Inhalt
 
 - [JOURNAL.md](/Users/jonasweiss/MathTeach/JOURNAL.md): Laufender Session- und Projektstand mit Mathematikwerken, Teacher-Mind-Quellen, Runtime-Handoff und naechsten Schritten

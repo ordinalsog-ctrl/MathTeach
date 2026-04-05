@@ -2,6 +2,46 @@
 
 Stand: 2026-04-02
 
+## Phase-H.4-Lookahead-Path-Evaluation 2026-04-05
+
+Die H.3-Blocksequenz ist jetzt nicht mehr auf genau eine direkte
+Naechstblock-Empfehlung beschraenkt. Stattdessen bewertet der Planner
+jetzt mehrere moegliche Lookahead-Pfade und macht sichtbar, warum der
+ausgewaehlte Pfad gegenueber den Alternativen bevorzugt wurde.
+
+Wichtigste Konsequenzen:
+
+- `BlockSequenceDecision` traegt jetzt
+  `selected_path_score` und `candidate_paths`
+- jeder `PlannedTeachingBlock` zeigt jetzt nicht nur
+  `next_block_type`, sondern auch mehrere bewertete Pfadoptionen
+- `sequence_planning_metadata` macht jetzt sichtbar, wie viele
+  Kandidaten bewertet wurden und welche Pfade als aktuelle Alternativen
+  gelten
+- die H.4-Pfadbewertung bleibt auf dem bestehenden H.3-Entscheidungsweg
+  aufgesetzt, statt einen zweiten Planner-Pfad zu eroeffnen
+- Pattern-, Support- und Sequenzheuristiken koennen jetzt nicht nur den
+  naechsten Block, sondern auch kurze Pfadverlaeufe wie
+  `guided_practice -> bridge_to_application -> concept_check` oder
+  `error_recovery -> worked_example -> guided_practice` gegeneinander
+  abwaegen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/block_sequence_planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/block_sequence_planner.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_block_sequence_planner.py](/Users/jonasweiss/MathTeach/tests/test_block_sequence_planner.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/lookahead-path-planning.md](/Users/jonasweiss/MathTeach/docs/lookahead-path-planning.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `82 passed, 1 warning`
+- Full-Suite: `168 passed, 1 warning`
+
 ## Phase-H.3-Block-Sequential-Planning 2026-04-04
 
 Die Planung springt jetzt ueber H.2g hinaus: jeder Block traegt nicht

@@ -138,6 +138,10 @@ Aktueller Stand:
   `alternative_next_block_types`, waehrend `TeachingPlan` jetzt auch
   `block_sequence_state` und `sequence_planning_metadata` sichtbar
   macht
+- H.4 erweitert diese Sequenzlogik jetzt um echte Lookahead-Pfade:
+  `candidate_paths` und `selected_path_score` machen sichtbar, welche
+  kurzen Blockpfade gegeneinander bewertet wurden, statt nur eine
+  einzelne Naechstblock-Wahl zu liefern
 
 ## Phase D: Pilot and Validation
 
@@ -282,8 +286,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.4 den neuen H.3-Routingpfad von einer direkten Naechstblock-Wahl zu
-  mehreren bewerteten Lookahead-Pfaden erweitern
+- H.5 die neuen H.4-Pfade staerker an laengerfristige Lernziele,
+  Session-Historie und spaetere Pilotdaten koppeln
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

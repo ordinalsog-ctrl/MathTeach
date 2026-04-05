@@ -280,10 +280,15 @@ def test_planner_routes_preview_block_type_after_rapid_success() -> None:
     assert third_block.next_block_type == BlockType.GUIDED_PRACTICE
     assert third_block.transition_reason == BlockTransitionReason.EVIDENCE_PATTERN
     assert third_block.sequence_intent == BlockSequenceIntent.MASTERY_PATH
+    assert third_block.selected_path_score is not None
+    assert third_block.candidate_paths
+    assert third_block.candidate_paths[0].block_types[0] == BlockType.GUIDED_PRACTICE
     assert preview_block.block_type == BlockType.GUIDED_PRACTICE
     assert plan.block_sequence_state is not None
     assert plan.sequence_planning_metadata is not None
     assert plan.sequence_planning_metadata.adaptive_transitions_applied >= 1
+    assert plan.sequence_planning_metadata.candidate_path_count >= 1
+    assert plan.sequence_planning_metadata.candidate_paths
 
 
 def test_planner_routes_error_recovery_preview_back_to_worked_example() -> None:

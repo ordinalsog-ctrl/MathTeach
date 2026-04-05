@@ -100,8 +100,9 @@ Die H.3-Schicht ist aktuell abgesichert ueber:
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.4 kann jetzt auf echter Sequenzlogik aufsetzen: mehrere moegliche
-Lookahead-Pfade bewerten, statt nur einen direkten naechsten Blocktyp zu
-waehlen.
+H.4 ist jetzt als eigene Folgeschicht umgesetzt und bewertet mehrere
+kurze Lookahead-Pfade statt nur einer direkten Naechstblock-Empfehlung.
+Der Anschluss ist dokumentiert in
+[lookahead-path-planning.md](/Users/jonasweiss/MathTeach/docs/lookahead-path-planning.md).

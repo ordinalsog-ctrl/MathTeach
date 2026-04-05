@@ -742,7 +742,9 @@ def _attach_sequence_decision(
             "next_block_type": decision.suggested_next_block_type,
             "alternative_next_block_types": decision.alternative_next_block_types,
             "routing_confidence": decision.confidence,
+            "selected_path_score": decision.selected_path_score,
             "routing_rationale": decision.rationale,
+            "candidate_paths": decision.candidate_paths,
         }
     )
     updated_state = advance_sequence_state(
@@ -1277,6 +1279,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
             planned_blocks[-1].routing_confidence if planned_blocks else None
         ),
         lookahead_block_types=block_sequence_state.lookahead_block_types,
+        candidate_path_count=(
+            len(planned_blocks[-1].candidate_paths) if planned_blocks else 0
+        ),
+        candidate_paths=planned_blocks[-1].candidate_paths if planned_blocks else [],
     )
 
     return TeachingPlan(

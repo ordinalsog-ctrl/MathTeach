@@ -1253,9 +1253,14 @@ def test_tutoring_plan_exposes_sequence_routing_after_rapid_success() -> None:
     assert third_block["next_block_type"] == "guided_practice"
     assert third_block["transition_reason"] == "evidence_pattern"
     assert third_block["sequence_intent"] == "mastery_path"
+    assert third_block["selected_path_score"] is not None
+    assert third_block["candidate_paths"]
+    assert third_block["candidate_paths"][0]["block_types"][0] == "guided_practice"
     assert preview_block["block_type"] == "guided_practice"
     assert payload["block_sequence_state"]["adaptive_transitions_applied"] >= 1
     assert payload["sequence_planning_metadata"]["next_block_options"]
+    assert payload["sequence_planning_metadata"]["candidate_path_count"] >= 1
+    assert payload["sequence_planning_metadata"]["candidate_paths"]
 
 
 def test_tutoring_plan_exposes_error_recovery_routing_back_to_worked_example() -> None:

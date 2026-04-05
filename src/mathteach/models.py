@@ -189,6 +189,14 @@ class BlockSequenceDecision(BaseModel):
     rationale: list[str] = Field(default_factory=list)
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     lookahead_block_types: list[BlockType] = Field(default_factory=list)
+    selected_path_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    candidate_paths: list["BlockSequencePathOption"] = Field(default_factory=list)
+
+
+class BlockSequencePathOption(BaseModel):
+    block_types: list[BlockType] = Field(default_factory=list)
+    score: float = Field(default=0.0, ge=0.0, le=1.0)
+    rationale: list[str] = Field(default_factory=list)
 
 
 class BlockSequenceState(BaseModel):
@@ -207,6 +215,8 @@ class SequencePlanningMetadata(BaseModel):
     last_transition_reason: BlockTransitionReason | None = None
     last_routing_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     lookahead_block_types: list[BlockType] = Field(default_factory=list)
+    candidate_path_count: int = Field(default=0, ge=0)
+    candidate_paths: list[BlockSequencePathOption] = Field(default_factory=list)
 
 
 class PlannedTeachingBlock(BaseModel):
@@ -218,7 +228,9 @@ class PlannedTeachingBlock(BaseModel):
     next_block_type: BlockType | None = None
     alternative_next_block_types: list[BlockType] = Field(default_factory=list)
     routing_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    selected_path_score: float | None = Field(default=None, ge=0.0, le=1.0)
     routing_rationale: list[str] = Field(default_factory=list)
+    candidate_paths: list[BlockSequencePathOption] = Field(default_factory=list)
     goal: str
     focus: list[str] = Field(default_factory=list)
     support_moves: list[str] = Field(default_factory=list)

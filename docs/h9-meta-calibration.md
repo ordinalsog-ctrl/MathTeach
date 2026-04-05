@@ -149,6 +149,46 @@ Dadurch lassen sich jetzt drei Dinge inspizieren:
 - Profil-Dichte mit duennen oder isolierten Profilen und passenden
   Donor-Kandidaten
 
+## H.9.2 Active Steering - Phase 1
+
+Die aktuelle H.9.2-Phase greift jetzt nicht mehr nur beobachtend, sondern
+leicht steuernd in die Donor-Auswahl ein.
+
+Wichtig: Diese Steuerung sitzt bewusst in der `CalibrationEngine`,
+konkret in `_meta_transfer_candidates()`, nicht im Planner. Dadurch
+bleibt die Meta-Transfer-Auswahl an genau einer Stelle im System
+konsistent.
+
+Phase 1 fuehrt zwei Signale ein:
+
+- Weak-edge penalty:
+  Donor-Ziel-Kanten, die im H.9.1-Monitoring als schwach erkannt
+  wurden, erhalten einen Strafmultiplikator auf ihre aehnlichkeitsnahe
+  Kandidatenbewertung.
+- Proven-donor boost:
+  Donoren mit starker Paar-Historie fuer genau dieses Zielprofil
+  erhalten einen positiven Multiplikator und koennen dadurch generische
+  Aehnlichkeit ueberholen.
+
+Diese Steering-Signale werden jetzt sichtbar in:
+
+- `EnrichedPathEvaluation.steering_weak_edge_penalty_applied`
+- `EnrichedPathEvaluation.steering_proven_donor_boost_applied`
+- `EnrichedPathEvaluation.meta_transfer_source_steering_factors`
+- `DecisionRecord.steering_weak_edge_penalty_applied`
+- `DecisionRecord.steering_proven_donor_boost_applied`
+- `DecisionRecord.meta_transfer_source_steering_factors`
+- `CalibrationContext.steering_weak_edge_penalty_applied`
+- `CalibrationContext.steering_proven_donor_boost_applied`
+- `CalibrationContext.meta_transfer_source_steering_factors`
+
+Damit bleibt auditierbar:
+
+- ob eine schwache Kante aktiv abgewertet wurde
+- ob ein historisch bewaehrter Donor aktiv hochgestuft wurde
+- welche Faktoren fuer jeden verwendeten Donor in die finale
+  Kandidatenbewertung eingegangen sind
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -159,6 +199,7 @@ Noch nicht enthalten:
 - lernende Merge/Split-Strategien fuer Profile
 - separate Meta-Gewichte pro Dimension
 - adaptive Transfer-Raten ueber Zeit
+- adaptive Blend-Caps pro Donor-Ziel-Kante (geplante H.9.2-Folgephase)
 
 ## Naechster logischer Ausbau
 
@@ -167,5 +208,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Transferquellen fuer
   welches Profil langfristig wirklich hilfreich sind
-- Admin- und Monitoring-Sichten fuer Transfer-Nutzung, Profil-Dichte
-  und Effektgroessen
+- adaptive Begrenzung oder Ausweitung der tatsaechlichen
+  Transfer-Staerke pro Donor-Ziel-Kante

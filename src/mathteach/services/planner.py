@@ -909,6 +909,15 @@ def _log_path_decision(
         meta_transfer_source_shares=enriched_paths[0].meta_transfer_source_shares,
         meta_transfer_weight_delta=enriched_paths[0].meta_transfer_weight_delta,
         meta_transfer_was_effective=enriched_paths[0].meta_transfer_was_effective,
+        steering_weak_edge_penalty_applied=(
+            enriched_paths[0].steering_weak_edge_penalty_applied
+        ),
+        steering_proven_donor_boost_applied=(
+            enriched_paths[0].steering_proven_donor_boost_applied
+        ),
+        meta_transfer_source_steering_factors=(
+            enriched_paths[0].meta_transfer_source_steering_factors
+        ),
         calibration_stratification_dimensions={
             key: value
             for key, value in {
@@ -1037,6 +1046,21 @@ def _build_calibration_context(
             selected_path.meta_transfer_was_effective
             if selected_path is not None
             else False
+        ),
+        steering_weak_edge_penalty_applied=(
+            selected_path.steering_weak_edge_penalty_applied
+            if selected_path is not None
+            else False
+        ),
+        steering_proven_donor_boost_applied=(
+            selected_path.steering_proven_donor_boost_applied
+            if selected_path is not None
+            else False
+        ),
+        meta_transfer_source_steering_factors=(
+            selected_path.meta_transfer_source_steering_factors
+            if selected_path is not None
+            else {}
         ),
         stratification_dimensions=(
             selected_profile.stratification_dimensions

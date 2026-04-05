@@ -28,6 +28,9 @@ META_TRANSFER_MAX_BLEND = 0.35
 META_TRANSFER_MAX_SOURCES = 3
 META_TRANSFER_HISTORY_LIMIT = 50
 META_TRANSFER_EFFECTIVE_EPSILON = 1e-6
+META_TRANSFER_WEAK_EDGE_PENALTY_MULTIPLIER = 0.6
+META_TRANSFER_PROVEN_DONOR_EFFECTIVENESS_THRESHOLD = 0.7
+META_TRANSFER_PROVEN_DONOR_BOOST_MULTIPLIER = 1.3
 
 
 def _estimate_mastery_gain(
@@ -520,17 +523,16 @@ class CalibrationEngine:
             return []
 
         candidate_strengths = [
-            (similarity_score * candidate.confidence_score)
-            + (0.25 * historical_effectiveness)
-            for candidate, similarity_score, historical_effectiveness in candidates
+            final_candidate_strength
+            for _, _, _, _, final_candidate_strength in candidates
         ]
         total_strength = sum(candidate_strengths)
         source_shares = _normalize_source_shares(
-            [candidate.profile_id for candidate, _, _ in candidates],
+            [candidate.profile_id for candidate, _, _, _, _ in candidates],
             (
                 {
                     candidate.profile_id: strength / total_strength
-                    for (candidate, _, _), strength in zip(
+                    for (candidate, _, _, _, _), strength in zip(
                         candidates,
                         candidate_strengths,
                         strict=True,
@@ -549,8 +551,16 @@ class CalibrationEngine:
                 "confidence_score": round(candidate.confidence_score, 4),
                 "outcome_count": candidate.outcome_count,
                 "recommended_share": round(source_shares.get(candidate.profile_id, 0.0), 4),
+                "adjusted_similarity_score": steering_factors["adjusted_similarity_score"],
+                "final_candidate_strength": steering_factors["final_candidate_strength"],
+                "steering_weak_edge_penalty_applied": steering_factors[
+                    "weak_edge_penalty_applied"
+                ],
+                "steering_proven_donor_boost_applied": steering_factors[
+                    "proven_donor_boost_applied"
+                ],
             }
-            for candidate, similarity_score, historical_effectiveness in candidates
+            for candidate, similarity_score, historical_effectiveness, steering_factors, _ in candidates
         ]
 
     def get_profile_transfer_history(
@@ -857,6 +867,9 @@ class CalibrationEngine:
                 meta_transfer_source_shares,
                 meta_transfer_weight_delta,
                 meta_transfer_was_effective,
+                steering_weak_edge_penalty_applied,
+                steering_proven_donor_boost_applied,
+                meta_transfer_source_steering_factors,
             ) = self._effective_weights_for_profile_chain(
                 profile_chain,
             )
@@ -891,6 +904,15 @@ class CalibrationEngine:
                         "meta_transfer_source_shares": meta_transfer_source_shares,
                         "meta_transfer_weight_delta": meta_transfer_weight_delta,
                         "meta_transfer_was_effective": meta_transfer_was_effective,
+                        "steering_weak_edge_penalty_applied": (
+                            steering_weak_edge_penalty_applied
+                        ),
+                        "steering_proven_donor_boost_applied": (
+                            steering_proven_donor_boost_applied
+                        ),
+                        "meta_transfer_source_steering_factors": (
+                            meta_transfer_source_steering_factors
+                        ),
                         "calibration_weights_used": {
                             key: round(value, 4)
                             for key, value in effective_weights.items()
@@ -1021,8 +1043,16 @@ class CalibrationEngine:
                     "historical_effectiveness": round(historical_effectiveness, 4),
                     "confidence_score": candidate.confidence_score,
                     "outcome_count": candidate.outcome_count,
+                    "adjusted_similarity_score": steering_factors["adjusted_similarity_score"],
+                    "final_candidate_strength": steering_factors["final_candidate_strength"],
+                    "steering_weak_edge_penalty_applied": steering_factors[
+                        "weak_edge_penalty_applied"
+                    ],
+                    "steering_proven_donor_boost_applied": steering_factors[
+                        "proven_donor_boost_applied"
+                    ],
                 }
-                for candidate, similarity_score, historical_effectiveness in meta_candidates
+                for candidate, similarity_score, historical_effectiveness, steering_factors, _ in meta_candidates
             ],
             "last_calibration": (
                 profile.last_calibration.isoformat()
@@ -1295,13 +1325,36 @@ class CalibrationEngine:
             return 0.0
         return min(1.0, link.use_count / 5) * link.average_outcome_score
 
+    def _weak_transfer_edge_keys(self) -> set[tuple[str, str]]:
+        return {
+            (edge["source_profile_id"], edge["target_profile_id"])
+            for edge in self.compute_weak_transfers()
+        }
+
+    def _transfer_effectiveness_for_pair(
+        self,
+        source_profile_id: str,
+        target_profile_id: str,
+    ) -> float:
+        target_profile = self.get_profile(target_profile_id)
+        if target_profile is None:
+            return 0.0
+        link = self._history_based_transfer_links(target_profile).get(source_profile_id)
+        if link is None or link.use_count <= 0:
+            return 0.0
+        return link.average_outcome_score
+
     def _meta_transfer_candidates(
         self,
         target_profile: CalibrationProfile,
         *,
         excluded_profile_ids: set[str],
-    ) -> list[tuple[CalibrationProfile, float, float]]:
-        ranked_candidates: list[tuple[CalibrationProfile, float, float]] = []
+    ) -> list[tuple[CalibrationProfile, float, float, dict[str, float | bool], float]]:
+        ranked_candidates: list[
+            tuple[CalibrationProfile, float, float, dict[str, float | bool], float]
+        ] = []
+        weak_edges = self._weak_transfer_edge_keys()
+
         for candidate in self.calibration_profiles.values():
             if candidate.profile_id in excluded_profile_ids:
                 continue
@@ -1319,13 +1372,58 @@ class CalibrationEngine:
                 target_profile,
                 candidate.profile_id,
             )
+            pair_effectiveness = self._transfer_effectiveness_for_pair(
+                candidate.profile_id,
+                target_profile.profile_id,
+            )
+            penalty_multiplier = 1.0
+            boost_multiplier = 1.0
+            weak_edge_penalty_applied = (
+                candidate.profile_id,
+                target_profile.profile_id,
+            ) in weak_edges
+            if weak_edge_penalty_applied:
+                penalty_multiplier = META_TRANSFER_WEAK_EDGE_PENALTY_MULTIPLIER
+            proven_donor_boost_applied = (
+                pair_effectiveness > META_TRANSFER_PROVEN_DONOR_EFFECTIVENESS_THRESHOLD
+            )
+            if proven_donor_boost_applied:
+                boost_multiplier = META_TRANSFER_PROVEN_DONOR_BOOST_MULTIPLIER
+
+            adjusted_similarity_score = max(
+                0.0,
+                min(
+                    1.0,
+                    similarity_score * penalty_multiplier * boost_multiplier,
+                ),
+            )
+            final_candidate_strength = (
+                adjusted_similarity_score * candidate.confidence_score
+            ) + (0.25 * historical_effectiveness)
+            steering_factors: dict[str, float | bool] = {
+                "base_similarity_score": round(similarity_score, 4),
+                "adjusted_similarity_score": round(adjusted_similarity_score, 4),
+                "historical_effectiveness": round(historical_effectiveness, 4),
+                "pair_effectiveness": round(pair_effectiveness, 4),
+                "penalty_multiplier": round(penalty_multiplier, 4),
+                "boost_multiplier": round(boost_multiplier, 4),
+                "weak_edge_penalty_applied": weak_edge_penalty_applied,
+                "proven_donor_boost_applied": proven_donor_boost_applied,
+                "final_candidate_strength": round(final_candidate_strength, 4),
+            }
             ranked_candidates.append(
-                (candidate, similarity_score, historical_effectiveness)
+                (
+                    candidate,
+                    similarity_score,
+                    historical_effectiveness,
+                    steering_factors,
+                    final_candidate_strength,
+                )
             )
 
         ranked_candidates.sort(
             key=lambda item: (
-                (item[1] * item[0].confidence_score) + (0.25 * item[2]),
+                item[4],
                 item[0].outcome_count,
                 len(item[0].stratification_dimensions),
                 item[0].profile_id,
@@ -1339,34 +1437,39 @@ class CalibrationEngine:
         selected_profile: CalibrationProfile,
         *,
         excluded_profile_ids: set[str],
-    ) -> tuple[dict[str, float] | None, float, list[str], dict[str, float]]:
+    ) -> tuple[
+        dict[str, float] | None,
+        float,
+        list[str],
+        dict[str, float],
+        dict[str, dict[str, float | bool]],
+    ]:
         candidates = self._meta_transfer_candidates(
             selected_profile,
             excluded_profile_ids=excluded_profile_ids,
         )
         if not candidates:
-            return None, 0.0, [], {}
+            return None, 0.0, [], {}, {}
 
         candidate_strengths = [
-            (similarity_score * candidate.confidence_score)
-            + (0.25 * historical_effectiveness)
-            for candidate, similarity_score, historical_effectiveness in candidates
+            final_candidate_strength
+            for _, _, _, _, final_candidate_strength in candidates
         ]
         total_strength = sum(candidate_strengths)
         if total_strength <= 0.0:
-            return None, 0.0, [], {}
+            return None, 0.0, [], {}, {}
 
         transfer_weights: dict[str, float] = {}
         all_components = {
             component
-            for candidate, _, _ in candidates
+            for candidate, _, _, _, _ in candidates
             for component in candidate.current_weights.get_current_weights()
         }
         for component in all_components:
             transfer_weights[component] = sum(
                 candidate.current_weights.get_current_weights().get(component, 0.0)
                 * strength
-                for (candidate, _, _), strength in zip(
+                for (candidate, _, _, _, _), strength in zip(
                     candidates,
                     candidate_strengths,
                     strict=True,
@@ -1377,23 +1480,28 @@ class CalibrationEngine:
             META_TRANSFER_MAX_BLEND,
             total_strength / len(candidate_strengths),
         )
-        source_profiles = [candidate.profile_id for candidate, _, _ in candidates]
+        source_profiles = [candidate.profile_id for candidate, _, _, _, _ in candidates]
         source_shares = _normalize_source_shares(
             source_profiles,
             {
                 candidate.profile_id: strength / total_strength
-                for (candidate, _, _), strength in zip(
+                for (candidate, _, _, _, _), strength in zip(
                     candidates,
                     candidate_strengths,
                     strict=True,
                 )
             },
         )
+        steering_factors_by_source = {
+            candidate.profile_id: steering_factors
+            for candidate, _, _, steering_factors, _ in candidates
+        }
         return (
             _normalize_weight_map(transfer_weights),
             transfer_strength,
             source_profiles,
             source_shares,
+            steering_factors_by_source,
         )
 
     def _base_weights_for_profile_chain(
@@ -1432,9 +1540,31 @@ class CalibrationEngine:
     def _effective_weights_for_profile_chain(
         self,
         profiles: list[CalibrationProfile],
-    ) -> tuple[dict[str, float], float, float, list[str], dict[str, float], float, bool]:
+    ) -> tuple[
+        dict[str, float],
+        float,
+        float,
+        list[str],
+        dict[str, float],
+        float,
+        bool,
+        bool,
+        bool,
+        dict[str, dict[str, float | bool]],
+    ]:
         if not profiles:
-            return self.current_weights.get_current_weights(), 0.0, 0.0, [], {}, 0.0, False
+            return (
+                self.current_weights.get_current_weights(),
+                0.0,
+                0.0,
+                [],
+                {},
+                0.0,
+                False,
+                False,
+                False,
+                {},
+            )
 
         selected_profile = profiles[0]
         selected_profile_weights = selected_profile.current_weights.get_current_weights()
@@ -1454,6 +1584,7 @@ class CalibrationEngine:
             meta_transfer_strength,
             meta_transfer_source_profiles,
             meta_transfer_source_shares,
+            meta_transfer_source_steering_factors,
         ) = (
             self._meta_transfer_prior(
                 selected_profile,
@@ -1470,7 +1601,19 @@ class CalibrationEngine:
                 {},
                 0.0,
                 False,
+                False,
+                False,
+                {},
             )
+
+        steering_weak_edge_penalty_applied = any(
+            factor.get("weak_edge_penalty_applied", False)
+            for factor in meta_transfer_source_steering_factors.values()
+        )
+        steering_proven_donor_boost_applied = any(
+            factor.get("proven_donor_boost_applied", False)
+            for factor in meta_transfer_source_steering_factors.values()
+        )
 
         base_weights_with_transfer = self._blend_weight_maps(
             base_weights,
@@ -1517,6 +1660,9 @@ class CalibrationEngine:
                 else 0.0
             ),
             meta_transfer_was_effective,
+            steering_weak_edge_penalty_applied,
+            steering_proven_donor_boost_applied,
+            meta_transfer_source_steering_factors,
         )
 
     def _record_matches_profile(

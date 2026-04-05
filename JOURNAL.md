@@ -2,6 +2,42 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Active-Transfer-Steering-Phase1 2026-04-06
+
+Die Meta-Transfer-Schicht nutzt ihre H.9.1-Monitoringdaten jetzt nicht
+mehr nur fuer Inspektion, sondern auch fuer eine erste aktive
+Steuerung der Donor-Auswahl.
+
+Wichtigste Konsequenzen:
+
+- Weak-transfer-Kanten werden jetzt direkt in
+  `_meta_transfer_candidates()` engine-seitig abgewertet, statt dass
+  spaeter der Planner ad hoc eingreifen muss
+- historisch bewaehrte Donoren koennen durch einen Boost
+  generische Aehnlichkeitskandidaten ueberholen
+- die Steering-Logik bleibt damit in der `CalibrationEngine` die
+  Single Source of Truth fuer Donor-Ranking und Meta-Prior-Bildung
+- `EnrichedPathEvaluation`, `DecisionRecord` und `CalibrationContext`
+  tragen jetzt zusaetzliche Steering-Signale, damit nachvollziehbar
+  bleibt, ob eine schwache Kante gedrosselt oder ein bewaehrter Donor
+  aktiv bevorzugt wurde
+- die H.9.2-Phase greift vorerst nur in die Kandidatenauswahl ein;
+  die eigentliche maximale Transfer-Staerke bleibt noch unveraendert
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `69 passed, 1 warning`
+- Full-Suite: `207 passed, 1 warning`
+
 ## Phase-H.9.1-Monitoring-Hardening 2026-04-06
 
 Die erste H.9.1-Monitoring-Schicht ist jetzt noch einmal an zwei

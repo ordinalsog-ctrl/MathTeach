@@ -420,6 +420,11 @@ class DecisionRecord(BaseModel):
     meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
     meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
     meta_transfer_was_effective: bool = False
+    steering_weak_edge_penalty_applied: bool = False
+    steering_proven_donor_boost_applied: bool = False
+    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+        default_factory=dict
+    )
     alternative_paths: list[DecisionAlternative] = Field(default_factory=list)
     observed_outcome: OutcomeMetrics | None = None
     outcome_timestamp: datetime | None = None
@@ -447,6 +452,11 @@ class CalibrationContext(BaseModel):
     meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
     meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
     meta_transfer_was_effective: bool = False
+    steering_weak_edge_penalty_applied: bool = False
+    steering_proven_donor_boost_applied: bool = False
+    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+        default_factory=dict
+    )
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
 
@@ -493,6 +503,11 @@ class EnrichedPathEvaluation(BaseModel):
     meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
     meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
     meta_transfer_was_effective: bool = False
+    steering_weak_edge_penalty_applied: bool = False
+    steering_proven_donor_boost_applied: bool = False
+    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+        default_factory=dict
+    )
     calibration_weights_used: dict[str, float] = Field(default_factory=dict)
     score_breakdown: dict[str, float] = Field(default_factory=dict)
     goal_alignment_explanation: str = ""

@@ -73,8 +73,9 @@ keine zweite Konfigurationswelt ein.
 - [tests/test_h7_persistent_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h7_persistent_calibration.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Anschlussstand
 
-H.8 kann jetzt auf echter Persistenz aufbauen und die Kalibrierung
-profilspezifisch machen, statt weiterhin nur ein globales Gewichtungsset
-zu lernen.
+H.8 baut jetzt direkt auf dieser Persistenz auf:
+[h8-profile-calibration.md](/Users/jonasweiss/MathTeach/docs/h8-profile-calibration.md)
+beschreibt die profilspezifische Nutzung der in H.7 gespeicherten
+Kalibrierungsdaten.

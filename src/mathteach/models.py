@@ -328,9 +328,30 @@ class CalibrationWeights(BaseModel):
 class CalibrationWeightsSnapshot(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     active_weights: dict[str, float] = Field(default_factory=dict)
+    profile_id: str | None = None
     trigger_decision_id: str | None = None
     outcome_score: float | None = Field(default=None, ge=0.0, le=1.0)
     adjustment_reason: str = ""
+
+
+class CalibrationProfile(BaseModel):
+    profile_id: str = Field(min_length=3)
+    stratification_dimensions: dict[str, str] = Field(default_factory=dict)
+    current_weights: CalibrationWeights = Field(default_factory=CalibrationWeights)
+    decision_ids: list[str] = Field(default_factory=list)
+    outcome_decision_ids: list[str] = Field(default_factory=list)
+    sample_size: int = Field(default=0, ge=0)
+    outcome_count: int = Field(default=0, ge=0)
+    confidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    last_calibration: datetime | None = None
+    weights_history: list[CalibrationWeightsSnapshot] = Field(default_factory=list)
+
+    def refresh_counts(self) -> None:
+        self.sample_size = len(self.decision_ids)
+        self.outcome_count = len(self.outcome_decision_ids)
+
+    def weight_summary(self) -> dict[str, float]:
+        return self.current_weights.summary()
 
 
 class DecisionRecord(BaseModel):
@@ -338,12 +359,17 @@ class DecisionRecord(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     session_id: str | None = None
     current_block_type: BlockType
+    selected_block_type: BlockType | None = None
     evidence_patterns: list[EvidenceCombinationPattern] = Field(default_factory=list)
     active_supports: list[SupportNeed] = Field(default_factory=list)
+    sequence_intent: BlockSequenceIntent | None = None
     available_candidate_paths: list[str] = Field(default_factory=list)
     chosen_path_id: str = Field(min_length=3)
     chosen_path_score: float = Field(ge=0.0, le=1.0)
     chosen_path_score_breakdown: dict[str, float] = Field(default_factory=dict)
+    calibration_profile_id: str | None = None
+    calibration_profile_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    calibration_stratification_dimensions: dict[str, str] = Field(default_factory=dict)
     alternative_paths: list[DecisionAlternative] = Field(default_factory=list)
     observed_outcome: OutcomeMetrics | None = None
     outcome_timestamp: datetime | None = None
@@ -361,6 +387,12 @@ class CalibrationContext(BaseModel):
     persisted_decision_count: int = Field(default=0, ge=0)
     recent_success_rate: float | None = Field(default=None, ge=0.0, le=1.0)
     weight_stability_index: float | None = Field(default=None, ge=0.0, le=1.0)
+    calibration_profile_id: str | None = None
+    profile_confidence_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    profile_sample_size: int = Field(default=0, ge=0)
+    profile_outcome_count: int = Field(default=0, ge=0)
+    profile_weight_blend_ratio: float | None = Field(default=None, ge=0.0, le=1.0)
+    stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
 
 class CalibrationOutcomeRequest(BaseModel):
@@ -397,6 +429,11 @@ class EnrichedPathEvaluation(BaseModel):
     total_score: float = Field(default=0.0, ge=0.0, le=1.0)
     mastery_projection: float = Field(default=0.0, ge=0.0, le=1.0)
     calibration_applied: bool = False
+    calibration_profile_id: str | None = None
+    calibration_profile_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    calibration_profile_sample_size: int = Field(default=0, ge=0)
+    profile_weight_blend_ratio: float | None = Field(default=None, ge=0.0, le=1.0)
+    calibration_weights_used: dict[str, float] = Field(default_factory=dict)
     score_breakdown: dict[str, float] = Field(default_factory=dict)
     goal_alignment_explanation: str = ""
     history_alignment_explanation: str = ""

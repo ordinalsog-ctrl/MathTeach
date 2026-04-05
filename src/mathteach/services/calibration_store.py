@@ -9,6 +9,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from mathteach.models import (
+    CalibrationProfile,
     CalibrationWeights,
     CalibrationWeightsSnapshot,
     DecisionRecord,
@@ -21,6 +22,7 @@ class CalibrationData(BaseModel):
     outcome_metrics: list[OutcomeMetrics] = Field(default_factory=list)
     calibration_weights: CalibrationWeights = Field(default_factory=CalibrationWeights)
     weights_history: list[CalibrationWeightsSnapshot] = Field(default_factory=list)
+    calibration_profiles: dict[str, CalibrationProfile] = Field(default_factory=dict)
     last_updated: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
@@ -70,6 +72,7 @@ class CalibrationStore:
             "total_outcomes": len(data.outcome_metrics),
             "calibration_rounds": data.calibration_weights.calibration_rounds,
             "weights_history_length": len(data.weights_history),
+            "profile_count": len(data.calibration_profiles),
             "last_updated": data.last_updated.isoformat(),
             "recent_success_rate": (
                 round(sum(completed_outcomes) / len(completed_outcomes), 4)
@@ -79,3 +82,19 @@ class CalibrationStore:
             "weight_stability_index": round(stability_index, 4),
             "store_path": str(self.storage_path),
         }
+
+    def get_profile(self, profile_id: str) -> CalibrationProfile | None:
+        data = self.load()
+        return data.calibration_profiles.get(profile_id)
+
+    def list_profiles(self) -> list[CalibrationProfile]:
+        data = self.load()
+        return sorted(
+            data.calibration_profiles.values(),
+            key=lambda profile: (
+                profile.outcome_count,
+                profile.sample_size,
+                profile.profile_id,
+            ),
+            reverse=True,
+        )

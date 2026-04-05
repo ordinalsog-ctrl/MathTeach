@@ -107,6 +107,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md): H.5-Ausbau fuer Lernziele, Session-Historie und pilotdatengestuetzte Pfadbewertung
 - [docs/h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md): H.6-Ausbau fuer Entscheidungs-Logging, Outcome-Updates und empirische Gewichtsanpassung
 - [docs/h7-persistent-calibration.md](/Users/jonasweiss/MathTeach/docs/h7-persistent-calibration.md): H.7-Ausbau fuer persistente Kalibrierung ueber Sessions und Prozessstarts hinweg
+- [docs/h8-profile-calibration.md](/Users/jonasweiss/MathTeach/docs/h8-profile-calibration.md): H.8-Ausbau fuer profilspezifische und kontextsensitive Gewichtsanpassung
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -307,9 +308,12 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   Entscheidungslogs, Outcomes und Gewichts-Historie koennen ueber
   persistente Stores erhalten bleiben und ueber API-Endpunkte inspiziert
   werden
+- H.8 nutzt diese persistenten Kalibrierungsdaten jetzt
+  profilspezifisch: `TeachingPlan` und `enriched_paths` zeigen, welches
+  Kalibrierungsprofil gerade aktiv war und mit welcher Konfidenz es
+  gegen das globale Gewichtungsset gemischt wurde
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern profilspezifische und spaeter kontextspezifische Nutzung der
-  jetzt persistenten Kalibrierungsdaten,
+  sondern Meta-Kalibrierung ueber verwandte Profile hinweg,
   spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade

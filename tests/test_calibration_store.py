@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from mathteach.models import (
+    CalibrationProfile,
     CalibrationWeights,
     CalibrationWeightsSnapshot,
     DecisionAlternative,
@@ -55,6 +56,18 @@ def test_store_saves_and_loads_data_correctly(tmp_path: Path) -> None:
         ],
         calibration_weights=CalibrationWeights(),
         weights_history=[snapshot],
+        calibration_profiles={
+            "support_profile__adhd_aware_support": CalibrationProfile(
+                profile_id="support_profile__adhd_aware_support",
+                stratification_dimensions={
+                    "support_profile": "adhd_aware_support",
+                },
+                decision_ids=["decision-1"],
+                outcome_decision_ids=["decision-1"],
+                sample_size=1,
+                outcome_count=1,
+            )
+        },
     )
 
     store.save(payload)
@@ -65,6 +78,7 @@ def test_store_saves_and_loads_data_correctly(tmp_path: Path) -> None:
     assert len(loaded.outcome_metrics) == 1
     assert len(loaded.weights_history) == 1
     assert loaded.weights_history[0].trigger_decision_id == "decision-1"
+    assert "support_profile__adhd_aware_support" in loaded.calibration_profiles
 
 
 def test_store_statistics_report_recent_success_and_stability(tmp_path: Path) -> None:
@@ -86,6 +100,16 @@ def test_store_statistics_report_recent_success_and_stability(tmp_path: Path) ->
                     active_weights={"heuristic": 0.45, "goal_alignment": 0.55},
                 ),
             ],
+            calibration_profiles={
+                "support_profile__adhd_aware_support": CalibrationProfile(
+                    profile_id="support_profile__adhd_aware_support",
+                    stratification_dimensions={
+                        "support_profile": "adhd_aware_support",
+                    },
+                    sample_size=1,
+                    outcome_count=1,
+                )
+            },
         )
     )
 
@@ -94,3 +118,4 @@ def test_store_statistics_report_recent_success_and_stability(tmp_path: Path) ->
     assert stats["total_outcomes"] == 1
     assert stats["recent_success_rate"] > 0.0
     assert 0.0 <= stats["weight_stability_index"] <= 1.0
+    assert stats["profile_count"] == 1

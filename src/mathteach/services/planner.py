@@ -5,6 +5,7 @@ from mathteach.models import (
     CalibrationContext,
     DecisionAlternative,
     DecisionRecord,
+    EvidenceCombinationPattern,
     LearnerProfile,
     LongTermContext,
     ModelAssignment,
@@ -876,6 +877,7 @@ def _log_path_decision(
     planned_blocks: list[PlannedTeachingBlock],
     response_settings,
     enriched_paths,
+    calibration_evidence_patterns: list[EvidenceCombinationPattern] | None,
     calibration_engine: CalibrationEngine,
 ) -> DecisionRecord | None:
     if not planned_blocks or not enriched_paths:
@@ -888,16 +890,56 @@ def _log_path_decision(
     record = DecisionRecord(
         session_id=request.session_id,
         current_block_type=last_block.block_type,
-        evidence_patterns=(
-            last_block.evidence_combination.patterns
-            if last_block.evidence_combination is not None
-            else []
+        selected_block_type=(
+            enriched_paths[0].block_types[0]
+            if enriched_paths[0].block_types
+            else last_block.next_block_type
         ),
+        evidence_patterns=calibration_evidence_patterns or [],
         active_supports=response_settings.active_supports,
+        sequence_intent=last_block.sequence_intent,
         available_candidate_paths=[path.path_id for path in enriched_paths],
         chosen_path_id=enriched_paths[0].path_id,
         chosen_path_score=enriched_paths[0].total_score,
         chosen_path_score_breakdown=enriched_paths[0].score_breakdown,
+        calibration_profile_id=enriched_paths[0].calibration_profile_id,
+        calibration_profile_confidence=enriched_paths[0].calibration_profile_confidence,
+        calibration_stratification_dimensions={
+            key: value
+            for key, value in {
+                "support_profile": (
+                    "+".join(sorted(response_settings.active_supports))
+                    if response_settings.active_supports
+                    else None
+                ),
+                "sequence_intent": (
+                    last_block.sequence_intent.value
+                    if last_block.sequence_intent is not None
+                    else None
+                ),
+                "evidence_pattern": (
+                    calibration_evidence_patterns[0].value
+                    if calibration_evidence_patterns
+                    else None
+                ),
+                "block_type": (
+                    enriched_paths[0].block_types[0].value
+                    if enriched_paths[0].block_types
+                    else last_block.next_block_type.value
+                    if last_block.next_block_type is not None
+                    else last_block.block_type.value
+                ),
+                "current_block_type": last_block.block_type.value,
+                "selected_block_type": (
+                    enriched_paths[0].block_types[0].value
+                    if enriched_paths[0].block_types
+                    else last_block.next_block_type.value
+                    if last_block.next_block_type is not None
+                    else None
+                ),
+            }.items()
+            if value is not None
+        },
         alternative_paths=[
             DecisionAlternative(
                 path_id=path.path_id,
@@ -913,19 +955,68 @@ def _log_path_decision(
 def _build_calibration_context(
     calibration_engine: CalibrationEngine,
     decision_record: DecisionRecord | None,
+    enriched_paths=None,
 ) -> CalibrationContext:
     recent_success_rate = calibration_engine.get_recent_success_rate()
     weight_stability_index = calibration_engine.get_weight_stability_index()
+    selected_path = enriched_paths[0] if enriched_paths else None
+    selected_profile = (
+        calibration_engine.get_profile(selected_path.calibration_profile_id)
+        if selected_path is not None
+        else None
+    )
     return CalibrationContext(
         decision_id=decision_record.decision_id if decision_record is not None else None,
         calibration_rounds=calibration_engine.current_weights.calibration_rounds,
         logged_decision_count=len(calibration_engine.decision_log),
         last_calibration=calibration_engine.current_weights.last_calibration,
-        active_weights=calibration_engine.current_weights.get_current_weights(),
+        active_weights=(
+            selected_path.calibration_weights_used
+            if selected_path is not None and selected_path.calibration_weights_used
+            else calibration_engine.current_weights.get_current_weights()
+        ),
         persistent_store_path=calibration_engine.store_path,
         persisted_decision_count=len(calibration_engine.decision_log),
         recent_success_rate=recent_success_rate,
         weight_stability_index=weight_stability_index,
+        calibration_profile_id=(
+            selected_path.calibration_profile_id if selected_path is not None else None
+        ),
+        profile_confidence_score=(
+            selected_path.calibration_profile_confidence
+            if selected_path is not None
+            else None
+        ),
+        profile_sample_size=(
+            selected_profile.sample_size
+            if selected_profile is not None
+            else len(calibration_engine.decision_log)
+            if selected_path is not None
+            and selected_path.calibration_profile_id == "global"
+            else 0
+        ),
+        profile_outcome_count=(
+            selected_profile.outcome_count
+            if selected_profile is not None
+            else len(calibration_engine.outcome_metrics)
+            if selected_path is not None
+            and selected_path.calibration_profile_id == "global"
+            else 0
+        ),
+        profile_weight_blend_ratio=(
+            selected_path.profile_weight_blend_ratio
+            if selected_path is not None
+            else None
+        ),
+        stratification_dimensions=(
+            selected_profile.stratification_dimensions
+            if selected_profile is not None
+            else (
+                decision_record.calibration_stratification_dimensions
+                if decision_record is not None
+                else {}
+            )
+        ),
     )
 
 
@@ -1458,7 +1549,13 @@ def build_teaching_plan(
         active_patterns=block_sequence_state.recent_evidence_patterns,
         scoring_criteria=PathScoringCriteria(),
     )
-    enriched_paths = calibration_engine.apply_to_enriched_paths(enriched_paths)
+    enriched_paths = calibration_engine.apply_to_enriched_paths(
+        enriched_paths,
+        active_supports=response_settings.active_supports,
+        sequence_intent=block_sequence_state.active_sequence_intent,
+        evidence_patterns=block_sequence_state.recent_evidence_patterns,
+        current_block_type=planned_blocks[-1].block_type if planned_blocks else None,
+    )
     planned_blocks, block_sequence_state = _apply_calibrated_preview_routing(
         planned_blocks,
         block_sequence_state,
@@ -1469,6 +1566,7 @@ def build_teaching_plan(
         planned_blocks=planned_blocks,
         response_settings=response_settings,
         enriched_paths=enriched_paths,
+        calibration_evidence_patterns=block_sequence_state.recent_evidence_patterns,
         calibration_engine=calibration_engine,
     )
     calibration_engine.force_save()
@@ -1523,6 +1621,7 @@ def build_teaching_plan(
         calibration_context=_build_calibration_context(
             calibration_engine,
             decision_record,
+            enriched_paths,
         ),
         mode_adaptation_trace=adaptation_trace,
         resume_context=resume_context,

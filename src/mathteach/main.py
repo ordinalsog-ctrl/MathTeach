@@ -118,10 +118,17 @@ def tutoring_outcome(
     )
     if not recorded:
         raise HTTPException(status_code=404, detail="No calibration decision found.")
+    decision_record = engine.get_decision(request.decision_id)
+    profile_summary = (
+        engine.get_profile_summary(decision_record.calibration_profile_id)
+        if decision_record is not None and decision_record.calibration_profile_id
+        else None
+    )
     return {
         "status": "recorded",
         "decision_id": request.decision_id,
         "calibration_rounds": engine.current_weights.calibration_rounds,
+        "calibration_profile_updated": profile_summary,
     }
 
 
@@ -154,6 +161,30 @@ def admin_calibration_history(
             for snapshot in history
         ]
     }
+
+
+@app.get("/api/v1/admin/calibration/profiles")
+def admin_calibration_profiles(
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    profiles = engine.list_profiles()
+    return {
+        "profiles": profiles,
+        "profile_count": len(profiles),
+    }
+
+
+@app.get("/api/v1/admin/calibration/profiles/{profile_id}")
+def admin_calibration_profile_detail(
+    profile_id: str,
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    profile = engine.get_profile_summary(profile_id)
+    if profile is None:
+        raise HTTPException(status_code=404, detail="No calibration profile found.")
+    return profile
 
 
 @app.get("/api/v1/admin/quarantine/sessions")

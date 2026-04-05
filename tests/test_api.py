@@ -1344,8 +1344,19 @@ def test_tutoring_plan_exposes_long_term_context_and_enriched_paths() -> None:
         payload["sequence_planning_metadata"]["calibration_decision_id"]
         == payload["calibration_context"]["decision_id"]
     )
+    assert payload["calibration_context"]["calibration_profile_id"] is not None
+    assert payload["calibration_context"]["stratification_dimensions"]
     assert payload["enriched_paths"][0]["calibration_applied"] is True
     assert payload["enriched_paths"][0]["uncalibrated_total_score"] is not None
+    assert (
+        payload["enriched_paths"][0]["calibration_profile_id"]
+        == payload["calibration_context"]["calibration_profile_id"]
+    )
+    assert payload["enriched_paths"][0]["calibration_weights_used"]
+    assert (
+        payload["calibration_context"]["active_weights"]
+        == payload["enriched_paths"][0]["calibration_weights_used"]
+    )
     assert "goal_alignment" in payload["enriched_paths"][0]["score_breakdown"]
 
 
@@ -1895,3 +1906,76 @@ def test_calibration_statistics_and_history_endpoints(tmp_path: Path) -> None:
     assert stats_payload["total_outcomes"] >= 1
     assert stats_payload["store_path"] == str(store_path)
     assert len(history_payload["history"]) >= 1
+
+
+def test_profile_calibration_endpoints_expose_profile_specific_data(tmp_path: Path) -> None:
+    store_path = tmp_path / "calibration.json"
+    engine = CalibrationEngine(
+        store=CalibrationStore(store_path),
+        autosave_threshold=1,
+        min_samples_for_calibration=1,
+    )
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this example in clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success_three_blocks", "transfer_success"]},
+            ],
+        ),
+        calibration_engine=engine,
+    )
+
+    outcome_response = client.post(
+        "/api/v1/tutoring/outcome",
+        params={"store_path": str(store_path)},
+        json={
+            "decision_id": plan.calibration_context.decision_id,
+            "observation": {
+                "block_index": 2,
+                "current_mode": plan.lesson_mode,
+                "evidence": ["visible_small_success", "transfer_success"],
+                "duration_seconds": 81.0,
+                "accuracy_estimate": 0.9,
+                "engagement_estimate": "high",
+            },
+            "confidence_change": 0.11,
+        },
+    )
+
+    assert outcome_response.status_code == 200
+    assert outcome_response.json()["calibration_profile_updated"] is not None
+    profile_id = outcome_response.json()["calibration_profile_updated"]["profile_id"]
+
+    profiles_response = client.get(
+        "/api/v1/admin/calibration/profiles",
+        params={"store_path": str(store_path)},
+    )
+    detail_response = client.get(
+        f"/api/v1/admin/calibration/profiles/{profile_id}",
+        params={"store_path": str(store_path)},
+    )
+
+    assert profiles_response.status_code == 200
+    assert detail_response.status_code == 200
+    assert profiles_response.json()["profile_count"] >= 1
+    assert any(
+        profile["profile_id"] == profile_id
+        for profile in profiles_response.json()["profiles"]
+    )
+    assert detail_response.json()["profile_id"] == profile_id
+    support_profile = detail_response.json()["stratification_dimensions"]["support_profile"]
+    assert "adhd_aware_support" in support_profile
+    assert "dyscalculia_aware_support" in support_profile

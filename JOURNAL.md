@@ -2,6 +2,48 @@
 
 Stand: 2026-04-05
 
+## Phase-H.8-Profile-Aware-Calibration 2026-04-05
+
+Die H.7-Kalibrierung arbeitet jetzt nicht mehr nur global. Mit H.8
+werden persistente Kalibrierungsdaten auch profilspezifisch entlang von
+Support-Mix, Sequenz-Intent, dominanter Evidence und Blocktyp
+ausgewertet.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationProfile` fuehrt fuer kontextspezifische Slices jetzt
+  eigene Gewichte, Sample-Groessen und Gewichts-Historien
+- `CalibrationEngine` waehlt fuer `enriched_paths` jetzt das passendste
+  Profil und mischt dessen Gewichte bei niedriger Konfidenz kontrolliert
+  mit dem globalen H.7-Satz
+- `DecisionRecord` und `calibration_context` tragen jetzt sichtbar
+  `calibration_profile_id`, Profil-Konfidenz und
+  Stratifikationsdimensionen
+- `CalibrationStore` persistiert jetzt auch die profilspezifischen
+  Kalibrierungsprofile statt nur globale Gewichte
+- die API zeigt ueber neue Endpunkte die gespeicherten Profile und gibt
+  bei Outcome-Updates zurueck, welcher Profil-Slice fortgeschrieben
+  wurde
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/calibration_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_store.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [tests/test_h8_profile_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h8_profile_calibration.py)
+- [tests/test_calibration_store.py](/Users/jonasweiss/MathTeach/tests/test_calibration_store.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/h8-profile-calibration.md](/Users/jonasweiss/MathTeach/docs/h8-profile-calibration.md)
+
+Verifikation:
+
+- `ruff`: ausstehend in dieser Runde
+- gezielte Tests: `87 passed, 1 warning`
+- Full-Suite: ausstehend in dieser Runde
+
 ## Phase-H.7-Persistent-Calibration 2026-04-05
 
 Die H.6-Kalibrierung bleibt jetzt nicht mehr nur im Speicher. Mit H.7

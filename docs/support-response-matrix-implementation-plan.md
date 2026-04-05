@@ -157,6 +157,9 @@ Aktueller Stand:
   `CalibrationStore` speichert Entscheidungslogs, Outcomes und
   Gewichtshistorie dateibasiert, waehrend neue API-Endpunkte Statistik
   und History sichtbar machen
+- H.8 nutzt diese persistente Kalibrierung jetzt profilspezifisch:
+  Support-Mix, Sequenz-Intent, dominante Evidence und Blocktyp koennen
+  eigene `CalibrationProfile` mit kontextsensitiven Gewichten aufbauen
 
 ## Phase D: Pilot and Validation
 
@@ -301,8 +304,9 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.8 die jetzt persistenten H.7-Kalibrierungsdaten profilspezifisch
-  auswerten, statt weiter nur ein globales Gewichtungsprofil zu lernen
+- H.9 Meta-Kalibrierung auf die jetzt vorhandenen H.8-Profile setzen,
+  damit verwandte Profil-Slices voneinander lernen koennen, ohne wieder
+  auf einen einzigen globalen Satz zurueckzufallen
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

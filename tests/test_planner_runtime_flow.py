@@ -321,6 +321,39 @@ def test_planner_routes_error_recovery_preview_back_to_worked_example() -> None:
     assert preview_block.block_type == BlockType.WORKED_EXAMPLE
 
 
+def test_planner_exposes_long_term_context_and_enriched_paths() -> None:
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this example in clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        )
+    )
+
+    assert plan.long_term_context is not None
+    assert plan.long_term_context.learning_goals
+    assert plan.long_term_context.concept_mastery_tracking
+    assert plan.enriched_paths
+    assert plan.recommended_path_id == plan.enriched_paths[0].path_id
+    assert plan.recommended_path_mastery_gain is not None
+    assert "goal_alignment" in plan.enriched_paths[0].score_breakdown
+
+
 def test_planner_carries_mode_change_into_next_preview_block() -> None:
     plan = build_teaching_plan(
         SessionRequest(

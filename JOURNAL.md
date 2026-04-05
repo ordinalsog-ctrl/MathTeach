@@ -1,6 +1,49 @@
 # MathTeach Journal
 
-Stand: 2026-04-02
+Stand: 2026-04-05
+
+## Phase-H.5-Long-Term-Integration 2026-04-05
+
+Die H.4-Lookahead-Pfade werden jetzt nicht mehr nur lokal ueber
+Evidenz und Profilpassung bewertet. Der Planner verknuepft sie erstmals
+mit Langfristlernzielen, Session-Historie und einem kleinen
+pilotdatengestuetzten Korrekturfaktor.
+
+Wichtigste Konsequenzen:
+
+- neue Modelle fuer `LongTermLearningGoal`, `SessionProgressTracker`,
+  `EnrichedPathEvaluation` und `LongTermContext`
+- der neue
+  [learner_progress_model.py](/Users/jonasweiss/MathTeach/src/mathteach/services/learner_progress_model.py)
+  leitet jetzt Lernziele, Konzept-Slugs und eine erste
+  Mastery-Schaetzung aus dem bisherigen Sitzungsverlauf ab
+- `enrich_candidate_paths(...)` in
+  [block_sequence_planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/block_sequence_planner.py)
+  bewertet H.4-Pfade jetzt zusaetzlich nach Goal Alignment,
+  History Alignment, Evidence Continuity, Profile Match und
+  Pilot-Adjustment
+- `TeachingPlan` traegt jetzt sichtbar `long_term_context`,
+  `enriched_paths`, `recommended_path_id` und
+  `recommended_path_mastery_gain`
+- die API kann damit jetzt zeigen, welcher Pfad nicht nur kurzfristig,
+  sondern auch fuer Konzeptaufbau und stabilere Mastery sinnvoller ist
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/learner_progress_model.py](/Users/jonasweiss/MathTeach/src/mathteach/services/learner_progress_model.py)
+- [src/mathteach/services/block_sequence_planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/block_sequence_planner.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_long_term_integration.py](/Users/jonasweiss/MathTeach/tests/test_long_term_integration.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `81 passed, 1 warning`
+- Full-Suite: `172 passed, 1 warning`
 
 ## Phase-H.4-Lookahead-Path-Evaluation 2026-04-05
 

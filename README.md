@@ -104,6 +104,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/blocktype-evidence-coupling.md](/Users/jonasweiss/MathTeach/docs/blocktype-evidence-coupling.md): H.2g-Ausbau fuer blocktyp- und evidence-kombinationssensible Blockauflosung
 - [docs/block-sequence-planning.md](/Users/jonasweiss/MathTeach/docs/block-sequence-planning.md): H.3-Ausbau fuer adaptive Wahl des naechsten Blocktyps
 - [docs/lookahead-path-planning.md](/Users/jonasweiss/MathTeach/docs/lookahead-path-planning.md): H.4-Ausbau fuer bewertete Lookahead-Pfade statt nur einer direkten Naechstblock-Wahl
+- [docs/long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md): H.5-Ausbau fuer Lernziele, Session-Historie und pilotdatengestuetzte Pfadbewertung
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -292,9 +293,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
 - H.4 bewertet jetzt zusaetzlich mehrere kurze Sequenzpfade und macht
   deren Scores sichtbar, sodass die gewaehlte Blockroute nicht nur
   lokal, sondern auch im nahen Verlauf begruendet werden kann
+- H.5 bewertet diese Pfade jetzt zusaetzlich gegen Langfristlernziele
+  und den bisherigen Sitzungsverlauf, sodass das System sichtbarer
+  zwischen kurzfristig passenden und langfristig sinnvolleren Pfaden
+  unterscheiden kann
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern staerkere Pfadkalibrierung ueber laengerfristige Lernziele und
-  Session-Historie,
+  sondern empirische Kalibrierung der neuen H.5-Pfadgewichte und
+  Pilotkorrekturen,
   spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade

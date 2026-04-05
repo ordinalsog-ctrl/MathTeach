@@ -142,6 +142,12 @@ Aktueller Stand:
   `candidate_paths` und `selected_path_score` machen sichtbar, welche
   kurzen Blockpfade gegeneinander bewertet wurden, statt nur eine
   einzelne Naechstblock-Wahl zu liefern
+- H.5 erweitert diese Pfade jetzt um Langzeitkontext:
+  `TeachingPlan` traegt dafuer `long_term_context`,
+  `enriched_paths`, `recommended_path_id` und
+  `recommended_path_mastery_gain`, waehrend die Pfadbewertung jetzt auch
+  Goal Alignment, History Alignment und einen kleinen
+  Pilotdaten-Korrekturfaktor beruecksichtigt
 
 ## Phase D: Pilot and Validation
 
@@ -286,8 +292,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.5 die neuen H.4-Pfade staerker an laengerfristige Lernziele,
-  Session-Historie und spaetere Pilotdaten koppeln
+- H.6 die neuen H.5-Gewichtungen und Pilotkorrekturen empirisch
+  kalibrieren, statt sie nur regelbasiert vorzugeben
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

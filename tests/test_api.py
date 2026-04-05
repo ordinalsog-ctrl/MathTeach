@@ -1296,6 +1296,43 @@ def test_tutoring_plan_exposes_error_recovery_routing_back_to_worked_example() -
     assert preview_block["block_type"] == "worked_example"
 
 
+def test_tutoring_plan_exposes_long_term_context_and_enriched_paths() -> None:
+    response = client.post(
+        "/api/v1/tutoring/plan",
+        json={
+            "objective": "Explain this example in clear steps.",
+            "learner_profile": {
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "de",
+                "wants_visuals": True,
+                "wants_history": False,
+                "declared_support_needs": [
+                    "adhd_aware_support",
+                    "dyscalculia_aware_support",
+                ],
+            },
+            "runtime_observations": [
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+                {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+
+    assert payload["long_term_context"] is not None
+    assert payload["long_term_context"]["learning_goals"]
+    assert payload["long_term_context"]["concept_mastery_tracking"]
+    assert payload["enriched_paths"]
+    assert payload["recommended_path_id"] == payload["enriched_paths"][0]["path_id"]
+    assert payload["recommended_path_mastery_gain"] is not None
+    assert "goal_alignment" in payload["enriched_paths"][0]["score_breakdown"]
+
+
 def test_tutoring_plan_resume_keeps_pending_transition_message() -> None:
     response = client.post(
         "/api/v1/tutoring/plan",

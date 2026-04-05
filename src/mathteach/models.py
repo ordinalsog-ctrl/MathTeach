@@ -74,6 +74,19 @@ class BlockSequenceIntent(StrEnum):
     ADAPTIVE_REMEDIATION = "adaptive_remediation"
 
 
+class LearningGoalCategory(StrEnum):
+    CONCEPT_MASTERY = "concept_mastery"
+    PROCEDURAL_FLUENCY = "procedural_fluency"
+    CONCEPTUAL_UNDERSTANDING = "conceptual_understanding"
+    TRANSFER_ABILITY = "transfer_ability"
+
+
+class ConceptComplexityLevel(StrEnum):
+    FOUNDATIONAL = "foundational"
+    INTERMEDIATE = "intermediate"
+    ADVANCED = "advanced"
+
+
 class LearnerProfile(BaseModel):
     age_group: AgeGroup
     math_level: MathLevel
@@ -180,6 +193,57 @@ class EvidenceCombination(BaseModel):
     block_sequence: int = Field(ge=1)
 
 
+class LongTermLearningGoal(BaseModel):
+    goal_id: str = Field(min_length=3)
+    category: LearningGoalCategory
+    concept: str = Field(min_length=2)
+    description: str = Field(min_length=3)
+    complexity_level: ConceptComplexityLevel
+    target_mastery_threshold: float = Field(default=0.85, ge=0.0, le=1.0)
+    estimated_blocks_needed: int = Field(default=4, ge=1)
+
+
+class SessionHistoryEntry(BaseModel):
+    block_index: int = Field(ge=1)
+    block_type: BlockType
+    evidence_patterns: list[EvidenceCombinationPattern] = Field(default_factory=list)
+    observed_evidence: list[str] = Field(default_factory=list)
+    success_indicators: list[str] = Field(default_factory=list)
+    difficulty_rating: float = Field(default=0.5, ge=0.0, le=1.0)
+    concept_target: str | None = None
+
+
+class SessionProgressTracker(BaseModel):
+    session_id: str | None = None
+    current_concept: str = Field(min_length=2)
+    learning_goals: list[LongTermLearningGoal] = Field(default_factory=list)
+    history_entries: list[SessionHistoryEntry] = Field(default_factory=list)
+    concept_mastery_tracking: dict[str, float] = Field(default_factory=dict)
+
+
+class PathScoringCriteria(BaseModel):
+    heuristic_weight: float = Field(default=0.35, ge=0.0, le=1.0)
+    goal_alignment_weight: float = Field(default=0.2, ge=0.0, le=1.0)
+    history_alignment_weight: float = Field(default=0.15, ge=0.0, le=1.0)
+    evidence_continuity_weight: float = Field(default=0.1, ge=0.0, le=1.0)
+    profile_match_weight: float = Field(default=0.1, ge=0.0, le=1.0)
+    pilot_data_adjustment_weight: float = Field(default=0.1, ge=0.0, le=1.0)
+
+    @model_validator(mode="after")
+    def validate_total_weight(self) -> "PathScoringCriteria":
+        total = (
+            self.heuristic_weight
+            + self.goal_alignment_weight
+            + self.history_alignment_weight
+            + self.evidence_continuity_weight
+            + self.profile_match_weight
+            + self.pilot_data_adjustment_weight
+        )
+        if abs(total - 1.0) > 0.001:
+            raise ValueError("Path scoring weights must sum to 1.0.")
+        return self
+
+
 class BlockSequenceDecision(BaseModel):
     current_block_type: BlockType
     suggested_next_block_type: BlockType
@@ -197,6 +261,20 @@ class BlockSequencePathOption(BaseModel):
     block_types: list[BlockType] = Field(default_factory=list)
     score: float = Field(default=0.0, ge=0.0, le=1.0)
     rationale: list[str] = Field(default_factory=list)
+
+
+class EnrichedPathEvaluation(BaseModel):
+    path_id: str = Field(min_length=3)
+    block_types: list[BlockType] = Field(default_factory=list)
+    raw_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    total_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    mastery_projection: float = Field(default=0.0, ge=0.0, le=1.0)
+    score_breakdown: dict[str, float] = Field(default_factory=dict)
+    goal_alignment_explanation: str = ""
+    history_alignment_explanation: str = ""
+    evidence_continuity_explanation: str = ""
+    profile_match_explanation: str = ""
+    pilot_data_references: list[str] = Field(default_factory=list)
 
 
 class BlockSequenceState(BaseModel):
@@ -217,6 +295,14 @@ class SequencePlanningMetadata(BaseModel):
     lookahead_block_types: list[BlockType] = Field(default_factory=list)
     candidate_path_count: int = Field(default=0, ge=0)
     candidate_paths: list[BlockSequencePathOption] = Field(default_factory=list)
+
+
+class LongTermContext(BaseModel):
+    session_id: str | None = None
+    current_concept: str = Field(min_length=2)
+    learning_goals: list[LongTermLearningGoal] = Field(default_factory=list)
+    concept_mastery_tracking: dict[str, float] = Field(default_factory=dict)
+    history_entry_count: int = Field(default=0, ge=0)
 
 
 class PlannedTeachingBlock(BaseModel):
@@ -293,6 +379,10 @@ class TeachingPlan(BaseModel):
     planned_blocks: list[PlannedTeachingBlock] = Field(default_factory=list)
     block_sequence_state: BlockSequenceState | None = None
     sequence_planning_metadata: SequencePlanningMetadata | None = None
+    long_term_context: LongTermContext | None = None
+    enriched_paths: list[EnrichedPathEvaluation] = Field(default_factory=list)
+    recommended_path_id: str | None = None
+    recommended_path_mastery_gain: float | None = Field(default=None, ge=0.0, le=1.0)
     mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
     resume_context: ResumeContext
     support_signal_profile: SupportSignalProfile

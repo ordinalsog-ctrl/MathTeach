@@ -3,8 +3,10 @@ from mathteach.models import (
     BlockSequenceState,
     BlockType,
     LearnerProfile,
+    LongTermContext,
     ModelAssignment,
     ModeAdaptationCheckpoint,
+    PathScoringCriteria,
     ResumeContext,
     ResumeSource,
     ModeAdaptationTraceEntry,
@@ -21,11 +23,13 @@ from mathteach.models import (
 )
 from mathteach.services.block_sequence_planner import (
     advance_sequence_state,
+    enrich_candidate_paths,
     plan_next_block,
 )
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.conflict_resolver import resolve_block_support_conflicts
 from mathteach.services.evidence_pattern_detector import build_evidence_combination
+from mathteach.services.learner_progress_model import build_session_progress_tracker
 from mathteach.services.response_engine import build_support_response
 from mathteach.services.runtime_mode_adapter import RuntimeModeAdapter
 
@@ -1284,6 +1288,28 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         ),
         candidate_paths=planned_blocks[-1].candidate_paths if planned_blocks else [],
     )
+    session_progress_tracker = build_session_progress_tracker(
+        session_id=request.session_id,
+        objective=request.objective,
+        lesson_mode=lesson_mode,
+        math_level=profile.math_level,
+        planned_blocks=planned_blocks,
+    )
+    enriched_paths = enrich_candidate_paths(
+        candidate_paths=sequence_planning_metadata.candidate_paths,
+        learning_goals=session_progress_tracker.learning_goals,
+        session_tracker=session_progress_tracker,
+        active_supports=response_settings.active_supports,
+        active_patterns=block_sequence_state.recent_evidence_patterns,
+        scoring_criteria=PathScoringCriteria(),
+    )
+    long_term_context = LongTermContext(
+        session_id=session_progress_tracker.session_id,
+        current_concept=session_progress_tracker.current_concept,
+        learning_goals=session_progress_tracker.learning_goals,
+        concept_mastery_tracking=session_progress_tracker.concept_mastery_tracking,
+        history_entry_count=len(session_progress_tracker.history_entries),
+    )
 
     return TeachingPlan(
         lesson_mode=lesson_mode,
@@ -1297,6 +1323,12 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         planned_blocks=planned_blocks,
         block_sequence_state=block_sequence_state,
         sequence_planning_metadata=sequence_planning_metadata,
+        long_term_context=long_term_context,
+        enriched_paths=enriched_paths,
+        recommended_path_id=enriched_paths[0].path_id if enriched_paths else None,
+        recommended_path_mastery_gain=(
+            enriched_paths[0].mastery_projection if enriched_paths else None
+        ),
         mode_adaptation_trace=adaptation_trace,
         resume_context=resume_context,
         support_signal_profile=support_signal_profile,

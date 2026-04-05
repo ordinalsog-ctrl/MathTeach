@@ -73,8 +73,9 @@ Die H.4-Schicht ist aktuell abgesichert ueber:
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.5 kann jetzt auf echter Pfadbewertung aufsetzen: nicht nur heuristisch
-kurze Pfade sortieren, sondern spaeter Pfade staerker an langfristige
-Lernziele, Session-Historie und Pilotdaten kalibrieren.
+H.5 ist jetzt als eigene Folgeschicht umgesetzt und koppelt die
+Lookahead-Pfade an Lernziele, Session-Historie und Pilotdaten. Der
+Anschluss ist dokumentiert in
+[long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md).

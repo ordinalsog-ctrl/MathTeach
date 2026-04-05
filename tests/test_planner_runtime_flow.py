@@ -351,6 +351,14 @@ def test_planner_exposes_long_term_context_and_enriched_paths() -> None:
     assert plan.enriched_paths
     assert plan.recommended_path_id == plan.enriched_paths[0].path_id
     assert plan.recommended_path_mastery_gain is not None
+    assert plan.calibration_context is not None
+    assert plan.calibration_context.decision_id is not None
+    assert (
+        plan.sequence_planning_metadata.calibration_decision_id
+        == plan.calibration_context.decision_id
+    )
+    assert plan.enriched_paths[0].calibration_applied is True
+    assert plan.enriched_paths[0].uncalibrated_total_score is not None
     assert "goal_alignment" in plan.enriched_paths[0].score_breakdown
 
 

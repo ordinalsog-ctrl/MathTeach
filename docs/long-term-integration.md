@@ -100,8 +100,9 @@ Die H.5-Schicht ist aktuell abgesichert ueber:
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.6 kann jetzt die Gewichtungen und Pilotdaten empirischer kalibrieren:
-nicht nur regelbasiert plausible Pfade scoren, sondern die Scores
-spaeter an echten Lernergebnissen nachjustieren.
+H.6 ist jetzt als direkte Folgeschicht umgesetzt und kalibriert die
+H.5-Pfade ueber Entscheidungslogs und spaetere Outcome-Updates. Der
+Anschluss ist dokumentiert in
+[h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md).

@@ -105,6 +105,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/block-sequence-planning.md](/Users/jonasweiss/MathTeach/docs/block-sequence-planning.md): H.3-Ausbau fuer adaptive Wahl des naechsten Blocktyps
 - [docs/lookahead-path-planning.md](/Users/jonasweiss/MathTeach/docs/lookahead-path-planning.md): H.4-Ausbau fuer bewertete Lookahead-Pfade statt nur einer direkten Naechstblock-Wahl
 - [docs/long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md): H.5-Ausbau fuer Lernziele, Session-Historie und pilotdatengestuetzte Pfadbewertung
+- [docs/h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md): H.6-Ausbau fuer Entscheidungs-Logging, Outcome-Updates und empirische Gewichtsanpassung
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -297,9 +298,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   und den bisherigen Sitzungsverlauf, sodass das System sichtbarer
   zwischen kurzfristig passenden und langfristig sinnvolleren Pfaden
   unterscheiden kann
+- H.6 loggt diese Pfadentscheidungen jetzt zusaetzlich, verknuepft sie
+  mit spaeteren Outcome-Beobachtungen und kann die sichtbare
+  Preview-Empfehlung damit gegen erste empirische Rueckmeldungen
+  nachjustieren
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern empirische Kalibrierung der neuen H.5-Pfadgewichte und
-  Pilotkorrekturen,
+  sondern Persistenz und spaetere Session-uebergreifende Nutzung der
+  neuen Kalibrierungsdaten,
   spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade

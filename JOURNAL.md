@@ -2,6 +2,48 @@
 
 Stand: 2026-04-05
 
+## Phase-H.6-Calibration 2026-04-05
+
+Die H.5-Pfadbewertung ist jetzt nicht mehr statisch. Der Planner loggt
+sichtbare Pfadentscheidungen, kann spaetere Outcomes an dieselbe
+`decision_id` haengen und re-rankt die H.5-Pfade ueber eine erste
+Kalibrierungsschicht.
+
+Wichtigste Konsequenzen:
+
+- neue Modelle fuer `DecisionRecord`, `OutcomeMetrics`,
+  `CalibrationWeights` und `CalibrationContext`
+- der neue
+  [calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+  haelt Entscheidungslogs, Outcome-Updates und einfache
+  Gewichtsanpassungen zusammen
+- `build_teaching_plan(...)` akzeptiert jetzt optional einen
+  `CalibrationEngine` und nutzt ihn, um `enriched_paths` vor der
+  finalen Preview-Empfehlung neu zu sortieren
+- der letzte Preview-Block uebernimmt jetzt sichtbar die kalibrierte
+  Pfadreihenfolge statt nur die rohe H.4/H.5-Heuristik
+- `TeachingPlan` traegt jetzt `calibration_context`, waehrend
+  `sequence_planning_metadata` zusaetzlich
+  `calibration_decision_id` und `calibration_rounds` sichtbar macht
+- ueber `record_decision_outcome(...)` koennen spaetere Beobachtungen
+  jetzt direkt auf die vorherige Pfadwahl zurueckgebucht werden
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_h6_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h6_calibration.py)
+- [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `83 passed, 1 warning`
+- Full-Suite: `176 passed, 1 warning`
+
 ## Phase-H.5-Long-Term-Integration 2026-04-05
 
 Die H.4-Lookahead-Pfade werden jetzt nicht mehr nur lokal ueber

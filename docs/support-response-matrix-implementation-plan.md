@@ -148,6 +148,11 @@ Aktueller Stand:
   `recommended_path_mastery_gain`, waehrend die Pfadbewertung jetzt auch
   Goal Alignment, History Alignment und einen kleinen
   Pilotdaten-Korrekturfaktor beruecksichtigt
+- H.6 kalibriert diese Pfade jetzt zusaetzlich ueber sichtbare
+  Entscheidungslogs und spaetere Outcome-Updates:
+  `TeachingPlan` traegt dafuer `calibration_context`, waehrend
+  `sequence_planning_metadata` jetzt auch
+  `calibration_decision_id` und `calibration_rounds` zeigt
 
 ## Phase D: Pilot and Validation
 
@@ -292,8 +297,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.6 die neuen H.5-Gewichtungen und Pilotkorrekturen empirisch
-  kalibrieren, statt sie nur regelbasiert vorzugeben
+- H.7 die neuen H.6-Entscheidungslogs und Outcome-Daten ueber Sessions
+  hinweg persistent machen, statt nur in-memory zu halten
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Literal
+from uuid import uuid4
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -23,6 +25,8 @@ MathLevel = Literal[
 ConfidenceLevel = Literal["low", "medium", "high"]
 Pace = Literal["gentle", "balanced", "intensive"]
 ObservationStrength = Literal["weak", "meaningful", "strong"]
+EngagementLevel = Literal["high", "medium", "low"]
+ErrorRateTrend = Literal["improving", "stable", "degrading"]
 ObservationSignalType = Literal[
     "confusion_signal",
     "overload_signal",
@@ -160,6 +164,9 @@ class RawBlockObservation(BaseModel):
     block_index: int = Field(ge=0)
     current_mode: str = Field(min_length=3)
     evidence: list[str] = Field(default_factory=list)
+    duration_seconds: float | None = Field(default=None, ge=0.0)
+    accuracy_estimate: float | None = Field(default=None, ge=0.0, le=1.0)
+    engagement_estimate: EngagementLevel | None = None
 
 
 class ObservationSignal(BaseModel):
@@ -244,6 +251,81 @@ class PathScoringCriteria(BaseModel):
         return self
 
 
+class DecisionAlternative(BaseModel):
+    path_id: str = Field(min_length=3)
+    score: float = Field(ge=0.0, le=1.0)
+    score_breakdown: dict[str, float] = Field(default_factory=dict)
+
+
+class OutcomeMetrics(BaseModel):
+    observed_evidence: list[str] = Field(default_factory=list)
+    observed_evidence_patterns: list[EvidenceCombinationPattern] = Field(
+        default_factory=list
+    )
+    duration_seconds: float | None = Field(default=None, ge=0.0)
+    accuracy_estimate: float | None = Field(default=None, ge=0.0, le=1.0)
+    confidence_change: float = 0.0
+    mastery_gain_estimate: float = Field(default=0.0, ge=0.0, le=1.0)
+    error_rate_trend: ErrorRateTrend = "stable"
+    observed_engagement: EngagementLevel = "medium"
+
+
+class CalibrationWeights(BaseModel):
+    baseline_weights: dict[str, float] = Field(
+        default_factory=lambda: {
+            "heuristic": 0.35,
+            "goal_alignment": 0.2,
+            "history_alignment": 0.15,
+            "evidence_continuity": 0.1,
+            "profile_match": 0.1,
+            "pilot_data_adjustment": 0.1,
+        }
+    )
+    adjusted_weights: dict[str, float] = Field(default_factory=dict)
+    calibration_rounds: int = Field(default=0, ge=0)
+    last_calibration: datetime | None = None
+    mean_squared_error_history: list[float] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_weight_sets(self) -> "CalibrationWeights":
+        for weights in (self.baseline_weights, self.adjusted_weights):
+            if not weights:
+                continue
+            total = sum(weights.values())
+            if abs(total - 1.0) > 0.001:
+                raise ValueError("Calibration weights must sum to 1.0.")
+        return self
+
+    def get_current_weights(self) -> dict[str, float]:
+        return self.adjusted_weights.copy() if self.adjusted_weights else self.baseline_weights.copy()
+
+
+class DecisionRecord(BaseModel):
+    decision_id: str = Field(default_factory=lambda: uuid4().hex)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    session_id: str | None = None
+    current_block_type: BlockType
+    evidence_patterns: list[EvidenceCombinationPattern] = Field(default_factory=list)
+    active_supports: list[SupportNeed] = Field(default_factory=list)
+    available_candidate_paths: list[str] = Field(default_factory=list)
+    chosen_path_id: str = Field(min_length=3)
+    chosen_path_score: float = Field(ge=0.0, le=1.0)
+    chosen_path_score_breakdown: dict[str, float] = Field(default_factory=dict)
+    alternative_paths: list[DecisionAlternative] = Field(default_factory=list)
+    observed_outcome: OutcomeMetrics | None = None
+    outcome_timestamp: datetime | None = None
+    used_for_calibration: bool = False
+    calibration_weight_updates: dict[str, float] | None = None
+
+
+class CalibrationContext(BaseModel):
+    decision_id: str | None = None
+    calibration_rounds: int = Field(default=0, ge=0)
+    logged_decision_count: int = Field(default=0, ge=0)
+    last_calibration: datetime | None = None
+    active_weights: dict[str, float] = Field(default_factory=dict)
+
+
 class BlockSequenceDecision(BaseModel):
     current_block_type: BlockType
     suggested_next_block_type: BlockType
@@ -267,8 +349,10 @@ class EnrichedPathEvaluation(BaseModel):
     path_id: str = Field(min_length=3)
     block_types: list[BlockType] = Field(default_factory=list)
     raw_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    uncalibrated_total_score: float | None = Field(default=None, ge=0.0, le=1.0)
     total_score: float = Field(default=0.0, ge=0.0, le=1.0)
     mastery_projection: float = Field(default=0.0, ge=0.0, le=1.0)
+    calibration_applied: bool = False
     score_breakdown: dict[str, float] = Field(default_factory=dict)
     goal_alignment_explanation: str = ""
     history_alignment_explanation: str = ""
@@ -295,6 +379,8 @@ class SequencePlanningMetadata(BaseModel):
     lookahead_block_types: list[BlockType] = Field(default_factory=list)
     candidate_path_count: int = Field(default=0, ge=0)
     candidate_paths: list[BlockSequencePathOption] = Field(default_factory=list)
+    calibration_decision_id: str | None = None
+    calibration_rounds: int = Field(default=0, ge=0)
 
 
 class LongTermContext(BaseModel):
@@ -383,6 +469,7 @@ class TeachingPlan(BaseModel):
     enriched_paths: list[EnrichedPathEvaluation] = Field(default_factory=list)
     recommended_path_id: str | None = None
     recommended_path_mastery_gain: float | None = Field(default=None, ge=0.0, le=1.0)
+    calibration_context: CalibrationContext | None = None
     mode_adaptation_trace: list[ModeAdaptationTraceEntry] = Field(default_factory=list)
     resume_context: ResumeContext
     support_signal_profile: SupportSignalProfile

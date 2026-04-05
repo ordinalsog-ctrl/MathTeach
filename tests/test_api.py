@@ -1330,6 +1330,14 @@ def test_tutoring_plan_exposes_long_term_context_and_enriched_paths() -> None:
     assert payload["enriched_paths"]
     assert payload["recommended_path_id"] == payload["enriched_paths"][0]["path_id"]
     assert payload["recommended_path_mastery_gain"] is not None
+    assert payload["calibration_context"] is not None
+    assert payload["calibration_context"]["decision_id"] is not None
+    assert (
+        payload["sequence_planning_metadata"]["calibration_decision_id"]
+        == payload["calibration_context"]["decision_id"]
+    )
+    assert payload["enriched_paths"][0]["calibration_applied"] is True
+    assert payload["enriched_paths"][0]["uncalibrated_total_score"] is not None
     assert "goal_alignment" in payload["enriched_paths"][0]["score_breakdown"]
 
 

@@ -2,6 +2,9 @@ from mathteach.config import Settings
 from mathteach.models import (
     BlockSequenceState,
     BlockType,
+    CalibrationContext,
+    DecisionAlternative,
+    DecisionRecord,
     LearnerProfile,
     LongTermContext,
     ModelAssignment,
@@ -25,6 +28,10 @@ from mathteach.services.block_sequence_planner import (
     advance_sequence_state,
     enrich_candidate_paths,
     plan_next_block,
+)
+from mathteach.services.calibration_engine import (
+    CalibrationEngine,
+    infer_outcome_metrics,
 )
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.conflict_resolver import resolve_block_support_conflicts
@@ -72,6 +79,35 @@ EXAMPLE_HINTS = (
     "loesen",
     "gegeben",
 )
+
+
+DEFAULT_CALIBRATION_ENGINE = CalibrationEngine()
+
+
+def get_default_calibration_engine() -> CalibrationEngine:
+    return DEFAULT_CALIBRATION_ENGINE
+
+
+def reset_default_calibration_engine() -> CalibrationEngine:
+    global DEFAULT_CALIBRATION_ENGINE
+    DEFAULT_CALIBRATION_ENGINE = CalibrationEngine()
+    return DEFAULT_CALIBRATION_ENGINE
+
+
+def record_decision_outcome(
+    decision_id: str,
+    observation: RawBlockObservation,
+    confidence_change: float = 0.0,
+    engagement_estimate: str | None = None,
+    calibration_engine: CalibrationEngine | None = None,
+) -> bool:
+    engine = calibration_engine or DEFAULT_CALIBRATION_ENGINE
+    outcome = infer_outcome_metrics(
+        observation=observation,
+        confidence_change=confidence_change,
+        engagement_estimate=engagement_estimate,
+    )
+    return engine.update_outcome(decision_id, outcome)
 
 
 def _normalize_text(value: str) -> str:
@@ -760,6 +796,114 @@ def _attach_sequence_decision(
     return updated_block, updated_state
 
 
+def _apply_calibrated_preview_routing(
+    planned_blocks: list[PlannedTeachingBlock],
+    sequence_state: BlockSequenceState,
+    enriched_paths,
+) -> tuple[list[PlannedTeachingBlock], BlockSequenceState]:
+    if not planned_blocks or not enriched_paths:
+        return planned_blocks, sequence_state
+
+    last_block = planned_blocks[-1]
+    if not last_block.candidate_paths:
+        return planned_blocks, sequence_state
+
+    path_score_map = {
+        tuple(path.block_types): path.total_score
+        for path in enriched_paths
+    }
+    updated_candidates = [
+        candidate.model_copy(
+            update={
+                "score": path_score_map.get(tuple(candidate.block_types), candidate.score)
+            }
+        )
+        for candidate in last_block.candidate_paths
+    ]
+    updated_candidates.sort(key=lambda candidate: candidate.score, reverse=True)
+
+    best_candidate = updated_candidates[0]
+    updated_last_block = last_block.model_copy(
+        update={
+            "next_block_type": (
+                best_candidate.block_types[0]
+                if best_candidate.block_types
+                else last_block.next_block_type
+            ),
+            "alternative_next_block_types": [
+                candidate.block_types[0]
+                for candidate in updated_candidates[1:3]
+                if candidate.block_types
+            ],
+            "selected_path_score": best_candidate.score,
+            "candidate_paths": updated_candidates,
+            "routing_rationale": [
+                *last_block.routing_rationale,
+                "Outcome-aware calibration rescored the preview paths against logged learner outcomes.",
+            ],
+        }
+    )
+    updated_state = sequence_state.model_copy(
+        update={
+            "last_recommended_block_type": updated_last_block.next_block_type,
+            "lookahead_block_types": best_candidate.block_types,
+        }
+    )
+    return [*planned_blocks[:-1], updated_last_block], updated_state
+
+
+def _log_path_decision(
+    request: SessionRequest,
+    planned_blocks: list[PlannedTeachingBlock],
+    response_settings,
+    enriched_paths,
+    calibration_engine: CalibrationEngine,
+) -> DecisionRecord | None:
+    if not planned_blocks or not enriched_paths:
+        return None
+
+    last_block = planned_blocks[-1]
+    if last_block.block_type is None:
+        return None
+
+    record = DecisionRecord(
+        session_id=request.session_id,
+        current_block_type=last_block.block_type,
+        evidence_patterns=(
+            last_block.evidence_combination.patterns
+            if last_block.evidence_combination is not None
+            else []
+        ),
+        active_supports=response_settings.active_supports,
+        available_candidate_paths=[path.path_id for path in enriched_paths],
+        chosen_path_id=enriched_paths[0].path_id,
+        chosen_path_score=enriched_paths[0].total_score,
+        chosen_path_score_breakdown=enriched_paths[0].score_breakdown,
+        alternative_paths=[
+            DecisionAlternative(
+                path_id=path.path_id,
+                score=path.total_score,
+                score_breakdown=path.score_breakdown,
+            )
+            for path in enriched_paths[1:3]
+        ],
+    )
+    return calibration_engine.log_decision(record)
+
+
+def _build_calibration_context(
+    calibration_engine: CalibrationEngine,
+    decision_record: DecisionRecord | None,
+) -> CalibrationContext:
+    return CalibrationContext(
+        decision_id=decision_record.decision_id if decision_record is not None else None,
+        calibration_rounds=calibration_engine.current_weights.calibration_rounds,
+        logged_decision_count=len(calibration_engine.decision_log),
+        last_calibration=calibration_engine.current_weights.last_calibration,
+        active_weights=calibration_engine.current_weights.get_current_weights(),
+    )
+
+
 def _has_overload_indicator(evidence: set[str]) -> bool:
     return bool(
         evidence
@@ -1139,7 +1283,11 @@ def build_stack(settings: Settings) -> StackResponse:
     )
 
 
-def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
+def build_teaching_plan(
+    request: SessionRequest,
+    calibration_engine: CalibrationEngine | None = None,
+) -> TeachingPlan:
+    calibration_engine = calibration_engine or DEFAULT_CALIBRATION_ENGINE
     profile: LearnerProfile = request.learner_profile
     resume_state = _resolve_resume_state(request)
     tone, pattern_hint = AUDIENCE_MODES[profile.age_group]
@@ -1270,6 +1418,34 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         planned_blocks=planned_blocks,
         final_state=mode_adaptation_state,
     )
+    session_progress_tracker = build_session_progress_tracker(
+        session_id=request.session_id,
+        objective=request.objective,
+        lesson_mode=lesson_mode,
+        math_level=profile.math_level,
+        planned_blocks=planned_blocks,
+    )
+    enriched_paths = enrich_candidate_paths(
+        candidate_paths=planned_blocks[-1].candidate_paths if planned_blocks else [],
+        learning_goals=session_progress_tracker.learning_goals,
+        session_tracker=session_progress_tracker,
+        active_supports=response_settings.active_supports,
+        active_patterns=block_sequence_state.recent_evidence_patterns,
+        scoring_criteria=PathScoringCriteria(),
+    )
+    enriched_paths = calibration_engine.apply_to_enriched_paths(enriched_paths)
+    planned_blocks, block_sequence_state = _apply_calibrated_preview_routing(
+        planned_blocks,
+        block_sequence_state,
+        enriched_paths,
+    )
+    decision_record = _log_path_decision(
+        request=request,
+        planned_blocks=planned_blocks,
+        response_settings=response_settings,
+        enriched_paths=enriched_paths,
+        calibration_engine=calibration_engine,
+    )
     sequence_planning_metadata = SequencePlanningMetadata(
         active_sequence_intent=block_sequence_state.active_sequence_intent,
         next_block_options=(
@@ -1287,21 +1463,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
             len(planned_blocks[-1].candidate_paths) if planned_blocks else 0
         ),
         candidate_paths=planned_blocks[-1].candidate_paths if planned_blocks else [],
-    )
-    session_progress_tracker = build_session_progress_tracker(
-        session_id=request.session_id,
-        objective=request.objective,
-        lesson_mode=lesson_mode,
-        math_level=profile.math_level,
-        planned_blocks=planned_blocks,
-    )
-    enriched_paths = enrich_candidate_paths(
-        candidate_paths=sequence_planning_metadata.candidate_paths,
-        learning_goals=session_progress_tracker.learning_goals,
-        session_tracker=session_progress_tracker,
-        active_supports=response_settings.active_supports,
-        active_patterns=block_sequence_state.recent_evidence_patterns,
-        scoring_criteria=PathScoringCriteria(),
+        calibration_decision_id=(
+            decision_record.decision_id if decision_record is not None else None
+        ),
+        calibration_rounds=calibration_engine.current_weights.calibration_rounds,
     )
     long_term_context = LongTermContext(
         session_id=session_progress_tracker.session_id,
@@ -1328,6 +1493,10 @@ def build_teaching_plan(request: SessionRequest) -> TeachingPlan:
         recommended_path_id=enriched_paths[0].path_id if enriched_paths else None,
         recommended_path_mastery_gain=(
             enriched_paths[0].mastery_projection if enriched_paths else None
+        ),
+        calibration_context=_build_calibration_context(
+            calibration_engine,
+            decision_record,
         ),
         mode_adaptation_trace=adaptation_trace,
         resume_context=resume_context,

@@ -86,9 +86,9 @@ Entscheidungen und spaeter beobachtete Outcomes nachjustiert.
 - [tests/test_planner_runtime_flow.py](/Users/jonasweiss/MathTeach/tests/test_planner_runtime_flow.py)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
-## Naechster Schritt
+## Weiterfuehrung
 
-H.7 kann jetzt die bisher in-memory gehaltenen Entscheidungs- und
-Outcome-Daten ueber Sessions hinweg persistent machen, damit die
-Kalibrierung nicht nur innerhalb eines Prozesses, sondern ueber echte
-Nutzung hinweg lernt.
+H.7 ist jetzt als direkte Folgeschicht umgesetzt und macht die H.6-
+Kalibrierung ueber einen dateibasierten Store persistent. Der Anschluss
+ist dokumentiert in
+[h7-persistent-calibration.md](/Users/jonasweiss/MathTeach/docs/h7-persistent-calibration.md).

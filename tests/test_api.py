@@ -4,7 +4,15 @@ import uuid
 from fastapi.testclient import TestClient
 
 from mathteach.main import app, session_store
-from mathteach.models import ModeAdaptationCheckpoint, ModeAdaptationState
+from mathteach.models import (
+    ModeAdaptationCheckpoint,
+    ModeAdaptationState,
+    RawBlockObservation,
+    SessionRequest,
+)
+from mathteach.services.calibration_engine import CalibrationEngine
+from mathteach.services.calibration_store import CalibrationStore
+from mathteach.services.planner import build_teaching_plan, record_decision_outcome
 
 
 client = TestClient(app)
@@ -1808,3 +1816,82 @@ def test_tutoring_plan_origin_mode_reduced_under_adhd_scarcity() -> None:
     assert payload["mode_selection"]["selected_mode"] == "origin_then_example"
     assert "micro_origin_bridge" in payload["mode_selection"]["constraints"]
     assert payload["retrieval_plan"]["history_mode"] == "supporting_only"
+
+
+def test_calibration_statistics_and_history_endpoints(tmp_path: Path) -> None:
+    store_path = tmp_path / "calibration.json"
+    engine = CalibrationEngine(
+        store=CalibrationStore(store_path),
+        autosave_threshold=1,
+        min_samples_for_calibration=1,
+    )
+    plan = build_teaching_plan(
+        SessionRequest(
+            objective="Explain this example in clear steps.",
+            learner_profile={
+                "age_group": "teen",
+                "math_level": "middle_school",
+                "confidence": "low",
+                "preferred_pace": "balanced",
+                "language": "en",
+                "wants_visuals": True,
+                "wants_history": False,
+            },
+            runtime_observations=[
+                {"evidence": ["rapid_success_three_blocks", "transfer_success"]},
+            ],
+        ),
+        calibration_engine=engine,
+    )
+
+    outcome_response = client.post(
+        "/api/v1/tutoring/outcome",
+        params={"store_path": str(store_path)},
+        json={
+            "decision_id": plan.calibration_context.decision_id,
+            "observation": {
+                "block_index": 2,
+                "current_mode": plan.lesson_mode,
+                "evidence": ["visible_small_success", "transfer_success"],
+                "duration_seconds": 88.0,
+                "accuracy_estimate": 0.87,
+                "engagement_estimate": "high",
+            },
+            "confidence_change": 0.12,
+        },
+    )
+
+    assert outcome_response.status_code == 200
+    record_decision_outcome(
+        plan.calibration_context.decision_id,
+        observation=RawBlockObservation(
+            block_index=3,
+            current_mode=plan.lesson_mode,
+            evidence=["visible_small_success", "transfer_success"],
+            duration_seconds=80.0,
+            accuracy_estimate=0.9,
+            engagement_estimate="high",
+        ),
+        confidence_change=0.14,
+        calibration_engine=engine,
+    )
+    engine.force_save()
+
+    stats_response = client.get(
+        "/api/v1/admin/calibration/statistics",
+        params={"store_path": str(store_path)},
+    )
+    history_response = client.get(
+        "/api/v1/admin/calibration/history",
+        params={"store_path": str(store_path)},
+    )
+
+    assert stats_response.status_code == 200
+    assert history_response.status_code == 200
+    stats_payload = stats_response.json()
+    history_payload = history_response.json()
+
+    assert stats_payload["total_decisions"] >= 1
+    assert stats_payload["total_outcomes"] >= 1
+    assert stats_payload["store_path"] == str(store_path)
+    assert len(history_payload["history"]) >= 1

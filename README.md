@@ -106,6 +106,7 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 - [docs/lookahead-path-planning.md](/Users/jonasweiss/MathTeach/docs/lookahead-path-planning.md): H.4-Ausbau fuer bewertete Lookahead-Pfade statt nur einer direkten Naechstblock-Wahl
 - [docs/long-term-integration.md](/Users/jonasweiss/MathTeach/docs/long-term-integration.md): H.5-Ausbau fuer Lernziele, Session-Historie und pilotdatengestuetzte Pfadbewertung
 - [docs/h6-calibration.md](/Users/jonasweiss/MathTeach/docs/h6-calibration.md): H.6-Ausbau fuer Entscheidungs-Logging, Outcome-Updates und empirische Gewichtsanpassung
+- [docs/h7-persistent-calibration.md](/Users/jonasweiss/MathTeach/docs/h7-persistent-calibration.md): H.7-Ausbau fuer persistente Kalibrierung ueber Sessions und Prozessstarts hinweg
 - [docs/math-corpus-blueprint.md](/Users/jonasweiss/MathTeach/docs/math-corpus-blueprint.md): Startplan fuer die mathematische Quellensammlung
 - [docs/math-history-program.md](/Users/jonasweiss/MathTeach/docs/math-history-program.md): Chronologisches Sammelprogramm fuer die erste Mathegeschichte
 - [docs/modern-math-baseline-audit-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/modern-math-baseline-audit-2026-04-01.md): Startaudit fuer die neue Epoche Moderne Mathematik
@@ -302,9 +303,13 @@ Die aktuellen Reviews bestaetigen dabei ausdruecklich:
   mit spaeteren Outcome-Beobachtungen und kann die sichtbare
   Preview-Empfehlung damit gegen erste empirische Rueckmeldungen
   nachjustieren
+- H.7 macht diese Kalibrierung jetzt dauerhaft:
+  Entscheidungslogs, Outcomes und Gewichts-Historie koennen ueber
+  persistente Stores erhalten bleiben und ueber API-Endpunkte inspiziert
+  werden
 - der naechste Engpass ist jetzt nicht mehr Phase-A-Dokumentation,
-  sondern Persistenz und spaetere Session-uebergreifende Nutzung der
-  neuen Kalibrierungsdaten,
+  sondern profilspezifische und spaeter kontextspezifische Nutzung der
+  jetzt persistenten Kalibrierungsdaten,
   spaetere
   runtime-sensitive Response-Anpassung und danach punktuelle
   Rollen-/Monitoring-Haertung fuer Admin-Pfade

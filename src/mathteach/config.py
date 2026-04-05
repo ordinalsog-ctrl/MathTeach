@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     app_name: str = "MathTeach API"
     environment: str = "development"
     session_store_dir: str | None = None
+    calibration_store_path: str | None = None
+    calibration_autosave_threshold: int = 10
     primary_reasoner_model: str = "gpt-5.4"
     fast_path_model: str = "gpt-5.4-mini"
     ingestion_model: str = "gemini-2.5-pro"

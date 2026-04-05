@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException, Query
 
 from mathteach.config import get_settings
-from mathteach.models import SessionRequest
+from mathteach.models import CalibrationOutcomeRequest, SessionRequest
 from mathteach.services.corpus import (
     build_chronology_program,
     build_corpus_blueprint,
@@ -9,7 +11,13 @@ from mathteach.services.corpus import (
     build_source_access_program,
 )
 from mathteach.services.foundation import build_foundation
-from mathteach.services.planner import build_stack, build_teaching_plan
+from mathteach.services.calibration_engine import CalibrationEngine
+from mathteach.services.calibration_store import CalibrationStore
+from mathteach.services.planner import (
+    build_stack,
+    build_teaching_plan,
+    record_decision_outcome,
+)
 from mathteach.services.checkpoint_validation import (
     CheckpointMigrationRequired,
     SessionValidationError,
@@ -21,6 +29,26 @@ settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0")
 session_store = SessionStore(settings.session_store_dir)
 session_manager = SessionManager(session_store)
+calibration_store = (
+    CalibrationStore(settings.calibration_store_path)
+    if settings.calibration_store_path
+    else None
+)
+calibration_engine = CalibrationEngine(
+    store=calibration_store,
+    autosave_threshold=settings.calibration_autosave_threshold,
+)
+
+
+def _resolve_calibration_engine(
+    store_path: str | None = None,
+) -> CalibrationEngine:
+    if store_path:
+        return CalibrationEngine(
+            store=CalibrationStore(Path(store_path)),
+            autosave_threshold=settings.calibration_autosave_threshold,
+        )
+    return calibration_engine
 
 
 @app.get("/health")
@@ -62,7 +90,10 @@ def corpus_network():
 def tutoring_plan(request: SessionRequest):
     try:
         planner_request, session_id = session_manager.prepare_planner_request(request)
-        plan = build_teaching_plan(planner_request)
+        plan = build_teaching_plan(
+            planner_request,
+            calibration_engine=calibration_engine,
+        )
         return session_manager.persist_plan_result(session_id, plan)
     except (
         SessionConflictError,
@@ -70,6 +101,59 @@ def tutoring_plan(request: SessionRequest):
         CheckpointMigrationRequired,
     ) as exc:
         raise as_http_error(exc) from exc
+
+
+@app.post("/api/v1/tutoring/outcome")
+def tutoring_outcome(
+    request: CalibrationOutcomeRequest,
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    recorded = record_decision_outcome(
+        request.decision_id,
+        request.observation,
+        confidence_change=request.confidence_change,
+        engagement_estimate=request.engagement_estimate,
+        calibration_engine=engine,
+    )
+    if not recorded:
+        raise HTTPException(status_code=404, detail="No calibration decision found.")
+    return {
+        "status": "recorded",
+        "decision_id": request.decision_id,
+        "calibration_rounds": engine.current_weights.calibration_rounds,
+    }
+
+
+@app.get("/api/v1/admin/calibration/statistics")
+def admin_calibration_statistics(
+    store_path: str | None = Query(default=None),
+):
+    engine = _resolve_calibration_engine(store_path)
+    if store_path:
+        return CalibrationStore(Path(store_path)).get_statistics()
+    return engine.get_statistics()
+
+
+@app.get("/api/v1/admin/calibration/history")
+def admin_calibration_history(
+    store_path: str | None = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=1000),
+):
+    engine = _resolve_calibration_engine(store_path)
+    history = engine.weights_history[-limit:]
+    return {
+        "history": [
+            {
+                "timestamp": snapshot.timestamp.isoformat(),
+                "trigger_decision_id": snapshot.trigger_decision_id,
+                "outcome_score": snapshot.outcome_score,
+                "active_weights": snapshot.active_weights,
+                "adjustment_reason": snapshot.adjustment_reason,
+            }
+            for snapshot in history
+        ]
+    }
 
 
 @app.get("/api/v1/admin/quarantine/sessions")

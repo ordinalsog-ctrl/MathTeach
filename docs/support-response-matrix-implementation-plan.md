@@ -153,6 +153,10 @@ Aktueller Stand:
   `TeachingPlan` traegt dafuer `calibration_context`, waehrend
   `sequence_planning_metadata` jetzt auch
   `calibration_decision_id` und `calibration_rounds` zeigt
+- H.7 macht diese Kalibrierung jetzt persistent:
+  `CalibrationStore` speichert Entscheidungslogs, Outcomes und
+  Gewichtshistorie dateibasiert, waehrend neue API-Endpunkte Statistik
+  und History sichtbar machen
 
 ## Phase D: Pilot and Validation
 
@@ -297,8 +301,8 @@ Jede spaetere Regel soll rueckfuehrbar bleiben auf:
 
 Naechster direkter Coding-Start:
 
-- H.7 die neuen H.6-Entscheidungslogs und Outcome-Daten ueber Sessions
-  hinweg persistent machen, statt nur in-memory zu halten
+- H.8 die jetzt persistenten H.7-Kalibrierungsdaten profilspezifisch
+  auswerten, statt weiter nur ein globales Gewichtungsprofil zu lernen
 - weitere Triad-Gruppen und besondere Vierer-Konstellationen nur dann
   ergaenzen, wenn echte Konfliktmuster im Pilot oder in Tests sichtbar
   werden

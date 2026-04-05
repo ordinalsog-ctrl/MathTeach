@@ -269,6 +269,25 @@ class OutcomeMetrics(BaseModel):
     error_rate_trend: ErrorRateTrend = "stable"
     observed_engagement: EngagementLevel = "medium"
 
+    def composite_score(self) -> float:
+        score = self.mastery_gain_estimate * 0.45
+
+        if self.error_rate_trend == "improving":
+            score += 0.2
+        elif self.error_rate_trend == "stable":
+            score += 0.1
+
+        if self.observed_engagement == "high":
+            score += 0.2
+        elif self.observed_engagement == "medium":
+            score += 0.1
+
+        if self.accuracy_estimate is not None:
+            score += self.accuracy_estimate * 0.1
+
+        score += max(0.0, min(0.05, self.confidence_change))
+        return max(0.0, min(1.0, score))
+
 
 class CalibrationWeights(BaseModel):
     baseline_weights: dict[str, float] = Field(
@@ -299,6 +318,20 @@ class CalibrationWeights(BaseModel):
     def get_current_weights(self) -> dict[str, float]:
         return self.adjusted_weights.copy() if self.adjusted_weights else self.baseline_weights.copy()
 
+    def summary(self) -> dict[str, float]:
+        return {
+            key: round(value, 4)
+            for key, value in self.get_current_weights().items()
+        }
+
+
+class CalibrationWeightsSnapshot(BaseModel):
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    active_weights: dict[str, float] = Field(default_factory=dict)
+    trigger_decision_id: str | None = None
+    outcome_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    adjustment_reason: str = ""
+
 
 class DecisionRecord(BaseModel):
     decision_id: str = Field(default_factory=lambda: uuid4().hex)
@@ -324,6 +357,17 @@ class CalibrationContext(BaseModel):
     logged_decision_count: int = Field(default=0, ge=0)
     last_calibration: datetime | None = None
     active_weights: dict[str, float] = Field(default_factory=dict)
+    persistent_store_path: str | None = None
+    persisted_decision_count: int = Field(default=0, ge=0)
+    recent_success_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+    weight_stability_index: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class CalibrationOutcomeRequest(BaseModel):
+    decision_id: str = Field(min_length=3)
+    observation: RawBlockObservation
+    confidence_change: float = 0.0
+    engagement_estimate: EngagementLevel | None = None
 
 
 class BlockSequenceDecision(BaseModel):

@@ -2,6 +2,48 @@
 
 Stand: 2026-04-05
 
+## Phase-H.7-Persistent-Calibration 2026-04-05
+
+Die H.6-Kalibrierung bleibt jetzt nicht mehr nur im Speicher. Mit H.7
+koennen Entscheidungslogs, Outcome-Metriken und Gewichtshistorie
+dateibasiert ueber Sessions und Prozessstarts hinweg erhalten bleiben.
+
+Wichtigste Konsequenzen:
+
+- neuer
+  [calibration_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_store.py)
+  als atomare JSON-Persistenz fuer Kalibrierungsdaten
+- `CalibrationEngine` kann jetzt optional mit Store und Autosave laufen
+  und laedt fruehere Entscheidungen sowie Gewichte beim Start wieder ein
+- `CalibrationWeightsSnapshot` macht Gewichtsverschiebungen jetzt
+  historisch nachvollziehbar statt nur den letzten Stand sichtbar
+- `calibration_context` zeigt jetzt auch
+  `persistent_store_path`, `persisted_decision_count`,
+  `recent_success_rate` und `weight_stability_index`
+- die API traegt jetzt neue H.7-Endpunkte fuer Outcome-Erfassung sowie
+  Statistik- und History-Inspektion der Kalibrierung
+- die bestehende H.6-Pfadentscheidung bleibt dabei erhalten; H.7 macht
+  sie dauerhaft und ueber Neustarts hinweg nutzbar
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/config.py](/Users/jonasweiss/MathTeach/src/mathteach/config.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/calibration_store.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_store.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [tests/test_calibration_store.py](/Users/jonasweiss/MathTeach/tests/test_calibration_store.py)
+- [tests/test_h7_persistent_calibration.py](/Users/jonasweiss/MathTeach/tests/test_h7_persistent_calibration.py)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [docs/h7-persistent-calibration.md](/Users/jonasweiss/MathTeach/docs/h7-persistent-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- gezielte Tests: `57 passed, 1 warning`
+- Full-Suite: `183 passed, 1 warning`
+
 ## Phase-H.6-Calibration 2026-04-05
 
 Die H.5-Pfadbewertung ist jetzt nicht mehr statisch. Der Planner loggt

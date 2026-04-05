@@ -33,6 +33,7 @@ from mathteach.services.calibration_engine import (
     CalibrationEngine,
     infer_outcome_metrics,
 )
+from mathteach.services.calibration_store import CalibrationStore
 from mathteach.services.mode_selector import select_mode
 from mathteach.services.conflict_resolver import resolve_block_support_conflicts
 from mathteach.services.evidence_pattern_detector import build_evidence_combination
@@ -88,6 +89,21 @@ def get_default_calibration_engine() -> CalibrationEngine:
     return DEFAULT_CALIBRATION_ENGINE
 
 
+def configure_default_calibration_engine(
+    store_path: str | None = None,
+    autosave_threshold: int = 10,
+    min_samples_for_calibration: int = 8,
+) -> CalibrationEngine:
+    global DEFAULT_CALIBRATION_ENGINE
+    store = CalibrationStore(store_path) if store_path else None
+    DEFAULT_CALIBRATION_ENGINE = CalibrationEngine(
+        min_samples_for_calibration=min_samples_for_calibration,
+        store=store,
+        autosave_threshold=autosave_threshold,
+    )
+    return DEFAULT_CALIBRATION_ENGINE
+
+
 def reset_default_calibration_engine() -> CalibrationEngine:
     global DEFAULT_CALIBRATION_ENGINE
     DEFAULT_CALIBRATION_ENGINE = CalibrationEngine()
@@ -107,7 +123,10 @@ def record_decision_outcome(
         confidence_change=confidence_change,
         engagement_estimate=engagement_estimate,
     )
-    return engine.update_outcome(decision_id, outcome)
+    updated = engine.update_outcome(decision_id, outcome)
+    if updated:
+        engine.force_save()
+    return updated
 
 
 def _normalize_text(value: str) -> str:
@@ -895,12 +914,18 @@ def _build_calibration_context(
     calibration_engine: CalibrationEngine,
     decision_record: DecisionRecord | None,
 ) -> CalibrationContext:
+    recent_success_rate = calibration_engine.get_recent_success_rate()
+    weight_stability_index = calibration_engine.get_weight_stability_index()
     return CalibrationContext(
         decision_id=decision_record.decision_id if decision_record is not None else None,
         calibration_rounds=calibration_engine.current_weights.calibration_rounds,
         logged_decision_count=len(calibration_engine.decision_log),
         last_calibration=calibration_engine.current_weights.last_calibration,
         active_weights=calibration_engine.current_weights.get_current_weights(),
+        persistent_store_path=calibration_engine.store_path,
+        persisted_decision_count=len(calibration_engine.decision_log),
+        recent_success_rate=recent_success_rate,
+        weight_stability_index=weight_stability_index,
     )
 
 
@@ -1446,6 +1471,7 @@ def build_teaching_plan(
         enriched_paths=enriched_paths,
         calibration_engine=calibration_engine,
     )
+    calibration_engine.force_save()
     sequence_planning_metadata = SequencePlanningMetadata(
         active_sequence_intent=block_sequence_state.active_sequence_intent,
         next_block_options=(

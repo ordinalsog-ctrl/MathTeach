@@ -269,6 +269,7 @@ def admin_calibration_steering_log(
     include_proven_boost: bool = Query(default=True),
     include_adaptive_caps: bool = Query(default=True),
     include_edge_seeking: bool = Query(default=True),
+    include_edge_policy: bool = Query(default=True),
 ):
     engine = _resolve_calibration_engine(store_path)
     query = SteeringLogQuery(engine)
@@ -279,6 +280,7 @@ def admin_calibration_steering_log(
         include_proven_boost=include_proven_boost,
         include_adaptive_caps=include_adaptive_caps,
         include_edge_seeking=include_edge_seeking,
+        include_edge_policy=include_edge_policy,
     )
     return {
         "entries": [entry.model_dump(mode="json") for entry in entries[:limit]],

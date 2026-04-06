@@ -42,6 +42,11 @@ META_TRANSFER_STRONG_EDGE_EFFECTIVENESS_THRESHOLD = 0.7
 META_TRANSFER_EDGE_SEEKING_MIN_SIMILARITY = 0.25
 META_TRANSFER_EDGE_SEEKING_INSUFFICIENT_HISTORY_MULTIPLIER = 1.15
 META_TRANSFER_EDGE_SEEKING_WEAK_EDGE_RECOVERY_MULTIPLIER = 1.2
+META_TRANSFER_EDGE_POLICY_TRUSTED_MULTIPLIER = 1.05
+META_TRANSFER_EDGE_POLICY_EXPLORE_MULTIPLIER = 1.02
+META_TRANSFER_EDGE_POLICY_RECOVERY_MULTIPLIER = 0.98
+META_TRANSFER_EDGE_POLICY_CAUTIOUS_MULTIPLIER = 0.96
+META_TRANSFER_EDGE_POLICY_GUARDED_MULTIPLIER = 0.9
 
 
 def _estimate_mastery_gain(
@@ -288,6 +293,16 @@ def _normalize_source_shares(
         source_id: raw_shares[source_id] / total
         for source_id in source_profiles
     }
+
+
+def _edge_policy_distribution(
+    steering_factors_by_source: dict[str, dict[str, float | bool | int | str]],
+) -> dict[str, int]:
+    distribution: dict[str, int] = {}
+    for factors in steering_factors_by_source.values():
+        policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
+        distribution[policy] = distribution.get(policy, 0) + 1
+    return distribution
 
 
 class CalibrationEngine:
@@ -574,6 +589,16 @@ class CalibrationEngine:
                     "edge_seeking_applied"
                 ],
                 "edge_seeking_reason": steering_factors["edge_seeking_reason"],
+                "edge_transfer_policy": steering_factors["edge_transfer_policy"],
+                "edge_transfer_policy_reason": steering_factors[
+                    "edge_transfer_policy_reason"
+                ],
+                "edge_transfer_policy_multiplier": steering_factors[
+                    "edge_transfer_policy_multiplier"
+                ],
+                "policy_adjusted_candidate_strength": steering_factors[
+                    "policy_adjusted_candidate_strength"
+                ],
                 "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                     candidate.profile_id,
                     profile.profile_id,
@@ -893,6 +918,7 @@ class CalibrationEngine:
                 steering_weak_edge_penalty_applied,
                 steering_proven_donor_boost_applied,
                 steering_edge_seeking_applied,
+                steering_edge_policy_applied,
                 meta_transfer_source_steering_factors,
                 meta_transfer_source_adaptive_caps,
             ) = self._effective_weights_for_profile_chain(
@@ -938,11 +964,17 @@ class CalibrationEngine:
                         "steering_edge_seeking_applied": (
                             steering_edge_seeking_applied
                         ),
+                        "steering_edge_policy_applied": (
+                            steering_edge_policy_applied
+                        ),
                         "meta_transfer_source_steering_factors": (
                             meta_transfer_source_steering_factors
                         ),
                         "meta_transfer_source_adaptive_caps": (
                             meta_transfer_source_adaptive_caps
+                        ),
+                        "edge_policy_distribution": _edge_policy_distribution(
+                            meta_transfer_source_steering_factors
                         ),
                         "calibration_weights_used": {
                             key: round(value, 4)
@@ -1086,6 +1118,16 @@ class CalibrationEngine:
                         "edge_seeking_applied"
                     ],
                     "edge_seeking_reason": steering_factors["edge_seeking_reason"],
+                    "edge_transfer_policy": steering_factors["edge_transfer_policy"],
+                    "edge_transfer_policy_reason": steering_factors[
+                        "edge_transfer_policy_reason"
+                    ],
+                    "edge_transfer_policy_multiplier": steering_factors[
+                        "edge_transfer_policy_multiplier"
+                    ],
+                    "policy_adjusted_candidate_strength": steering_factors[
+                        "policy_adjusted_candidate_strength"
+                    ],
                     "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                         candidate.profile_id,
                         profile.profile_id,
@@ -1456,6 +1498,57 @@ class CalibrationEngine:
         )
         return float(cap_info["cap"]), str(cap_info["reason"])
 
+    def _edge_transfer_policy_info(
+        self,
+        *,
+        weak_edge_penalty_applied: bool,
+        proven_donor_boost_applied: bool,
+        edge_seeking_applied: bool,
+        edge_seeking_reason: str,
+        cap_reason: str,
+    ) -> dict[str, float | str]:
+        if proven_donor_boost_applied and cap_reason in {"moderate", "strong_edge"}:
+            return {
+                "policy": "trusted_edge",
+                "reason": "prefer_proven_effective_edge",
+                "multiplier": META_TRANSFER_EDGE_POLICY_TRUSTED_MULTIPLIER,
+            }
+        if (
+            edge_seeking_applied
+            and edge_seeking_reason == "probe_insufficient_history_for_sparse_target"
+        ):
+            return {
+                "policy": "explore_edge",
+                "reason": "probe_sparse_target_with_insufficient_history",
+                "multiplier": META_TRANSFER_EDGE_POLICY_EXPLORE_MULTIPLIER,
+            }
+        if (
+            edge_seeking_applied
+            and edge_seeking_reason == "recover_weak_edge_for_sparse_target"
+        ):
+            return {
+                "policy": "recovery_edge",
+                "reason": "retest_guarded_edge_for_sparse_target",
+                "multiplier": META_TRANSFER_EDGE_POLICY_RECOVERY_MULTIPLIER,
+            }
+        if weak_edge_penalty_applied or cap_reason == "weak_edge":
+            return {
+                "policy": "guarded_edge",
+                "reason": "protect_target_from_weak_edge",
+                "multiplier": META_TRANSFER_EDGE_POLICY_GUARDED_MULTIPLIER,
+            }
+        if cap_reason == "low_effectiveness":
+            return {
+                "policy": "cautious_edge",
+                "reason": "downweight_low_effectiveness_edge",
+                "multiplier": META_TRANSFER_EDGE_POLICY_CAUTIOUS_MULTIPLIER,
+            }
+        return {
+            "policy": "neutral_edge",
+            "reason": "no_additional_edge_policy",
+            "multiplier": 1.0,
+        }
+
     def _should_seek_edges_for_profile(
         self,
         target_profile: CalibrationProfile,
@@ -1614,6 +1707,17 @@ class CalibrationEngine:
             final_candidate_strength = (
                 adjusted_similarity_score * candidate.confidence_score
             ) + (0.25 * historical_effectiveness)
+            edge_policy_info = self._edge_transfer_policy_info(
+                weak_edge_penalty_applied=weak_edge_penalty_applied,
+                proven_donor_boost_applied=proven_donor_boost_applied,
+                edge_seeking_applied=edge_seeking_applied,
+                edge_seeking_reason=edge_seeking_reason,
+                cap_reason=cap_reason,
+            )
+            edge_policy_multiplier = float(edge_policy_info["multiplier"])
+            policy_adjusted_candidate_strength = final_candidate_strength * (
+                edge_policy_multiplier
+            )
             steering_factors: dict[str, float | bool | str] = {
                 "base_similarity_score": round(similarity_score, 4),
                 "adjusted_similarity_score": round(adjusted_similarity_score, 4),
@@ -1628,6 +1732,13 @@ class CalibrationEngine:
                 "edge_seeking_reason": edge_seeking_reason,
                 "edge_seeking_target_sparse": edge_seeking_active,
                 "final_candidate_strength": round(final_candidate_strength, 4),
+                "edge_transfer_policy": str(edge_policy_info["policy"]),
+                "edge_transfer_policy_reason": str(edge_policy_info["reason"]),
+                "edge_transfer_policy_multiplier": round(edge_policy_multiplier, 4),
+                "policy_adjusted_candidate_strength": round(
+                    policy_adjusted_candidate_strength,
+                    4,
+                ),
             }
             ranked_candidates.append(
                 (
@@ -1635,7 +1746,7 @@ class CalibrationEngine:
                     similarity_score,
                     historical_effectiveness,
                     steering_factors,
-                    final_candidate_strength,
+                    policy_adjusted_candidate_strength,
                 )
             )
 
@@ -1687,13 +1798,13 @@ class CalibrationEngine:
             similarity_score,
             historical_effectiveness,
             steering_factors,
-            final_candidate_strength,
+            policy_adjusted_candidate_strength,
         ) in candidates:
             cap_info = self._adaptive_transfer_cap_info(
                 candidate.profile_id,
                 selected_profile.profile_id,
             )
-            adaptive_candidate_strength = final_candidate_strength * (
+            adaptive_candidate_strength = policy_adjusted_candidate_strength * (
                 float(cap_info["cap"]) / META_TRANSFER_MAX_BLEND
             )
             if adaptive_candidate_strength <= 0.0:
@@ -1701,7 +1812,12 @@ class CalibrationEngine:
 
             adaptive_caps_by_source[candidate.profile_id] = {
                 **cap_info,
-                "raw_candidate_strength": round(final_candidate_strength, 4),
+                "raw_candidate_strength": float(
+                    steering_factors["final_candidate_strength"]
+                ),
+                "policy_adjusted_candidate_strength": float(
+                    steering_factors["policy_adjusted_candidate_strength"]
+                ),
                 "adaptive_candidate_strength": round(adaptive_candidate_strength, 4),
             }
             active_candidates.append(
@@ -1710,7 +1826,7 @@ class CalibrationEngine:
                     similarity_score,
                     historical_effectiveness,
                     steering_factors,
-                    final_candidate_strength,
+                    policy_adjusted_candidate_strength,
                     adaptive_candidate_strength,
                 )
             )
@@ -1785,6 +1901,9 @@ class CalibrationEngine:
                 "raw_candidate_strength": adaptive_caps_by_source[candidate.profile_id][
                     "raw_candidate_strength"
                 ],
+                "policy_adjusted_candidate_strength": adaptive_caps_by_source[
+                    candidate.profile_id
+                ]["policy_adjusted_candidate_strength"],
                 "adaptive_candidate_strength": adaptive_caps_by_source[candidate.profile_id][
                     "adaptive_candidate_strength"
                 ],
@@ -1861,6 +1980,7 @@ class CalibrationEngine:
         bool,
         bool,
         bool,
+        bool,
         dict[str, dict[str, float | bool | int | str]],
         dict[str, dict[str, float | int | str]],
     ]:
@@ -1872,6 +1992,7 @@ class CalibrationEngine:
                 [],
                 {},
                 0.0,
+                False,
                 False,
                 False,
                 False,
@@ -1919,6 +2040,7 @@ class CalibrationEngine:
                 False,
                 False,
                 False,
+                False,
                 {},
                 {},
             )
@@ -1933,6 +2055,10 @@ class CalibrationEngine:
         )
         steering_edge_seeking_applied = any(
             factor.get("edge_seeking_applied", False)
+            for factor in meta_transfer_source_steering_factors.values()
+        )
+        steering_edge_policy_applied = any(
+            str(factor.get("edge_transfer_policy", "neutral_edge")) != "neutral_edge"
             for factor in meta_transfer_source_steering_factors.values()
         )
 
@@ -1984,6 +2110,7 @@ class CalibrationEngine:
             steering_weak_edge_penalty_applied,
             steering_proven_donor_boost_applied,
             steering_edge_seeking_applied,
+            steering_edge_policy_applied,
             meta_transfer_source_steering_factors,
             meta_transfer_source_adaptive_caps,
         )

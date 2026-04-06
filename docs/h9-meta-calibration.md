@@ -315,6 +315,59 @@ Und sie erscheinen ebenfalls im Steering-Log:
   kann jetzt auch edge-seeking-getriebene Decisions sichtbar machen
   und entsprechend filtern
 
+### Phase 5: Edge Policy Layer
+
+Phase 5 zieht ueber die vorhandenen Steering-Signale jetzt eine
+explizite Policy-Schicht pro Donor-Ziel-Kante.
+
+Wichtig:
+
+- es gibt weiterhin keine zweite Edge-History; die Policy basiert auf
+  `_edge_effectiveness_history()`,
+  `_transfer_effectiveness_for_pair()` und effektiver
+  `meta_transfer_history`
+- die Policy ersetzt Weak-edge penalty, proven-donor boost, adaptive
+  Caps oder Edge-Seeking nicht, sondern orchestriert sie als klar
+  benannte Kantenpolitik
+- dadurch wird sichtbarer, ob eine Kante aktuell eher vertrauenswuerdig,
+  vorsichtig, probeartig oder bewusst geschuetzt behandelt wird
+
+Aktuelle Policy-Typen:
+
+- `trusted_edge`
+  fuer historisch bewaehrte, hinreichend belegte Kanten
+- `guarded_edge`
+  fuer klar schwache oder aktiv abgewertete Kanten
+- `explore_edge`
+  fuer sparse Targets mit datenarmen, aber plausiblen Probe-Kanten
+- `recovery_edge`
+  fuer sparse Targets, bei denen eine schwache Kante kontrolliert erneut
+  getestet wird
+- `cautious_edge`
+  fuer Kanten mit niedriger, aber nicht ganz schwacher beobachteter
+  Effectiveness
+- `neutral_edge`
+  wenn keine zusaetzliche Policy ueber die vorhandenen Basissignale
+  hinaus notwendig ist
+
+Diese Policy-Schicht wird jetzt sichtbar in:
+
+- `EnrichedPathEvaluation.steering_edge_policy_applied`
+- `EnrichedPathEvaluation.edge_policy_distribution`
+- `DecisionRecord.steering_edge_policy_applied`
+- `CalibrationContext.steering_edge_policy_applied`
+- `CalibrationContext.edge_policy_distribution`
+- `meta_transfer_source_steering_factors[*].edge_transfer_policy`
+- `meta_transfer_source_steering_factors[*].edge_transfer_policy_reason`
+- `meta_transfer_source_steering_factors[*].edge_transfer_policy_multiplier`
+- `meta_transfer_source_steering_factors[*].policy_adjusted_candidate_strength`
+
+Und im Steering-Log:
+
+- `GET /api/v1/admin/calibration/steering-log`
+  kann jetzt auch nach `include_edge_policy=true` filtern und zeigt pro
+  Decision einen `edge_policy_distribution`-Snapshot
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -332,7 +385,7 @@ Noch nicht enthalten:
 Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
-- staerkere Auswertung der Meta-Historie, welche Transferquellen fuer
-  welches Profil langfristig wirklich hilfreich sind
+- staerkere Auswertung der Meta-Historie, welche Policy-Typen fuer
+  welche Profilfamilien langfristig wirklich hilfreich sind
 - feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
-  des jetzt vorhandenen Edge-Seeking- und Steering-Logs
+  des jetzt vorhandenen Edge-Seeking-, Policy- und Steering-Logs

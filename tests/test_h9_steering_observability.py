@@ -32,6 +32,8 @@ def _decision_with_steering(
     proven_boost: bool = False,
     adaptive_reason: str = "insufficient_history",
     adaptive_cap: float = 0.3,
+    edge_policy: str | None = None,
+    edge_policy_multiplier: float | None = None,
     observed_outcome_score: float | None = None,
 ) -> DecisionRecord:
     observed_outcome = (
@@ -65,12 +67,24 @@ def _decision_with_steering(
         meta_transfer_was_effective=True,
         steering_weak_edge_penalty_applied=weak_penalty,
         steering_proven_donor_boost_applied=proven_boost,
+        steering_edge_policy_applied=edge_policy not in (None, "neutral_edge"),
         meta_transfer_source_steering_factors={
             source_id: {
                 "weak_edge_penalty_applied": weak_penalty,
                 "proven_donor_boost_applied": proven_boost,
                 "penalty_multiplier": 0.6 if weak_penalty else 1.0,
                 "boost_multiplier": 1.3 if proven_boost else 1.0,
+                "edge_transfer_policy": edge_policy or "neutral_edge",
+                "edge_transfer_policy_reason": (
+                    "test_policy"
+                    if edge_policy not in (None, "neutral_edge")
+                    else "no_additional_edge_policy"
+                ),
+                "edge_transfer_policy_multiplier": (
+                    edge_policy_multiplier
+                    if edge_policy_multiplier is not None
+                    else 1.0
+                ),
                 "adaptive_transfer_cap": adaptive_cap,
                 "adaptive_transfer_cap_reason": adaptive_reason,
             }
@@ -212,6 +226,46 @@ def test_steering_log_query_filters_edge_seeking_decisions() -> None:
     assert entries[0].edge_seeking_sources == ["edge_donor"]
 
 
+def test_steering_log_query_filters_edge_policy_decisions() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="neutral_caps_only",
+            timestamp=now - timedelta(minutes=5),
+            session_id="session_plain",
+            adaptive_reason="moderate",
+            adaptive_cap=0.35,
+        ),
+        _decision_with_steering(
+            decision_id="trusted_policy",
+            timestamp=now,
+            session_id="session_policy",
+            source_id="policy_donor",
+            proven_boost=True,
+            adaptive_reason="strong_edge",
+            adaptive_cap=0.45,
+            edge_policy="trusted_edge",
+            edge_policy_multiplier=1.05,
+        ),
+    ]
+
+    query = SteeringLogQuery(engine)
+    entries = query.get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=False,
+        include_edge_policy=True,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].decision_id == "trusted_policy"
+    assert entries[0].edge_policy_applied is True
+    assert entries[0].edge_policy_sources == ["policy_donor"]
+    assert entries[0].edge_policy_distribution["trusted_edge"] == 1
+
+
 def test_adaptive_caps_trends_aggregates_by_reason() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
@@ -298,6 +352,8 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
             source_id="api_donor_weak",
             adaptive_reason="weak_edge",
             adaptive_cap=0.2,
+            edge_policy="guarded_edge",
+            edge_policy_multiplier=0.9,
         ),
         _decision_with_steering(
             decision_id="api_strong",
@@ -307,10 +363,13 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
             source_id="api_donor_strong",
             adaptive_reason="strong_edge",
             adaptive_cap=0.45,
+            edge_policy="trusted_edge",
+            edge_policy_multiplier=1.05,
             observed_outcome_score=0.85,
         ).model_copy(
             update={
                 "steering_edge_seeking_applied": True,
+                "steering_edge_policy_applied": True,
                 "meta_transfer_source_steering_factors": {
                     "api_donor_strong": {
                         "weak_edge_penalty_applied": False,
@@ -319,6 +378,9 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
                         "edge_seeking_applied": True,
                         "edge_seeking_multiplier": 1.15,
                         "edge_seeking_reason": "probe_insufficient_history_for_sparse_target",
+                        "edge_transfer_policy": "trusted_edge",
+                        "edge_transfer_policy_reason": "prefer_proven_effective_edge",
+                        "edge_transfer_policy_multiplier": 1.05,
                         "adaptive_transfer_cap": 0.45,
                         "adaptive_transfer_cap_reason": "strong_edge",
                     }
@@ -347,6 +409,8 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
     assert log_payload["entries"][0]["adaptive_cap_distribution"]
     assert "meta_transfer_source_adaptive_caps" in log_payload["entries"][0]
     assert "edge_seeking_applied" in log_payload["entries"][0]
+    assert "edge_policy_applied" in log_payload["entries"][0]
+    assert "edge_policy_distribution" in log_payload["entries"][0]
     assert "weak_edge" in trends_payload["trends"]
     assert "strong_edge" in trends_payload["trends"]
     assert trends_payload["trends"]["weak_edge"]["avg_cap"] == 0.2

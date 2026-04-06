@@ -2,6 +2,50 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Edge-Policy-Layer 2026-04-06
+
+Die H.9.2-Steuerung besitzt jetzt eine explizite Policy-Schicht pro
+Donor-Ziel-Kante, statt nur lose Einzelheuristiken fuer Penalty, Boost,
+Caps und Edge-Seeking nebeneinander zu tragen.
+
+Wichtigste Konsequenzen:
+
+- `_meta_transfer_candidates()` klassifiziert Kanten jetzt explizit als
+  `trusted_edge`, `guarded_edge`, `explore_edge`, `recovery_edge`,
+  `cautious_edge` oder `neutral_edge`
+- diese Policy-Klassifikation baut ausschliesslich auf der bestehenden
+  Edge-History und den bereits vorhandenen Steering-Signalen auf; es
+  wurde kein zweites Edge-Store-Modell eingefuehrt
+- Policies wirken jetzt als leichte Orchestrierungsschicht auf die
+  finale Candidate-Strength und machen dadurch die Transferlogik pro
+  Kante semantisch klarer
+- `EnrichedPathEvaluation`, `DecisionRecord`, `CalibrationContext` und
+  der Steering-Log tragen jetzt sichtbar, ob ueberhaupt eine
+  Edge-Policy aktiv war und wie der Policy-Mix des aktuellen Pfads oder
+  einer historischen Decision aussieht
+- Steering-Observability kann jetzt auch explizit nach Edge-Policy-
+  Decisions filtern, statt nur Penalty/Boost/Caps/Edge-Seeking getrennt
+  zu betrachten
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- Steering-/Observability-Zielsuite: `22 passed, 1 warning`
+- H.9-/API-Zielsuite: `87 passed, 1 warning`
+- Full-Suite: `225 passed, 1 warning`
+
 ## Phase-H.9.2-Active-Edge-Seeking 2026-04-06
 
 Die H.9.2-Steuerung kann jetzt bei sparsamen oder isolierten

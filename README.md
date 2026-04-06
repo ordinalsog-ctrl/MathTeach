@@ -112,6 +112,13 @@ Heute bereits im Code:
   vorsichtige Explorations-Boosts fuer datenarme oder zuvor schwache
   Kanten erhalten; diese Signale laufen ebenfalls bis in Audit und
   Observability durch
+- H.9.2 Edge Policy Layer, Phase 5:
+  die Engine klassifiziert Donor-Ziel-Kanten jetzt zusaetzlich in
+  explizite Policy-Typen wie `trusted_edge`, `guarded_edge`,
+  `explore_edge`, `recovery_edge` oder `cautious_edge`, nutzt diese
+  Policies als leichte Orchestrierungsschicht ueber den bestehenden
+  Steering-Signalen und macht ihren Mix jetzt auch in Runtime und
+  Steering-Log sichtbar
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -120,13 +127,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `222 passed, 1 warning`
+- `pytest -q` -> `225 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
 die naechste Ausbaustufe fuer noch gezieltere Transferpolitik auf Basis
-dieser Steuerung, etwa staerker regulierte Probe-Policies,
-Informationsgewinn-Heuristiken oder feinere Donor-Ziel-Strategien pro
-Profilfamilie.
+des jetzt expliziten Edge-Policy-Layers, etwa Policy-Trends,
+familienspezifische Donor-Ziel-Regeln, staerker regulierte Probe-Policies
+oder Informationsgewinn-Heuristiken.
 
 ## Repository-Inhalt
 

@@ -2,6 +2,42 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Fresh-Success-Windows-For-Cross-Family-Probes 2026-04-06
+
+Die adaptive Cross-Family-Probe-Budgetlogik bekommt jetzt eine
+Zeitkomponente. Nicht jeder erfolgreiche Probe-Record im grossen
+Zeitfenster zaehlt gleich: Nur frische erfolgreiche Cross-Family-Probes
+oeffnen das kleine Bonusfenster fuer Budget und
+`cross_family_probe_preference`.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine._cross_family_probe_budget_info(...)` trennt jetzt
+  `recent_success_count` und `fresh_success_count`
+- das kleine Erfolgs-Bonusbudget basiert nur noch auf frischen
+  Erfolgen, nicht auf beliebig alten Erfolgen innerhalb des grossen
+  24h-Fensters
+- aeltere Erfolge bleiben auditierbar sichtbar, treiben aber keine
+  frische Probe-Praeferenz mehr
+- `cross_family_success_bonus_active` zeigt explizit, ob das frische
+  Bonusfenster fuer ein Family-Pair aktuell aktiv ist
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `23 passed, 1 warning`
+- Steering-Observability-Zielsuite: `15 passed, 1 warning`
+- H.9-/API-Zielsuite: `103 passed, 1 warning`
+- Full-Suite: `242 passed, 1 warning`
+
 ## Phase-H.9.2-Adaptive-Cross-Family-Probe-Budget-Sizes 2026-04-06
 
 Die Cross-Family-Probe-Logik reagiert jetzt nicht mehr nur mit einer

@@ -627,6 +627,52 @@ Wichtig:
 - es gibt weiterhin keinen neuen Store; alles baut auf den
   persistierten Family-Snapshots und der vorhandenen Decision-History auf
 
+### Phase 12: Fresh Success Windows for Cross-Family Probes
+
+Phase 12 gibt dem adaptiven Probe-Budget aus Phase 11 eine erste
+Zeitgewichtung. Erfolgreiche Cross-Family-Probes bleiben weiterhin im
+grossen juengsten Fenster sichtbar, aber nur wirklich frische Erfolge
+oeffnen das kleine Bonusfenster fuer Budget und
+`cross_family_probe_preference`.
+
+Kernidee:
+
+- `recent_success_count` bleibt als breite Sicht auf juengste Erfolge
+  erhalten
+- zusaetzlich trennt die Engine jetzt `fresh_success_count`
+- nur `fresh_success_count` darf das kleine Erfolgs-Bonusbudget treiben
+- damit bleibt ein aelterer Erfolg zwar historisch sichtbar, erzeugt
+  aber keine gleich starke aktuelle Probe-Praeferenz mehr
+
+Neue Logik:
+
+- `_cross_family_probe_budget_info(...)` berechnet jetzt:
+  - `recent_success_count`
+  - `fresh_success_count`
+  - `success_bonus_active`
+- `budget_limit` basiert nicht mehr auf allen juengsten Erfolgen,
+  sondern nur auf `fresh_success_count`
+- `_family_transfer_policy_info(...)` laesst
+  `cross_family_probe_preference` nur noch bei
+  `fresh_success_count > 0` und Restbudget zu
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_fresh_success_count`
+- `cross_family_success_bonus_active`
+- weiterhin `cross_family_probe_budget_limit`,
+  `cross_family_probe_budget_remaining`,
+  `cross_family_probe_budget_exhausted`
+
+Wichtig:
+
+- das ist eine bewusst einfache Zeitgewichtung ueber einen klaren
+  Freshness-Cutoff
+- es gibt noch kein kontinuierliches Decay und keine mehrstufige
+  Qualitaetsgewichtung
+- die Semantik bleibt voll auditierbar ueber die bestehenden
+  Steering-Faktoren
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -641,8 +687,8 @@ Noch nicht enthalten:
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
 - Probe-Budgets sind jetzt nur sehr leicht adaptiv; sie kennen aktuell
-  nur ein kleines Erfolgs-Bonusfenster und noch keine feinere
-  Qualitaets- oder Zeitgewichtung
+  nur ein kleines Erfolgs-Bonusfenster und eine einfache
+  Freshness-Grenze, aber noch keine kontinuierliche Decay-Logik
 
 ## Naechster logischer Ausbau
 

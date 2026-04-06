@@ -501,6 +501,50 @@ Das verbessert vor allem:
 - spaetere Evaluation von Family-Policies
 - Vergleichbarkeit ueber spaetere Profil-Reklassifizierungen hinweg
 
+### Phase 9: Cross-Family Probe Budgets
+
+Phase 9 fuehrt auf Basis dieser stabilen Family-Snapshots den ersten
+echten Probe-Budget-Mechanismus ein. Ziel ist, wiederholte
+Cross-Family-Experimente vorsichtiger zu behandeln, wenn juengste
+Probes fuer dasselbe Family-Pair keinen positiven Outcome geliefert
+haben.
+
+Kernidee:
+
+- Cross-Family-Edge-Seeking bleibt moeglich
+- aber pro `source_family -> target_family` wird ein kleines juengstes
+  Probe-Budget verfolgt
+- wenn dieses Budget verbraucht ist und keine erfolgreiche Probe im
+  Zeitfenster sichtbar war, wird weiterer Probe-Boost blockiert
+
+Neue Logik:
+
+- `CalibrationEngine._cross_family_probe_budget_info(...)`
+  rekonstruiert pro Family-Pair:
+  `recent_probe_count`, `recent_success_count`,
+  `budget_remaining`, `budget_exhausted`
+- `_meta_transfer_candidates(...)` blockiert fuer solche Faelle den
+  zusaetzlichen Edge-Seeking-Boost und markiert
+  `edge_seeking_budget_blocked`
+- die Family-Policy-Schicht kann daraus jetzt
+  `cross_family_probe_budget_guard` ableiten
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_recent_probe_count`
+- `cross_family_recent_success_count`
+- `cross_family_probe_budget_remaining`
+- `cross_family_probe_budget_exhausted`
+- `edge_seeking_budget_blocked`
+
+Wichtig:
+
+- das Budget baut auf den persistierten Family-Snapshots aus Phase 8 auf
+- dadurch bleiben Probe-Budgets auch dann stabil, wenn spaetere
+  Profil-Reklassifizierungen stattfinden
+- Alt-Daten ohne Snapshot bleiben weiter ueber Fallback lesbar, liefern
+  aber weniger stabile historische Probe-Budgets
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -514,6 +558,8 @@ Noch nicht enthalten:
 - automatische Folgeaktionen auf Basis dieser Steering-Sicht
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
+- Probe-Budgets sind aktuell noch statisch; sie wachsen oder schrumpfen
+  noch nicht adaptiv mit beobachteter Guete des Family-Pairs
 
 ## Naechster logischer Ausbau
 
@@ -525,4 +571,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - optionale Backfill-/Migrationsstrategie fuer aeltere Decisions ohne
   Family-Snapshot
 - feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
-  des jetzt vorhandenen Edge-Seeking-, Policy- und Steering-Logs
+  des jetzt vorhandenen Edge-Seeking-, Policy-, Snapshot- und
+  Probe-Budget-Logs

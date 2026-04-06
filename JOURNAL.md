@@ -2,6 +2,46 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Cross-Family-Probe-Budgets 2026-04-06
+
+Die Family-Policy ist jetzt nicht nur historisch stabil, sondern auch
+vorsichtiger im Umgang mit wiederholten Cross-Family-Probes. Sparse
+Experimente zwischen unterschiedlichen Profilfamilien erhalten jetzt ein
+kleines Budget pro Family-Pair.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine` berechnet jetzt pro Cross-Family-Pair juengste
+  Probe-Counts und juengste erfolgreiche Probes in einem Zeitfenster
+- wenn dasselbe Family-Pair bereits mehrere juengste Probes ohne
+  positives Signal verbraucht hat, wird weiterer Probe-Boost blockiert
+- solche Faelle erscheinen als
+  `cross_family_probe_budget_guard` in den Family-Policies
+- das Budget bleibt ueber die neuen Family-Snapshots historisch stabil
+  und driftet nicht mit spaeteren Profil-Reklassifizierungen
+- die Budget-Metadaten laufen in
+  `meta_transfer_source_steering_factors` mit:
+  `cross_family_recent_probe_count`,
+  `cross_family_recent_success_count`,
+  `cross_family_probe_budget_remaining`,
+  `cross_family_probe_budget_exhausted`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `21 passed, 1 warning`
+- Steering-Observability-Zielsuite: `14 passed, 1 warning`
+- H.9-/API-Zielsuite: `100 passed, 1 warning`
+- Full-Suite: `239 passed, 1 warning`
+
 ## Phase-H.9.2-Persistent-Family-Snapshots 2026-04-06
 
 Die Family-Policy- und Family-Trend-Schicht ist jetzt historisch

@@ -136,6 +136,12 @@ Heute bereits im Code:
   gesnapshottet; historische Trends und Steering-Logs bevorzugen diese
   persistierten Werte und fallen nur fuer Alt-Daten ohne Snapshot auf
   die bisherige Computed-on-Read-Rekonstruktion zurueck
+- H.9.2 Cross-Family Probe Budgets, Phase 9:
+  wiederholte Cross-Family-Probes bekommen jetzt ein kleines Budget pro
+  Family-Pair; wenn juengste Probe-Entscheidungen fuer dasselbe Pair
+  keinen positiven Outcome geliefert haben, wird weiterer Probe-Boost
+  blockiert und als `cross_family_probe_budget_guard` auditierbar
+  markiert
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -144,13 +150,14 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `235 passed, 1 warning`
+- `pytest -q` -> `239 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer feinere Family-Policy-Regeln und
-Informationsgewinn-Steuerung, etwa familiare Probe-Budgets,
-Family-Pair-spezifische Regelerweiterungen oder staerker outcome-
-orientierte Exploration innerhalb stabil gesnapshotteter Family-Historien.
+die naechste Ausbaustufe fuer feinere Informationsgewinn-Steuerung auf
+dieser Basis, etwa Family-Pair-spezifische Probe-Priorisierung,
+adaptive Budgetgroessen nach beobachtetem Outcome oder staerker
+zeitgewichtete Transfer-Raten innerhalb stabil gesnapshotteter
+Family-Historien.
 
 ## Repository-Inhalt
 

@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -86,6 +86,68 @@ def _family_policy_history_record(
             accuracy_estimate=observed_outcome_score,
         ),
         outcome_timestamp=datetime.now(UTC),
+    )
+
+
+def _cross_family_probe_record(
+    *,
+    decision_id: str,
+    source_id: str,
+    source_family_snapshot: str,
+    target_id: str,
+    target_family_snapshot: str,
+    observed_outcome_score: float | None,
+    effective: bool,
+    timestamp: datetime | None = None,
+) -> DecisionRecord:
+    observed_outcome = (
+        OutcomeMetrics(
+            mastery_gain_estimate=observed_outcome_score or 0.0,
+            error_rate_trend="improving" if observed_outcome_score else "degrading",
+            observed_engagement="high" if observed_outcome_score else "low",
+            accuracy_estimate=observed_outcome_score,
+        )
+        if observed_outcome_score is not None
+        else None
+    )
+    return DecisionRecord(
+        decision_id=decision_id,
+        timestamp=timestamp or datetime.now(UTC),
+        session_id=f"probe_{decision_id}",
+        current_block_type=BlockType.WORKED_EXAMPLE,
+        selected_block_type=BlockType.WORKED_EXAMPLE,
+        evidence_patterns=[EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS],
+        active_supports=["adhd_aware_support"],
+        sequence_intent=BlockSequenceIntent.MASTERY_PATH,
+        available_candidate_paths=[decision_id],
+        chosen_path_id=decision_id,
+        chosen_path_score=0.68,
+        chosen_path_score_breakdown={"heuristic": 0.68},
+        calibration_profile_id=target_id,
+        calibration_stratification_dimensions={
+            "support_profile": target_family_snapshot,
+        },
+        transfer_target_profile_family_snapshot=target_family_snapshot,
+        transfer_source_profile_families_snapshot={source_id: source_family_snapshot},
+        meta_transfer_strength=0.3,
+        meta_transfer_source_profiles=[source_id],
+        meta_transfer_source_shares={source_id: 1.0},
+        meta_transfer_weight_delta=0.08 if effective else 0.0,
+        meta_transfer_was_effective=effective,
+        steering_edge_seeking_applied=True,
+        meta_transfer_source_steering_factors={
+            source_id: {
+                "edge_seeking_applied": True,
+                "edge_seeking_multiplier": 1.15,
+                "edge_seeking_reason": "probe_insufficient_history_for_sparse_target",
+                "source_support_profile": source_family_snapshot,
+                "target_support_profile": target_family_snapshot,
+                "source_family": source_family_snapshot,
+                "target_family": target_family_snapshot,
+            }
+        },
+        observed_outcome=observed_outcome,
+        outcome_timestamp=(timestamp or datetime.now(UTC)) if observed_outcome else None,
     )
 
 
@@ -649,6 +711,152 @@ def test_cross_family_probe_guard_applies_to_sparse_cross_family_probe() -> None
         == "adhd_aware_support+language_sensitive_support"
     )
     assert probe_candidate[3]["target_family"] == "adhd_aware_support"
+
+
+def test_cross_family_probe_budget_guard_blocks_repeated_unsuccessful_probes() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    target_profile.outcome_count = 1
+    target_profile.confidence_score = 0.0
+
+    donor_cross_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_cross_family.confidence_score = 0.8
+    donor_cross_family.outcome_count = 20
+
+    engine.decision_log = [
+        _cross_family_probe_record(
+            decision_id="cross_probe_recent_1",
+            source_id="historical_probe_a",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_a",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.2,
+            effective=False,
+            timestamp=now - timedelta(hours=1),
+        ),
+        _cross_family_probe_record(
+            decision_id="cross_probe_recent_2",
+            source_id="historical_probe_b",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_b",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.18,
+            effective=False,
+            timestamp=now - timedelta(hours=2),
+        ),
+    ]
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    budget_guarded_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_cross_family.profile_id
+    )
+    assert budget_guarded_candidate[3]["edge_seeking_applied"] is False
+    assert budget_guarded_candidate[3]["edge_seeking_budget_blocked"] is True
+    assert budget_guarded_candidate[3]["edge_seeking_reason"] == (
+        "skip_cross_family_probe_budget_exhausted"
+    )
+    assert (
+        budget_guarded_candidate[3]["family_transfer_policy"]
+        == "cross_family_probe_budget_guard"
+    )
+    assert budget_guarded_candidate[3]["family_transfer_policy_multiplier"] == pytest.approx(
+        0.88,
+        abs=1e-6,
+    )
+    assert budget_guarded_candidate[3]["cross_family_recent_probe_count"] == 2
+    assert budget_guarded_candidate[3]["cross_family_recent_success_count"] == 0
+    assert budget_guarded_candidate[3]["cross_family_probe_budget_remaining"] == 0
+    assert budget_guarded_candidate[3]["cross_family_probe_budget_exhausted"] is True
+
+
+def test_cross_family_probe_budget_allows_probe_when_recent_success_exists() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    target_profile.outcome_count = 1
+    target_profile.confidence_score = 0.0
+
+    donor_cross_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_cross_family.confidence_score = 0.8
+    donor_cross_family.outcome_count = 20
+
+    engine.decision_log = [
+        _cross_family_probe_record(
+            decision_id="cross_probe_successful",
+            source_id="historical_probe_success",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_success",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.8,
+            effective=True,
+            timestamp=now - timedelta(hours=1),
+        ),
+        _cross_family_probe_record(
+            decision_id="cross_probe_unsuccessful",
+            source_id="historical_probe_unsuccessful",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_unsuccessful",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.2,
+            effective=False,
+            timestamp=now - timedelta(hours=2),
+        ),
+    ]
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    allowed_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_cross_family.profile_id
+    )
+    assert allowed_candidate[3]["edge_seeking_applied"] is True
+    assert allowed_candidate[3]["edge_seeking_budget_blocked"] is False
+    assert allowed_candidate[3]["family_transfer_policy"] == "cross_family_probe_guard"
+    assert allowed_candidate[3]["cross_family_recent_probe_count"] == 2
+    assert allowed_candidate[3]["cross_family_recent_success_count"] == 1
+    assert allowed_candidate[3]["cross_family_probe_budget_remaining"] == 0
+    assert allowed_candidate[3]["cross_family_probe_budget_exhausted"] is False
 
 
 def test_planner_and_decision_record_expose_h92_steering_signals() -> None:

@@ -345,6 +345,59 @@ def test_steering_log_query_filters_family_policy_decisions() -> None:
     assert entries[0].family_policy_distribution == {"same_family_preference": 1}
 
 
+def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="family_budget_guard",
+            timestamp=now,
+            session_id="session_budget",
+            source_id="budget_donor",
+            source_support_profile="adhd_aware_support+language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            family_policy="cross_family_probe_budget_guard",
+            family_policy_multiplier=0.88,
+        ).model_copy(
+            update={
+                "meta_transfer_source_steering_factors": {
+                    "budget_donor": {
+                        "family_transfer_policy": "cross_family_probe_budget_guard",
+                        "family_transfer_policy_reason": "limit_repeated_cross_family_probes_without_signal",
+                        "family_transfer_policy_multiplier": 0.88,
+                        "source_support_profile": "adhd_aware_support+language_sensitive_support",
+                        "target_support_profile": "adhd_aware_support",
+                        "source_family": "adhd_aware_support+language_sensitive_support",
+                        "target_family": "adhd_aware_support",
+                        "family_pair_effectiveness": 0.0,
+                        "family_pair_samples": 1,
+                        "cross_family_recent_probe_count": 2,
+                        "cross_family_recent_success_count": 0,
+                        "cross_family_probe_budget_remaining": 0,
+                        "cross_family_probe_budget_exhausted": True,
+                    }
+                }
+            }
+        )
+    ]
+
+    entries = SteeringLogQuery(engine).get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=False,
+        include_edge_policy=False,
+        include_family_policy=True,
+    )
+
+    assert len(entries) == 1
+    factors = entries[0].meta_transfer_source_steering_factors["budget_donor"]
+    assert factors["cross_family_recent_probe_count"] == 2
+    assert factors["cross_family_recent_success_count"] == 0
+    assert factors["cross_family_probe_budget_remaining"] == 0
+    assert factors["cross_family_probe_budget_exhausted"] is True
+
+
 def test_steering_log_includes_profile_families() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)

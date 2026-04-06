@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from statistics import fmean
 
 from mathteach.models import (
@@ -55,6 +55,10 @@ META_TRANSFER_FAMILY_POLICY_TRUSTED_MULTIPLIER = 1.04
 META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MULTIPLIER = 1.02
 META_TRANSFER_FAMILY_POLICY_GUARDED_MULTIPLIER = 0.93
 META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PROBE_MULTIPLIER = 0.95
+META_TRANSFER_CROSS_FAMILY_PROBE_WINDOW_HOURS = 24
+META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT = 2
+META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_THRESHOLD = 0.55
+META_TRANSFER_CROSS_FAMILY_PROBE_BUDGET_GUARD_MULTIPLIER = 0.88
 
 
 def _estimate_mastery_gain(
@@ -1641,6 +1645,66 @@ class CalibrationEngine:
             "effectiveness": round(fmean(outcomes), 4) if outcomes else 0.0,
         }
 
+    def _cross_family_probe_budget_info(
+        self,
+        source_family: str,
+        target_family: str,
+    ) -> dict[str, int | bool]:
+        cutoff = datetime.now(UTC) - timedelta(
+            hours=META_TRANSFER_CROSS_FAMILY_PROBE_WINDOW_HOURS
+        )
+        recent_probe_count = 0
+        recent_success_count = 0
+
+        for record in self.decision_log:
+            if record.timestamp < cutoff:
+                continue
+            if not record.meta_transfer_source_profiles:
+                continue
+            if self._target_profile_family_for_record(record) != target_family:
+                continue
+
+            for source_profile_id in record.meta_transfer_source_profiles:
+                if (
+                    self._source_profile_family_for_record(record, source_profile_id)
+                    != source_family
+                ):
+                    continue
+                source_factors = record.meta_transfer_source_steering_factors.get(
+                    source_profile_id,
+                    {},
+                )
+                if not bool(source_factors.get("edge_seeking_applied", False)):
+                    continue
+                recent_probe_count += 1
+                outcome_score = (
+                    self._compute_outcome_score(record.observed_outcome)
+                    if record.observed_outcome is not None
+                    else None
+                )
+                if (
+                    record.meta_transfer_was_effective
+                    and outcome_score is not None
+                    and outcome_score
+                    >= META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_THRESHOLD
+                ):
+                    recent_success_count += 1
+
+        budget_remaining = max(
+            0,
+            META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT - recent_probe_count,
+        )
+        budget_exhausted = (
+            recent_probe_count >= META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT
+            and recent_success_count == 0
+        )
+        return {
+            "recent_probe_count": recent_probe_count,
+            "recent_success_count": recent_success_count,
+            "budget_remaining": budget_remaining,
+            "budget_exhausted": budget_exhausted,
+        }
+
     def _family_transfer_policy_info(
         self,
         *,
@@ -1648,7 +1712,8 @@ class CalibrationEngine:
         target_profile: CalibrationProfile,
         pair_effectiveness: float,
         edge_seeking_applied: bool,
-    ) -> dict[str, float | str | int]:
+        cross_family_probe_budget_info: dict[str, int | bool] | None = None,
+    ) -> dict[str, float | str | int | bool]:
         source_family = self._profile_family_label(
             source_profile.stratification_dimensions.get("support_profile")
         )
@@ -1661,6 +1726,18 @@ class CalibrationEngine:
         )
         family_pair_effectiveness = float(family_pair_summary["effectiveness"])
         family_pair_samples = int(family_pair_summary["sample_size"])
+        recent_probe_count = int(
+            (cross_family_probe_budget_info or {}).get("recent_probe_count", 0)
+        )
+        recent_success_count = int(
+            (cross_family_probe_budget_info or {}).get("recent_success_count", 0)
+        )
+        budget_remaining = int(
+            (cross_family_probe_budget_info or {}).get("budget_remaining", 0)
+        )
+        budget_exhausted = bool(
+            (cross_family_probe_budget_info or {}).get("budget_exhausted", False)
+        )
 
         if (
             family_pair_samples >= META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
@@ -1675,6 +1752,10 @@ class CalibrationEngine:
                 "target_family": target_family,
                 "family_pair_effectiveness": round(family_pair_effectiveness, 4),
                 "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
             }
 
         if (
@@ -1689,6 +1770,10 @@ class CalibrationEngine:
                 "target_family": target_family,
                 "family_pair_effectiveness": round(family_pair_effectiveness, 4),
                 "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
             }
 
         if (
@@ -1704,6 +1789,29 @@ class CalibrationEngine:
                 "target_family": target_family,
                 "family_pair_effectiveness": round(family_pair_effectiveness, 4),
                 "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
+            }
+
+        if (
+            source_family != target_family
+            and budget_exhausted
+            and family_pair_samples < META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
+        ):
+            return {
+                "policy": "cross_family_probe_budget_guard",
+                "reason": "limit_repeated_cross_family_probes_without_signal",
+                "multiplier": META_TRANSFER_CROSS_FAMILY_PROBE_BUDGET_GUARD_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
             }
 
         if (
@@ -1719,6 +1827,10 @@ class CalibrationEngine:
                 "target_family": target_family,
                 "family_pair_effectiveness": round(family_pair_effectiveness, 4),
                 "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
             }
 
         return {
@@ -1729,6 +1841,10 @@ class CalibrationEngine:
             "target_family": target_family,
             "family_pair_effectiveness": round(family_pair_effectiveness, 4),
             "family_pair_samples": family_pair_samples,
+            "cross_family_recent_probe_count": recent_probe_count,
+            "cross_family_recent_success_count": recent_success_count,
+            "cross_family_probe_budget_remaining": budget_remaining,
+            "cross_family_probe_budget_exhausted": budget_exhausted,
         }
 
     def _edge_transfer_policy_info(
@@ -1905,16 +2021,36 @@ class CalibrationEngine:
             weak_edge_penalty_applied = bool(item["weak_edge_penalty_applied"])
             proven_donor_boost_applied = bool(item["proven_donor_boost_applied"])
             cap_reason = str(item["cap_reason"])
+            source_family = self._profile_family_label(
+                candidate.stratification_dimensions.get("support_profile")
+            )
+            target_family = self._profile_family_label(
+                target_profile.stratification_dimensions.get("support_profile")
+            )
+            cross_family_probe_budget_info = (
+                self._cross_family_probe_budget_info(source_family, target_family)
+                if source_family != target_family
+                else {
+                    "recent_probe_count": 0,
+                    "recent_success_count": 0,
+                    "budget_remaining": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
+                    "budget_exhausted": False,
+                }
+            )
 
             edge_seeking_applied = False
             edge_seeking_multiplier = 1.0
             edge_seeking_reason = ""
+            edge_seeking_budget_blocked = False
             if (
                 edge_seeking_active
                 and not proven_donor_boost_applied
                 and similarity_score >= META_TRANSFER_EDGE_SEEKING_MIN_SIMILARITY
             ):
-                if weak_edge_penalty_applied:
+                if bool(cross_family_probe_budget_info["budget_exhausted"]):
+                    edge_seeking_budget_blocked = True
+                    edge_seeking_reason = "skip_cross_family_probe_budget_exhausted"
+                elif weak_edge_penalty_applied:
                     edge_seeking_applied = True
                     edge_seeking_multiplier = (
                         META_TRANSFER_EDGE_SEEKING_WEAK_EDGE_RECOVERY_MULTIPLIER
@@ -1956,6 +2092,7 @@ class CalibrationEngine:
                 target_profile=target_profile,
                 pair_effectiveness=pair_effectiveness,
                 edge_seeking_applied=edge_seeking_applied,
+                cross_family_probe_budget_info=cross_family_probe_budget_info,
             )
             family_policy_multiplier = float(family_policy_info["multiplier"])
             family_policy_adjusted_candidate_strength = (
@@ -1982,6 +2119,7 @@ class CalibrationEngine:
                 "edge_seeking_multiplier": round(edge_seeking_multiplier, 4),
                 "edge_seeking_reason": edge_seeking_reason,
                 "edge_seeking_target_sparse": edge_seeking_active,
+                "edge_seeking_budget_blocked": edge_seeking_budget_blocked,
                 "final_candidate_strength": round(final_candidate_strength, 4),
                 "edge_transfer_policy": str(edge_policy_info["policy"]),
                 "edge_transfer_policy_reason": str(edge_policy_info["reason"]),
@@ -2003,6 +2141,18 @@ class CalibrationEngine:
                     4,
                 ),
                 "family_pair_samples": int(family_policy_info["family_pair_samples"]),
+                "cross_family_recent_probe_count": int(
+                    family_policy_info["cross_family_recent_probe_count"]
+                ),
+                "cross_family_recent_success_count": int(
+                    family_policy_info["cross_family_recent_success_count"]
+                ),
+                "cross_family_probe_budget_remaining": int(
+                    family_policy_info["cross_family_probe_budget_remaining"]
+                ),
+                "cross_family_probe_budget_exhausted": bool(
+                    family_policy_info["cross_family_probe_budget_exhausted"]
+                ),
                 "family_policy_adjusted_candidate_strength": round(
                     family_policy_adjusted_candidate_strength,
                     4,

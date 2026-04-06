@@ -2,6 +2,43 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Policy-Trends-and-Profile-Families 2026-04-06
+
+Die H.9.2-Policy-Schicht ist jetzt nicht mehr nur pro Decision
+sichtbar, sondern auch historisch entlang von Profilfamilien
+aggregierbar.
+
+Wichtigste Konsequenzen:
+
+- `SteeringLogQuery` zeigt jetzt pro Decision nicht nur Policy-Typen,
+  sondern auch `transfer_target_profile_family` und
+  `transfer_source_profile_families`
+- ein neuer Read-only Query-Layer aggregiert Edge-Policies historisch
+  nach `policy`, `source_family`, `target_family` oder `family_pair`
+- der neue Admin-Endpunkt
+  `GET /api/v1/admin/calibration/edge-policy-trends` macht diese Trends
+  direkt ueber die API sichtbar
+- damit ist jetzt erstmals sichtbar, welche Policy-Muster zwischen
+  bestimmten Support-Profilfamilien im Zeitverlauf ueberhaupt auftreten,
+  bevor eine spaetere Phase daraus live wirksame Familienregeln ableitet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- Steering-Observability-Zielsuite: `9 passed, 1 warning`
+- H.9-/API-Zielsuite: `89 passed, 1 warning`
+- Full-Suite: `227 passed, 1 warning`
+
 ## Phase-H.9.2-Edge-Policy-Layer 2026-04-06
 
 Die H.9.2-Steuerung besitzt jetzt eine explizite Policy-Schicht pro

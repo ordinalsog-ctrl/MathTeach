@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from statistics import fmean
 
-from mathteach.models import CapTrendAggregation, DecisionRecord, SteeringLogEntry
+from mathteach.models import (
+    CapTrendAggregation,
+    DecisionRecord,
+    EdgePolicyTrendAggregation,
+    SteeringLogEntry,
+)
 from mathteach.services.calibration_engine import CalibrationEngine
 
 
@@ -44,6 +49,43 @@ def _edge_policy_distribution(
         policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
         grouped[policy] = grouped.get(policy, 0) + 1
     return grouped
+
+
+def _profile_family_label(support_profile: str | None) -> str:
+    return support_profile or "generic"
+
+
+def _target_profile_family(
+    engine: CalibrationEngine,
+    record: DecisionRecord,
+) -> str:
+    target_profile = (
+        engine.get_profile(record.calibration_profile_id)
+        if record.calibration_profile_id is not None
+        else None
+    )
+    if target_profile is not None:
+        return _profile_family_label(
+            target_profile.stratification_dimensions.get("support_profile")
+        )
+    return _profile_family_label(
+        record.calibration_stratification_dimensions.get("support_profile")
+    )
+
+
+def _source_profile_family(
+    engine: CalibrationEngine,
+    source_id: str,
+    factors: dict[str, float | bool | int | str],
+) -> str:
+    if "source_support_profile" in factors:
+        return _profile_family_label(str(factors.get("source_support_profile")) or None)
+    source_profile = engine.get_profile(source_id)
+    if source_profile is None:
+        return "generic"
+    return _profile_family_label(
+        source_profile.stratification_dimensions.get("support_profile")
+    )
 
 
 class SteeringLogQuery:
@@ -118,6 +160,11 @@ class SteeringLogQuery:
                 continue
 
             steering_factors = record.meta_transfer_source_steering_factors
+            target_family = _target_profile_family(self.engine, record)
+            source_families = {
+                source_id: _source_profile_family(self.engine, source_id, factors)
+                for source_id, factors in steering_factors.items()
+            }
             weak_sources = [
                 source_id
                 for source_id, factors in steering_factors.items()
@@ -171,7 +218,9 @@ class SteeringLogQuery:
                     session_id=record.session_id,
                     timestamp=record.timestamp,
                     transfer_target_profile_id=record.calibration_profile_id,
+                    transfer_target_profile_family=target_family,
                     transfer_source_profiles=record.meta_transfer_source_profiles,
+                    transfer_source_profile_families=source_families,
                     weak_edge_penalty_applied=record.steering_weak_edge_penalty_applied,
                     weak_edge_penalty_sources=weak_sources,
                     weak_edge_penalty_factor=weak_factor,
@@ -294,6 +343,112 @@ class AdaptiveCapsTrendQuery:
                 max_cap=round(max(caps), 4),
                 trend_direction=self._trend_direction(
                     [(timestamp, cap) for timestamp, cap, _ in points]
+                ),
+            )
+
+        return result
+
+
+class EdgePolicyTrendQuery:
+    def __init__(self, engine: CalibrationEngine) -> None:
+        self.engine = engine
+
+    def _cutoff(self, time_window_hours: int) -> datetime:
+        return datetime.now(UTC) - timedelta(hours=time_window_hours)
+
+    def _aggregate_key(
+        self,
+        *,
+        aggregate_by: str,
+        policy: str,
+        source_family: str,
+        target_family: str,
+    ) -> str:
+        if aggregate_by == "policy":
+            return policy
+        if aggregate_by == "source_family":
+            return source_family
+        if aggregate_by == "target_family":
+            return target_family
+        if aggregate_by == "family_pair":
+            return f"{source_family}->{target_family}"
+        raise ValueError("Unsupported aggregate_by value.")
+
+    def _trend_direction(
+        self,
+        points: list[tuple[datetime, float]],
+    ) -> str:
+        if len(points) < 2:
+            return "stable"
+        ordered = sorted(points, key=lambda item: item[0])
+        midpoint = max(1, len(ordered) // 2)
+        older = [value for _, value in ordered[:midpoint]]
+        newer = [value for _, value in ordered[midpoint:]]
+        if not newer:
+            return "stable"
+        older_avg = fmean(older)
+        newer_avg = fmean(newer)
+        if newer_avg - older_avg > 0.01:
+            return "increasing"
+        if older_avg - newer_avg > 0.01:
+            return "decreasing"
+        return "stable"
+
+    def get_policy_trends(
+        self,
+        *,
+        time_window_hours: int = 24,
+        aggregate_by: str = "policy",
+    ) -> dict[str, EdgePolicyTrendAggregation]:
+        cutoff = self._cutoff(time_window_hours)
+        grouped: dict[str, list[tuple[datetime, float, float, str, str]]] = {}
+
+        for record in self.engine.decision_log:
+            if record.timestamp < cutoff:
+                continue
+            if not record.meta_transfer_source_steering_factors:
+                continue
+            target_family = _target_profile_family(self.engine, record)
+            for source_id, factors in record.meta_transfer_source_steering_factors.items():
+                policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
+                source_family = _source_profile_family(self.engine, source_id, factors)
+                key = self._aggregate_key(
+                    aggregate_by=aggregate_by,
+                    policy=policy,
+                    source_family=source_family,
+                    target_family=target_family,
+                )
+                grouped.setdefault(key, []).append(
+                    (
+                        record.timestamp,
+                        float(factors.get("edge_transfer_policy_multiplier", 1.0)),
+                        float(factors.get("pair_effectiveness", 0.0)),
+                        policy,
+                        record.decision_id,
+                    )
+                )
+
+        result: dict[str, EdgePolicyTrendAggregation] = {}
+        for key, points in grouped.items():
+            multipliers = [multiplier for _, multiplier, _, _, _ in points]
+            effectiveness_values = [
+                pair_effectiveness
+                for _, _, pair_effectiveness, _, _ in points
+            ]
+            policy_distribution: dict[str, int] = {}
+            for _, _, _, policy, _ in points:
+                policy_distribution[policy] = policy_distribution.get(policy, 0) + 1
+            result[key] = EdgePolicyTrendAggregation(
+                aggregate_key=key,
+                count=len(points),
+                sample_size=len({decision_id for *_, decision_id in points}),
+                avg_policy_multiplier=round(fmean(multipliers), 4),
+                min_policy_multiplier=round(min(multipliers), 4),
+                max_policy_multiplier=round(max(multipliers), 4),
+                avg_pair_effectiveness=round(fmean(effectiveness_values), 4),
+                policy_distribution=policy_distribution,
+                trend_direction=self._trend_direction(
+                    [(timestamp, multiplier) for timestamp, multiplier, _, _, _ in points]
                 ),
             )
 

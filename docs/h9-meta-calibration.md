@@ -368,6 +368,46 @@ Und im Steering-Log:
   kann jetzt auch nach `include_edge_policy=true` filtern und zeigt pro
   Decision einen `edge_policy_distribution`-Snapshot
 
+### Phase 6: Policy Trends and Profile Families
+
+Phase 6 erweitert die Read-only-Sicht jetzt um historische Policy-Trends
+zwischen Profilfamilien.
+
+Wichtig:
+
+- die Profilfamilie wird aktuell bewusst einfach ueber
+  `support_profile` abgeleitet
+- es wird weiterhin kein zweites Historienmodell eingefuehrt; die
+  Trends werden aus `DecisionRecord` und
+  `meta_transfer_source_steering_factors` rekonstruiert
+- diese Phase fuehrt noch keine live wirksame Familienregel in der
+  Engine ein; sie schafft zuerst die Sichtbarkeit, auf der spaetere
+  Regeln sicher aufgebaut werden koennen
+
+Neue historische Sicht:
+
+`GET /api/v1/admin/calibration/edge-policy-trends`
+
+- aggregiert Edge-Policies historisch nach:
+  `policy`, `source_family`, `target_family` oder `family_pair`
+- zeigt pro Aggregat:
+  Anzahl, Sample-Groesse, durchschnittlichen Policy-Multiplikator,
+  durchschnittliche beobachtete Pair-Effectiveness, Policy-Verteilung
+  und Trend-Richtung
+
+Erweiterter Steering-Log:
+
+- `SteeringLogEntry.transfer_target_profile_family`
+- `SteeringLogEntry.transfer_source_profile_families`
+
+Damit lassen sich jetzt Fragen beantworten wie:
+
+- welche Policy-Typen dominieren fuer `adhd_aware_support -> adhd_aware_support`
+- ob `language_sensitive_support -> adhd_aware_support` eher
+  `explore_edge` oder `guarded_edge` produziert
+- ob sich der durchschnittliche Policy-Multiplikator bestimmter
+  Familienpaare im Zeitverlauf stabilisiert
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -387,5 +427,7 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Policy-Typen fuer
   welche Profilfamilien langfristig wirklich hilfreich sind
+- live wirksame Familienregeln auf Basis der jetzt sichtbaren
+  Policy-Trends
 - feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
   des jetzt vorhandenen Edge-Seeking-, Policy- und Steering-Logs

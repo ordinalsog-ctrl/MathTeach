@@ -119,6 +119,11 @@ Heute bereits im Code:
   Policies als leichte Orchestrierungsschicht ueber den bestehenden
   Steering-Signalen und macht ihren Mix jetzt auch in Runtime und
   Steering-Log sichtbar
+- H.9.2 Policy Trends and Profile Families, Phase 6:
+  der Admin-Layer kann Edge-Policies jetzt historisch nach `policy`,
+  `source_family`, `target_family` oder `family_pair` aggregieren; der
+  Steering-Log traegt zusaetzlich Source-/Target-Familien pro Decision
+  und macht Policy-Muster zwischen Profilfamilien sichtbar
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -127,12 +132,12 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `225 passed, 1 warning`
+- `pytest -q` -> `227 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer noch gezieltere Transferpolitik auf Basis
-des jetzt expliziten Edge-Policy-Layers, etwa Policy-Trends,
-familienspezifische Donor-Ziel-Regeln, staerker regulierte Probe-Policies
+die naechste Ausbaustufe fuer live wirksame familienspezifische
+Transferpolitik auf Basis des jetzt sichtbaren Trend-Layers, etwa
+familienbezogene Donor-Ziel-Regeln, staerker regulierte Probe-Policies
 oder Informationsgewinn-Heuristiken.
 
 ## Repository-Inhalt

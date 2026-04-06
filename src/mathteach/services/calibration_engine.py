@@ -1723,6 +1723,14 @@ class CalibrationEngine:
                 "adjusted_similarity_score": round(adjusted_similarity_score, 4),
                 "historical_effectiveness": round(historical_effectiveness, 4),
                 "pair_effectiveness": round(pair_effectiveness, 4),
+                "source_support_profile": (
+                    candidate.stratification_dimensions.get("support_profile")
+                    or "generic"
+                ),
+                "target_support_profile": (
+                    target_profile.stratification_dimensions.get("support_profile")
+                    or "generic"
+                ),
                 "penalty_multiplier": round(penalty_multiplier, 4),
                 "boost_multiplier": round(boost_multiplier, 4),
                 "weak_edge_penalty_applied": weak_edge_penalty_applied,

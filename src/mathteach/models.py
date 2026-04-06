@@ -503,7 +503,9 @@ class SteeringLogEntry(BaseModel):
     session_id: str | None = None
     timestamp: datetime
     transfer_target_profile_id: str | None = None
+    transfer_target_profile_family: str | None = None
     transfer_source_profiles: list[str] = Field(default_factory=list)
+    transfer_source_profile_families: dict[str, str] = Field(default_factory=dict)
     weak_edge_penalty_applied: bool = False
     weak_edge_penalty_sources: list[str] = Field(default_factory=list)
     weak_edge_penalty_factor: float | None = Field(default=None, ge=0.0)
@@ -547,6 +549,18 @@ class CapTrendAggregation(BaseModel):
     avg_cap: float = Field(ge=0.0)
     min_cap: float = Field(ge=0.0)
     max_cap: float = Field(ge=0.0)
+    trend_direction: str
+
+
+class EdgePolicyTrendAggregation(BaseModel):
+    aggregate_key: str = Field(min_length=2)
+    count: int = Field(ge=0)
+    sample_size: int = Field(ge=0)
+    avg_policy_multiplier: float = Field(ge=0.0)
+    min_policy_multiplier: float = Field(ge=0.0)
+    max_policy_multiplier: float = Field(ge=0.0)
+    avg_pair_effectiveness: float | None = Field(default=None, ge=0.0, le=1.0)
+    policy_distribution: dict[str, int] = Field(default_factory=dict)
     trend_direction: str
 
 

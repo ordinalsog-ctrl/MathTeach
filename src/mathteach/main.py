@@ -14,6 +14,7 @@ from mathteach.services.foundation import build_foundation
 from mathteach.services.calibration_engine import CalibrationEngine
 from mathteach.services.calibration_observability import (
     AdaptiveCapsTrendQuery,
+    EdgePolicyTrendQuery,
     SteeringLogQuery,
 )
 from mathteach.services.calibration_store import CalibrationStore
@@ -299,6 +300,31 @@ def admin_calibration_adaptive_caps_trends(
     query = AdaptiveCapsTrendQuery(engine)
     try:
         trends = query.get_cap_distribution_trends(
+            time_window_hours=time_window_hours,
+            aggregate_by=aggregate_by,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {
+        "trends": {
+            key: value.model_dump(mode="json")
+            for key, value in trends.items()
+        },
+        "window_hours": time_window_hours,
+        "aggregate_by": aggregate_by,
+    }
+
+
+@app.get("/api/v1/admin/calibration/edge-policy-trends")
+def admin_calibration_edge_policy_trends(
+    store_path: str | None = Query(default=None),
+    time_window_hours: int = Query(default=24, ge=1, le=168),
+    aggregate_by: str = Query(default="policy"),
+):
+    engine = _resolve_calibration_engine(store_path)
+    query = EdgePolicyTrendQuery(engine)
+    try:
+        trends = query.get_policy_trends(
             time_window_hours=time_window_hours,
             aggregate_by=aggregate_by,
         )

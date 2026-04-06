@@ -13,6 +13,7 @@ from mathteach.models import (
 from mathteach.services.calibration_engine import CalibrationEngine
 from mathteach.services.calibration_observability import (
     AdaptiveCapsTrendQuery,
+    EdgePolicyTrendQuery,
     SteeringLogQuery,
 )
 from mathteach.services.calibration_store import CalibrationStore
@@ -27,7 +28,9 @@ def _decision_with_steering(
     timestamp: datetime,
     session_id: str,
     target_profile_id: str = "target_profile",
+    target_support_profile: str = "adhd_aware_support",
     source_id: str = "donor_profile",
+    source_support_profile: str = "adhd_aware_support",
     weak_penalty: bool = False,
     proven_boost: bool = False,
     adaptive_reason: str = "insufficient_history",
@@ -60,6 +63,9 @@ def _decision_with_steering(
         chosen_path_score=0.7,
         chosen_path_score_breakdown={"heuristic": 0.7},
         calibration_profile_id=target_profile_id,
+        calibration_stratification_dimensions={
+            "support_profile": target_support_profile,
+        },
         meta_transfer_strength=min(1.0, adaptive_cap),
         meta_transfer_source_profiles=[source_id],
         meta_transfer_source_shares={source_id: 1.0},
@@ -85,6 +91,8 @@ def _decision_with_steering(
                     if edge_policy_multiplier is not None
                     else 1.0
                 ),
+                "source_support_profile": source_support_profile,
+                "target_support_profile": target_support_profile,
                 "adaptive_transfer_cap": adaptive_cap,
                 "adaptive_transfer_cap_reason": adaptive_reason,
             }
@@ -266,6 +274,38 @@ def test_steering_log_query_filters_edge_policy_decisions() -> None:
     assert entries[0].edge_policy_distribution["trusted_edge"] == 1
 
 
+def test_steering_log_includes_profile_families() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="family_view",
+            timestamp=now,
+            session_id="family_session",
+            source_id="language_donor",
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            edge_policy="explore_edge",
+            edge_policy_multiplier=1.02,
+        )
+    ]
+
+    entries = SteeringLogQuery(engine).get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=False,
+        include_edge_policy=True,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].transfer_target_profile_family == "adhd_aware_support"
+    assert (
+        entries[0].transfer_source_profile_families["language_donor"]
+        == "language_sensitive_support"
+    )
+
+
 def test_adaptive_caps_trends_aggregates_by_reason() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
@@ -336,6 +376,58 @@ def test_adaptive_caps_trends_respects_time_window() -> None:
     assert "strong_edge" in trends_72h
 
 
+def test_edge_policy_trends_aggregate_by_family_pair() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="trusted_same_family",
+            timestamp=now,
+            session_id="s1",
+            source_id="donor_a",
+            source_support_profile="adhd_aware_support",
+            target_support_profile="adhd_aware_support",
+            edge_policy="trusted_edge",
+            edge_policy_multiplier=1.05,
+            proven_boost=True,
+            adaptive_reason="strong_edge",
+            adaptive_cap=0.45,
+        ),
+        _decision_with_steering(
+            decision_id="guarded_cross_family",
+            timestamp=now - timedelta(minutes=30),
+            session_id="s2",
+            source_id="donor_b",
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            edge_policy="guarded_edge",
+            edge_policy_multiplier=0.9,
+            weak_penalty=True,
+            adaptive_reason="weak_edge",
+            adaptive_cap=0.2,
+        ),
+    ]
+
+    trends = EdgePolicyTrendQuery(engine).get_policy_trends(
+        aggregate_by="family_pair"
+    )
+
+    assert "adhd_aware_support->adhd_aware_support" in trends
+    assert "language_sensitive_support->adhd_aware_support" in trends
+    assert (
+        trends["adhd_aware_support->adhd_aware_support"].policy_distribution[
+            "trusted_edge"
+        ]
+        == 1
+    )
+    assert (
+        trends["language_sensitive_support->adhd_aware_support"].policy_distribution[
+            "guarded_edge"
+        ]
+        == 1
+    )
+
+
 def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> None:
     store_path = tmp_path / "steering_observability.json"
     engine = CalibrationEngine(
@@ -398,12 +490,18 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
         "/api/v1/admin/calibration/adaptive-caps-trends",
         params={"store_path": str(store_path), "aggregate_by": "reason"},
     )
+    policy_trends_response = client.get(
+        "/api/v1/admin/calibration/edge-policy-trends",
+        params={"store_path": str(store_path), "aggregate_by": "family_pair"},
+    )
 
     assert log_response.status_code == 200
     assert trends_response.status_code == 200
+    assert policy_trends_response.status_code == 200
 
     log_payload = log_response.json()
     trends_payload = trends_response.json()
+    policy_trends_payload = policy_trends_response.json()
 
     assert log_payload["total_count"] == 2
     assert log_payload["entries"][0]["adaptive_cap_distribution"]
@@ -411,6 +509,11 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
     assert "edge_seeking_applied" in log_payload["entries"][0]
     assert "edge_policy_applied" in log_payload["entries"][0]
     assert "edge_policy_distribution" in log_payload["entries"][0]
+    assert "transfer_target_profile_family" in log_payload["entries"][0]
+    assert "transfer_source_profile_families" in log_payload["entries"][0]
     assert "weak_edge" in trends_payload["trends"]
     assert "strong_edge" in trends_payload["trends"]
     assert trends_payload["trends"]["weak_edge"]["avg_cap"] == 0.2
+    assert "aggregate_by" in policy_trends_payload
+    assert policy_trends_payload["aggregate_by"] == "family_pair"
+    assert policy_trends_payload["trends"]

@@ -40,6 +40,7 @@ def _decision_with_steering(
     family_policy: str | None = None,
     family_policy_multiplier: float | None = None,
     observed_outcome_score: float | None = None,
+    include_family_snapshots: bool = True,
 ) -> DecisionRecord:
     observed_outcome = (
         OutcomeMetrics(
@@ -68,6 +69,12 @@ def _decision_with_steering(
         calibration_stratification_dimensions={
             "support_profile": target_support_profile,
         },
+        transfer_target_profile_family_snapshot=(
+            target_support_profile if include_family_snapshots else None
+        ),
+        transfer_source_profile_families_snapshot=(
+            {source_id: source_support_profile} if include_family_snapshots else {}
+        ),
         meta_transfer_strength=min(1.0, adaptive_cap),
         meta_transfer_source_profiles=[source_id],
         meta_transfer_source_shares={source_id: 1.0},
@@ -370,6 +377,85 @@ def test_steering_log_includes_profile_families() -> None:
     )
 
 
+def test_steering_log_prefers_persisted_family_snapshots() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="snapshot_family_view",
+            timestamp=now,
+            session_id="family_snapshot_session",
+            source_id="snapshot_donor",
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+        ).model_copy(
+            update={
+                "transfer_target_profile_family_snapshot": "legacy_target_family",
+                "transfer_source_profile_families_snapshot": {
+                    "snapshot_donor": "legacy_source_family"
+                },
+                "calibration_stratification_dimensions": {
+                    "support_profile": "reclassified_target_family"
+                },
+                "meta_transfer_source_steering_factors": {
+                    "snapshot_donor": {
+                        "source_support_profile": "reclassified_source_family",
+                        "target_support_profile": "reclassified_target_family",
+                    }
+                },
+            }
+        )
+    ]
+
+    entries = SteeringLogQuery(engine).get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=True,
+        include_edge_seeking=False,
+        include_edge_policy=False,
+        include_family_policy=False,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].transfer_target_profile_family == "legacy_target_family"
+    assert (
+        entries[0].transfer_source_profile_families["snapshot_donor"]
+        == "legacy_source_family"
+    )
+
+
+def test_steering_log_falls_back_when_family_snapshots_are_missing() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="fallback_family_view",
+            timestamp=now,
+            session_id="family_fallback_session",
+            source_id="fallback_donor",
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            include_family_snapshots=False,
+        )
+    ]
+
+    entries = SteeringLogQuery(engine).get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=True,
+        include_edge_seeking=False,
+        include_edge_policy=False,
+        include_family_policy=False,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].transfer_target_profile_family == "adhd_aware_support"
+    assert (
+        entries[0].transfer_source_profile_families["fallback_donor"]
+        == "language_sensitive_support"
+    )
+
+
 def test_adaptive_caps_trends_aggregates_by_reason() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
@@ -490,6 +576,49 @@ def test_edge_policy_trends_aggregate_by_family_pair() -> None:
         ]
         == 1
     )
+
+
+def test_edge_policy_trends_prefer_persisted_family_snapshots() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="snapshot_policy_pair",
+            timestamp=now,
+            session_id="snapshot_pair_session",
+            source_id="policy_snapshot_donor",
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            edge_policy="guarded_edge",
+            edge_policy_multiplier=0.9,
+            include_family_snapshots=True,
+        ).model_copy(
+            update={
+                "transfer_target_profile_family_snapshot": "legacy_target_family",
+                "transfer_source_profile_families_snapshot": {
+                    "policy_snapshot_donor": "legacy_source_family"
+                },
+                "calibration_stratification_dimensions": {
+                    "support_profile": "reclassified_target_family"
+                },
+                "meta_transfer_source_steering_factors": {
+                    "policy_snapshot_donor": {
+                        "edge_transfer_policy": "guarded_edge",
+                        "edge_transfer_policy_multiplier": 0.9,
+                        "pair_effectiveness": 0.1,
+                        "source_support_profile": "reclassified_source_family",
+                        "target_support_profile": "reclassified_target_family",
+                    }
+                },
+            }
+        )
+    ]
+
+    trends = EdgePolicyTrendQuery(engine).get_policy_trends(
+        aggregate_by="family_pair"
+    )
+
+    assert "legacy_source_family->legacy_target_family" in trends
 
 
 def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> None:

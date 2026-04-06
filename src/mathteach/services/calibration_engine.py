@@ -1561,6 +1561,8 @@ class CalibrationEngine:
         return support_profile or "generic"
 
     def _target_profile_family_for_record(self, record: DecisionRecord) -> str:
+        if record.transfer_target_profile_family_snapshot is not None:
+            return self._profile_family_label(record.transfer_target_profile_family_snapshot)
         if record.calibration_profile_id is not None:
             target_profile = self.get_profile(record.calibration_profile_id)
             if target_profile is not None:
@@ -1576,6 +1578,10 @@ class CalibrationEngine:
         record: DecisionRecord,
         source_profile_id: str,
     ) -> str:
+        if source_profile_id in record.transfer_source_profile_families_snapshot:
+            return self._profile_family_label(
+                record.transfer_source_profile_families_snapshot.get(source_profile_id)
+            )
         source_factors = record.meta_transfer_source_steering_factors.get(
             source_profile_id,
             {},

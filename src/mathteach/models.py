@@ -415,6 +415,10 @@ class DecisionRecord(BaseModel):
     calibration_profile_id: str | None = None
     calibration_profile_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     calibration_stratification_dimensions: dict[str, str] = Field(default_factory=dict)
+    transfer_target_profile_family_snapshot: str | None = None
+    transfer_source_profile_families_snapshot: dict[str, str] = Field(
+        default_factory=dict
+    )
     meta_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
     meta_transfer_source_profiles: list[str] = Field(default_factory=list)
     meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)

@@ -465,6 +465,42 @@ Der Steering-Log kann jetzt auch nach Family-Policies gefiltert werden:
 
 - `GET /api/v1/admin/calibration/steering-log?include_family_policy=true`
 
+### Phase 8: Persistent Family Snapshots
+
+Phase 8 haertet die Family-Sicht historisch. Bis einschliesslich Phase 7
+konnten Family-Labels bei alten Decisions implizit mitwandern, wenn ein
+Profil spaeter anders klassifiziert wurde. Jetzt werden diese Labels
+zusaetzlich im `DecisionRecord` gesnapshottet.
+
+Neue persistierte Snapshot-Felder:
+
+- `DecisionRecord.transfer_target_profile_family_snapshot`
+- `DecisionRecord.transfer_source_profile_families_snapshot`
+
+Wie sie verwendet werden:
+
+- beim Loggen einer neuen Decision schreibt der Planner die aktuell
+  sichtbaren Target-/Source-Familien als Snapshot in den Record
+- `SteeringLogQuery` bevorzugt fuer `transfer_target_profile_family`
+  und `transfer_source_profile_families` jetzt diese Snapshot-Werte
+- `EdgePolicyTrendQuery` bevorzugt fuer `source_family`,
+  `target_family` und `family_pair` ebenfalls die Snapshot-Werte
+- nur wenn ein aelterer Record diese Felder noch nicht hat, faellt das
+  System auf die bisherige Computed-on-Read-Rekonstruktion aus
+  `DecisionRecord`, Steering-Faktoren und Profilen zurueck
+
+Damit wird die Family-Semantik zweistufig:
+
+- neue Decisions: historisch stabil ueber persistente Snapshots
+- alte Decisions: weiter lesbar durch Fallback, aber semantisch weniger
+  stabil
+
+Das verbessert vor allem:
+
+- historische Family-Trends
+- spaetere Evaluation von Family-Policies
+- Vergleichbarkeit ueber spaetere Profil-Reklassifizierungen hinweg
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -476,8 +512,8 @@ Noch nicht enthalten:
 - separate Meta-Gewichte pro Dimension
 - adaptive Transfer-Raten ueber Zeit
 - automatische Folgeaktionen auf Basis dieser Steering-Sicht
-- persistente Family-Snapshots fuer spaeter unveraenderliche historische
-  Family-Analysen
+- Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
+  angewiesen, bis eine spaetere Migration sie optional nachzieht
 
 ## Naechster logischer Ausbau
 
@@ -486,7 +522,7 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Policy-Typen fuer
   welche Profilfamilien langfristig wirklich hilfreich sind
-- stabile historische Family-Snapshots, falls spaetere Phasen auf
-  unveraenderliche Family-Analysen bauen sollen
+- optionale Backfill-/Migrationsstrategie fuer aeltere Decisions ohne
+  Family-Snapshot
 - feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
   des jetzt vorhandenen Edge-Seeking-, Policy- und Steering-Logs

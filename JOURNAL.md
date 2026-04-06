@@ -2,6 +2,45 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Persistent-Family-Snapshots 2026-04-06
+
+Die Family-Policy- und Family-Trend-Schicht ist jetzt historisch
+stabiler. Familienlabels werden beim Loggen einer Decision nicht mehr
+nur implizit aus Profilen rekonstruiert, sondern als Snapshot direkt im
+`DecisionRecord` mitgespeichert.
+
+Wichtigste Konsequenzen:
+
+- `DecisionRecord` traegt jetzt
+  `transfer_target_profile_family_snapshot` und
+  `transfer_source_profile_families_snapshot`
+- `SteeringLogQuery` und `EdgePolicyTrendQuery` bevorzugen diese
+  persistierten Snapshot-Werte und fallen nur fuer aeltere Records ohne
+  Snapshot auf die bisherige Computed-on-Read-Rekonstruktion zurueck
+- damit bleiben historische Family-Trends auch dann stabil, wenn sich
+  eine Profil-Zuordnung spaeter aendert
+- Alt-Daten bleiben rueckwaertskompatibel lesbar und brauchen keine
+  sofortige Migration
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `19 passed, 1 warning`
+- Steering-Observability-Zielsuite: `13 passed, 1 warning`
+- H.9-/API-Zielsuite: `97 passed, 1 warning`
+- Full-Suite: `235 passed, 1 warning`
+
 ## Phase-H.9.2-Live-Family-Transfer-Policies 2026-04-06
 
 Die Family-/Trend-Sicht aus Phase 6 wirkt jetzt auch live in der

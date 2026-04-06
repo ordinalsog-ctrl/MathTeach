@@ -131,6 +131,11 @@ Heute bereits im Code:
   `guarded_family_pair` und `cross_family_probe_guard`, schreibt diese
   Regeln pro Source in die Steering-Faktoren und zeigt ihren Mix in
   Runtime und Steering-Log
+- H.9.2 Persistent Family Snapshots, Phase 8:
+  Family-Labels werden jetzt zusaetzlich im `DecisionRecord`
+  gesnapshottet; historische Trends und Steering-Logs bevorzugen diese
+  persistierten Werte und fallen nur fuer Alt-Daten ohne Snapshot auf
+  die bisherige Computed-on-Read-Rekonstruktion zurueck
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -139,14 +144,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `232 passed, 1 warning`
+- `pytest -q` -> `235 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer stabilere historische
-Familien-Interpretation und feinere Policy-Regeln, etwa persistente
-Family-Snapshots fuer spaetere Langzeitanalysen, familiare
-Informationsgewinn-Heuristiken oder strengere Probe-Budgets pro
-Family-Pair.
+die naechste Ausbaustufe fuer feinere Family-Policy-Regeln und
+Informationsgewinn-Steuerung, etwa familiare Probe-Budgets,
+Family-Pair-spezifische Regelerweiterungen oder staerker outcome-
+orientierte Exploration innerhalb stabil gesnapshotteter Family-Historien.
 
 ## Repository-Inhalt
 

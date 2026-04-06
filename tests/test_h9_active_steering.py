@@ -61,6 +61,10 @@ def _family_policy_history_record(
         calibration_stratification_dimensions={
             "support_profile": target_support_profile,
         },
+        transfer_target_profile_family_snapshot=target_support_profile,
+        transfer_source_profile_families_snapshot={
+            source_id: source_support_profile,
+        },
         meta_transfer_strength=0.3,
         meta_transfer_source_profiles=[source_id],
         meta_transfer_source_shares={source_id: 1.0},
@@ -817,6 +821,16 @@ def test_planner_and_decision_record_expose_phase7_family_policy_signals() -> No
         == "same_family_preference"
     )
     assert engine.decision_log[-1].steering_family_policy_applied is True
+    assert (
+        engine.decision_log[-1].transfer_target_profile_family_snapshot
+        == "adhd_aware_support"
+    )
+    assert (
+        engine.decision_log[-1].transfer_source_profile_families_snapshot[
+            donor_profile.profile_id
+        ]
+        == "adhd_aware_support"
+    )
 
 
 def test_planner_and_decision_record_expose_phase4_edge_seeking_signals() -> None:

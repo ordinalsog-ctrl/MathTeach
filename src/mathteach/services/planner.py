@@ -887,6 +887,25 @@ def _log_path_decision(
     if last_block.block_type is None:
         return None
 
+    target_family_snapshot = (
+        str(
+            enriched_paths[0].meta_transfer_source_steering_factors
+            .get(enriched_paths[0].meta_transfer_source_profiles[0], {})
+            .get("target_family")
+        )
+        if enriched_paths[0].meta_transfer_source_profiles
+        and enriched_paths[0].meta_transfer_source_steering_factors
+        else (
+            "+".join(sorted(response_settings.active_supports))
+            if response_settings.active_supports
+            else None
+        )
+    )
+    source_family_snapshots = {
+        source_id: str(factors.get("source_family", "generic"))
+        for source_id, factors in enriched_paths[0].meta_transfer_source_steering_factors.items()
+    }
+
     record = DecisionRecord(
         session_id=request.session_id,
         current_block_type=last_block.block_type,
@@ -904,6 +923,8 @@ def _log_path_decision(
         chosen_path_score_breakdown=enriched_paths[0].score_breakdown,
         calibration_profile_id=enriched_paths[0].calibration_profile_id,
         calibration_profile_confidence=enriched_paths[0].calibration_profile_confidence,
+        transfer_target_profile_family_snapshot=target_family_snapshot,
+        transfer_source_profile_families_snapshot=source_family_snapshots,
         meta_transfer_strength=enriched_paths[0].meta_transfer_strength,
         meta_transfer_source_profiles=enriched_paths[0].meta_transfer_source_profiles,
         meta_transfer_source_shares=enriched_paths[0].meta_transfer_source_shares,

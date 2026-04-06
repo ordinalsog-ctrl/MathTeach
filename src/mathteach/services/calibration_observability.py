@@ -69,6 +69,8 @@ def _target_profile_family(
     engine: CalibrationEngine,
     record: DecisionRecord,
 ) -> str:
+    if record.transfer_target_profile_family_snapshot is not None:
+        return _profile_family_label(record.transfer_target_profile_family_snapshot)
     target_profile = (
         engine.get_profile(record.calibration_profile_id)
         if record.calibration_profile_id is not None
@@ -87,7 +89,12 @@ def _source_profile_family(
     engine: CalibrationEngine,
     source_id: str,
     factors: dict[str, float | bool | int | str],
+    record: DecisionRecord,
 ) -> str:
+    if source_id in record.transfer_source_profile_families_snapshot:
+        return _profile_family_label(
+            record.transfer_source_profile_families_snapshot.get(source_id)
+        )
     if "source_support_profile" in factors:
         return _profile_family_label(str(factors.get("source_support_profile")) or None)
     source_profile = engine.get_profile(source_id)
@@ -177,7 +184,12 @@ class SteeringLogQuery:
             steering_factors = record.meta_transfer_source_steering_factors
             target_family = _target_profile_family(self.engine, record)
             source_families = {
-                source_id: _source_profile_family(self.engine, source_id, factors)
+                source_id: _source_profile_family(
+                    self.engine,
+                    source_id,
+                    factors,
+                    record,
+                )
                 for source_id, factors in steering_factors.items()
             }
             weak_sources = [
@@ -448,7 +460,12 @@ class EdgePolicyTrendQuery:
             target_family = _target_profile_family(self.engine, record)
             for source_id, factors in record.meta_transfer_source_steering_factors.items():
                 policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
-                source_family = _source_profile_family(self.engine, source_id, factors)
+                source_family = _source_profile_family(
+                    self.engine,
+                    source_id,
+                    factors,
+                    record,
+                )
                 key = self._aggregate_key(
                     aggregate_by=aggregate_by,
                     policy=policy,

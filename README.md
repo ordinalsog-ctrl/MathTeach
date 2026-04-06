@@ -147,6 +147,11 @@ Heute bereits im Code:
   Probe-Signal gezeigt hat, wird es nicht mehr nur konservativ
   behandelt, sondern leicht als `cross_family_probe_preference`
   priorisiert
+- H.9.2 Adaptive Cross-Family Probe Budget Sizes, Phase 11:
+  juengste erfolgreiche Cross-Family-Probes erweitern das kleine
+  Probe-Budget fuer dasselbe Family-Pair um ein enges Zusatzfenster;
+  ist dieses Erfolgsfenster wieder verbraucht, faellt das Pair auf die
+  konservative Guard-Logik zurueck
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -155,13 +160,14 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `240 passed, 1 warning`
+- `pytest -q` -> `241 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
 die naechste Ausbaustufe fuer noch feinere Informationsgewinn-Steuerung
-auf dieser Basis, etwa adaptive Budgetgroessen nach beobachtetem
-Outcome oder staerker zeitgewichtete Transfer-Raten innerhalb stabil
-gesnapshotteter Family-Historien.
+auf dieser Basis, etwa staerker zeitgewichtete Transfer-Raten,
+qualitativ feinere Erfolgsfenster oder adaptive Budgetgroessen mit mehr
+als einem kleinen Erfolgs-Bonus innerhalb stabil gesnapshotteter
+Family-Historien.
 
 ## Repository-Inhalt
 

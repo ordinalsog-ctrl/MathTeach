@@ -2,6 +2,43 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Adaptive-Cross-Family-Probe-Budget-Sizes 2026-04-06
+
+Die Cross-Family-Probe-Logik reagiert jetzt nicht mehr nur mit einer
+starren Obergrenze. Juengste erfolgreiche Probes geben einem sparsamen
+`source_family -> target_family`-Pair ein kleines zusaetzliches
+Budgetfenster. Ist dieses enge Erfolgsfenster wieder aufgebraucht,
+faellt das Pair zurueck auf die konservative Guard-Logik.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine._cross_family_probe_budget_info(...)` berechnet
+  jetzt neben Probe-Count und Success-Count auch ein adaptives
+  `budget_limit`
+- ein juengster Erfolg erweitert das kleine Cross-Family-Probe-Budget
+  um genau einen zusaetzlichen Slot
+- `cross_family_probe_preference` greift nur noch, solange in diesem
+  adaptiven Budgetfenster noch Restbudget uebrig ist
+- sobald dieses Erfolgsfenster verbraucht ist, bleibt das Pair zwar
+  lesbar als juengst erfolgreich, faellt aber policy-seitig zurueck auf
+  `cross_family_probe_guard`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `22 passed, 1 warning`
+- Steering-Observability-Zielsuite: `15 passed, 1 warning`
+- H.9-/API-Zielsuite: `102 passed, 1 warning`
+- Full-Suite: `241 passed, 1 warning`
+
 ## Phase-H.9.2-Family-Pair-Probe-Prioritization 2026-04-06
 
 Die Cross-Family-Probe-Logik ist jetzt nicht mehr nur defensiv. Wenn ein

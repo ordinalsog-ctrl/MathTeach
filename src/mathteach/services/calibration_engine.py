@@ -59,6 +59,7 @@ META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PROBE_MULTIPLIER = 0.95
 META_TRANSFER_CROSS_FAMILY_PROBE_WINDOW_HOURS = 24
 META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT = 2
 META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_THRESHOLD = 0.55
+META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_BUDGET_BONUS = 1
 META_TRANSFER_CROSS_FAMILY_PROBE_BUDGET_GUARD_MULTIPLIER = 0.88
 
 
@@ -1691,17 +1692,19 @@ class CalibrationEngine:
                 ):
                     recent_success_count += 1
 
-        budget_remaining = max(
-            0,
-            META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT - recent_probe_count,
+        budget_limit = META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT + min(
+            recent_success_count,
+            META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_BUDGET_BONUS,
         )
+        budget_remaining = max(0, budget_limit - recent_probe_count)
         budget_exhausted = (
-            recent_probe_count >= META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT
+            recent_probe_count >= budget_limit
             and recent_success_count == 0
         )
         return {
             "recent_probe_count": recent_probe_count,
             "recent_success_count": recent_success_count,
+            "budget_limit": budget_limit,
             "budget_remaining": budget_remaining,
             "budget_exhausted": budget_exhausted,
         }
@@ -1736,6 +1739,12 @@ class CalibrationEngine:
         budget_remaining = int(
             (cross_family_probe_budget_info or {}).get("budget_remaining", 0)
         )
+        budget_limit = int(
+            (cross_family_probe_budget_info or {}).get(
+                "budget_limit",
+                META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
+            )
+        )
         budget_exhausted = bool(
             (cross_family_probe_budget_info or {}).get("budget_exhausted", False)
         )
@@ -1755,6 +1764,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1773,6 +1783,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1792,6 +1803,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1811,6 +1823,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1820,6 +1833,7 @@ class CalibrationEngine:
             and source_family != target_family
             and family_pair_samples < META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
             and recent_success_count > 0
+            and budget_remaining > 0
         ):
             return {
                 "policy": "cross_family_probe_preference",
@@ -1831,6 +1845,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1850,6 +1865,7 @@ class CalibrationEngine:
                 "family_pair_samples": family_pair_samples,
                 "cross_family_recent_probe_count": recent_probe_count,
                 "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
             }
@@ -1864,6 +1880,7 @@ class CalibrationEngine:
             "family_pair_samples": family_pair_samples,
             "cross_family_recent_probe_count": recent_probe_count,
             "cross_family_recent_success_count": recent_success_count,
+            "cross_family_probe_budget_limit": budget_limit,
             "cross_family_probe_budget_remaining": budget_remaining,
             "cross_family_probe_budget_exhausted": budget_exhausted,
         }
@@ -2054,6 +2071,7 @@ class CalibrationEngine:
                 else {
                     "recent_probe_count": 0,
                     "recent_success_count": 0,
+                    "budget_limit": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
                     "budget_remaining": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
                     "budget_exhausted": False,
                 }
@@ -2167,6 +2185,9 @@ class CalibrationEngine:
                 ),
                 "cross_family_recent_success_count": int(
                     family_policy_info["cross_family_recent_success_count"]
+                ),
+                "cross_family_probe_budget_limit": int(
+                    family_policy_info["cross_family_probe_budget_limit"]
                 ),
                 "cross_family_probe_budget_remaining": int(
                     family_policy_info["cross_family_probe_budget_remaining"]

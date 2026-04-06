@@ -373,6 +373,7 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
                         "family_pair_samples": 1,
                         "cross_family_recent_probe_count": 2,
                         "cross_family_recent_success_count": 0,
+                        "cross_family_probe_budget_limit": 2,
                         "cross_family_probe_budget_remaining": 0,
                         "cross_family_probe_budget_exhausted": True,
                     }
@@ -394,6 +395,7 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
     factors = entries[0].meta_transfer_source_steering_factors["budget_donor"]
     assert factors["cross_family_recent_probe_count"] == 2
     assert factors["cross_family_recent_success_count"] == 0
+    assert factors["cross_family_probe_budget_limit"] == 2
     assert factors["cross_family_probe_budget_remaining"] == 0
     assert factors["cross_family_probe_budget_exhausted"] is True
 
@@ -428,7 +430,8 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
                         "family_pair_samples": 1,
                         "cross_family_recent_probe_count": 2,
                         "cross_family_recent_success_count": 1,
-                        "cross_family_probe_budget_remaining": 0,
+                        "cross_family_probe_budget_limit": 3,
+                        "cross_family_probe_budget_remaining": 1,
                         "cross_family_probe_budget_exhausted": False,
                     }
                 },
@@ -448,6 +451,9 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
     assert len(entries) == 1
     assert entries[0].family_policy_sources == ["probe_donor"]
     assert entries[0].family_policy_distribution == {"cross_family_probe_preference": 1}
+    factors = entries[0].meta_transfer_source_steering_factors["probe_donor"]
+    assert factors["cross_family_probe_budget_limit"] == 3
+    assert factors["cross_family_probe_budget_remaining"] == 1
 
 
 def test_steering_log_includes_profile_families() -> None:

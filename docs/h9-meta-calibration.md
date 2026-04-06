@@ -585,6 +585,48 @@ Neue Audit-Sicht:
 - Steering-Log und Family-Policy-Distribution zeigen diese Kategorie
   direkt an
 
+### Phase 11: Adaptive Cross-Family Probe Budget Sizes
+
+Phase 11 macht das juengste Probe-Budget aus Phase 9 minimal adaptiv.
+Ein sparsames Cross-Family-Pair, das juengst schon ein positives
+Probe-Signal gezeigt hat, bekommt nicht nur die Policy
+`cross_family_probe_preference`, sondern auch ein kleines zusaetzliches
+Budgetfenster fuer weitere Exploration.
+
+Kernidee:
+
+- das Basisbudget fuer Cross-Family-Probes bleibt klein
+- ein juengster erfolgreicher Probe-Record erweitert dieses Budget um
+  genau einen zusaetzlichen Slot
+- `cross_family_probe_preference` gilt nur, solange innerhalb dieses
+  adaptiven Budgets noch Restbudget uebrig ist
+- ist der Erfolgsbonus verbraucht, faellt das Pair policy-seitig
+  zurueck auf `cross_family_probe_guard`
+
+Neue Logik:
+
+- `_cross_family_probe_budget_info(...)` liefert jetzt zusaetzlich
+  `budget_limit`
+- `budget_limit` berechnet sich aktuell als:
+  Basisbudget `+ min(recent_success_count, 1)`
+- `_family_transfer_policy_info(...)` laesst
+  `cross_family_probe_preference` nur noch bei
+  `cross_family_probe_budget_remaining > 0` zu
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_probe_budget_limit`
+- `cross_family_probe_budget_remaining`
+- `cross_family_probe_budget_exhausted`
+
+Wichtig:
+
+- das ist bewusst nur ein enges Bonusfenster, kein grosser Policy-Sprung
+- die Budget-Adaption bleibt voll auditierbar ueber die bestehenden
+  Steering-Faktoren
+- es gibt weiterhin keinen neuen Store; alles baut auf den
+  persistierten Family-Snapshots und der vorhandenen Decision-History auf
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -598,8 +640,9 @@ Noch nicht enthalten:
 - automatische Folgeaktionen auf Basis dieser Steering-Sicht
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
-- Probe-Budgets sind aktuell noch statisch; sie wachsen oder schrumpfen
-  noch nicht adaptiv mit beobachteter Guete des Family-Pairs
+- Probe-Budgets sind jetzt nur sehr leicht adaptiv; sie kennen aktuell
+  nur ein kleines Erfolgs-Bonusfenster und noch keine feinere
+  Qualitaets- oder Zeitgewichtung
 
 ## Naechster logischer Ausbau
 
@@ -610,6 +653,6 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
   welche Profilfamilien langfristig wirklich hilfreich sind
 - optionale Backfill-/Migrationsstrategie fuer aeltere Decisions ohne
   Family-Snapshot
-- adaptive Budgetgroessen und staerker zeitgewichtete
+- staerker zeitgewichtete und qualitativ feinere
   Informationsgewinn-Heuristiken auf Basis des jetzt vorhandenen
   Edge-Seeking-, Policy-, Snapshot- und Probe-Budget-Logs

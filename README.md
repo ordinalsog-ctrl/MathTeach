@@ -103,6 +103,10 @@ Heute bereits im Code:
   ueber donor-spezifische adaptive Blend-Caps und dokumentiert diese
   Signale bis in `enriched_paths`, `DecisionRecord` und
   `calibration_context`
+- H.9.2 Steering Observability, Phase 3:
+  read-only Admin-Endpunkte machen Steering-Entscheidungen und
+  adaptive Cap-Trends jetzt historisch sichtbar, ohne in die Engine-
+  Logik selbst einzugreifen
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -111,13 +115,12 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `212 passed, 1 warning`
+- `pytest -q` -> `217 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer Steering-Observability und laengerfristige
-Transferpolitik pro Donor-Ziel-Kante, damit die jetzt aktive Auswahl-
-und Intensitaetssteuerung auch ueber Admin-Endpunkte und Trendsicht
-gezielt inspiziert werden kann.
+die naechste Ausbaustufe fuer echte Folgeaktionen auf Basis dieser
+Steering-Sicht, etwa Active Edge-Seeking fuer isolierte Profile oder
+weitergehende Transferpolitik pro Donor-Ziel-Kante.
 
 ## Repository-Inhalt
 

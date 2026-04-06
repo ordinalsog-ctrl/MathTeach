@@ -12,6 +12,10 @@ from mathteach.services.corpus import (
 )
 from mathteach.services.foundation import build_foundation
 from mathteach.services.calibration_engine import CalibrationEngine
+from mathteach.services.calibration_observability import (
+    AdaptiveCapsTrendQuery,
+    SteeringLogQuery,
+)
 from mathteach.services.calibration_store import CalibrationStore
 from mathteach.services.planner import (
     build_stack,
@@ -253,6 +257,57 @@ def admin_calibration_profile_density(
 ):
     engine = _resolve_calibration_engine(store_path)
     return engine.profile_density_summary()
+
+
+@app.get("/api/v1/admin/calibration/steering-log")
+def admin_calibration_steering_log(
+    store_path: str | None = Query(default=None),
+    session_id: str | None = Query(default=None),
+    time_window_minutes: int = Query(default=1440, ge=1, le=10080),
+    limit: int = Query(default=100, ge=1, le=1000),
+    include_weak_edges: bool = Query(default=True),
+    include_proven_boost: bool = Query(default=True),
+    include_adaptive_caps: bool = Query(default=True),
+):
+    engine = _resolve_calibration_engine(store_path)
+    query = SteeringLogQuery(engine)
+    entries = query.get_steering_decisions(
+        session_id=session_id,
+        time_window_minutes=time_window_minutes,
+        include_weak_edges=include_weak_edges,
+        include_proven_boost=include_proven_boost,
+        include_adaptive_caps=include_adaptive_caps,
+    )
+    return {
+        "entries": [entry.model_dump(mode="json") for entry in entries[:limit]],
+        "total_count": len(entries),
+        "window_minutes": time_window_minutes,
+    }
+
+
+@app.get("/api/v1/admin/calibration/adaptive-caps-trends")
+def admin_calibration_adaptive_caps_trends(
+    store_path: str | None = Query(default=None),
+    time_window_hours: int = Query(default=24, ge=1, le=168),
+    aggregate_by: str = Query(default="reason"),
+):
+    engine = _resolve_calibration_engine(store_path)
+    query = AdaptiveCapsTrendQuery(engine)
+    try:
+        trends = query.get_cap_distribution_trends(
+            time_window_hours=time_window_hours,
+            aggregate_by=aggregate_by,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {
+        "trends": {
+            key: value.model_dump(mode="json")
+            for key, value in trends.items()
+        },
+        "window_hours": time_window_hours,
+        "aggregate_by": aggregate_by,
+    }
 
 
 @app.get("/api/v1/admin/quarantine/sessions")

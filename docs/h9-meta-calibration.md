@@ -249,6 +249,33 @@ zum Beispiel:
 - `adaptive_transfer_history_samples`
 - `applied_source_contribution`
 
+### Phase 3: Steering Observability
+
+Die aktuelle Folgephase fuegt zwei read-only Admin-Endpunkte hinzu, die
+H.9.2-Steering operativ sichtbar machen, ohne die Engine-Entscheidungen
+selbst zu veraendern.
+
+`GET /api/v1/admin/calibration/steering-log`
+
+- liefert eine per-Decision-Auditsicht auf angewendete Steering-Signale
+- zeigt weak-edge penalty, proven-donor boost, adaptive Caps,
+  `meta_transfer_source_shares`, `meta_transfer_strength`,
+  `meta_transfer_weight_delta` und beobachteten Outcome-Score
+- arbeitet historisch auf `DecisionRecord`, nicht auf
+  `CalibrationContext`
+
+`GET /api/v1/admin/calibration/adaptive-caps-trends`
+
+- aggregiert adaptive Caps historisch ueber Decisions hinweg
+- gruppiert nach `reason`, `profile` oder `effectiveness_bucket`
+- trennt damit bewusst echte Verlaufssicht von
+  `CalibrationContext.adaptive_cap_distribution`, das nur ein Snapshot
+  des aktuell ausgewaehlten Pfads bleibt
+
+Diese Phase ist die Grundlage fuer spaetere, aggressivere
+Steering-Folgeschritte, weil jetzt erstmals direkt sichtbar ist, welche
+Steering-Signale im Zeitverlauf tatsaechlich auftreten.
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -259,7 +286,7 @@ Noch nicht enthalten:
 - lernende Merge/Split-Strategien fuer Profile
 - separate Meta-Gewichte pro Dimension
 - adaptive Transfer-Raten ueber Zeit
-- eigener Admin- oder Steering-Log-Endpunkt fuer Phase-2-Signale
+- automatische Folgeaktionen auf Basis dieser Steering-Sicht
 
 ## Naechster logischer Ausbau
 
@@ -268,5 +295,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Transferquellen fuer
   welches Profil langfristig wirklich hilfreich sind
-- explizite Inspection- und Trend-Endpunkte fuer Steering-Signale und
-  adaptive Cap-Verteilungen
+- echte Folgeaktionen auf Basis der Steering-Observationen, zum
+  Beispiel Active Edge-Seeking fuer isolierte Profile

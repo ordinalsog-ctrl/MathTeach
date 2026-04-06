@@ -2,6 +2,42 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Steering-Observability 2026-04-06
+
+Die H.9.2-Steuerung ist jetzt nicht mehr nur intern auditierbar,
+sondern auch ueber eigene Read-only-Admin-Endpunkte operativ sichtbar.
+
+Wichtigste Konsequenzen:
+
+- ein neuer Query-Layer liest Steering-Daten direkt aus
+  `DecisionRecord`, statt historische Trenddaten aus
+  `CalibrationContext.adaptive_cap_distribution` zu erraten
+- `GET /api/v1/admin/calibration/steering-log` zeigt jetzt pro
+  Transfer-Decision, ob weak-edge penalty, proven-donor boost oder
+  adaptive Caps aktiv waren, inklusive Shares, Cap-Snapshot und
+  beobachtetem Outcome-Score
+- `GET /api/v1/admin/calibration/adaptive-caps-trends` aggregiert
+  donor-spezifische Caps historisch ueber Decisions hinweg, gruppierbar
+  nach `reason`, `profile` oder `effectiveness_bucket`
+- die Snapshot-Semantik von
+  `CalibrationContext.adaptive_cap_distribution` bleibt dabei klar
+  getrennt von echten Verlaufsstatistiken
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-/API-Zielsuite: `79 passed, 1 warning`
+- Full-Suite: `217 passed, 1 warning`
+
 ## Phase-H.9.2-Adaptive-Blend-Caps 2026-04-06
 
 Die H.9.2-Steuerung greift jetzt nicht mehr nur in die Donor-Auswahl

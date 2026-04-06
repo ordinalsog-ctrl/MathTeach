@@ -486,6 +486,52 @@ class CalibrationContext(BaseModel):
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
 
+class SteeringLogEntry(BaseModel):
+    decision_id: str = Field(min_length=3)
+    session_id: str | None = None
+    timestamp: datetime
+    transfer_target_profile_id: str | None = None
+    transfer_source_profiles: list[str] = Field(default_factory=list)
+    weak_edge_penalty_applied: bool = False
+    weak_edge_penalty_sources: list[str] = Field(default_factory=list)
+    weak_edge_penalty_factor: float | None = Field(default=None, ge=0.0)
+    proven_donor_boost_applied: bool = False
+    proven_donor_boost_sources: list[str] = Field(default_factory=list)
+    proven_donor_boost_factor: float | None = Field(default=None, ge=0.0)
+    adaptive_cap_distribution: dict[str, dict[str, int | float]] = Field(
+        default_factory=dict,
+        description=(
+            "Historical per-decision snapshot derived from this single record's "
+            "adaptive source caps."
+        ),
+    )
+    meta_transfer_source_adaptive_caps: dict[
+        str,
+        dict[str, float | int | str],
+    ] = Field(default_factory=dict)
+    meta_transfer_source_shares: dict[str, float] = Field(default_factory=dict)
+    meta_transfer_source_steering_factors: dict[
+        str,
+        dict[str, float | bool | int | str],
+    ] = Field(default_factory=dict)
+    meta_transfer_strength: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_weight_delta: float | None = Field(default=None, ge=0.0, le=1.0)
+    meta_transfer_was_effective: bool = False
+    outcome_recorded: bool = False
+    observed_outcome_score: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class CapTrendAggregation(BaseModel):
+    aggregate_key: str = Field(min_length=2)
+    count: int = Field(ge=0)
+    sample_size: int = Field(ge=0)
+    total_cap: float = Field(ge=0.0)
+    avg_cap: float = Field(ge=0.0)
+    min_cap: float = Field(ge=0.0)
+    max_cap: float = Field(ge=0.0)
+    trend_direction: str
+
+
 class CalibrationOutcomeRequest(BaseModel):
     decision_id: str = Field(min_length=3)
     observation: RawBlockObservation

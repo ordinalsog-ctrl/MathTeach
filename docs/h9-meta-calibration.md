@@ -545,6 +545,46 @@ Wichtig:
 - Alt-Daten ohne Snapshot bleiben weiter ueber Fallback lesbar, liefern
   aber weniger stabile historische Probe-Budgets
 
+### Phase 10: Family-Pair Probe Prioritization
+
+Phase 10 nutzt die neue Budget-Sicht aus Phase 9 nicht nur zum
+Blockieren, sondern erstmals auch fuer einen kleinen positiven
+Informationsgewinn-Impuls. Sparse Cross-Family-Pairs, die juengst schon
+mindestens eine erfolgreiche Probe gezeigt haben, werden jetzt leicht
+gegenueber rein unbekannten Cross-Family-Probes priorisiert.
+
+Kernidee:
+
+- `cross_family_probe_budget_guard` bleibt fuer wiederholte erfolglose
+  Probes bestehen
+- aber wenn juengste Cross-Family-Probes fuer dasselbe Pair bereits
+  positives Signal gezeigt haben, soll das Pair nicht weiter nur unter
+  der konservativen Probe-Guard-Regel laufen
+- daraus entsteht eine neue Family-Policy:
+  `cross_family_probe_preference`
+
+Neue Logik:
+
+- `_family_transfer_policy_info(...)` unterscheidet jetzt drei sparse
+  Cross-Family-Zustaende:
+  - `cross_family_probe_budget_guard`
+  - `cross_family_probe_preference`
+  - `cross_family_probe_guard`
+- `cross_family_probe_preference` greift nur, wenn:
+  - `edge_seeking_applied == True`
+  - `source_family != target_family`
+  - das Family-Pair noch unter der Mindest-Sample-Grenze liegt
+  - aber `cross_family_recent_success_count > 0`
+- die Multiplikation bleibt bewusst klein, damit es eine Priorisierung
+  und kein aggressiver Sprung wird
+
+Neue Audit-Sicht:
+
+- `family_transfer_policy = cross_family_probe_preference`
+- `family_transfer_policy_reason = prioritize_cross_family_probe_with_recent_success_signal`
+- Steering-Log und Family-Policy-Distribution zeigen diese Kategorie
+  direkt an
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -570,6 +610,6 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
   welche Profilfamilien langfristig wirklich hilfreich sind
 - optionale Backfill-/Migrationsstrategie fuer aeltere Decisions ohne
   Family-Snapshot
-- feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
-  des jetzt vorhandenen Edge-Seeking-, Policy-, Snapshot- und
-  Probe-Budget-Logs
+- adaptive Budgetgroessen und staerker zeitgewichtete
+  Informationsgewinn-Heuristiken auf Basis des jetzt vorhandenen
+  Edge-Seeking-, Policy-, Snapshot- und Probe-Budget-Logs

@@ -2,6 +2,42 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Family-Pair-Probe-Prioritization 2026-04-06
+
+Die Cross-Family-Probe-Logik ist jetzt nicht mehr nur defensiv. Wenn ein
+juengst noch sparsames `source_family -> target_family`-Pair bereits
+positives Probe-Signal gezeigt hat, bekommt es einen kleinen
+Prioritaetsimpuls statt weiter pauschal unter dem konservativen
+`cross_family_probe_guard` zu laufen.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine` unterscheidet jetzt zwischen erfolglosen
+  Cross-Family-Probes mit Budget-Sperre und sparsamen Family-Pairs mit
+  juengstem Erfolgs-Signal
+- solche Faelle werden als `cross_family_probe_preference`
+  klassifiziert und leicht bevorzugt
+- die Priorisierung bleibt klein und auditierbar; sie basiert weiter
+  nur auf der vorhandenen Decision-/Snapshot-History
+- Steering-Log und Family-Policy-Distribution zeigen diese neue
+  Kategorie direkt an
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `21 passed, 1 warning`
+- Steering-Observability-Zielsuite: `15 passed, 1 warning`
+- H.9-/API-Zielsuite: `101 passed, 1 warning`
+- Full-Suite: `240 passed, 1 warning`
+
 ## Phase-H.9.2-Cross-Family-Probe-Budgets 2026-04-06
 
 Die Family-Policy ist jetzt nicht nur historisch stabil, sondern auch

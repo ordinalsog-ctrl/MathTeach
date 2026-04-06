@@ -142,6 +142,11 @@ Heute bereits im Code:
   keinen positiven Outcome geliefert haben, wird weiterer Probe-Boost
   blockiert und als `cross_family_probe_budget_guard` auditierbar
   markiert
+- H.9.2 Family-Pair Probe Prioritization, Phase 10:
+  wenn ein sparsames Cross-Family-Pair juengst bereits positives
+  Probe-Signal gezeigt hat, wird es nicht mehr nur konservativ
+  behandelt, sondern leicht als `cross_family_probe_preference`
+  priorisiert
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -150,14 +155,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `239 passed, 1 warning`
+- `pytest -q` -> `240 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer feinere Informationsgewinn-Steuerung auf
-dieser Basis, etwa Family-Pair-spezifische Probe-Priorisierung,
-adaptive Budgetgroessen nach beobachtetem Outcome oder staerker
-zeitgewichtete Transfer-Raten innerhalb stabil gesnapshotteter
-Family-Historien.
+die naechste Ausbaustufe fuer noch feinere Informationsgewinn-Steuerung
+auf dieser Basis, etwa adaptive Budgetgroessen nach beobachtetem
+Outcome oder staerker zeitgewichtete Transfer-Raten innerhalb stabil
+gesnapshotteter Family-Historien.
 
 ## Repository-Inhalt
 

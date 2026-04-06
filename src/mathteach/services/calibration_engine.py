@@ -54,6 +54,7 @@ META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MIN_EFFECTIVENESS = 0.5
 META_TRANSFER_FAMILY_POLICY_TRUSTED_MULTIPLIER = 1.04
 META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MULTIPLIER = 1.02
 META_TRANSFER_FAMILY_POLICY_GUARDED_MULTIPLIER = 0.93
+META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PRIORITY_MULTIPLIER = 1.03
 META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PROBE_MULTIPLIER = 0.95
 META_TRANSFER_CROSS_FAMILY_PROBE_WINDOW_HOURS = 24
 META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT = 2
@@ -1804,6 +1805,26 @@ class CalibrationEngine:
                 "policy": "cross_family_probe_budget_guard",
                 "reason": "limit_repeated_cross_family_probes_without_signal",
                 "multiplier": META_TRANSFER_CROSS_FAMILY_PROBE_BUDGET_GUARD_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+                "cross_family_recent_probe_count": recent_probe_count,
+                "cross_family_recent_success_count": recent_success_count,
+                "cross_family_probe_budget_remaining": budget_remaining,
+                "cross_family_probe_budget_exhausted": budget_exhausted,
+            }
+
+        if (
+            edge_seeking_applied
+            and source_family != target_family
+            and family_pair_samples < META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
+            and recent_success_count > 0
+        ):
+            return {
+                "policy": "cross_family_probe_preference",
+                "reason": "prioritize_cross_family_probe_with_recent_success_signal",
+                "multiplier": META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PRIORITY_MULTIPLIER,
                 "source_family": source_family,
                 "target_family": target_family,
                 "family_pair_effectiveness": round(family_pair_effectiveness, 4),

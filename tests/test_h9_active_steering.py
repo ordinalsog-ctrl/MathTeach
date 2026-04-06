@@ -791,7 +791,7 @@ def test_cross_family_probe_budget_guard_blocks_repeated_unsuccessful_probes() -
     assert budget_guarded_candidate[3]["cross_family_probe_budget_exhausted"] is True
 
 
-def test_cross_family_probe_budget_allows_probe_when_recent_success_exists() -> None:
+def test_cross_family_probe_preference_applies_when_recent_success_exists() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
 
@@ -852,7 +852,14 @@ def test_cross_family_probe_budget_allows_probe_when_recent_success_exists() -> 
     )
     assert allowed_candidate[3]["edge_seeking_applied"] is True
     assert allowed_candidate[3]["edge_seeking_budget_blocked"] is False
-    assert allowed_candidate[3]["family_transfer_policy"] == "cross_family_probe_guard"
+    assert (
+        allowed_candidate[3]["family_transfer_policy"]
+        == "cross_family_probe_preference"
+    )
+    assert allowed_candidate[3]["family_transfer_policy_multiplier"] == pytest.approx(
+        1.03,
+        abs=1e-6,
+    )
     assert allowed_candidate[3]["cross_family_recent_probe_count"] == 2
     assert allowed_candidate[3]["cross_family_recent_success_count"] == 1
     assert allowed_candidate[3]["cross_family_probe_budget_remaining"] == 0

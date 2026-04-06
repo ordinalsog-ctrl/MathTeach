@@ -107,6 +107,11 @@ Heute bereits im Code:
   read-only Admin-Endpunkte machen Steering-Entscheidungen und
   adaptive Cap-Trends jetzt historisch sichtbar, ohne in die Engine-
   Logik selbst einzugreifen
+- H.9.2 Active Edge-Seeking, Phase 4:
+  sparse und isolierte Zielprofile koennen jetzt engine-seitig
+  vorsichtige Explorations-Boosts fuer datenarme oder zuvor schwache
+  Kanten erhalten; diese Signale laufen ebenfalls bis in Audit und
+  Observability durch
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -115,12 +120,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `217 passed, 1 warning`
+- `pytest -q` -> `222 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer echte Folgeaktionen auf Basis dieser
-Steering-Sicht, etwa Active Edge-Seeking fuer isolierte Profile oder
-weitergehende Transferpolitik pro Donor-Ziel-Kante.
+die naechste Ausbaustufe fuer noch gezieltere Transferpolitik auf Basis
+dieser Steuerung, etwa staerker regulierte Probe-Policies,
+Informationsgewinn-Heuristiken oder feinere Donor-Ziel-Strategien pro
+Profilfamilie.
 
 ## Repository-Inhalt
 

@@ -39,6 +39,9 @@ META_TRANSFER_STRONG_EDGE_MAX_BLEND = 0.45
 META_TRANSFER_WEAK_EDGE_EFFECTIVENESS_THRESHOLD = 0.25
 META_TRANSFER_LOW_EFFECTIVENESS_THRESHOLD = 0.5
 META_TRANSFER_STRONG_EDGE_EFFECTIVENESS_THRESHOLD = 0.7
+META_TRANSFER_EDGE_SEEKING_MIN_SIMILARITY = 0.25
+META_TRANSFER_EDGE_SEEKING_INSUFFICIENT_HISTORY_MULTIPLIER = 1.15
+META_TRANSFER_EDGE_SEEKING_WEAK_EDGE_RECOVERY_MULTIPLIER = 1.2
 
 
 def _estimate_mastery_gain(
@@ -567,6 +570,10 @@ class CalibrationEngine:
                 "steering_proven_donor_boost_applied": steering_factors[
                     "proven_donor_boost_applied"
                 ],
+                "steering_edge_seeking_applied": steering_factors[
+                    "edge_seeking_applied"
+                ],
+                "edge_seeking_reason": steering_factors["edge_seeking_reason"],
                 "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                     candidate.profile_id,
                     profile.profile_id,
@@ -885,6 +892,7 @@ class CalibrationEngine:
                 meta_transfer_was_effective,
                 steering_weak_edge_penalty_applied,
                 steering_proven_donor_boost_applied,
+                steering_edge_seeking_applied,
                 meta_transfer_source_steering_factors,
                 meta_transfer_source_adaptive_caps,
             ) = self._effective_weights_for_profile_chain(
@@ -926,6 +934,9 @@ class CalibrationEngine:
                         ),
                         "steering_proven_donor_boost_applied": (
                             steering_proven_donor_boost_applied
+                        ),
+                        "steering_edge_seeking_applied": (
+                            steering_edge_seeking_applied
                         ),
                         "meta_transfer_source_steering_factors": (
                             meta_transfer_source_steering_factors
@@ -1071,6 +1082,10 @@ class CalibrationEngine:
                     "steering_proven_donor_boost_applied": steering_factors[
                         "proven_donor_boost_applied"
                     ],
+                    "steering_edge_seeking_applied": steering_factors[
+                        "edge_seeking_applied"
+                    ],
+                    "edge_seeking_reason": steering_factors["edge_seeking_reason"],
                     "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                         candidate.profile_id,
                         profile.profile_id,
@@ -1441,16 +1456,61 @@ class CalibrationEngine:
         )
         return float(cap_info["cap"]), str(cap_info["reason"])
 
+    def _should_seek_edges_for_profile(
+        self,
+        target_profile: CalibrationProfile,
+        candidate_diagnostics: list[dict[str, object]],
+    ) -> bool:
+        if target_profile.outcome_count >= PROFILE_PARTIAL_INHERITANCE_THRESHOLD:
+            return False
+        if not candidate_diagnostics:
+            return False
+        if any(
+            bool(item["proven_donor_boost_applied"])
+            or str(item["cap_reason"]) in {"moderate", "strong_edge"}
+            for item in candidate_diagnostics
+        ):
+            return False
+
+        exploratory_candidates = [
+            item
+            for item in candidate_diagnostics
+            if float(item["similarity_score"]) >= META_TRANSFER_EDGE_SEEKING_MIN_SIMILARITY
+        ]
+        if not exploratory_candidates:
+            return False
+        if len(exploratory_candidates) < 2:
+            return True
+        return all(
+            str(item["cap_reason"]) in {"insufficient_history", "weak_edge"}
+            for item in exploratory_candidates
+        )
+
     def _meta_transfer_candidates(
         self,
         target_profile: CalibrationProfile,
         *,
         excluded_profile_ids: set[str],
-    ) -> list[tuple[CalibrationProfile, float, float, dict[str, float | bool], float]]:
+    ) -> list[
+        tuple[
+            CalibrationProfile,
+            float,
+            float,
+            dict[str, float | bool | str],
+            float,
+        ]
+    ]:
         ranked_candidates: list[
-            tuple[CalibrationProfile, float, float, dict[str, float | bool], float]
+            tuple[
+                CalibrationProfile,
+                float,
+                float,
+                dict[str, float | bool | str],
+                float,
+            ]
         ] = []
         weak_edges = self._weak_transfer_edge_keys()
+        candidate_diagnostics: list[dict[str, object]] = []
 
         for candidate in self.calibration_profiles.values():
             if candidate.profile_id in excluded_profile_ids:
@@ -1486,18 +1546,75 @@ class CalibrationEngine:
             )
             if proven_donor_boost_applied:
                 boost_multiplier = META_TRANSFER_PROVEN_DONOR_BOOST_MULTIPLIER
+            cap_info = self._adaptive_transfer_cap_info(
+                candidate.profile_id,
+                target_profile.profile_id,
+            )
+            candidate_diagnostics.append(
+                {
+                    "candidate": candidate,
+                    "similarity_score": similarity_score,
+                    "historical_effectiveness": historical_effectiveness,
+                    "pair_effectiveness": pair_effectiveness,
+                    "penalty_multiplier": penalty_multiplier,
+                    "boost_multiplier": boost_multiplier,
+                    "weak_edge_penalty_applied": weak_edge_penalty_applied,
+                    "proven_donor_boost_applied": proven_donor_boost_applied,
+                    "cap_reason": cap_info["reason"],
+                }
+            )
+
+        edge_seeking_active = self._should_seek_edges_for_profile(
+            target_profile,
+            candidate_diagnostics,
+        )
+
+        for item in candidate_diagnostics:
+            candidate = item["candidate"]
+            similarity_score = float(item["similarity_score"])
+            historical_effectiveness = float(item["historical_effectiveness"])
+            pair_effectiveness = float(item["pair_effectiveness"])
+            penalty_multiplier = float(item["penalty_multiplier"])
+            boost_multiplier = float(item["boost_multiplier"])
+            weak_edge_penalty_applied = bool(item["weak_edge_penalty_applied"])
+            proven_donor_boost_applied = bool(item["proven_donor_boost_applied"])
+            cap_reason = str(item["cap_reason"])
+
+            edge_seeking_applied = False
+            edge_seeking_multiplier = 1.0
+            edge_seeking_reason = ""
+            if (
+                edge_seeking_active
+                and not proven_donor_boost_applied
+                and similarity_score >= META_TRANSFER_EDGE_SEEKING_MIN_SIMILARITY
+            ):
+                if weak_edge_penalty_applied:
+                    edge_seeking_applied = True
+                    edge_seeking_multiplier = (
+                        META_TRANSFER_EDGE_SEEKING_WEAK_EDGE_RECOVERY_MULTIPLIER
+                    )
+                    edge_seeking_reason = "recover_weak_edge_for_sparse_target"
+                elif cap_reason == "insufficient_history":
+                    edge_seeking_applied = True
+                    edge_seeking_multiplier = (
+                        META_TRANSFER_EDGE_SEEKING_INSUFFICIENT_HISTORY_MULTIPLIER
+                    )
+                    edge_seeking_reason = "probe_insufficient_history_for_sparse_target"
 
             adjusted_similarity_score = max(
                 0.0,
                 min(
                     1.0,
-                    similarity_score * penalty_multiplier * boost_multiplier,
+                    similarity_score
+                    * penalty_multiplier
+                    * boost_multiplier
+                    * edge_seeking_multiplier,
                 ),
             )
             final_candidate_strength = (
                 adjusted_similarity_score * candidate.confidence_score
             ) + (0.25 * historical_effectiveness)
-            steering_factors: dict[str, float | bool] = {
+            steering_factors: dict[str, float | bool | str] = {
                 "base_similarity_score": round(similarity_score, 4),
                 "adjusted_similarity_score": round(adjusted_similarity_score, 4),
                 "historical_effectiveness": round(historical_effectiveness, 4),
@@ -1506,6 +1623,10 @@ class CalibrationEngine:
                 "boost_multiplier": round(boost_multiplier, 4),
                 "weak_edge_penalty_applied": weak_edge_penalty_applied,
                 "proven_donor_boost_applied": proven_donor_boost_applied,
+                "edge_seeking_applied": edge_seeking_applied,
+                "edge_seeking_multiplier": round(edge_seeking_multiplier, 4),
+                "edge_seeking_reason": edge_seeking_reason,
+                "edge_seeking_target_sparse": edge_seeking_active,
                 "final_candidate_strength": round(final_candidate_strength, 4),
             }
             ranked_candidates.append(
@@ -1554,7 +1675,7 @@ class CalibrationEngine:
                 CalibrationProfile,
                 float,
                 float,
-                dict[str, float | bool],
+                dict[str, float | bool | str],
                 float,
                 float,
             ]
@@ -1739,6 +1860,7 @@ class CalibrationEngine:
         bool,
         bool,
         bool,
+        bool,
         dict[str, dict[str, float | bool | int | str]],
         dict[str, dict[str, float | int | str]],
     ]:
@@ -1750,6 +1872,7 @@ class CalibrationEngine:
                 [],
                 {},
                 0.0,
+                False,
                 False,
                 False,
                 False,
@@ -1795,6 +1918,7 @@ class CalibrationEngine:
                 False,
                 False,
                 False,
+                False,
                 {},
                 {},
             )
@@ -1805,6 +1929,10 @@ class CalibrationEngine:
         )
         steering_proven_donor_boost_applied = any(
             factor.get("proven_donor_boost_applied", False)
+            for factor in meta_transfer_source_steering_factors.values()
+        )
+        steering_edge_seeking_applied = any(
+            factor.get("edge_seeking_applied", False)
             for factor in meta_transfer_source_steering_factors.values()
         )
 
@@ -1855,6 +1983,7 @@ class CalibrationEngine:
             meta_transfer_was_effective,
             steering_weak_edge_penalty_applied,
             steering_proven_donor_boost_applied,
+            steering_edge_seeking_applied,
             meta_transfer_source_steering_factors,
             meta_transfer_source_adaptive_caps,
         )

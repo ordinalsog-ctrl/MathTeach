@@ -52,6 +52,7 @@ class SteeringLogQuery:
         include_weak_edges: bool,
         include_proven_boost: bool,
         include_adaptive_caps: bool,
+        include_edge_seeking: bool,
     ) -> bool:
         if record.timestamp < cutoff:
             return False
@@ -65,12 +66,14 @@ class SteeringLogQuery:
         has_weak = record.steering_weak_edge_penalty_applied
         has_boost = record.steering_proven_donor_boost_applied
         has_caps = bool(record.meta_transfer_source_adaptive_caps)
+        has_edge_seeking = record.steering_edge_seeking_applied
 
         return any(
             (
                 include_weak_edges and has_weak,
                 include_proven_boost and has_boost,
                 include_adaptive_caps and has_caps,
+                include_edge_seeking and has_edge_seeking,
             )
         )
 
@@ -82,6 +85,7 @@ class SteeringLogQuery:
         include_weak_edges: bool = True,
         include_proven_boost: bool = True,
         include_adaptive_caps: bool = True,
+        include_edge_seeking: bool = True,
     ) -> list[SteeringLogEntry]:
         cutoff = self._cutoff(time_window_minutes)
         entries: list[SteeringLogEntry] = []
@@ -94,6 +98,7 @@ class SteeringLogQuery:
                 include_weak_edges=include_weak_edges,
                 include_proven_boost=include_proven_boost,
                 include_adaptive_caps=include_adaptive_caps,
+                include_edge_seeking=include_edge_seeking,
             ):
                 continue
 
@@ -118,6 +123,21 @@ class SteeringLogQuery:
                 if proven_sources
                 else None
             )
+            edge_seeking_sources = [
+                source_id
+                for source_id, factors in steering_factors.items()
+                if bool(factors.get("edge_seeking_applied", False))
+            ]
+            edge_seeking_factor = (
+                float(
+                    steering_factors[edge_seeking_sources[0]].get(
+                        "edge_seeking_multiplier",
+                        0.0,
+                    )
+                )
+                if edge_seeking_sources
+                else None
+            )
             observed_outcome_score = (
                 record.observed_outcome.composite_score()
                 if record.observed_outcome is not None
@@ -137,6 +157,9 @@ class SteeringLogQuery:
                     proven_donor_boost_applied=record.steering_proven_donor_boost_applied,
                     proven_donor_boost_sources=proven_sources,
                     proven_donor_boost_factor=boost_factor,
+                    edge_seeking_applied=record.steering_edge_seeking_applied,
+                    edge_seeking_sources=edge_seeking_sources,
+                    edge_seeking_factor=edge_seeking_factor,
                     adaptive_cap_distribution=_adaptive_cap_distribution(
                         record.meta_transfer_source_adaptive_caps
                     ),

@@ -276,6 +276,45 @@ Diese Phase ist die Grundlage fuer spaetere, aggressivere
 Steering-Folgeschritte, weil jetzt erstmals direkt sichtbar ist, welche
 Steering-Signale im Zeitverlauf tatsaechlich auftreten.
 
+### Phase 4: Active Edge-Seeking
+
+Phase 4 nutzt diese Sichtbarkeit jetzt, um fuer sparse oder isolierte
+Zielprofile sehr vorsichtige Explorationssignale direkt in der Engine zu
+aktivieren.
+
+Wichtig:
+
+- die Logik sitzt weiterhin in `_meta_transfer_candidates()` und nicht
+  im Planner
+- Edge-Seeking wird nur fuer sparse Zielprofile aktiviert
+- proven donors oder bereits moderat/stark belegte Kanten schalten diese
+  Exploration aus
+- die Exploration ersetzt bestehende Steering-Signale nicht, sondern
+  ergaenzt sie kontrolliert
+
+Aktuelle Phase-4-Signale:
+
+- `probe_insufficient_history_for_sparse_target`
+  hebt datenarme, aber plausibel aehnliche Kanten vorsichtig an
+- `recover_weak_edge_for_sparse_target`
+  gibt bereits schwach bewerteten Kanten in echten Isolationslagen einen
+  begrenzten Teil ihrer Chance zurueck
+
+Diese Signale werden jetzt sichtbar in:
+
+- `EnrichedPathEvaluation.steering_edge_seeking_applied`
+- `DecisionRecord.steering_edge_seeking_applied`
+- `CalibrationContext.steering_edge_seeking_applied`
+- `meta_transfer_source_steering_factors[*].edge_seeking_applied`
+- `meta_transfer_source_steering_factors[*].edge_seeking_multiplier`
+- `meta_transfer_source_steering_factors[*].edge_seeking_reason`
+
+Und sie erscheinen ebenfalls im Steering-Log:
+
+- `GET /api/v1/admin/calibration/steering-log`
+  kann jetzt auch edge-seeking-getriebene Decisions sichtbar machen
+  und entsprechend filtern
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -295,5 +334,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Transferquellen fuer
   welches Profil langfristig wirklich hilfreich sind
-- echte Folgeaktionen auf Basis der Steering-Observationen, zum
-  Beispiel Active Edge-Seeking fuer isolierte Profile
+- feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
+  des jetzt vorhandenen Edge-Seeking- und Steering-Logs

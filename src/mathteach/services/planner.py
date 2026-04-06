@@ -915,6 +915,9 @@ def _log_path_decision(
         steering_proven_donor_boost_applied=(
             enriched_paths[0].steering_proven_donor_boost_applied
         ),
+        steering_edge_seeking_applied=(
+            enriched_paths[0].steering_edge_seeking_applied
+        ),
         meta_transfer_source_steering_factors=(
             enriched_paths[0].meta_transfer_source_steering_factors
         ),
@@ -1093,6 +1096,11 @@ def _build_calibration_context(
         ),
         steering_proven_donor_boost_applied=(
             selected_path.steering_proven_donor_boost_applied
+            if selected_path is not None
+            else False
+        ),
+        steering_edge_seeking_applied=(
+            selected_path.steering_edge_seeking_applied
             if selected_path is not None
             else False
         ),

@@ -2,6 +2,46 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Active-Edge-Seeking 2026-04-06
+
+Die H.9.2-Steuerung kann jetzt bei sparsamen oder isolierten
+Zielprofilen gezielt explorativer werden, statt datenarme oder bereits
+abgewertete Kanten nur stumpf zu vermeiden.
+
+Wichtigste Konsequenzen:
+
+- `_meta_transfer_candidates()` arbeitet jetzt zweistufig: erst werden
+  Kandidaten diagnostisch gesammelt, danach wird nur fuer wirklich sparse
+  Zielprofile entschieden, ob Edge-Seeking aktiv werden soll
+- datenarme Kanten mit `insufficient_history` koennen in solchen Faellen
+  einen kontrollierten Explorations-Boost erhalten
+- bereits als schwach erkannte Kanten koennen fuer sparse Zielprofile
+  teilweise wiederhergestellt werden, statt ausschliesslich die volle
+  Weak-edge-Penalty zu tragen
+- proven donors oder bereits moderat/stark belegte Kanten unterdruecken
+  Edge-Seeking; die Exploration greift also nicht global, sondern nur in
+  echten Isolationslagen
+- die neuen Signale laufen bis in `EnrichedPathEvaluation`,
+  `DecisionRecord`, `CalibrationContext` und den Steering-Log durch
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- Steering-/Observability-Zielsuite: `19 passed, 1 warning`
+- H.9-/API-Zielsuite: `84 passed, 1 warning`
+- Full-Suite: `222 passed, 1 warning`
+
 ## Phase-H.9.2-Steering-Observability 2026-04-06
 
 Die H.9.2-Steuerung ist jetzt nicht mehr nur intern auditierbar,

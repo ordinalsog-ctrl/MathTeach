@@ -160,6 +160,58 @@ def test_steering_log_query_filters_boosted_donors() -> None:
     assert entries[0].observed_outcome_score is not None
 
 
+def test_steering_log_query_filters_edge_seeking_decisions() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    edge_seeking_record = _decision_with_steering(
+        decision_id="edge_seeking",
+        timestamp=now,
+        session_id="session_edge",
+        source_id="edge_donor",
+        adaptive_reason="insufficient_history",
+        adaptive_cap=0.3,
+    ).model_copy(
+        update={
+            "steering_edge_seeking_applied": True,
+            "meta_transfer_source_steering_factors": {
+                "edge_donor": {
+                    "weak_edge_penalty_applied": False,
+                    "proven_donor_boost_applied": False,
+                    "edge_seeking_applied": True,
+                    "edge_seeking_multiplier": 1.15,
+                    "edge_seeking_reason": "probe_insufficient_history_for_sparse_target",
+                    "adaptive_transfer_cap": 0.3,
+                    "adaptive_transfer_cap_reason": "insufficient_history",
+                }
+            },
+        }
+    )
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="plain_caps_only",
+            timestamp=now - timedelta(minutes=5),
+            session_id="session_plain",
+            adaptive_reason="moderate",
+            adaptive_cap=0.35,
+        ),
+        edge_seeking_record,
+    ]
+
+    query = SteeringLogQuery(engine)
+    entries = query.get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=True,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].decision_id == "edge_seeking"
+    assert entries[0].edge_seeking_applied is True
+    assert entries[0].edge_seeking_factor == 1.15
+    assert entries[0].edge_seeking_sources == ["edge_donor"]
+
+
 def test_adaptive_caps_trends_aggregates_by_reason() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
@@ -256,6 +308,22 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
             adaptive_reason="strong_edge",
             adaptive_cap=0.45,
             observed_outcome_score=0.85,
+        ).model_copy(
+            update={
+                "steering_edge_seeking_applied": True,
+                "meta_transfer_source_steering_factors": {
+                    "api_donor_strong": {
+                        "weak_edge_penalty_applied": False,
+                        "proven_donor_boost_applied": True,
+                        "boost_multiplier": 1.3,
+                        "edge_seeking_applied": True,
+                        "edge_seeking_multiplier": 1.15,
+                        "edge_seeking_reason": "probe_insufficient_history_for_sparse_target",
+                        "adaptive_transfer_cap": 0.45,
+                        "adaptive_transfer_cap_reason": "strong_edge",
+                    }
+                },
+            }
         ),
     ]
     engine.force_save()
@@ -278,6 +346,7 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
     assert log_payload["total_count"] == 2
     assert log_payload["entries"][0]["adaptive_cap_distribution"]
     assert "meta_transfer_source_adaptive_caps" in log_payload["entries"][0]
+    assert "edge_seeking_applied" in log_payload["entries"][0]
     assert "weak_edge" in trends_payload["trends"]
     assert "strong_edge" in trends_payload["trends"]
     assert trends_payload["trends"]["weak_edge"]["avg_cap"] == 0.2

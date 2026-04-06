@@ -422,6 +422,7 @@ class DecisionRecord(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
+    steering_edge_seeking_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],
@@ -463,6 +464,7 @@ class CalibrationContext(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
+    steering_edge_seeking_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],
@@ -498,6 +500,9 @@ class SteeringLogEntry(BaseModel):
     proven_donor_boost_applied: bool = False
     proven_donor_boost_sources: list[str] = Field(default_factory=list)
     proven_donor_boost_factor: float | None = Field(default=None, ge=0.0)
+    edge_seeking_applied: bool = False
+    edge_seeking_sources: list[str] = Field(default_factory=list)
+    edge_seeking_factor: float | None = Field(default=None, ge=0.0)
     adaptive_cap_distribution: dict[str, dict[str, int | float]] = Field(
         default_factory=dict,
         description=(
@@ -577,6 +582,7 @@ class EnrichedPathEvaluation(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
+    steering_edge_seeking_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],

@@ -1,10 +1,14 @@
+from datetime import UTC, datetime
+
 import pytest
 
 from mathteach.models import (
     BlockSequenceIntent,
     BlockType,
+    DecisionRecord,
     EvidenceCombinationPattern,
     MetaTransferHistoryEntry,
+    OutcomeMetrics,
     SessionRequest,
 )
 from mathteach.services.calibration_engine import CalibrationEngine
@@ -28,6 +32,56 @@ def _steering_request() -> SessionRequest:
             {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
             {"evidence": ["rapid_success", "pattern_recognized", "transfer_success"]},
         ],
+    )
+
+
+def _family_policy_history_record(
+    *,
+    decision_id: str,
+    source_id: str,
+    source_support_profile: str,
+    target_id: str,
+    target_support_profile: str,
+    observed_outcome_score: float,
+) -> DecisionRecord:
+    return DecisionRecord(
+        decision_id=decision_id,
+        timestamp=datetime.now(UTC),
+        session_id=f"session_{decision_id}",
+        current_block_type=BlockType.WORKED_EXAMPLE,
+        selected_block_type=BlockType.WORKED_EXAMPLE,
+        evidence_patterns=[EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS],
+        active_supports=["adhd_aware_support"],
+        sequence_intent=BlockSequenceIntent.MASTERY_PATH,
+        available_candidate_paths=[decision_id],
+        chosen_path_id=decision_id,
+        chosen_path_score=0.72,
+        chosen_path_score_breakdown={"heuristic": 0.72},
+        calibration_profile_id=target_id,
+        calibration_stratification_dimensions={
+            "support_profile": target_support_profile,
+        },
+        meta_transfer_strength=0.3,
+        meta_transfer_source_profiles=[source_id],
+        meta_transfer_source_shares={source_id: 1.0},
+        meta_transfer_weight_delta=0.08,
+        meta_transfer_was_effective=True,
+        meta_transfer_source_steering_factors={
+            source_id: {
+                "source_support_profile": source_support_profile,
+                "target_support_profile": target_support_profile,
+                "pair_effectiveness": observed_outcome_score,
+                "edge_transfer_policy": "neutral_edge",
+                "edge_transfer_policy_multiplier": 1.0,
+            }
+        },
+        observed_outcome=OutcomeMetrics(
+            mastery_gain_estimate=observed_outcome_score,
+            error_rate_trend="degrading",
+            observed_engagement="low",
+            accuracy_estimate=observed_outcome_score,
+        ),
+        outcome_timestamp=datetime.now(UTC),
     )
 
 
@@ -435,6 +489,164 @@ def test_low_effectiveness_edge_gets_cautious_policy() -> None:
     assert cautious_candidate[4] < cautious_candidate[3]["final_candidate_strength"]
 
 
+def test_same_family_preference_policy_boosts_nonweak_same_family_edge() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_same_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_same_family.confidence_score = 0.8
+    donor_same_family.outcome_count = 20
+
+    for index in range(4):
+        target_profile.meta_transfer_history.append(
+            MetaTransferHistoryEntry(
+                target_profile_id=target_profile.profile_id,
+                source_profile_ids=[donor_same_family.profile_id],
+                decision_id=f"same_family_history_{index}",
+                transfer_strength=0.2,
+                outcome_score=0.6,
+                similarity_by_source={donor_same_family.profile_id: 0.68},
+                source_shares={donor_same_family.profile_id: 1.0},
+                effective_weight_delta=0.06,
+            )
+        )
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    same_family_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_same_family.profile_id
+    )
+    assert same_family_candidate[3]["family_transfer_policy"] == "same_family_preference"
+    assert same_family_candidate[3]["family_transfer_policy_multiplier"] == pytest.approx(
+        1.02,
+        abs=1e-6,
+    )
+    assert same_family_candidate[4] > same_family_candidate[3][
+        "policy_adjusted_candidate_strength"
+    ]
+
+
+def test_guarded_family_pair_policy_downweights_historically_weak_family_pair() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_cross_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_cross_family.confidence_score = 0.8
+    donor_cross_family.outcome_count = 20
+
+    engine.decision_log = [
+            _family_policy_history_record(
+                decision_id=f"weak_family_pair_{index}",
+                source_id=f"historical_donor_{index}",
+                source_support_profile="adhd_aware_support+language_sensitive_support",
+                target_id=f"historical_target_{index}",
+                target_support_profile="adhd_aware_support",
+                observed_outcome_score=0.12,
+            )
+        for index in range(3)
+    ]
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    guarded_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_cross_family.profile_id
+    )
+    assert guarded_candidate[3]["family_transfer_policy"] == "guarded_family_pair"
+    assert guarded_candidate[3]["family_transfer_policy_multiplier"] == pytest.approx(
+        0.93,
+        abs=1e-6,
+    )
+    assert guarded_candidate[4] < guarded_candidate[3][
+        "policy_adjusted_candidate_strength"
+    ]
+
+
+def test_cross_family_probe_guard_applies_to_sparse_cross_family_probe() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    target_profile.outcome_count = 1
+    target_profile.confidence_score = 0.0
+
+    donor_cross_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_cross_family.confidence_score = 0.8
+    donor_cross_family.outcome_count = 20
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    probe_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_cross_family.profile_id
+    )
+    assert probe_candidate[3]["edge_seeking_applied"] is True
+    assert probe_candidate[3]["family_transfer_policy"] == "cross_family_probe_guard"
+    assert probe_candidate[3]["family_transfer_policy_multiplier"] == pytest.approx(
+        0.95,
+        abs=1e-6,
+    )
+    assert (
+        probe_candidate[3]["source_family"]
+        == "adhd_aware_support+language_sensitive_support"
+    )
+    assert probe_candidate[3]["target_family"] == "adhd_aware_support"
+
+
 def test_planner_and_decision_record_expose_h92_steering_signals() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=1)
 
@@ -549,6 +761,62 @@ def test_runtime_context_exposes_trusted_edge_policy_distribution() -> None:
     )
     assert engine.decision_log[-1].steering_edge_policy_applied is True
     assert donor_profile.profile_id in engine.decision_log[-1].meta_transfer_source_adaptive_caps
+
+
+def test_planner_and_decision_record_expose_phase7_family_policy_signals() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=1)
+
+    initial_plan = build_teaching_plan(_steering_request(), calibration_engine=engine)
+    assert initial_plan.calibration_context is not None
+    target_profile_id = initial_plan.calibration_context.calibration_profile_id
+    assert target_profile_id is not None
+
+    target_profile = engine.calibration_profiles[target_profile_id]
+    donor_profile = engine._get_or_create_profile(
+        {
+            **target_profile.stratification_dimensions,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": (
+                BlockType.GUIDED_PRACTICE.value
+                if target_profile.stratification_dimensions.get("block_type")
+                != BlockType.GUIDED_PRACTICE.value
+                else BlockType.CONCEPT_CHECK.value
+            ),
+        }
+    )
+    donor_profile.confidence_score = 0.8
+    donor_profile.outcome_count = 24
+
+    for index in range(4):
+        target_profile.meta_transfer_history.append(
+            MetaTransferHistoryEntry(
+                target_profile_id=target_profile.profile_id,
+                source_profile_ids=[donor_profile.profile_id],
+                decision_id=f"family_policy_live_{index}",
+                transfer_strength=0.2,
+                outcome_score=0.6,
+                similarity_by_source={donor_profile.profile_id: 0.68},
+                source_shares={donor_profile.profile_id: 1.0},
+                effective_weight_delta=0.06,
+            )
+        )
+
+    plan = build_teaching_plan(_steering_request(), calibration_engine=engine)
+
+    assert plan.calibration_context is not None
+    assert plan.enriched_paths[0].steering_family_policy_applied is True
+    assert plan.calibration_context.steering_family_policy_applied is True
+    assert (
+        plan.calibration_context.family_policy_distribution["same_family_preference"]
+        >= 1
+    )
+    assert (
+        plan.calibration_context.meta_transfer_source_steering_factors[donor_profile.profile_id][
+            "family_transfer_policy"
+        ]
+        == "same_family_preference"
+    )
+    assert engine.decision_log[-1].steering_family_policy_applied is True
 
 
 def test_planner_and_decision_record_expose_phase4_edge_seeking_signals() -> None:

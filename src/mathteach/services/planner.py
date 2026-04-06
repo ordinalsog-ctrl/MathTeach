@@ -921,6 +921,9 @@ def _log_path_decision(
         steering_edge_policy_applied=(
             enriched_paths[0].steering_edge_policy_applied
         ),
+        steering_family_policy_applied=(
+            enriched_paths[0].steering_family_policy_applied
+        ),
         meta_transfer_source_steering_factors=(
             enriched_paths[0].meta_transfer_source_steering_factors
         ),
@@ -1011,6 +1014,16 @@ def _edge_policy_distribution(
     grouped: dict[str, int] = {}
     for factors in steering_factors_by_source.values():
         policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
+        grouped[policy] = grouped.get(policy, 0) + 1
+    return grouped
+
+
+def _family_policy_distribution(
+    steering_factors_by_source: dict[str, dict[str, float | bool | int | str]],
+) -> dict[str, int]:
+    grouped: dict[str, int] = {}
+    for factors in steering_factors_by_source.values():
+        policy = str(factors.get("family_transfer_policy", "neutral_family_policy"))
         grouped[policy] = grouped.get(policy, 0) + 1
     return grouped
 
@@ -1122,6 +1135,11 @@ def _build_calibration_context(
             if selected_path is not None
             else False
         ),
+        steering_family_policy_applied=(
+            selected_path.steering_family_policy_applied
+            if selected_path is not None
+            else False
+        ),
         meta_transfer_source_steering_factors=(
             selected_path.meta_transfer_source_steering_factors
             if selected_path is not None
@@ -1141,6 +1159,13 @@ def _build_calibration_context(
         ),
         edge_policy_distribution=(
             _edge_policy_distribution(
+                selected_path.meta_transfer_source_steering_factors
+            )
+            if selected_path is not None
+            else {}
+        ),
+        family_policy_distribution=(
+            _family_policy_distribution(
                 selected_path.meta_transfer_source_steering_factors
             )
             if selected_path is not None

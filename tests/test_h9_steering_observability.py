@@ -37,6 +37,8 @@ def _decision_with_steering(
     adaptive_cap: float = 0.3,
     edge_policy: str | None = None,
     edge_policy_multiplier: float | None = None,
+    family_policy: str | None = None,
+    family_policy_multiplier: float | None = None,
     observed_outcome_score: float | None = None,
 ) -> DecisionRecord:
     observed_outcome = (
@@ -74,6 +76,9 @@ def _decision_with_steering(
         steering_weak_edge_penalty_applied=weak_penalty,
         steering_proven_donor_boost_applied=proven_boost,
         steering_edge_policy_applied=edge_policy not in (None, "neutral_edge"),
+        steering_family_policy_applied=(
+            family_policy not in (None, "neutral_family_policy")
+        ),
         meta_transfer_source_steering_factors={
             source_id: {
                 "weak_edge_penalty_applied": weak_penalty,
@@ -91,6 +96,23 @@ def _decision_with_steering(
                     if edge_policy_multiplier is not None
                     else 1.0
                 ),
+                "family_transfer_policy": family_policy or "neutral_family_policy",
+                "family_transfer_policy_reason": (
+                    "test_family_policy"
+                    if family_policy not in (None, "neutral_family_policy")
+                    else "no_additional_family_policy"
+                ),
+                "family_transfer_policy_multiplier": (
+                    family_policy_multiplier
+                    if family_policy_multiplier is not None
+                    else 1.0
+                ),
+                "source_family": source_support_profile,
+                "target_family": target_support_profile,
+                "family_pair_effectiveness": (
+                    observed_outcome_score if observed_outcome_score is not None else 0.0
+                ),
+                "family_pair_samples": 4,
                 "source_support_profile": source_support_profile,
                 "target_support_profile": target_support_profile,
                 "adaptive_transfer_cap": adaptive_cap,
@@ -274,6 +296,48 @@ def test_steering_log_query_filters_edge_policy_decisions() -> None:
     assert entries[0].edge_policy_distribution["trusted_edge"] == 1
 
 
+def test_steering_log_query_filters_family_policy_decisions() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="neutral_family",
+            timestamp=now - timedelta(minutes=5),
+            session_id="session_plain",
+            adaptive_reason="moderate",
+            adaptive_cap=0.35,
+        ),
+        _decision_with_steering(
+            decision_id="family_policy",
+            timestamp=now,
+            session_id="session_family",
+            source_id="family_donor",
+            source_support_profile="adhd_aware_support",
+            target_support_profile="adhd_aware_support",
+            family_policy="same_family_preference",
+            family_policy_multiplier=1.02,
+            observed_outcome_score=0.6,
+        ),
+    ]
+
+    query = SteeringLogQuery(engine)
+    entries = query.get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=False,
+        include_edge_policy=False,
+        include_family_policy=True,
+    )
+
+    assert len(entries) == 1
+    assert entries[0].decision_id == "family_policy"
+    assert entries[0].family_policy_applied is True
+    assert entries[0].family_policy_factor == 1.02
+    assert entries[0].family_policy_sources == ["family_donor"]
+    assert entries[0].family_policy_distribution == {"same_family_preference": 1}
+
+
 def test_steering_log_includes_profile_families() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
@@ -446,6 +510,10 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
             adaptive_cap=0.2,
             edge_policy="guarded_edge",
             edge_policy_multiplier=0.9,
+            family_policy="guarded_family_pair",
+            family_policy_multiplier=0.93,
+            source_support_profile="language_sensitive_support",
+            target_support_profile="adhd_aware_support",
         ),
         _decision_with_steering(
             decision_id="api_strong",
@@ -457,11 +525,14 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
             adaptive_cap=0.45,
             edge_policy="trusted_edge",
             edge_policy_multiplier=1.05,
+            family_policy="same_family_preference",
+            family_policy_multiplier=1.02,
             observed_outcome_score=0.85,
         ).model_copy(
             update={
                 "steering_edge_seeking_applied": True,
                 "steering_edge_policy_applied": True,
+                "steering_family_policy_applied": True,
                 "meta_transfer_source_steering_factors": {
                     "api_donor_strong": {
                         "weak_edge_penalty_applied": False,
@@ -473,6 +544,15 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
                         "edge_transfer_policy": "trusted_edge",
                         "edge_transfer_policy_reason": "prefer_proven_effective_edge",
                         "edge_transfer_policy_multiplier": 1.05,
+                        "family_transfer_policy": "same_family_preference",
+                        "family_transfer_policy_reason": "prefer_same_support_family_with_nonweak_pair",
+                        "family_transfer_policy_multiplier": 1.02,
+                        "source_support_profile": "adhd_aware_support",
+                        "target_support_profile": "adhd_aware_support",
+                        "source_family": "adhd_aware_support",
+                        "target_family": "adhd_aware_support",
+                        "family_pair_effectiveness": 0.85,
+                        "family_pair_samples": 4,
                         "adaptive_transfer_cap": 0.45,
                         "adaptive_transfer_cap_reason": "strong_edge",
                     }
@@ -509,6 +589,8 @@ def test_steering_observability_api_endpoints_return_valid_schema(tmp_path) -> N
     assert "edge_seeking_applied" in log_payload["entries"][0]
     assert "edge_policy_applied" in log_payload["entries"][0]
     assert "edge_policy_distribution" in log_payload["entries"][0]
+    assert "family_policy_applied" in log_payload["entries"][0]
+    assert "family_policy_distribution" in log_payload["entries"][0]
     assert "transfer_target_profile_family" in log_payload["entries"][0]
     assert "transfer_source_profile_families" in log_payload["entries"][0]
     assert "weak_edge" in trends_payload["trends"]

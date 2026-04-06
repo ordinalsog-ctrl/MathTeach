@@ -408,6 +408,63 @@ Damit lassen sich jetzt Fragen beantworten wie:
 - ob sich der durchschnittliche Policy-Multiplikator bestimmter
   Familienpaare im Zeitverlauf stabilisiert
 
+### Phase 7: Live Family Transfer Policies
+
+Phase 7 nutzt die in Phase 6 sichtbaren Profilfamilien jetzt auch live
+in der Engine. Die Family-Logik bleibt absichtlich eine leichte
+Orchestrierungsschicht ueber bestehender Edge-History, Edge-Policy und
+Adaptive-Cap-Logik.
+
+Wichtig:
+
+- es wird weiterhin kein zweites Family-Store-Modell eingefuehrt
+- historische Family-Signale werden aus `DecisionRecord`,
+  `meta_transfer_source_steering_factors` und beobachteten Outcomes
+  rekonstruiert
+- die live wirksame Family-Policy arbeitet damit auf derselben
+  Single-Source-of-Truth wie die bisherigen H.9.2-Phasen
+
+Neue live wirksame Family-Policies:
+
+- `trusted_family_pair`
+  fuer historisch starke Family-Pairs mit genuegend Samples
+- `same_family_preference`
+  fuer nicht-schwache Donor-Ziel-Paare innerhalb derselben
+  Support-Familie
+- `guarded_family_pair`
+  fuer historisch schwache Family-Pairs
+- `cross_family_probe_guard`
+  fuer sparse Cross-family-Probes unter Edge-Seeking
+- `neutral_family_policy`
+  wenn keine zusaetzliche Family-Regel greift
+
+Diese Signale erscheinen jetzt pro Source in
+`meta_transfer_source_steering_factors[*]`:
+
+- `family_transfer_policy`
+- `family_transfer_policy_reason`
+- `family_transfer_policy_multiplier`
+- `source_family`
+- `target_family`
+- `family_pair_effectiveness`
+- `family_pair_samples`
+- `family_policy_adjusted_candidate_strength`
+
+Und sie laufen weiter bis in Runtime und Admin-Sicht:
+
+- `EnrichedPathEvaluation.steering_family_policy_applied`
+- `CalibrationContext.steering_family_policy_applied`
+- `CalibrationContext.family_policy_distribution`
+- `DecisionRecord.steering_family_policy_applied`
+- `SteeringLogEntry.family_policy_applied`
+- `SteeringLogEntry.family_policy_sources`
+- `SteeringLogEntry.family_policy_factor`
+- `SteeringLogEntry.family_policy_distribution`
+
+Der Steering-Log kann jetzt auch nach Family-Policies gefiltert werden:
+
+- `GET /api/v1/admin/calibration/steering-log?include_family_policy=true`
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -419,6 +476,8 @@ Noch nicht enthalten:
 - separate Meta-Gewichte pro Dimension
 - adaptive Transfer-Raten ueber Zeit
 - automatische Folgeaktionen auf Basis dieser Steering-Sicht
+- persistente Family-Snapshots fuer spaeter unveraenderliche historische
+  Family-Analysen
 
 ## Naechster logischer Ausbau
 
@@ -427,7 +486,7 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Policy-Typen fuer
   welche Profilfamilien langfristig wirklich hilfreich sind
-- live wirksame Familienregeln auf Basis der jetzt sichtbaren
-  Policy-Trends
+- stabile historische Family-Snapshots, falls spaetere Phasen auf
+  unveraenderliche Family-Analysen bauen sollen
 - feinere Probe-Policies und Informationsgewinn-Heuristiken auf Basis
   des jetzt vorhandenen Edge-Seeking-, Policy- und Steering-Logs

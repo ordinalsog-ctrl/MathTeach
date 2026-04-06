@@ -124,6 +124,13 @@ Heute bereits im Code:
   `source_family`, `target_family` oder `family_pair` aggregieren; der
   Steering-Log traegt zusaetzlich Source-/Target-Familien pro Decision
   und macht Policy-Muster zwischen Profilfamilien sichtbar
+- H.9.2 Live Family Transfer Policies, Phase 7:
+  die Engine nutzt die sichtbaren Profilfamilien jetzt auch live bei
+  der Donor-Auswahl; sie unterscheidet zwischen
+  `trusted_family_pair`, `same_family_preference`,
+  `guarded_family_pair` und `cross_family_probe_guard`, schreibt diese
+  Regeln pro Source in die Steering-Faktoren und zeigt ihren Mix in
+  Runtime und Steering-Log
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -132,13 +139,14 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `227 passed, 1 warning`
+- `pytest -q` -> `232 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die naechste Ausbaustufe fuer live wirksame familienspezifische
-Transferpolitik auf Basis des jetzt sichtbaren Trend-Layers, etwa
-familienbezogene Donor-Ziel-Regeln, staerker regulierte Probe-Policies
-oder Informationsgewinn-Heuristiken.
+die naechste Ausbaustufe fuer stabilere historische
+Familien-Interpretation und feinere Policy-Regeln, etwa persistente
+Family-Snapshots fuer spaetere Langzeitanalysen, familiare
+Informationsgewinn-Heuristiken oder strengere Probe-Budgets pro
+Family-Pair.
 
 ## Repository-Inhalt
 

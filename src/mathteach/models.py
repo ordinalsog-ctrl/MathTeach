@@ -424,6 +424,7 @@ class DecisionRecord(BaseModel):
     steering_proven_donor_boost_applied: bool = False
     steering_edge_seeking_applied: bool = False
     steering_edge_policy_applied: bool = False
+    steering_family_policy_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],
@@ -467,6 +468,7 @@ class CalibrationContext(BaseModel):
     steering_proven_donor_boost_applied: bool = False
     steering_edge_seeking_applied: bool = False
     steering_edge_policy_applied: bool = False
+    steering_family_policy_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],
@@ -495,6 +497,14 @@ class CalibrationContext(BaseModel):
             "historical aggregate."
         ),
     )
+    family_policy_distribution: dict[str, int] = Field(
+        default_factory=dict,
+        description=(
+            "Snapshot count of per-source family-transfer policies for the "
+            "currently selected path only. This resets for each new plan and "
+            "is not a historical aggregate."
+        ),
+    )
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
 
@@ -515,9 +525,13 @@ class SteeringLogEntry(BaseModel):
     edge_seeking_applied: bool = False
     edge_seeking_sources: list[str] = Field(default_factory=list)
     edge_seeking_factor: float | None = Field(default=None, ge=0.0)
+    family_policy_applied: bool = False
+    family_policy_sources: list[str] = Field(default_factory=list)
+    family_policy_factor: float | None = Field(default=None, ge=0.0)
     edge_policy_applied: bool = False
     edge_policy_sources: list[str] = Field(default_factory=list)
     edge_policy_distribution: dict[str, int] = Field(default_factory=dict)
+    family_policy_distribution: dict[str, int] = Field(default_factory=dict)
     adaptive_cap_distribution: dict[str, dict[str, int | float]] = Field(
         default_factory=dict,
         description=(
@@ -611,6 +625,7 @@ class EnrichedPathEvaluation(BaseModel):
     steering_proven_donor_boost_applied: bool = False
     steering_edge_seeking_applied: bool = False
     steering_edge_policy_applied: bool = False
+    steering_family_policy_applied: bool = False
     meta_transfer_source_steering_factors: dict[
         str,
         dict[str, float | bool | int | str],
@@ -624,6 +639,7 @@ class EnrichedPathEvaluation(BaseModel):
         default_factory=dict
     )
     edge_policy_distribution: dict[str, int] = Field(default_factory=dict)
+    family_policy_distribution: dict[str, int] = Field(default_factory=dict)
     calibration_weights_used: dict[str, float] = Field(default_factory=dict)
     score_breakdown: dict[str, float] = Field(default_factory=dict)
     goal_alignment_explanation: str = ""

@@ -2,6 +2,49 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Live-Family-Transfer-Policies 2026-04-06
+
+Die Family-/Trend-Sicht aus Phase 6 wirkt jetzt auch live in der
+Engine. Donor-Ziel-Kanten werden nicht mehr nur nach Edge-History und
+Edge-Policy bewertet, sondern zusaetzlich entlang sichtbarer
+Profilfamilien gesteuert.
+
+Wichtigste Konsequenzen:
+
+- `_meta_transfer_candidates()` nutzt jetzt eine leichte
+  Family-Policy-Schicht auf Basis der bestehenden `decision_log`- und
+  Edge-History
+- neue live wirksame Family-Policies:
+  `trusted_family_pair`, `same_family_preference`,
+  `guarded_family_pair`, `cross_family_probe_guard`
+- dieselbe Steuerung bleibt Single-Source-of-Truth in der Engine und
+  fuehrt keinen zweiten Family-Store ein
+- die neuen Family-Signale laufen bis in `EnrichedPathEvaluation`,
+  `DecisionRecord`, `CalibrationContext` und den Admin-Steering-Log
+  durch
+- `GET /api/v1/admin/calibration/steering-log` kann jetzt auch nach
+  `include_family_policy=true` gefiltert werden
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/services/calibration_observability.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_observability.py)
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `19 passed, 1 warning`
+- Steering-Observability-Zielsuite: `10 passed, 1 warning`
+- H.9-/API-Zielsuite: `94 passed, 1 warning`
+- Full-Suite: `232 passed, 1 warning`
+
 ## Phase-H.9.2-Policy-Trends-and-Profile-Families 2026-04-06
 
 Die H.9.2-Policy-Schicht ist jetzt nicht mehr nur pro Decision

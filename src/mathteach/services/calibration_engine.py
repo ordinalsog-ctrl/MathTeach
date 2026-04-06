@@ -47,6 +47,14 @@ META_TRANSFER_EDGE_POLICY_EXPLORE_MULTIPLIER = 1.02
 META_TRANSFER_EDGE_POLICY_RECOVERY_MULTIPLIER = 0.98
 META_TRANSFER_EDGE_POLICY_CAUTIOUS_MULTIPLIER = 0.96
 META_TRANSFER_EDGE_POLICY_GUARDED_MULTIPLIER = 0.9
+META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES = 3
+META_TRANSFER_FAMILY_POLICY_STRONG_EFFECTIVENESS_THRESHOLD = 0.6
+META_TRANSFER_FAMILY_POLICY_WEAK_EFFECTIVENESS_THRESHOLD = 0.2
+META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MIN_EFFECTIVENESS = 0.5
+META_TRANSFER_FAMILY_POLICY_TRUSTED_MULTIPLIER = 1.04
+META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MULTIPLIER = 1.02
+META_TRANSFER_FAMILY_POLICY_GUARDED_MULTIPLIER = 0.93
+META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PROBE_MULTIPLIER = 0.95
 
 
 def _estimate_mastery_gain(
@@ -301,6 +309,16 @@ def _edge_policy_distribution(
     distribution: dict[str, int] = {}
     for factors in steering_factors_by_source.values():
         policy = str(factors.get("edge_transfer_policy", "neutral_edge"))
+        distribution[policy] = distribution.get(policy, 0) + 1
+    return distribution
+
+
+def _family_policy_distribution(
+    steering_factors_by_source: dict[str, dict[str, float | bool | int | str]],
+) -> dict[str, int]:
+    distribution: dict[str, int] = {}
+    for factors in steering_factors_by_source.values():
+        policy = str(factors.get("family_transfer_policy", "neutral_family_policy"))
         distribution[policy] = distribution.get(policy, 0) + 1
     return distribution
 
@@ -598,6 +616,22 @@ class CalibrationEngine:
                 ],
                 "policy_adjusted_candidate_strength": steering_factors[
                     "policy_adjusted_candidate_strength"
+                ],
+                "family_transfer_policy": steering_factors["family_transfer_policy"],
+                "family_transfer_policy_reason": steering_factors[
+                    "family_transfer_policy_reason"
+                ],
+                "family_transfer_policy_multiplier": steering_factors[
+                    "family_transfer_policy_multiplier"
+                ],
+                "source_family": steering_factors["source_family"],
+                "target_family": steering_factors["target_family"],
+                "family_pair_effectiveness": steering_factors[
+                    "family_pair_effectiveness"
+                ],
+                "family_pair_samples": steering_factors["family_pair_samples"],
+                "family_policy_adjusted_candidate_strength": steering_factors[
+                    "family_policy_adjusted_candidate_strength"
                 ],
                 "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                     candidate.profile_id,
@@ -919,6 +953,7 @@ class CalibrationEngine:
                 steering_proven_donor_boost_applied,
                 steering_edge_seeking_applied,
                 steering_edge_policy_applied,
+                steering_family_policy_applied,
                 meta_transfer_source_steering_factors,
                 meta_transfer_source_adaptive_caps,
             ) = self._effective_weights_for_profile_chain(
@@ -967,6 +1002,9 @@ class CalibrationEngine:
                         "steering_edge_policy_applied": (
                             steering_edge_policy_applied
                         ),
+                        "steering_family_policy_applied": (
+                            steering_family_policy_applied
+                        ),
                         "meta_transfer_source_steering_factors": (
                             meta_transfer_source_steering_factors
                         ),
@@ -974,6 +1012,9 @@ class CalibrationEngine:
                             meta_transfer_source_adaptive_caps
                         ),
                         "edge_policy_distribution": _edge_policy_distribution(
+                            meta_transfer_source_steering_factors
+                        ),
+                        "family_policy_distribution": _family_policy_distribution(
                             meta_transfer_source_steering_factors
                         ),
                         "calibration_weights_used": {
@@ -1127,6 +1168,24 @@ class CalibrationEngine:
                     ],
                     "policy_adjusted_candidate_strength": steering_factors[
                         "policy_adjusted_candidate_strength"
+                    ],
+                    "family_transfer_policy": steering_factors[
+                        "family_transfer_policy"
+                    ],
+                    "family_transfer_policy_reason": steering_factors[
+                        "family_transfer_policy_reason"
+                    ],
+                    "family_transfer_policy_multiplier": steering_factors[
+                        "family_transfer_policy_multiplier"
+                    ],
+                    "source_family": steering_factors["source_family"],
+                    "target_family": steering_factors["target_family"],
+                    "family_pair_effectiveness": steering_factors[
+                        "family_pair_effectiveness"
+                    ],
+                    "family_pair_samples": steering_factors["family_pair_samples"],
+                    "family_policy_adjusted_candidate_strength": steering_factors[
+                        "family_policy_adjusted_candidate_strength"
                     ],
                     "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
                         candidate.profile_id,
@@ -1498,6 +1557,174 @@ class CalibrationEngine:
         )
         return float(cap_info["cap"]), str(cap_info["reason"])
 
+    def _profile_family_label(self, support_profile: str | None) -> str:
+        return support_profile or "generic"
+
+    def _target_profile_family_for_record(self, record: DecisionRecord) -> str:
+        if record.calibration_profile_id is not None:
+            target_profile = self.get_profile(record.calibration_profile_id)
+            if target_profile is not None:
+                return self._profile_family_label(
+                    target_profile.stratification_dimensions.get("support_profile")
+                )
+        return self._profile_family_label(
+            record.calibration_stratification_dimensions.get("support_profile")
+        )
+
+    def _source_profile_family_for_record(
+        self,
+        record: DecisionRecord,
+        source_profile_id: str,
+    ) -> str:
+        source_factors = record.meta_transfer_source_steering_factors.get(
+            source_profile_id,
+            {},
+        )
+        if "source_support_profile" in source_factors:
+            return self._profile_family_label(
+                str(source_factors.get("source_support_profile")) or None
+            )
+        source_profile = self.get_profile(source_profile_id)
+        if source_profile is None:
+            return "generic"
+        return self._profile_family_label(
+            source_profile.stratification_dimensions.get("support_profile")
+        )
+
+    def _family_pair_effectiveness_history(
+        self,
+        source_family: str,
+        target_family: str,
+    ) -> list[float]:
+        outcomes: list[float] = []
+        for record in self.decision_log:
+            if (
+                record.observed_outcome is None
+                or not record.meta_transfer_was_effective
+                or not record.meta_transfer_source_profiles
+            ):
+                continue
+            if self._target_profile_family_for_record(record) != target_family:
+                continue
+
+            outcome_score = self._compute_outcome_score(record.observed_outcome)
+            normalized_shares = _normalize_source_shares(
+                record.meta_transfer_source_profiles,
+                record.meta_transfer_source_shares,
+            )
+            for source_profile_id in record.meta_transfer_source_profiles:
+                if (
+                    self._source_profile_family_for_record(record, source_profile_id)
+                    != source_family
+                ):
+                    continue
+                share = normalized_shares.get(source_profile_id, 0.0)
+                if share <= 0.0:
+                    continue
+                outcomes.append(outcome_score * share)
+        return outcomes
+
+    def _family_pair_effectiveness_summary(
+        self,
+        source_family: str,
+        target_family: str,
+    ) -> dict[str, float | int]:
+        outcomes = self._family_pair_effectiveness_history(source_family, target_family)
+        return {
+            "sample_size": len(outcomes),
+            "effectiveness": round(fmean(outcomes), 4) if outcomes else 0.0,
+        }
+
+    def _family_transfer_policy_info(
+        self,
+        *,
+        source_profile: CalibrationProfile,
+        target_profile: CalibrationProfile,
+        pair_effectiveness: float,
+        edge_seeking_applied: bool,
+    ) -> dict[str, float | str | int]:
+        source_family = self._profile_family_label(
+            source_profile.stratification_dimensions.get("support_profile")
+        )
+        target_family = self._profile_family_label(
+            target_profile.stratification_dimensions.get("support_profile")
+        )
+        family_pair_summary = self._family_pair_effectiveness_summary(
+            source_family,
+            target_family,
+        )
+        family_pair_effectiveness = float(family_pair_summary["effectiveness"])
+        family_pair_samples = int(family_pair_summary["sample_size"])
+
+        if (
+            family_pair_samples >= META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
+            and family_pair_effectiveness
+            >= META_TRANSFER_FAMILY_POLICY_STRONG_EFFECTIVENESS_THRESHOLD
+        ):
+            return {
+                "policy": "trusted_family_pair",
+                "reason": "prefer_historically_strong_family_pair",
+                "multiplier": META_TRANSFER_FAMILY_POLICY_TRUSTED_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+            }
+
+        if (
+            source_family == target_family
+            and pair_effectiveness >= META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MIN_EFFECTIVENESS
+        ):
+            return {
+                "policy": "same_family_preference",
+                "reason": "prefer_same_support_family_with_nonweak_pair",
+                "multiplier": META_TRANSFER_FAMILY_POLICY_SAME_FAMILY_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+            }
+
+        if (
+            family_pair_samples >= META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
+            and family_pair_effectiveness
+            < META_TRANSFER_FAMILY_POLICY_WEAK_EFFECTIVENESS_THRESHOLD
+        ):
+            return {
+                "policy": "guarded_family_pair",
+                "reason": "downweight_historically_weak_family_pair",
+                "multiplier": META_TRANSFER_FAMILY_POLICY_GUARDED_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+            }
+
+        if (
+            edge_seeking_applied
+            and source_family != target_family
+            and family_pair_samples < META_TRANSFER_FAMILY_POLICY_MIN_SAMPLES
+        ):
+            return {
+                "policy": "cross_family_probe_guard",
+                "reason": "keep_cross_family_sparse_probe_conservative",
+                "multiplier": META_TRANSFER_FAMILY_POLICY_CROSS_FAMILY_PROBE_MULTIPLIER,
+                "source_family": source_family,
+                "target_family": target_family,
+                "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+                "family_pair_samples": family_pair_samples,
+            }
+
+        return {
+            "policy": "neutral_family_policy",
+            "reason": "no_additional_family_policy",
+            "multiplier": 1.0,
+            "source_family": source_family,
+            "target_family": target_family,
+            "family_pair_effectiveness": round(family_pair_effectiveness, 4),
+            "family_pair_samples": family_pair_samples,
+        }
+
     def _edge_transfer_policy_info(
         self,
         *,
@@ -1718,6 +1945,16 @@ class CalibrationEngine:
             policy_adjusted_candidate_strength = final_candidate_strength * (
                 edge_policy_multiplier
             )
+            family_policy_info = self._family_transfer_policy_info(
+                source_profile=candidate,
+                target_profile=target_profile,
+                pair_effectiveness=pair_effectiveness,
+                edge_seeking_applied=edge_seeking_applied,
+            )
+            family_policy_multiplier = float(family_policy_info["multiplier"])
+            family_policy_adjusted_candidate_strength = (
+                policy_adjusted_candidate_strength * family_policy_multiplier
+            )
             steering_factors: dict[str, float | bool | str] = {
                 "base_similarity_score": round(similarity_score, 4),
                 "adjusted_similarity_score": round(adjusted_similarity_score, 4),
@@ -1747,6 +1984,23 @@ class CalibrationEngine:
                     policy_adjusted_candidate_strength,
                     4,
                 ),
+                "family_transfer_policy": str(family_policy_info["policy"]),
+                "family_transfer_policy_reason": str(family_policy_info["reason"]),
+                "family_transfer_policy_multiplier": round(
+                    family_policy_multiplier,
+                    4,
+                ),
+                "source_family": str(family_policy_info["source_family"]),
+                "target_family": str(family_policy_info["target_family"]),
+                "family_pair_effectiveness": round(
+                    float(family_policy_info["family_pair_effectiveness"]),
+                    4,
+                ),
+                "family_pair_samples": int(family_policy_info["family_pair_samples"]),
+                "family_policy_adjusted_candidate_strength": round(
+                    family_policy_adjusted_candidate_strength,
+                    4,
+                ),
             }
             ranked_candidates.append(
                 (
@@ -1754,7 +2008,7 @@ class CalibrationEngine:
                     similarity_score,
                     historical_effectiveness,
                     steering_factors,
-                    policy_adjusted_candidate_strength,
+                    family_policy_adjusted_candidate_strength,
                 )
             )
 
@@ -1806,13 +2060,13 @@ class CalibrationEngine:
             similarity_score,
             historical_effectiveness,
             steering_factors,
-            policy_adjusted_candidate_strength,
+            family_policy_adjusted_candidate_strength,
         ) in candidates:
             cap_info = self._adaptive_transfer_cap_info(
                 candidate.profile_id,
                 selected_profile.profile_id,
             )
-            adaptive_candidate_strength = policy_adjusted_candidate_strength * (
+            adaptive_candidate_strength = family_policy_adjusted_candidate_strength * (
                 float(cap_info["cap"]) / META_TRANSFER_MAX_BLEND
             )
             if adaptive_candidate_strength <= 0.0:
@@ -1826,6 +2080,9 @@ class CalibrationEngine:
                 "policy_adjusted_candidate_strength": float(
                     steering_factors["policy_adjusted_candidate_strength"]
                 ),
+                "family_policy_adjusted_candidate_strength": float(
+                    steering_factors["family_policy_adjusted_candidate_strength"]
+                ),
                 "adaptive_candidate_strength": round(adaptive_candidate_strength, 4),
             }
             active_candidates.append(
@@ -1834,7 +2091,7 @@ class CalibrationEngine:
                     similarity_score,
                     historical_effectiveness,
                     steering_factors,
-                    policy_adjusted_candidate_strength,
+                    family_policy_adjusted_candidate_strength,
                     adaptive_candidate_strength,
                 )
             )
@@ -1912,6 +2169,9 @@ class CalibrationEngine:
                 "policy_adjusted_candidate_strength": adaptive_caps_by_source[
                     candidate.profile_id
                 ]["policy_adjusted_candidate_strength"],
+                "family_policy_adjusted_candidate_strength": adaptive_caps_by_source[
+                    candidate.profile_id
+                ]["family_policy_adjusted_candidate_strength"],
                 "adaptive_candidate_strength": adaptive_caps_by_source[candidate.profile_id][
                     "adaptive_candidate_strength"
                 ],
@@ -1989,6 +2249,7 @@ class CalibrationEngine:
         bool,
         bool,
         bool,
+        bool,
         dict[str, dict[str, float | bool | int | str]],
         dict[str, dict[str, float | int | str]],
     ]:
@@ -2000,6 +2261,7 @@ class CalibrationEngine:
                 [],
                 {},
                 0.0,
+                False,
                 False,
                 False,
                 False,
@@ -2049,6 +2311,7 @@ class CalibrationEngine:
                 False,
                 False,
                 False,
+                False,
                 {},
                 {},
             )
@@ -2067,6 +2330,11 @@ class CalibrationEngine:
         )
         steering_edge_policy_applied = any(
             str(factor.get("edge_transfer_policy", "neutral_edge")) != "neutral_edge"
+            for factor in meta_transfer_source_steering_factors.values()
+        )
+        steering_family_policy_applied = any(
+            str(factor.get("family_transfer_policy", "neutral_family_policy"))
+            != "neutral_family_policy"
             for factor in meta_transfer_source_steering_factors.values()
         )
 
@@ -2119,6 +2387,7 @@ class CalibrationEngine:
             steering_proven_donor_boost_applied,
             steering_edge_seeking_applied,
             steering_edge_policy_applied,
+            steering_family_policy_applied,
             meta_transfer_source_steering_factors,
             meta_transfer_source_adaptive_caps,
         )

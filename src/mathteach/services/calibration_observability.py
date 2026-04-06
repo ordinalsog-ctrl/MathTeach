@@ -51,6 +51,16 @@ def _edge_policy_distribution(
     return grouped
 
 
+def _family_policy_distribution(
+    steering_factors_by_source: dict[str, dict[str, float | bool | int | str]],
+) -> dict[str, int]:
+    grouped: dict[str, int] = {}
+    for factors in steering_factors_by_source.values():
+        policy = str(factors.get("family_transfer_policy", "neutral_family_policy"))
+        grouped[policy] = grouped.get(policy, 0) + 1
+    return grouped
+
+
 def _profile_family_label(support_profile: str | None) -> str:
     return support_profile or "generic"
 
@@ -106,6 +116,7 @@ class SteeringLogQuery:
         include_adaptive_caps: bool,
         include_edge_seeking: bool,
         include_edge_policy: bool,
+        include_family_policy: bool,
     ) -> bool:
         if record.timestamp < cutoff:
             return False
@@ -121,6 +132,7 @@ class SteeringLogQuery:
         has_caps = bool(record.meta_transfer_source_adaptive_caps)
         has_edge_seeking = record.steering_edge_seeking_applied
         has_edge_policy = record.steering_edge_policy_applied
+        has_family_policy = record.steering_family_policy_applied
 
         return any(
             (
@@ -129,6 +141,7 @@ class SteeringLogQuery:
                 include_adaptive_caps and has_caps,
                 include_edge_seeking and has_edge_seeking,
                 include_edge_policy and has_edge_policy,
+                include_family_policy and has_family_policy,
             )
         )
 
@@ -142,6 +155,7 @@ class SteeringLogQuery:
         include_adaptive_caps: bool = True,
         include_edge_seeking: bool = True,
         include_edge_policy: bool = True,
+        include_family_policy: bool = True,
     ) -> list[SteeringLogEntry]:
         cutoff = self._cutoff(time_window_minutes)
         entries: list[SteeringLogEntry] = []
@@ -156,6 +170,7 @@ class SteeringLogQuery:
                 include_adaptive_caps=include_adaptive_caps,
                 include_edge_seeking=include_edge_seeking,
                 include_edge_policy=include_edge_policy,
+                include_family_policy=include_family_policy,
             ):
                 continue
 
@@ -206,6 +221,22 @@ class SteeringLogQuery:
                 if str(factors.get("edge_transfer_policy", "neutral_edge"))
                 != "neutral_edge"
             ]
+            family_policy_sources = [
+                source_id
+                for source_id, factors in steering_factors.items()
+                if str(factors.get("family_transfer_policy", "neutral_family_policy"))
+                != "neutral_family_policy"
+            ]
+            family_policy_factor = (
+                float(
+                    steering_factors[family_policy_sources[0]].get(
+                        "family_transfer_policy_multiplier",
+                        0.0,
+                    )
+                )
+                if family_policy_sources
+                else None
+            )
             observed_outcome_score = (
                 record.observed_outcome.composite_score()
                 if record.observed_outcome is not None
@@ -230,9 +261,15 @@ class SteeringLogQuery:
                     edge_seeking_applied=record.steering_edge_seeking_applied,
                     edge_seeking_sources=edge_seeking_sources,
                     edge_seeking_factor=edge_seeking_factor,
+                    family_policy_applied=record.steering_family_policy_applied,
+                    family_policy_sources=family_policy_sources,
+                    family_policy_factor=family_policy_factor,
                     edge_policy_applied=record.steering_edge_policy_applied,
                     edge_policy_sources=edge_policy_sources,
                     edge_policy_distribution=_edge_policy_distribution(
+                        steering_factors
+                    ),
+                    family_policy_distribution=_family_policy_distribution(
                         steering_factors
                     ),
                     adaptive_cap_distribution=_adaptive_cap_distribution(

@@ -2,6 +2,45 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Adaptive-Blend-Caps 2026-04-06
+
+Die H.9.2-Steuerung greift jetzt nicht mehr nur in die Donor-Auswahl
+ein, sondern begrenzt oder erweitert auch die tatsaechliche
+Transfer-Intensitaet pro Donor-Ziel-Kante.
+
+Wichtigste Konsequenzen:
+
+- die donor-spezifische Effectiveness-History wird jetzt aus effektiver
+  `meta_transfer_history` share-gewichtet rekonstruiert; Multi-Source-
+  Transfers werden also auch fuer Adaptive Caps proportional bewertet
+- `_meta_transfer_prior()` behaelt `meta_transfer_strength` als ein
+  aggregiertes Gesamt-Blend-Signal, leitet dieses Signal jetzt aber aus
+  donor-spezifischen Cap-Grenzen plus Source-Shares her
+- schwache Kanten werden dadurch nicht nur im Ranking abgewertet,
+  sondern auch in ihrer maximalen Blend-Intensitaet begrenzt; starke
+  Kanten duerfen entsprechend mehr echten Einfluss bekommen
+- `EnrichedPathEvaluation`, `DecisionRecord` und `CalibrationContext`
+  tragen jetzt `meta_transfer_source_adaptive_caps`; der
+  `CalibrationContext` aggregiert zusaetzlich eine
+  `adaptive_cap_distribution`
+- die bestehende Phase-1-Auditspur bleibt erhalten, wird aber um
+  adaptive Cap-Daten je Donor erweitert
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [src/mathteach/services/planner.py](/Users/jonasweiss/MathTeach/src/mathteach/services/planner.py)
+- [src/mathteach/models.py](/Users/jonasweiss/MathTeach/src/mathteach/models.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-/API-Zielsuite: `74 passed, 1 warning`
+- Full-Suite: `212 passed, 1 warning`
+
 ## Phase-H.9.2-Active-Transfer-Steering-Phase1 2026-04-06
 
 Die Meta-Transfer-Schicht nutzt ihre H.9.1-Monitoringdaten jetzt nicht

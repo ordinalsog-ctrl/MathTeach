@@ -422,7 +422,16 @@ class DecisionRecord(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
-    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+    meta_transfer_source_steering_factors: dict[
+        str,
+        dict[str, float | bool | int | str],
+    ] = Field(
+        default_factory=dict
+    )
+    meta_transfer_source_adaptive_caps: dict[
+        str,
+        dict[str, float | int | str],
+    ] = Field(
         default_factory=dict
     )
     alternative_paths: list[DecisionAlternative] = Field(default_factory=list)
@@ -454,8 +463,25 @@ class CalibrationContext(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
-    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+    meta_transfer_source_steering_factors: dict[
+        str,
+        dict[str, float | bool | int | str],
+    ] = Field(
         default_factory=dict
+    )
+    meta_transfer_source_adaptive_caps: dict[
+        str,
+        dict[str, float | int | str],
+    ] = Field(
+        default_factory=dict
+    )
+    adaptive_cap_distribution: dict[str, dict[str, int | float]] = Field(
+        default_factory=dict,
+        description=(
+            "Snapshot aggregation of adaptive caps for the currently selected "
+            "path only. This resets for each new plan and is not a historical "
+            "or cross-session engine-wide statistic."
+        ),
     )
     stratification_dimensions: dict[str, str] = Field(default_factory=dict)
 
@@ -505,7 +531,16 @@ class EnrichedPathEvaluation(BaseModel):
     meta_transfer_was_effective: bool = False
     steering_weak_edge_penalty_applied: bool = False
     steering_proven_donor_boost_applied: bool = False
-    meta_transfer_source_steering_factors: dict[str, dict[str, float | bool]] = Field(
+    meta_transfer_source_steering_factors: dict[
+        str,
+        dict[str, float | bool | int | str],
+    ] = Field(
+        default_factory=dict
+    )
+    meta_transfer_source_adaptive_caps: dict[
+        str,
+        dict[str, float | int | str],
+    ] = Field(
         default_factory=dict
     )
     calibration_weights_used: dict[str, float] = Field(default_factory=dict)

@@ -918,6 +918,9 @@ def _log_path_decision(
         meta_transfer_source_steering_factors=(
             enriched_paths[0].meta_transfer_source_steering_factors
         ),
+        meta_transfer_source_adaptive_caps=(
+            enriched_paths[0].meta_transfer_source_adaptive_caps
+        ),
         calibration_stratification_dimensions={
             key: value
             for key, value in {
@@ -966,11 +969,47 @@ def _log_path_decision(
     return calibration_engine.log_decision(record)
 
 
+def _adaptive_cap_distribution(
+    per_source_caps: dict[str, dict[str, float | int | str]],
+) -> dict[str, dict[str, int | float]]:
+    """Aggregate adaptive-cap reasons for the currently selected path only."""
+    grouped: dict[str, dict[str, float | int]] = {}
+
+    for cap_info in per_source_caps.values():
+        reason = str(cap_info.get("reason", "unknown"))
+        stats = grouped.setdefault(
+            reason,
+            {
+                "count": 0,
+                "total_cap": 0.0,
+            },
+        )
+        stats["count"] += 1
+        stats["total_cap"] += float(cap_info.get("cap", 0.0))
+
+    return {
+        reason: {
+            "count": int(stats["count"]),
+            "avg_cap": round(
+                float(stats["total_cap"]) / max(1, int(stats["count"])),
+                4,
+            ),
+        }
+        for reason, stats in grouped.items()
+    }
+
+
 def _build_calibration_context(
     calibration_engine: CalibrationEngine,
     decision_record: DecisionRecord | None,
     enriched_paths=None,
 ) -> CalibrationContext:
+    """Build the current decision snapshot for runtime diagnostics.
+
+    Note: ``adaptive_cap_distribution`` is derived only from the per-source
+    adaptive caps of the currently selected path. It resets on each new plan
+    and is not a historical aggregate over prior decisions or sessions.
+    """
     recent_success_rate = calibration_engine.get_recent_success_rate()
     weight_stability_index = calibration_engine.get_weight_stability_index()
     selected_path = enriched_paths[0] if enriched_paths else None
@@ -1059,6 +1098,18 @@ def _build_calibration_context(
         ),
         meta_transfer_source_steering_factors=(
             selected_path.meta_transfer_source_steering_factors
+            if selected_path is not None
+            else {}
+        ),
+        meta_transfer_source_adaptive_caps=(
+            selected_path.meta_transfer_source_adaptive_caps
+            if selected_path is not None
+            else {}
+        ),
+        adaptive_cap_distribution=(
+            _adaptive_cap_distribution(
+                selected_path.meta_transfer_source_adaptive_caps
+            )
             if selected_path is not None
             else {}
         ),

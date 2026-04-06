@@ -97,11 +97,12 @@ Heute bereits im Code:
   werden dabei aus effektiver Transfer-Historie statt aus rohen
   Linkaggregaten abgeleitet, und `weak-transfers` respektiert seine
   Query-Schwellen jetzt auch wirklich zur Laufzeit
-- H.9.2 Active Steering, Phase 1:
+- H.9.2 Active Steering, Phase 1 und 2:
   Die Engine nutzt weak-transfer- und proven-donor-Signale jetzt direkt
-  in der Donor-Auswahl, dokumentiert Steering-Faktoren bis in
-  `enriched_paths`, `DecisionRecord` und `calibration_context` und
-  laesst die eigentliche Transferstaerke vorerst noch unveraendert
+  in der Donor-Auswahl, steuert zusaetzlich die Transfer-Intensitaet
+  ueber donor-spezifische adaptive Blend-Caps und dokumentiert diese
+  Signale bis in `enriched_paths`, `DecisionRecord` und
+  `calibration_context`
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -110,13 +111,13 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `207 passed, 1 warning`
+- `pytest -q` -> `212 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
-die Folgephase zu H.9.2 Phase 1: adaptive Blend-Caps und weitere
-Transferpolitik pro Donor-Ziel-Kante, damit nicht nur die Auswahl,
-sondern spaeter auch die Intensitaet des Meta-Transfers aktiv gelernt
-und gesteuert wird.
+die naechste Ausbaustufe fuer Steering-Observability und laengerfristige
+Transferpolitik pro Donor-Ziel-Kante, damit die jetzt aktive Auswahl-
+und Intensitaetssteuerung auch ueber Admin-Endpunkte und Trendsicht
+gezielt inspiziert werden kann.
 
 ## Repository-Inhalt
 

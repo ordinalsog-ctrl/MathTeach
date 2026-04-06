@@ -31,6 +31,14 @@ META_TRANSFER_EFFECTIVE_EPSILON = 1e-6
 META_TRANSFER_WEAK_EDGE_PENALTY_MULTIPLIER = 0.6
 META_TRANSFER_PROVEN_DONOR_EFFECTIVENESS_THRESHOLD = 0.7
 META_TRANSFER_PROVEN_DONOR_BOOST_MULTIPLIER = 1.3
+META_TRANSFER_ADAPTIVE_HISTORY_MIN_SAMPLES = 3
+META_TRANSFER_INSUFFICIENT_HISTORY_BLEND = 0.3
+META_TRANSFER_WEAK_EDGE_MAX_BLEND = 0.2
+META_TRANSFER_LOW_EFFECTIVENESS_MAX_BLEND = 0.3
+META_TRANSFER_STRONG_EDGE_MAX_BLEND = 0.45
+META_TRANSFER_WEAK_EDGE_EFFECTIVENESS_THRESHOLD = 0.25
+META_TRANSFER_LOW_EFFECTIVENESS_THRESHOLD = 0.5
+META_TRANSFER_STRONG_EDGE_EFFECTIVENESS_THRESHOLD = 0.7
 
 
 def _estimate_mastery_gain(
@@ -559,6 +567,14 @@ class CalibrationEngine:
                 "steering_proven_donor_boost_applied": steering_factors[
                     "proven_donor_boost_applied"
                 ],
+                "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
+                    candidate.profile_id,
+                    profile.profile_id,
+                )["cap"],
+                "adaptive_transfer_cap_reason": self._adaptive_transfer_cap_info(
+                    candidate.profile_id,
+                    profile.profile_id,
+                )["reason"],
             }
             for candidate, similarity_score, historical_effectiveness, steering_factors, _ in candidates
         ]
@@ -870,6 +886,7 @@ class CalibrationEngine:
                 steering_weak_edge_penalty_applied,
                 steering_proven_donor_boost_applied,
                 meta_transfer_source_steering_factors,
+                meta_transfer_source_adaptive_caps,
             ) = self._effective_weights_for_profile_chain(
                 profile_chain,
             )
@@ -912,6 +929,9 @@ class CalibrationEngine:
                         ),
                         "meta_transfer_source_steering_factors": (
                             meta_transfer_source_steering_factors
+                        ),
+                        "meta_transfer_source_adaptive_caps": (
+                            meta_transfer_source_adaptive_caps
                         ),
                         "calibration_weights_used": {
                             key: round(value, 4)
@@ -1051,6 +1071,14 @@ class CalibrationEngine:
                     "steering_proven_donor_boost_applied": steering_factors[
                         "proven_donor_boost_applied"
                     ],
+                    "adaptive_transfer_cap": self._adaptive_transfer_cap_info(
+                        candidate.profile_id,
+                        profile.profile_id,
+                    )["cap"],
+                    "adaptive_transfer_cap_reason": self._adaptive_transfer_cap_info(
+                        candidate.profile_id,
+                        profile.profile_id,
+                    )["reason"],
                 }
                 for candidate, similarity_score, historical_effectiveness, steering_factors, _ in meta_candidates
             ],
@@ -1331,18 +1359,87 @@ class CalibrationEngine:
             for edge in self.compute_weak_transfers()
         }
 
+    def _edge_effectiveness_history(
+        self,
+        source_profile_id: str,
+        target_profile_id: str,
+    ) -> list[float]:
+        target_profile = self.get_profile(target_profile_id)
+        if target_profile is None:
+            return []
+
+        donor_outcomes: list[float] = []
+        for entry in self._effective_transfer_history_entries(target_profile):
+            if source_profile_id not in entry.source_profile_ids:
+                continue
+            normalized_source_shares = _normalize_source_shares(
+                entry.source_profile_ids,
+                entry.source_shares,
+            )
+            share = normalized_source_shares.get(source_profile_id, 0.0)
+            if share <= 0.0:
+                continue
+            donor_outcomes.append(entry.outcome_score * share)
+        return donor_outcomes
+
     def _transfer_effectiveness_for_pair(
         self,
         source_profile_id: str,
         target_profile_id: str,
     ) -> float:
-        target_profile = self.get_profile(target_profile_id)
-        if target_profile is None:
+        donor_outcomes = self._edge_effectiveness_history(
+            source_profile_id,
+            target_profile_id,
+        )
+        if not donor_outcomes:
             return 0.0
-        link = self._history_based_transfer_links(target_profile).get(source_profile_id)
-        if link is None or link.use_count <= 0:
-            return 0.0
-        return link.average_outcome_score
+        return fmean(donor_outcomes)
+
+    def _adaptive_transfer_cap_info(
+        self,
+        source_profile_id: str,
+        target_profile_id: str,
+    ) -> dict[str, float | int | str]:
+        donor_outcomes = self._edge_effectiveness_history(
+            source_profile_id,
+            target_profile_id,
+        )
+        history_samples = len(donor_outcomes)
+        effectiveness = fmean(donor_outcomes) if donor_outcomes else 0.0
+
+        if history_samples < META_TRANSFER_ADAPTIVE_HISTORY_MIN_SAMPLES:
+            cap = META_TRANSFER_INSUFFICIENT_HISTORY_BLEND
+            reason = "insufficient_history"
+        elif effectiveness < META_TRANSFER_WEAK_EDGE_EFFECTIVENESS_THRESHOLD:
+            cap = META_TRANSFER_WEAK_EDGE_MAX_BLEND
+            reason = "weak_edge"
+        elif effectiveness < META_TRANSFER_LOW_EFFECTIVENESS_THRESHOLD:
+            cap = META_TRANSFER_LOW_EFFECTIVENESS_MAX_BLEND
+            reason = "low_effectiveness"
+        elif effectiveness < META_TRANSFER_STRONG_EDGE_EFFECTIVENESS_THRESHOLD:
+            cap = META_TRANSFER_MAX_BLEND
+            reason = "moderate"
+        else:
+            cap = META_TRANSFER_STRONG_EDGE_MAX_BLEND
+            reason = "strong_edge"
+
+        return {
+            "cap": round(cap, 4),
+            "reason": reason,
+            "effectiveness_observed": round(effectiveness, 4),
+            "history_samples": history_samples,
+        }
+
+    def _adaptive_transfer_max_blend(
+        self,
+        source_profile_id: str,
+        target_profile_id: str,
+    ) -> tuple[float, str]:
+        cap_info = self._adaptive_transfer_cap_info(
+            source_profile_id,
+            target_profile_id,
+        )
+        return float(cap_info["cap"]), str(cap_info["reason"])
 
     def _meta_transfer_candidates(
         self,
@@ -1442,59 +1539,150 @@ class CalibrationEngine:
         float,
         list[str],
         dict[str, float],
-        dict[str, dict[str, float | bool]],
+        dict[str, dict[str, float | bool | int | str]],
+        dict[str, dict[str, float | int | str]],
     ]:
         candidates = self._meta_transfer_candidates(
             selected_profile,
             excluded_profile_ids=excluded_profile_ids,
         )
         if not candidates:
-            return None, 0.0, [], {}, {}
+            return None, 0.0, [], {}, {}, {}
+
+        active_candidates: list[
+            tuple[
+                CalibrationProfile,
+                float,
+                float,
+                dict[str, float | bool],
+                float,
+                float,
+            ]
+        ] = []
+        adaptive_caps_by_source: dict[str, dict[str, float | int | str]] = {}
+
+        for (
+            candidate,
+            similarity_score,
+            historical_effectiveness,
+            steering_factors,
+            final_candidate_strength,
+        ) in candidates:
+            cap_info = self._adaptive_transfer_cap_info(
+                candidate.profile_id,
+                selected_profile.profile_id,
+            )
+            adaptive_candidate_strength = final_candidate_strength * (
+                float(cap_info["cap"]) / META_TRANSFER_MAX_BLEND
+            )
+            if adaptive_candidate_strength <= 0.0:
+                continue
+
+            adaptive_caps_by_source[candidate.profile_id] = {
+                **cap_info,
+                "raw_candidate_strength": round(final_candidate_strength, 4),
+                "adaptive_candidate_strength": round(adaptive_candidate_strength, 4),
+            }
+            active_candidates.append(
+                (
+                    candidate,
+                    similarity_score,
+                    historical_effectiveness,
+                    steering_factors,
+                    final_candidate_strength,
+                    adaptive_candidate_strength,
+                )
+            )
+
+        if not active_candidates:
+            return None, 0.0, [], {}, {}, {}
 
         candidate_strengths = [
-            final_candidate_strength
-            for _, _, _, _, final_candidate_strength in candidates
+            adaptive_candidate_strength
+            for *_, adaptive_candidate_strength in active_candidates
         ]
         total_strength = sum(candidate_strengths)
         if total_strength <= 0.0:
-            return None, 0.0, [], {}, {}
+            return None, 0.0, [], {}, {}, {}
 
         transfer_weights: dict[str, float] = {}
         all_components = {
             component
-            for candidate, _, _, _, _ in candidates
+            for candidate, _, _, _, _, _ in active_candidates
             for component in candidate.current_weights.get_current_weights()
         }
         for component in all_components:
             transfer_weights[component] = sum(
                 candidate.current_weights.get_current_weights().get(component, 0.0)
                 * strength
-                for (candidate, _, _, _, _), strength in zip(
-                    candidates,
+                for (candidate, _, _, _, _, _), strength in zip(
+                    active_candidates,
                     candidate_strengths,
                     strict=True,
                 )
             ) / total_strength
 
-        transfer_strength = min(
-            META_TRANSFER_MAX_BLEND,
-            total_strength / len(candidate_strengths),
-        )
-        source_profiles = [candidate.profile_id for candidate, _, _, _, _ in candidates]
+        source_profiles = [candidate.profile_id for candidate, _, _, _, _, _ in active_candidates]
         source_shares = _normalize_source_shares(
             source_profiles,
             {
                 candidate.profile_id: strength / total_strength
-                for (candidate, _, _, _, _), strength in zip(
-                    candidates,
+                for (candidate, _, _, _, _, _), strength in zip(
+                    active_candidates,
                     candidate_strengths,
                     strict=True,
                 )
             },
         )
+        per_source_cap_limits = [
+            float(adaptive_caps_by_source[source_id]["cap"]) / share
+            for source_id, share in source_shares.items()
+            if share > 0.0
+        ]
+        adaptive_global_cap = min(
+            max(
+                float(adaptive_caps_by_source[source_id]["cap"])
+                for source_id in source_profiles
+            ),
+            min(per_source_cap_limits, default=META_TRANSFER_MAX_BLEND),
+        )
+        transfer_strength = min(
+            adaptive_global_cap,
+            total_strength / len(candidate_strengths),
+        )
         steering_factors_by_source = {
-            candidate.profile_id: steering_factors
-            for candidate, _, _, steering_factors, _ in candidates
+            candidate.profile_id: {
+                **steering_factors,
+                "adaptive_transfer_cap": adaptive_caps_by_source[candidate.profile_id]["cap"],
+                "adaptive_transfer_cap_reason": adaptive_caps_by_source[candidate.profile_id]["reason"],
+                "adaptive_transfer_effectiveness_observed": adaptive_caps_by_source[
+                    candidate.profile_id
+                ]["effectiveness_observed"],
+                "adaptive_transfer_history_samples": adaptive_caps_by_source[
+                    candidate.profile_id
+                ]["history_samples"],
+                "raw_candidate_strength": adaptive_caps_by_source[candidate.profile_id][
+                    "raw_candidate_strength"
+                ],
+                "adaptive_candidate_strength": adaptive_caps_by_source[candidate.profile_id][
+                    "adaptive_candidate_strength"
+                ],
+                "applied_source_contribution": round(
+                    transfer_strength * source_shares.get(candidate.profile_id, 0.0),
+                    4,
+                ),
+            }
+            for candidate, _, _, steering_factors, _, _ in active_candidates
+        }
+        adaptive_caps_by_source = {
+            source_id: {
+                **cap_info,
+                "applied_source_contribution": round(
+                    transfer_strength * source_shares.get(source_id, 0.0),
+                    4,
+                ),
+            }
+            for source_id, cap_info in adaptive_caps_by_source.items()
         }
         return (
             _normalize_weight_map(transfer_weights),
@@ -1502,6 +1690,7 @@ class CalibrationEngine:
             source_profiles,
             source_shares,
             steering_factors_by_source,
+            adaptive_caps_by_source,
         )
 
     def _base_weights_for_profile_chain(
@@ -1550,7 +1739,8 @@ class CalibrationEngine:
         bool,
         bool,
         bool,
-        dict[str, dict[str, float | bool]],
+        dict[str, dict[str, float | bool | int | str]],
+        dict[str, dict[str, float | int | str]],
     ]:
         if not profiles:
             return (
@@ -1563,6 +1753,7 @@ class CalibrationEngine:
                 False,
                 False,
                 False,
+                {},
                 {},
             )
 
@@ -1585,6 +1776,7 @@ class CalibrationEngine:
             meta_transfer_source_profiles,
             meta_transfer_source_shares,
             meta_transfer_source_steering_factors,
+            meta_transfer_source_adaptive_caps,
         ) = (
             self._meta_transfer_prior(
                 selected_profile,
@@ -1603,6 +1795,7 @@ class CalibrationEngine:
                 False,
                 False,
                 False,
+                {},
                 {},
             )
 
@@ -1663,6 +1856,7 @@ class CalibrationEngine:
             steering_weak_edge_penalty_applied,
             steering_proven_donor_boost_applied,
             meta_transfer_source_steering_factors,
+            meta_transfer_source_adaptive_caps,
         )
 
     def _record_matches_profile(

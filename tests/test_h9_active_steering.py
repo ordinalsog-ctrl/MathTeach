@@ -238,4 +238,271 @@ def test_planner_and_decision_record_expose_h92_steering_signals() -> None:
         ]
         is True
     )
+    assert donor_profile.profile_id in plan.calibration_context.meta_transfer_source_adaptive_caps
+    assert (
+        plan.calibration_context.meta_transfer_source_adaptive_caps[donor_profile.profile_id][
+            "reason"
+        ]
+        == "insufficient_history"
+    )
+    assert (
+        plan.calibration_context.adaptive_cap_distribution["insufficient_history"]["count"]
+        >= 1
+    )
     assert engine.decision_log[-1].steering_proven_donor_boost_applied is True
+    assert donor_profile.profile_id in engine.decision_log[-1].meta_transfer_source_adaptive_caps
+
+
+def test_edge_effectiveness_history_weights_multi_source_outcomes() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_a = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_b = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.CONCEPT_CONFUSION.value,
+            "block_type": BlockType.CONCEPT_CHECK.value,
+        }
+    )
+
+    target_profile.meta_transfer_history.append(
+        MetaTransferHistoryEntry(
+            target_profile_id=target_profile.profile_id,
+            source_profile_ids=[donor_a.profile_id, donor_b.profile_id],
+            decision_id="multi_source_weighted_history",
+            transfer_strength=0.3,
+            outcome_score=0.5,
+            similarity_by_source={
+                donor_a.profile_id: 0.7,
+                donor_b.profile_id: 0.5,
+            },
+            source_shares={
+                donor_a.profile_id: 0.6,
+                donor_b.profile_id: 0.4,
+            },
+            effective_weight_delta=0.08,
+        )
+    )
+
+    assert engine._edge_effectiveness_history(
+        donor_a.profile_id,
+        target_profile.profile_id,
+    ) == pytest.approx([0.3], abs=1e-6)
+    assert engine._edge_effectiveness_history(
+        donor_b.profile_id,
+        target_profile.profile_id,
+    ) == pytest.approx([0.2], abs=1e-6)
+    assert engine._transfer_effectiveness_for_pair(
+        donor_a.profile_id,
+        target_profile.profile_id,
+    ) == pytest.approx(0.3, abs=1e-6)
+    assert engine._transfer_effectiveness_for_pair(
+        donor_b.profile_id,
+        target_profile.profile_id,
+    ) == pytest.approx(0.2, abs=1e-6)
+
+
+def test_weak_edge_gets_low_adaptive_cap() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+
+    for index in range(5):
+        target_profile.meta_transfer_history.append(
+            MetaTransferHistoryEntry(
+                target_profile_id=target_profile.profile_id,
+                source_profile_ids=[donor_profile.profile_id],
+                decision_id=f"weak_cap_{index}",
+                transfer_strength=0.25,
+                outcome_score=0.1,
+                similarity_by_source={donor_profile.profile_id: 0.7},
+                source_shares={donor_profile.profile_id: 1.0},
+                effective_weight_delta=0.05,
+            )
+        )
+
+    cap, reason = engine._adaptive_transfer_max_blend(
+        donor_profile.profile_id,
+        target_profile.profile_id,
+    )
+
+    assert cap == pytest.approx(0.2, abs=1e-6)
+    assert reason == "weak_edge"
+
+
+def test_strong_edge_gets_high_adaptive_cap() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+
+    for index in range(5):
+        target_profile.meta_transfer_history.append(
+            MetaTransferHistoryEntry(
+                target_profile_id=target_profile.profile_id,
+                source_profile_ids=[donor_profile.profile_id],
+                decision_id=f"strong_cap_{index}",
+                transfer_strength=0.25,
+                outcome_score=0.82,
+                similarity_by_source={donor_profile.profile_id: 0.7},
+                source_shares={donor_profile.profile_id: 1.0},
+                effective_weight_delta=0.05,
+            )
+        )
+
+    cap, reason = engine._adaptive_transfer_max_blend(
+        donor_profile.profile_id,
+        target_profile.profile_id,
+    )
+
+    assert cap == pytest.approx(0.45, abs=1e-6)
+    assert reason == "strong_edge"
+
+
+def test_insufficient_history_defaults_to_conservative_cap() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+
+    target_profile.meta_transfer_history.append(
+        MetaTransferHistoryEntry(
+            target_profile_id=target_profile.profile_id,
+            source_profile_ids=[donor_profile.profile_id],
+            decision_id="insufficient_history_cap",
+            transfer_strength=0.25,
+            outcome_score=0.5,
+            similarity_by_source={donor_profile.profile_id: 0.7},
+            source_shares={donor_profile.profile_id: 1.0},
+            effective_weight_delta=0.05,
+        )
+    )
+
+    cap, reason = engine._adaptive_transfer_max_blend(
+        donor_profile.profile_id,
+        target_profile.profile_id,
+    )
+
+    assert cap == pytest.approx(0.3, abs=1e-6)
+    assert reason == "insufficient_history"
+
+
+def test_meta_transfer_prior_applies_adaptive_caps_to_strength_and_audit() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    donor_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.STAGNATION_PATTERN.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_profile.confidence_score = 0.9
+    donor_profile.outcome_count = 24
+
+    for index in range(5):
+        target_profile.meta_transfer_history.append(
+            MetaTransferHistoryEntry(
+                target_profile_id=target_profile.profile_id,
+                source_profile_ids=[donor_profile.profile_id],
+                decision_id=f"prior_cap_{index}",
+                transfer_strength=0.25,
+                outcome_score=0.1,
+                similarity_by_source={donor_profile.profile_id: 0.85},
+                source_shares={donor_profile.profile_id: 1.0},
+                effective_weight_delta=0.05,
+            )
+        )
+
+    (
+        _transfer_weights,
+        meta_transfer_strength,
+        source_profiles,
+        source_shares,
+        steering_factors,
+        adaptive_caps,
+    ) = engine._meta_transfer_prior(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    assert source_profiles == [donor_profile.profile_id]
+    assert source_shares == {donor_profile.profile_id: pytest.approx(1.0, abs=1e-6)}
+    assert meta_transfer_strength == pytest.approx(0.2, abs=1e-6)
+    assert adaptive_caps[donor_profile.profile_id]["cap"] == pytest.approx(0.2, abs=1e-6)
+    assert adaptive_caps[donor_profile.profile_id]["reason"] == "weak_edge"
+    assert steering_factors[donor_profile.profile_id]["adaptive_transfer_cap"] == pytest.approx(
+        0.2,
+        abs=1e-6,
+    )
+    assert steering_factors[donor_profile.profile_id]["adaptive_transfer_cap_reason"] == (
+        "weak_edge"
+    )

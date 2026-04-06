@@ -149,10 +149,14 @@ Dadurch lassen sich jetzt drei Dinge inspizieren:
 - Profil-Dichte mit duennen oder isolierten Profilen und passenden
   Donor-Kandidaten
 
-## H.9.2 Active Steering - Phase 1
+## H.9.2 Active Steering
 
-Die aktuelle H.9.2-Phase greift jetzt nicht mehr nur beobachtend, sondern
-leicht steuernd in die Donor-Auswahl ein.
+H.9.2 greift jetzt nicht mehr nur beobachtend, sondern aktiv steuernd in
+Meta-Transfer-Entscheidungen ein.
+
+### Phase 1: Donor-Auswahl
+
+Die erste Phase greift leicht steuernd in die Donor-Auswahl ein.
 
 Wichtig: Diese Steuerung sitzt bewusst in der `CalibrationEngine`,
 konkret in `_meta_transfer_candidates()`, nicht im Planner. Dadurch
@@ -189,6 +193,62 @@ Damit bleibt auditierbar:
 - welche Faktoren fuer jeden verwendeten Donor in die finale
   Kandidatenbewertung eingegangen sind
 
+### Phase 2: Adaptive Blend-Caps
+
+Phase 2 erweitert dieselbe Engine-Schicht jetzt um donor-spezifische
+Steuerung der Transfer-Intensitaet.
+
+Wichtig:
+
+- die donor-spezifische Effectiveness-History wird aus effektiver
+  `meta_transfer_history` rekonstruiert
+- bei Multi-Source-Transfers werden Outcomes ueber `source_shares`
+  proportional je Donor zugeschrieben
+- `meta_transfer_strength` bleibt semantisch stabil das eine aggregierte
+  Blend-Signal fuer den final verwendeten Transfer
+- Adaptive Caps beeinflussen also nicht die Bedeutung dieses Feldes,
+  sondern dessen Herleitung
+
+Die aktuelle Phase-2-Logik verwendet folgende Buckets:
+
+- `< 3` History-Samples:
+  `0.30`, Grund `insufficient_history`
+- geringe donor-spezifische Effectiveness `< 0.25`:
+  `0.20`, Grund `weak_edge`
+- niedrige donor-spezifische Effectiveness `< 0.50`:
+  `0.30`, Grund `low_effectiveness`
+- mittlere donor-spezifische Effectiveness `< 0.70`:
+  `0.35`, Grund `moderate`
+- starke donor-spezifische Effectiveness `>= 0.70`:
+  `0.45`, Grund `strong_edge`
+
+Diese Signale werden jetzt sichtbar in:
+
+- `EnrichedPathEvaluation.meta_transfer_source_adaptive_caps`
+- `DecisionRecord.meta_transfer_source_adaptive_caps`
+- `CalibrationContext.meta_transfer_source_adaptive_caps`
+- `CalibrationContext.adaptive_cap_distribution`
+
+Wichtig zur Semantik von `CalibrationContext.adaptive_cap_distribution`:
+
+- es ist ein Snapshot des aktuell ausgewaehlten Pfads
+- es aggregiert nur die Donor-Caps, die in genau dieser einen
+  Planentscheidung aktiv waren
+- es ist keine verlaufsweite Statistik ueber alle frueheren Decisions,
+  Sessions oder das gesamte Transfer-Netzwerk
+- wer historische Verteilungen will, braucht dafuer einen separaten
+  Monitoring- oder Admin-Endpunkt
+
+Zusaetzlich enthaelt
+`meta_transfer_source_steering_factors` jetzt auch adaptive Cap-Daten,
+zum Beispiel:
+
+- `adaptive_transfer_cap`
+- `adaptive_transfer_cap_reason`
+- `adaptive_transfer_effectiveness_observed`
+- `adaptive_transfer_history_samples`
+- `applied_source_contribution`
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -199,7 +259,7 @@ Noch nicht enthalten:
 - lernende Merge/Split-Strategien fuer Profile
 - separate Meta-Gewichte pro Dimension
 - adaptive Transfer-Raten ueber Zeit
-- adaptive Blend-Caps pro Donor-Ziel-Kante (geplante H.9.2-Folgephase)
+- eigener Admin- oder Steering-Log-Endpunkt fuer Phase-2-Signale
 
 ## Naechster logischer Ausbau
 
@@ -208,5 +268,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
 - bessere Nachbarschaftslogik fuer Mischprofile und Teilmengen
 - staerkere Auswertung der Meta-Historie, welche Transferquellen fuer
   welches Profil langfristig wirklich hilfreich sind
-- adaptive Begrenzung oder Ausweitung der tatsaechlichen
-  Transfer-Staerke pro Donor-Ziel-Kante
+- explizite Inspection- und Trend-Endpunkte fuer Steering-Signale und
+  adaptive Cap-Verteilungen

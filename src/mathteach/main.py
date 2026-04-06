@@ -88,6 +88,12 @@ def corpus_network():
 
 @app.post("/api/v1/tutoring/plan")
 def tutoring_plan(request: SessionRequest):
+    """Build the next tutoring plan and return the current calibration snapshot.
+
+    The returned ``calibration_context.adaptive_cap_distribution`` describes only
+    the active donor-cap mix of the selected path for this response. It is not
+    a historical statistic across earlier plans, sessions, or the whole engine.
+    """
     try:
         planner_request, session_id = session_manager.prepare_planner_request(request)
         plan = build_teaching_plan(

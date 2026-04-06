@@ -41,3 +41,12 @@ def test_session_quarantine_lists_and_discards_latest_record(tmp_path) -> None:
     assert listed[0].session_id == "session-2"
     assert discarded is not None
     assert quarantine.latest_record("session-2") is None
+
+
+def test_session_quarantine_ignores_dangling_metadata_entries(tmp_path) -> None:
+    quarantine_dir = tmp_path / "quarantine"
+    quarantine = SessionQuarantine(quarantine_dir)
+    dangling_metadata = quarantine_dir / "dangling.meta.json"
+    dangling_metadata.symlink_to(quarantine_dir / "missing-target.meta.json")
+
+    assert quarantine.list_records() == []

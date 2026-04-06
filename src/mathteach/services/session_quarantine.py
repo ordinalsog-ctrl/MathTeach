@@ -6,7 +6,7 @@ import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 
 class SessionQuarantineRecord(BaseModel):
@@ -61,12 +61,19 @@ class SessionQuarantine:
         return record
 
     def list_records(self, session_id: str | None = None) -> list[SessionQuarantineRecord]:
-        records = [
-            SessionQuarantineRecord.model_validate_json(
-                metadata_path.read_text(encoding="utf-8")
-            )
-            for metadata_path in sorted(self.base_dir.glob("*.meta.json"))
-        ]
+        records: list[SessionQuarantineRecord] = []
+        for metadata_path in sorted(self.base_dir.glob("*.meta.json")):
+            try:
+                record = SessionQuarantineRecord.model_validate_json(
+                    metadata_path.read_text(encoding="utf-8")
+                )
+            except FileNotFoundError:
+                # Ignore dangling metadata entries so one orphaned sidecar
+                # cannot break quarantine inspection for all sessions.
+                continue
+            except ValidationError:
+                continue
+            records.append(record)
         if session_id is not None:
             records = [record for record in records if record.session_id == session_id]
         return sorted(records, key=lambda record: record.timestamp, reverse=True)

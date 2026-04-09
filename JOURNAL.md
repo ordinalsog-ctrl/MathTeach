@@ -2,6 +2,41 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Quality-Weighted-Success-Bonuses-For-Cross-Family-Probes 2026-04-06
+
+Die Cross-Family-Probe-Steuerung reagiert jetzt nicht mehr nur auf die
+Anzahl frischer Erfolge, sondern auch auf deren Guete. Starke frische
+Cross-Family-Erfolge koennen jetzt mehr Bonus-Slots oeffnen als normale
+frische Erfolge.
+
+Wichtigste Konsequenzen:
+
+- `_cross_family_probe_budget_info(...)` zaehlt jetzt zusaetzlich
+  `high_quality_fresh_success_count`
+- `success_bonus_slots` entstehen nicht mehr nur aus der schlichten
+  Anzahl frischer Erfolge, sondern aus einer kleinen
+  qualitaetsgewichteten Bonus-Logik
+- ein einzelner sehr starker frischer Erfolg kann damit direkt ein
+  groesseres Bonusfenster oeffnen als ein normaler Erfolg
+- die Signalkette bleibt voll auditierbar ueber die bestehenden
+  Steering-Faktoren
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `25 passed, 1 warning`
+- Steering-Observability-Zielsuite: `15 passed, 1 warning`
+- H.9-/API-Zielsuite: `105 passed, 1 warning`
+- Full-Suite: `244 passed, 1 warning`
+
 ## Phase-H.9.2-Multi-Slot-Success-Bonuses-For-Cross-Family-Probes 2026-04-06
 
 Die Cross-Family-Probe-Steuerung kann jetzt mehr als nur ein einziges

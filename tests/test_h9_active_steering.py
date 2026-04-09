@@ -788,6 +788,7 @@ def test_cross_family_probe_budget_guard_blocks_repeated_unsuccessful_probes() -
     assert budget_guarded_candidate[3]["cross_family_recent_probe_count"] == 2
     assert budget_guarded_candidate[3]["cross_family_recent_success_count"] == 0
     assert budget_guarded_candidate[3]["cross_family_fresh_success_count"] == 0
+    assert budget_guarded_candidate[3]["cross_family_high_quality_fresh_success_count"] == 0
     assert budget_guarded_candidate[3]["cross_family_success_bonus_active"] is False
     assert budget_guarded_candidate[3]["cross_family_probe_base_budget"] == 2
     assert budget_guarded_candidate[3]["cross_family_probe_success_bonus_slots"] == 0
@@ -868,6 +869,7 @@ def test_cross_family_probe_preference_applies_when_recent_success_exists() -> N
     assert allowed_candidate[3]["cross_family_recent_probe_count"] == 2
     assert allowed_candidate[3]["cross_family_recent_success_count"] == 1
     assert allowed_candidate[3]["cross_family_fresh_success_count"] == 1
+    assert allowed_candidate[3]["cross_family_high_quality_fresh_success_count"] == 0
     assert allowed_candidate[3]["cross_family_success_bonus_active"] is True
     assert allowed_candidate[3]["cross_family_probe_base_budget"] == 2
     assert allowed_candidate[3]["cross_family_probe_success_bonus_slots"] == 1
@@ -876,7 +878,7 @@ def test_cross_family_probe_preference_applies_when_recent_success_exists() -> N
     assert allowed_candidate[3]["cross_family_probe_budget_exhausted"] is False
 
 
-def test_cross_family_probe_preference_falls_back_when_success_bonus_budget_is_spent() -> None:
+def test_cross_family_probe_preference_falls_back_when_quality_weighted_bonus_budget_is_spent() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
 
@@ -933,6 +935,16 @@ def test_cross_family_probe_preference_falls_back_when_success_bonus_budget_is_s
             effective=False,
             timestamp=now - timedelta(hours=3),
         ),
+        _cross_family_probe_record(
+            decision_id="cross_probe_retry_c",
+            source_id="historical_probe_retry_c",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_retry_c",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.16,
+            effective=False,
+            timestamp=now - timedelta(hours=4),
+        ),
     ]
 
     candidates = engine._meta_transfer_candidates(
@@ -947,13 +959,14 @@ def test_cross_family_probe_preference_falls_back_when_success_bonus_budget_is_s
     )
     assert spent_budget_candidate[3]["edge_seeking_applied"] is True
     assert spent_budget_candidate[3]["family_transfer_policy"] == "cross_family_probe_guard"
-    assert spent_budget_candidate[3]["cross_family_recent_probe_count"] == 3
+    assert spent_budget_candidate[3]["cross_family_recent_probe_count"] == 4
     assert spent_budget_candidate[3]["cross_family_recent_success_count"] == 1
     assert spent_budget_candidate[3]["cross_family_fresh_success_count"] == 1
+    assert spent_budget_candidate[3]["cross_family_high_quality_fresh_success_count"] == 1
     assert spent_budget_candidate[3]["cross_family_success_bonus_active"] is True
     assert spent_budget_candidate[3]["cross_family_probe_base_budget"] == 2
-    assert spent_budget_candidate[3]["cross_family_probe_success_bonus_slots"] == 1
-    assert spent_budget_candidate[3]["cross_family_probe_budget_limit"] == 3
+    assert spent_budget_candidate[3]["cross_family_probe_success_bonus_slots"] == 2
+    assert spent_budget_candidate[3]["cross_family_probe_budget_limit"] == 4
     assert spent_budget_candidate[3]["cross_family_probe_budget_remaining"] == 0
     assert spent_budget_candidate[3]["cross_family_probe_budget_exhausted"] is False
 
@@ -1021,6 +1034,7 @@ def test_cross_family_probe_preference_requires_fresh_success_signal() -> None:
     assert stale_success_candidate[3]["family_transfer_policy"] == "cross_family_probe_guard"
     assert stale_success_candidate[3]["cross_family_recent_success_count"] == 1
     assert stale_success_candidate[3]["cross_family_fresh_success_count"] == 0
+    assert stale_success_candidate[3]["cross_family_high_quality_fresh_success_count"] == 0
     assert stale_success_candidate[3]["cross_family_success_bonus_active"] is False
     assert stale_success_candidate[3]["cross_family_probe_base_budget"] == 2
     assert stale_success_candidate[3]["cross_family_probe_success_bonus_slots"] == 0
@@ -1028,7 +1042,7 @@ def test_cross_family_probe_preference_requires_fresh_success_signal() -> None:
     assert stale_success_candidate[3]["cross_family_probe_budget_remaining"] == 0
 
 
-def test_cross_family_probe_budget_accumulates_two_fresh_success_bonus_slots() -> None:
+def test_cross_family_probe_budget_accumulates_quality_weighted_success_bonus_slots() -> None:
     engine = CalibrationEngine(min_samples_for_calibration=999)
     now = datetime.now(UTC)
 
@@ -1100,11 +1114,87 @@ def test_cross_family_probe_budget_accumulates_two_fresh_success_bonus_slots() -
     assert bonus_candidate[3]["family_transfer_policy"] == "cross_family_probe_preference"
     assert bonus_candidate[3]["cross_family_recent_success_count"] == 2
     assert bonus_candidate[3]["cross_family_fresh_success_count"] == 2
+    assert bonus_candidate[3]["cross_family_high_quality_fresh_success_count"] == 1
     assert bonus_candidate[3]["cross_family_success_bonus_active"] is True
     assert bonus_candidate[3]["cross_family_probe_base_budget"] == 2
-    assert bonus_candidate[3]["cross_family_probe_success_bonus_slots"] == 2
-    assert bonus_candidate[3]["cross_family_probe_budget_limit"] == 4
-    assert bonus_candidate[3]["cross_family_probe_budget_remaining"] == 1
+    assert bonus_candidate[3]["cross_family_probe_success_bonus_slots"] == 3
+    assert bonus_candidate[3]["cross_family_probe_budget_limit"] == 5
+    assert bonus_candidate[3]["cross_family_probe_budget_remaining"] == 2
+
+
+def test_cross_family_probe_budget_weights_high_quality_fresh_successes_more_strongly() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+
+    target_profile = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.WORKED_EXAMPLE.value,
+        }
+    )
+    target_profile.outcome_count = 1
+    target_profile.confidence_score = 0.0
+
+    donor_cross_family = engine._get_or_create_profile(
+        {
+            "support_profile": "adhd_aware_support+language_sensitive_support",
+            "sequence_intent": BlockSequenceIntent.MASTERY_PATH.value,
+            "evidence_pattern": EvidenceCombinationPattern.RAPID_CONSECUTIVE_SUCCESS.value,
+            "block_type": BlockType.GUIDED_PRACTICE.value,
+        }
+    )
+    donor_cross_family.confidence_score = 0.8
+    donor_cross_family.outcome_count = 20
+
+    engine.decision_log = [
+        _cross_family_probe_record(
+            decision_id="cross_probe_high_quality_success",
+            source_id="historical_probe_high_quality_success",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_high_quality_success",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.91,
+            effective=True,
+            timestamp=now - timedelta(hours=1),
+        ),
+        _cross_family_probe_record(
+            decision_id="cross_probe_recent_retry_quality",
+            source_id="historical_probe_recent_retry_quality",
+            source_family_snapshot="adhd_aware_support+language_sensitive_support",
+            target_id="historical_target_recent_retry_quality",
+            target_family_snapshot="adhd_aware_support",
+            observed_outcome_score=0.18,
+            effective=False,
+            timestamp=now - timedelta(hours=2),
+        ),
+    ]
+
+    candidates = engine._meta_transfer_candidates(
+        target_profile,
+        excluded_profile_ids={target_profile.profile_id},
+    )
+
+    quality_bonus_candidate = next(
+        item
+        for item in candidates
+        if item[0].profile_id == donor_cross_family.profile_id
+    )
+    assert (
+        quality_bonus_candidate[3]["family_transfer_policy"]
+        == "cross_family_probe_preference"
+    )
+    assert quality_bonus_candidate[3]["cross_family_recent_success_count"] == 1
+    assert quality_bonus_candidate[3]["cross_family_fresh_success_count"] == 1
+    assert (
+        quality_bonus_candidate[3]["cross_family_high_quality_fresh_success_count"]
+        == 1
+    )
+    assert quality_bonus_candidate[3]["cross_family_probe_base_budget"] == 2
+    assert quality_bonus_candidate[3]["cross_family_probe_success_bonus_slots"] == 2
+    assert quality_bonus_candidate[3]["cross_family_probe_budget_limit"] == 4
+    assert quality_bonus_candidate[3]["cross_family_probe_budget_remaining"] == 2
 
 
 def test_planner_and_decision_record_expose_h92_steering_signals() -> None:

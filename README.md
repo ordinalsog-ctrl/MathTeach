@@ -161,6 +161,10 @@ Heute bereits im Code:
   mehrere frische erfolgreiche Cross-Family-Probes koennen jetzt mehr
   als nur einen kleinen Bonus-Slot oeffnen; das Budget bleibt klein,
   aber skaliert explizit ueber `success_bonus_slots`
+- H.9.2 Quality-Weighted Success Bonuses for Cross-Family Probes, Phase 14:
+  starke frische Cross-Family-Erfolge zaehlen jetzt mehr als normale
+  frische Erfolge; das Bonusfenster reagiert damit nicht nur auf Anzahl,
+  sondern auch auf Signalguete
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -169,14 +173,14 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `243 passed, 1 warning`
+- `pytest -q` -> `244 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
 die naechste Ausbaustufe fuer noch feinere Informationsgewinn-Steuerung
 auf dieser Basis, etwa staerker zeitgewichtete Transfer-Raten,
 qualitativ feinere Erfolgsfenster jenseits eines einfachen
-Freshness-Cutoffs oder qualitaetsgewichtete Bonus-Slots innerhalb
-stabil gesnapshotteter Family-Historien.
+Freshness-Cutoffs oder spaetere kontinuierliche Qualitaets- und
+Decay-Gewichtung innerhalb stabil gesnapshotteter Family-Historien.
 
 ## Repository-Inhalt
 

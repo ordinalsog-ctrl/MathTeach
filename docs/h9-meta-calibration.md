@@ -719,6 +719,46 @@ Wichtig:
 - die Mehr-Slot-Semantik ist ein Zwischenstopp vor spaeterer
   qualitaets- oder decay-gewichteter Steuerung
 
+### Phase 14: Quality-Weighted Success Bonuses for Cross-Family Probes
+
+Phase 14 fuegt der Multi-Slot-Logik aus Phase 13 eine erste
+Qualitaetsgewichtung hinzu. Nicht jeder frische Erfolg zaehlt jetzt
+gleich stark: sehr starke frische Cross-Family-Erfolge koennen mehr
+Bonus-Slots oeffnen als normale frische Erfolge.
+
+Kernidee:
+
+- normale frische Erfolge liefern weiterhin kleine Bonus-Slots
+- starke frische Erfolge liefern zusaetzliches Bonus-Gewicht
+- das Budget reagiert damit nicht nur auf die Anzahl, sondern auch auf
+  die Guete frischer Probe-Signale
+- alles bleibt klein begrenzt und voll auditierbar
+
+Neue Logik:
+
+- `_cross_family_probe_budget_info(...)` berechnet jetzt zusaetzlich:
+  - `high_quality_fresh_success_count`
+- `success_bonus_slots` basieren aktuell auf:
+  - `fresh_success_count + high_quality_fresh_success_count`
+  - gedeckelt durch `META_TRANSFER_CROSS_FAMILY_PROBE_MAX_SUCCESS_BONUS_SLOTS`
+- ein einzelner sehr starker frischer Erfolg kann damit bereits zwei
+  Bonus-Slots oeffnen
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_high_quality_fresh_success_count`
+- weiterhin `cross_family_probe_success_bonus_slots`,
+  `cross_family_probe_budget_limit`,
+  `cross_family_probe_budget_remaining`
+
+Wichtig:
+
+- das ist eine erste diskrete Qualitaetsgewichtung, noch kein
+  kontinuierliches Bewertungsmodell
+- starke Erfolge werden aktuell ueber einen festen Outcome-Schwellenwert
+  erkannt
+- die Persistenz- und Query-Architektur bleibt unveraendert
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -733,8 +773,8 @@ Noch nicht enthalten:
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
 - Probe-Budgets sind jetzt nur sehr leicht adaptiv; sie kennen aktuell
-  kleine Mehr-Slot-Erfolgsboni und eine einfache Freshness-Grenze, aber
-  noch keine kontinuierliche Decay- oder Qualitaetsgewichtung
+  kleine qualitaetsgewichtete Mehr-Slot-Erfolgsboni und eine einfache
+  Freshness-Grenze, aber noch keine kontinuierliche Decay-Gewichtung
 
 ## Naechster logischer Ausbau
 

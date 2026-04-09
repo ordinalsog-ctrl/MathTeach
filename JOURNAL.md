@@ -1,6 +1,42 @@
 # MathTeach Journal
 
-Stand: 2026-04-06
+Stand: 2026-04-09
+
+## Phase-H.9.2-Carryover-Bonus-Slots-For-Cross-Family-Probes 2026-04-09
+
+Die Cross-Family-Probe-Steuerung bekommt jetzt eine kleine
+Carryover-Stufe zwischen "frisch" und "weg". Juengste, aber nicht mehr
+frische Cross-Family-Erfolge koennen ein enges Restbudget offenhalten,
+ohne gleich wieder eine aktive `cross_family_probe_preference`
+auszuloesen.
+
+Wichtigste Konsequenzen:
+
+- `_cross_family_probe_budget_info(...)` trennt jetzt zusaetzlich
+  `carryover_success_count`
+- nicht mehr frische, aber noch juengste erfolgreiche Probes koennen
+  kleine `carryover_bonus_slots` beisteuern
+- `cross_family_probe_preference` bleibt trotzdem an
+  `fresh_success_count` gebunden; Carryover ist bewusst nur ein
+  schwaches Restbudget-Signal
+- damit faellt ein Family-Pair nach einem aelteren Erfolg nicht sofort
+  in die haertere Budget-Guard-Stufe zurueck, bleibt aber konservativ
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `26 passed, 1 warning`
+- Steering-Observability-Zielsuite: `16 passed, 1 warning`
+- H.9-/API-Zielsuite: `107 passed, 1 warning`
+- Full-Suite: `246 passed, 1 warning`
 
 ## Phase-H.9.2-Quality-Weighted-Success-Bonuses-For-Cross-Family-Probes 2026-04-06
 

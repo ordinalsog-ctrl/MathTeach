@@ -375,9 +375,11 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
                         "cross_family_recent_success_count": 0,
                         "cross_family_fresh_success_count": 0,
                         "cross_family_high_quality_fresh_success_count": 0,
+                        "cross_family_carryover_success_count": 0,
                         "cross_family_success_bonus_active": False,
                         "cross_family_probe_base_budget": 2,
                         "cross_family_probe_success_bonus_slots": 0,
+                        "cross_family_probe_carryover_bonus_slots": 0,
                         "cross_family_probe_budget_limit": 2,
                         "cross_family_probe_budget_remaining": 0,
                         "cross_family_probe_budget_exhausted": True,
@@ -402,9 +404,11 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
     assert factors["cross_family_recent_success_count"] == 0
     assert factors["cross_family_fresh_success_count"] == 0
     assert factors["cross_family_high_quality_fresh_success_count"] == 0
+    assert factors["cross_family_carryover_success_count"] == 0
     assert factors["cross_family_success_bonus_active"] is False
     assert factors["cross_family_probe_base_budget"] == 2
     assert factors["cross_family_probe_success_bonus_slots"] == 0
+    assert factors["cross_family_probe_carryover_bonus_slots"] == 0
     assert factors["cross_family_probe_budget_limit"] == 2
     assert factors["cross_family_probe_budget_remaining"] == 0
     assert factors["cross_family_probe_budget_exhausted"] is True
@@ -442,9 +446,11 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
                         "cross_family_recent_success_count": 1,
                         "cross_family_fresh_success_count": 1,
                         "cross_family_high_quality_fresh_success_count": 0,
+                        "cross_family_carryover_success_count": 0,
                         "cross_family_success_bonus_active": True,
                         "cross_family_probe_base_budget": 2,
                         "cross_family_probe_success_bonus_slots": 1,
+                        "cross_family_probe_carryover_bonus_slots": 0,
                         "cross_family_probe_budget_limit": 3,
                         "cross_family_probe_budget_remaining": 1,
                         "cross_family_probe_budget_exhausted": False,
@@ -469,9 +475,74 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
     factors = entries[0].meta_transfer_source_steering_factors["probe_donor"]
     assert factors["cross_family_fresh_success_count"] == 1
     assert factors["cross_family_high_quality_fresh_success_count"] == 0
+    assert factors["cross_family_carryover_success_count"] == 0
     assert factors["cross_family_success_bonus_active"] is True
     assert factors["cross_family_probe_base_budget"] == 2
     assert factors["cross_family_probe_success_bonus_slots"] == 1
+    assert factors["cross_family_probe_carryover_bonus_slots"] == 0
+    assert factors["cross_family_probe_budget_limit"] == 3
+    assert factors["cross_family_probe_budget_remaining"] == 1
+
+
+def test_steering_log_exposes_cross_family_probe_carryover_budget_metadata() -> None:
+    engine = CalibrationEngine(min_samples_for_calibration=999)
+    now = datetime.now(UTC)
+    engine.decision_log = [
+        _decision_with_steering(
+            decision_id="family_probe_carryover",
+            timestamp=now,
+            session_id="session_probe_carryover",
+            source_id="carryover_donor",
+            source_support_profile="adhd_aware_support+language_sensitive_support",
+            target_support_profile="adhd_aware_support",
+            family_policy="cross_family_probe_guard",
+            family_policy_multiplier=0.95,
+            observed_outcome_score=0.7,
+        ).model_copy(
+            update={
+                "steering_family_policy_applied": True,
+                "meta_transfer_source_steering_factors": {
+                    "carryover_donor": {
+                        "family_transfer_policy": "cross_family_probe_guard",
+                        "family_transfer_policy_reason": "keep_cross_family_sparse_probe_conservative",
+                        "family_transfer_policy_multiplier": 0.95,
+                        "source_support_profile": "adhd_aware_support+language_sensitive_support",
+                        "target_support_profile": "adhd_aware_support",
+                        "source_family": "adhd_aware_support+language_sensitive_support",
+                        "target_family": "adhd_aware_support",
+                        "family_pair_effectiveness": 0.0,
+                        "family_pair_samples": 1,
+                        "cross_family_recent_probe_count": 2,
+                        "cross_family_recent_success_count": 1,
+                        "cross_family_fresh_success_count": 0,
+                        "cross_family_high_quality_fresh_success_count": 0,
+                        "cross_family_carryover_success_count": 1,
+                        "cross_family_success_bonus_active": True,
+                        "cross_family_probe_base_budget": 2,
+                        "cross_family_probe_success_bonus_slots": 1,
+                        "cross_family_probe_carryover_bonus_slots": 1,
+                        "cross_family_probe_budget_limit": 3,
+                        "cross_family_probe_budget_remaining": 1,
+                        "cross_family_probe_budget_exhausted": False,
+                    }
+                },
+            }
+        )
+    ]
+
+    entries = SteeringLogQuery(engine).get_steering_decisions(
+        include_weak_edges=False,
+        include_proven_boost=False,
+        include_adaptive_caps=False,
+        include_edge_seeking=False,
+        include_edge_policy=False,
+        include_family_policy=True,
+    )
+
+    assert len(entries) == 1
+    factors = entries[0].meta_transfer_source_steering_factors["carryover_donor"]
+    assert factors["cross_family_carryover_success_count"] == 1
+    assert factors["cross_family_probe_carryover_bonus_slots"] == 1
     assert factors["cross_family_probe_budget_limit"] == 3
     assert factors["cross_family_probe_budget_remaining"] == 1
 

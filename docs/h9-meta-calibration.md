@@ -759,6 +759,55 @@ Wichtig:
   erkannt
 - die Persistenz- und Query-Architektur bleibt unveraendert
 
+### Phase 15: Carryover Bonus Slots for Cross-Family Probes
+
+Phase 15 fuegt zwischen "frisch" und "ausgelaufen" eine kleine
+Carryover-Stufe ein. Nicht mehr frische, aber noch juengste
+Cross-Family-Erfolge bleiben damit nicht folgenlos: Sie koennen ein
+enges Restbudget offenhalten, ohne erneut eine aktive
+`cross_family_probe_preference` auszulosen.
+
+Kernidee:
+
+- frische Erfolge bleiben das starke Signal fuer aktive
+  Probe-Praeferenz
+- aeltere juengste Erfolge werden zu einem kleinen
+  Carryover-Restsignal abgeschwaecht
+- dieses Carryover-Restsignal erweitert nur das Budget leicht
+- die Family-Policy bleibt konservativ: ohne frische Erfolge gibt es
+  trotz Carryover nur `cross_family_probe_guard`, nicht
+  `cross_family_probe_preference`
+
+Neue Logik:
+
+- `_cross_family_probe_budget_info(...)` berechnet jetzt zusaetzlich:
+  - `carryover_success_count`
+  - `carryover_bonus_slots`
+- `success_bonus_slots` enthalten jetzt:
+  - frische Erfolgs-Slots
+  - plus ein kleines Carryover-Slot-Fenster
+- `_family_transfer_policy_info(...)` laesst
+  `cross_family_probe_preference` weiterhin nur bei
+  `fresh_success_count > 0` zu
+- ohne frische Erfolge kann Carryover also nur ein kleines Restbudget
+  offenhalten, nicht aber die Priorisierung reaktivieren
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_carryover_success_count`
+- `cross_family_probe_carryover_bonus_slots`
+- weiterhin `cross_family_probe_success_bonus_slots`,
+  `cross_family_probe_budget_limit`,
+  `cross_family_probe_budget_remaining`
+
+Wichtig:
+
+- das ist noch keine kontinuierliche Decay-Gewichtung, sondern eine
+  kleine diskrete Zwischenstufe
+- Carryover bleibt absichtlich eng gedeckelt
+- die Signalkette bleibt voll auditierbar ueber die bestehenden
+  Steering-Faktoren und den Steering-Log
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -773,8 +822,9 @@ Noch nicht enthalten:
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
 - Probe-Budgets sind jetzt nur sehr leicht adaptiv; sie kennen aktuell
-  kleine qualitaetsgewichtete Mehr-Slot-Erfolgsboni und eine einfache
-  Freshness-Grenze, aber noch keine kontinuierliche Decay-Gewichtung
+  kleine qualitaetsgewichtete Mehr-Slot-Erfolgsboni, ein kleines
+  Carryover-Fenster und eine einfache Freshness-Grenze, aber noch keine
+  kontinuierliche Decay-Gewichtung
 
 ## Naechster logischer Ausbau
 
@@ -787,4 +837,5 @@ Die naechste H.9-Stufe sollte drei Dinge ergaenzen:
   Family-Snapshot
 - staerker zeitgewichtete und qualitativ feinere
   Informationsgewinn-Heuristiken auf Basis des jetzt vorhandenen
-  Edge-Seeking-, Policy-, Snapshot- und Probe-Budget-Logs
+  Edge-Seeking-, Policy-, Snapshot- und Probe-Budget-Logs, etwa
+  kontinuierlichere Decay-Stufen innerhalb des neuen Carryover-Fensters

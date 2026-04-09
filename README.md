@@ -165,6 +165,11 @@ Heute bereits im Code:
   starke frische Cross-Family-Erfolge zaehlen jetzt mehr als normale
   frische Erfolge; das Bonusfenster reagiert damit nicht nur auf Anzahl,
   sondern auch auf Signalguete
+- H.9.2 Carryover Bonus Slots for Cross-Family Probes, Phase 15:
+  juengste, aber nicht mehr frische Cross-Family-Erfolge halten jetzt
+  ein kleines Carryover-Fenster offen; sie verhindern damit ein sofort
+  voll ausgeschaltetes Probe-Budget, ohne schon wieder eine aktive
+  `cross_family_probe_preference` auszulosen
 - Session-Persistenz, Resume, Checkpoint-Migration, Quarantaene und
   Audit-Pfade fuer defekte Sessions
 - eine lauffaehige FastAPI-Schicht fuer Planerstellung, Outcome-Updates
@@ -173,14 +178,15 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `244 passed, 1 warning`
+- `pytest -q` -> `246 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
 die naechste Ausbaustufe fuer noch feinere Informationsgewinn-Steuerung
 auf dieser Basis, etwa staerker zeitgewichtete Transfer-Raten,
 qualitativ feinere Erfolgsfenster jenseits eines einfachen
-Freshness-Cutoffs oder spaetere kontinuierliche Qualitaets- und
-Decay-Gewichtung innerhalb stabil gesnapshotteter Family-Historien.
+Freshness-Cutoffs und des kleinen Carryover-Fensters oder spaetere
+kontinuierliche Qualitaets- und Decay-Gewichtung innerhalb stabil
+gesnapshotteter Family-Historien.
 
 ## Repository-Inhalt
 

@@ -62,6 +62,7 @@ META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT = 2
 META_TRANSFER_CROSS_FAMILY_PROBE_SUCCESS_THRESHOLD = 0.55
 META_TRANSFER_CROSS_FAMILY_PROBE_HIGH_QUALITY_SUCCESS_THRESHOLD = 0.85
 META_TRANSFER_CROSS_FAMILY_PROBE_MAX_SUCCESS_BONUS_SLOTS = 3
+META_TRANSFER_CROSS_FAMILY_PROBE_MAX_CARRYOVER_BONUS_SLOTS = 1
 META_TRANSFER_CROSS_FAMILY_PROBE_BUDGET_GUARD_MULTIPLIER = 0.88
 
 
@@ -1665,6 +1666,7 @@ class CalibrationEngine:
         recent_success_count = 0
         fresh_success_count = 0
         high_quality_fresh_success_count = 0
+        carryover_success_count = 0
 
         for record in self.decision_log:
             if record.timestamp < cutoff:
@@ -1706,11 +1708,23 @@ class CalibrationEngine:
                             >= META_TRANSFER_CROSS_FAMILY_PROBE_HIGH_QUALITY_SUCCESS_THRESHOLD
                         ):
                             high_quality_fresh_success_count += 1
+                    else:
+                        carryover_success_count += 1
 
-        success_bonus_slots = min(
+        fresh_success_bonus_slots = min(
             fresh_success_count + high_quality_fresh_success_count,
             META_TRANSFER_CROSS_FAMILY_PROBE_MAX_SUCCESS_BONUS_SLOTS,
         )
+        carryover_bonus_slots = min(
+            carryover_success_count,
+            META_TRANSFER_CROSS_FAMILY_PROBE_MAX_CARRYOVER_BONUS_SLOTS,
+            max(
+                0,
+                META_TRANSFER_CROSS_FAMILY_PROBE_MAX_SUCCESS_BONUS_SLOTS
+                - fresh_success_bonus_slots,
+            ),
+        )
+        success_bonus_slots = fresh_success_bonus_slots + carryover_bonus_slots
         budget_limit = META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT + success_bonus_slots
         budget_remaining = max(0, budget_limit - recent_probe_count)
         budget_exhausted = (
@@ -1722,9 +1736,11 @@ class CalibrationEngine:
             "recent_success_count": recent_success_count,
             "fresh_success_count": fresh_success_count,
             "high_quality_fresh_success_count": high_quality_fresh_success_count,
+            "carryover_success_count": carryover_success_count,
             "success_bonus_active": success_bonus_slots > 0,
             "base_budget": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
             "success_bonus_slots": success_bonus_slots,
+            "carryover_bonus_slots": carryover_bonus_slots,
             "budget_limit": budget_limit,
             "budget_remaining": budget_remaining,
             "budget_exhausted": budget_exhausted,
@@ -1766,6 +1782,9 @@ class CalibrationEngine:
                 0,
             )
         )
+        carryover_success_count = int(
+            (cross_family_probe_budget_info or {}).get("carryover_success_count", 0)
+        )
         success_bonus_active = bool(
             (cross_family_probe_budget_info or {}).get("success_bonus_active", False)
         )
@@ -1777,6 +1796,9 @@ class CalibrationEngine:
         )
         success_bonus_slots = int(
             (cross_family_probe_budget_info or {}).get("success_bonus_slots", 0)
+        )
+        carryover_bonus_slots = int(
+            (cross_family_probe_budget_info or {}).get("carryover_bonus_slots", 0)
         )
         budget_remaining = int(
             (cross_family_probe_budget_info or {}).get("budget_remaining", 0)
@@ -1810,9 +1832,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1836,9 +1860,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1863,9 +1889,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1890,9 +1918,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1919,9 +1949,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1946,9 +1978,11 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": (
                     high_quality_fresh_success_count
                 ),
+                "cross_family_carryover_success_count": carryover_success_count,
                 "cross_family_success_bonus_active": success_bonus_active,
                 "cross_family_probe_base_budget": base_budget,
                 "cross_family_probe_success_bonus_slots": success_bonus_slots,
+                "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
                 "cross_family_probe_budget_limit": budget_limit,
                 "cross_family_probe_budget_remaining": budget_remaining,
                 "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -1968,9 +2002,11 @@ class CalibrationEngine:
             "cross_family_high_quality_fresh_success_count": (
                 high_quality_fresh_success_count
             ),
+            "cross_family_carryover_success_count": carryover_success_count,
             "cross_family_success_bonus_active": success_bonus_active,
             "cross_family_probe_base_budget": base_budget,
             "cross_family_probe_success_bonus_slots": success_bonus_slots,
+            "cross_family_probe_carryover_bonus_slots": carryover_bonus_slots,
             "cross_family_probe_budget_limit": budget_limit,
             "cross_family_probe_budget_remaining": budget_remaining,
             "cross_family_probe_budget_exhausted": budget_exhausted,
@@ -2164,9 +2200,11 @@ class CalibrationEngine:
                     "recent_success_count": 0,
                     "fresh_success_count": 0,
                     "high_quality_fresh_success_count": 0,
+                    "carryover_success_count": 0,
                     "success_bonus_active": False,
                     "base_budget": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
                     "success_bonus_slots": 0,
+                    "carryover_bonus_slots": 0,
                     "budget_limit": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
                     "budget_remaining": META_TRANSFER_CROSS_FAMILY_PROBE_MAX_RECENT,
                     "budget_exhausted": False,
@@ -2288,6 +2326,9 @@ class CalibrationEngine:
                 "cross_family_high_quality_fresh_success_count": int(
                     family_policy_info["cross_family_high_quality_fresh_success_count"]
                 ),
+                "cross_family_carryover_success_count": int(
+                    family_policy_info["cross_family_carryover_success_count"]
+                ),
                 "cross_family_success_bonus_active": bool(
                     family_policy_info["cross_family_success_bonus_active"]
                 ),
@@ -2296,6 +2337,9 @@ class CalibrationEngine:
                 ),
                 "cross_family_probe_success_bonus_slots": int(
                     family_policy_info["cross_family_probe_success_bonus_slots"]
+                ),
+                "cross_family_probe_carryover_bonus_slots": int(
+                    family_policy_info["cross_family_probe_carryover_bonus_slots"]
                 ),
                 "cross_family_probe_budget_limit": int(
                     family_policy_info["cross_family_probe_budget_limit"]

@@ -673,6 +673,52 @@ Wichtig:
 - die Semantik bleibt voll auditierbar ueber die bestehenden
   Steering-Faktoren
 
+### Phase 13: Multi-Slot Success Bonuses for Cross-Family Probes
+
+Phase 13 macht das kleine Erfolgsfenster aus Phase 12 expliziter und
+etwas flexibler. Statt eines impliziten Bonus von genau einem Slot
+arbeitet die Engine jetzt mit sichtbaren `success_bonus_slots`.
+Mehrere frische Cross-Family-Erfolge koennen damit ein kleines, aber
+klar auditierbares Mehr-Slot-Fenster oeffnen.
+
+Kernidee:
+
+- das Basisbudget bleibt klein und konstant
+- frische erfolgreiche Probes liefern zusaetzliche
+  `success_bonus_slots`
+- das aktuelle Budget ergibt sich sichtbar aus
+  `base_budget + success_bonus_slots`
+- die Obergrenze bleibt weiterhin klein; es ist kein aggressiver
+  Sprung, sondern ein feiner abgestufter Informationsgewinn-Mechanismus
+
+Neue Logik:
+
+- `_cross_family_probe_budget_info(...)` liefert jetzt:
+  - `base_budget`
+  - `success_bonus_slots`
+  - `budget_limit`
+- `success_bonus_slots` berechnen sich aktuell als:
+  `min(fresh_success_count, 2)`
+- `_family_transfer_policy_info(...)` gibt diese Struktur unveraendert
+  an die Steering-Faktoren weiter
+
+Neue Steering-Felder pro Source:
+
+- `cross_family_probe_base_budget`
+- `cross_family_probe_success_bonus_slots`
+- weiterhin `cross_family_probe_budget_limit`,
+  `cross_family_probe_budget_remaining`,
+  `cross_family_probe_budget_exhausted`
+
+Wichtig:
+
+- die Logik bleibt weiter ohne neuen Store und baut nur auf den
+  persistierten Family-Snapshots plus Decision-History auf
+- aktuell zaehlt nur die Anzahl frischer Erfolge, nicht deren
+  unterschiedliche Qualitaet
+- die Mehr-Slot-Semantik ist ein Zwischenstopp vor spaeterer
+  qualitaets- oder decay-gewichteter Steuerung
+
 ## Aktuelle Grenzen
 
 Das ist bewusst nur der Start von H.9.
@@ -687,8 +733,8 @@ Noch nicht enthalten:
 - Alt-Daten ohne Family-Snapshot bleiben auf Computed-on-Read-Fallback
   angewiesen, bis eine spaetere Migration sie optional nachzieht
 - Probe-Budgets sind jetzt nur sehr leicht adaptiv; sie kennen aktuell
-  nur ein kleines Erfolgs-Bonusfenster und eine einfache
-  Freshness-Grenze, aber noch keine kontinuierliche Decay-Logik
+  kleine Mehr-Slot-Erfolgsboni und eine einfache Freshness-Grenze, aber
+  noch keine kontinuierliche Decay- oder Qualitaetsgewichtung
 
 ## Naechster logischer Ausbau
 

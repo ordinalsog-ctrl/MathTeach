@@ -375,6 +375,8 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
                         "cross_family_recent_success_count": 0,
                         "cross_family_fresh_success_count": 0,
                         "cross_family_success_bonus_active": False,
+                        "cross_family_probe_base_budget": 2,
+                        "cross_family_probe_success_bonus_slots": 0,
                         "cross_family_probe_budget_limit": 2,
                         "cross_family_probe_budget_remaining": 0,
                         "cross_family_probe_budget_exhausted": True,
@@ -399,6 +401,8 @@ def test_steering_log_exposes_cross_family_probe_budget_metadata() -> None:
     assert factors["cross_family_recent_success_count"] == 0
     assert factors["cross_family_fresh_success_count"] == 0
     assert factors["cross_family_success_bonus_active"] is False
+    assert factors["cross_family_probe_base_budget"] == 2
+    assert factors["cross_family_probe_success_bonus_slots"] == 0
     assert factors["cross_family_probe_budget_limit"] == 2
     assert factors["cross_family_probe_budget_remaining"] == 0
     assert factors["cross_family_probe_budget_exhausted"] is True
@@ -436,6 +440,8 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
                         "cross_family_recent_success_count": 1,
                         "cross_family_fresh_success_count": 1,
                         "cross_family_success_bonus_active": True,
+                        "cross_family_probe_base_budget": 2,
+                        "cross_family_probe_success_bonus_slots": 1,
                         "cross_family_probe_budget_limit": 3,
                         "cross_family_probe_budget_remaining": 1,
                         "cross_family_probe_budget_exhausted": False,
@@ -460,6 +466,8 @@ def test_steering_log_exposes_cross_family_probe_preference_distribution() -> No
     factors = entries[0].meta_transfer_source_steering_factors["probe_donor"]
     assert factors["cross_family_fresh_success_count"] == 1
     assert factors["cross_family_success_bonus_active"] is True
+    assert factors["cross_family_probe_base_budget"] == 2
+    assert factors["cross_family_probe_success_bonus_slots"] == 1
     assert factors["cross_family_probe_budget_limit"] == 3
     assert factors["cross_family_probe_budget_remaining"] == 1
 

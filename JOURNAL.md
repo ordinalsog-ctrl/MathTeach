@@ -2,6 +2,41 @@
 
 Stand: 2026-04-06
 
+## Phase-H.9.2-Multi-Slot-Success-Bonuses-For-Cross-Family-Probes 2026-04-06
+
+Die Cross-Family-Probe-Steuerung kann jetzt mehr als nur ein einziges
+kleines Erfolgsfenster abbilden. Mehrere frische erfolgreiche
+Cross-Family-Probes oeffnen jetzt explizite `success_bonus_slots`,
+sodass das Budget nicht nur an/aus ist, sondern klein skaliert.
+
+Wichtigste Konsequenzen:
+
+- `CalibrationEngine._cross_family_probe_budget_info(...)` berechnet
+  jetzt neben dem Basisbudget explizite
+  `success_bonus_slots`
+- das adaptive Budgetlimit ergibt sich jetzt sichtbar aus
+  `base_budget + success_bonus_slots`
+- mehrere frische Erfolge koennen das kleine Bonusfenster erweitern,
+  weiterhin streng begrenzt
+- Steering-Faktoren zeigen jetzt explizit, wie viel des aktuellen
+  Budgetfensters aus Basisbudget und wie viel aus Erfolgs-Boni stammt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/services/calibration_engine.py](/Users/jonasweiss/MathTeach/src/mathteach/services/calibration_engine.py)
+- [tests/test_h9_active_steering.py](/Users/jonasweiss/MathTeach/tests/test_h9_active_steering.py)
+- [tests/test_h9_steering_observability.py](/Users/jonasweiss/MathTeach/tests/test_h9_steering_observability.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+- [docs/h9-meta-calibration.md](/Users/jonasweiss/MathTeach/docs/h9-meta-calibration.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- H.9-Active-Steering-Zielsuite: `24 passed, 1 warning`
+- Steering-Observability-Zielsuite: `15 passed, 1 warning`
+- H.9-/API-Zielsuite: `104 passed, 1 warning`
+- Full-Suite: `243 passed, 1 warning`
+
 ## Phase-H.9.2-Fresh-Success-Windows-For-Cross-Family-Probes 2026-04-06
 
 Die adaptive Cross-Family-Probe-Budgetlogik bekommt jetzt eine

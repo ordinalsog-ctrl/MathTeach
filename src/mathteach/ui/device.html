@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>MathTeach Device</title>
+    <link rel="stylesheet" href="/device-static/device.css" />
+  </head>
+  <body>
+    <main class="device-shell">
+      <section class="screen screen-start" data-screen="start">
+        <div class="topline">
+          <p class="eyebrow">MathTeach local tutor</p>
+          <p class="clock" data-role="clock">--:--</p>
+        </div>
+
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="welcome">Schoen, dass du da bist.</p>
+            <h1 data-role="welcome-name">Wir lernen in deinem Tempo.</h1>
+            <p class="lead">
+              Dieses Geraet merkt sich deinen letzten Stand und fuehrt dich
+              ohne Druck Schritt fuer Schritt weiter.
+            </p>
+          </div>
+
+          <div class="visual-note" aria-hidden="true">
+            <div class="paper-sheet">
+              <p class="paper-label">Heute im Blick</p>
+              <div class="equation-line">
+                <span class="equation-pill">x + 3</span>
+                <span class="equation-mark">=</span>
+                <span class="equation-pill">7</span>
+              </div>
+              <p class="paper-copy">
+                Erst sehen, dann sprechen, dann rechnen.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="resume-card">
+          <p class="resume-label">Letzter Stand</p>
+          <h2 data-role="resume-topic">Noch kein Thema vorbereitet</h2>
+          <p data-role="resume-summary">
+            Wir starten mit einem ruhigen ersten Profil und einem klaren
+            Einstieg.
+          </p>
+        </div>
+
+        <div class="actions">
+          <button class="action-primary" data-action="continue">
+            Weiterlernen
+          </button>
+          <button class="action-secondary" data-action="onboarding">
+            Neues Profil einrichten
+          </button>
+          <button class="action-ghost" data-action="reset-session">
+            Letzten Stand loeschen
+          </button>
+        </div>
+      </section>
+
+      <section class="screen screen-onboarding is-hidden" data-screen="onboarding">
+        <div class="topline">
+          <p class="eyebrow">Erstes Einrichten</p>
+          <p class="step-copy">Kurze Fragen fuer deinen Start</p>
+        </div>
+
+        <div class="onboarding-grid">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="learnerName" placeholder="Zum Beispiel Alex" />
+          </label>
+
+          <label class="field">
+            <span>Klassenstufe / Niveau</span>
+            <select name="mathLevel">
+              <option value="middle_school">Mittelstufe</option>
+              <option value="high_school">Oberstufe</option>
+              <option value="undergraduate">Studium</option>
+            </select>
+          </label>
+
+          <label class="field field-wide">
+            <span>Womit willst du zuerst arbeiten?</span>
+            <input
+              type="text"
+              name="objective"
+              value="Erklaere mir lineare Gleichungen ruhig und mit Beispiel."
+            />
+          </label>
+
+          <div class="choice-group">
+            <p class="choice-label">Wie soll ich erklaeren?</p>
+            <div class="chip-row">
+              <button class="chip is-active" data-pref="visuals" data-value="true">
+                Mit Bild starten
+              </button>
+              <button class="chip" data-pref="visuals" data-value="false">
+                Mit Worten starten
+              </button>
+            </div>
+          </div>
+
+          <div class="choice-group">
+            <p class="choice-label">Wie gross sollen die Schritte sein?</p>
+            <div class="chip-row">
+              <button class="chip is-active" data-pref="pace" data-value="gentle">
+                Kleine Schritte
+              </button>
+              <button class="chip" data-pref="pace" data-value="balanced">
+                Ausgewogen
+              </button>
+              <button class="chip" data-pref="pace" data-value="intensive">
+                Eher direkt
+              </button>
+            </div>
+          </div>
+
+          <div class="choice-group">
+            <p class="choice-label">Was hilft dir oft?</p>
+            <div class="toggle-grid">
+              <label class="toggle-card">
+                <input type="checkbox" name="support" value="adhd_aware_support" />
+                <span>Kurze ruhige Schritte</span>
+              </label>
+              <label class="toggle-card">
+                <input
+                  type="checkbox"
+                  name="support"
+                  value="dyscalculia_aware_support"
+                />
+                <span>Zahlen einzeln sehen</span>
+              </label>
+              <label class="toggle-card">
+                <input type="checkbox" name="support" value="dyslexia_aware_support" />
+                <span>Weniger Text pro Blick</span>
+              </label>
+              <label class="toggle-card">
+                <input
+                  type="checkbox"
+                  name="support"
+                  value="language_sensitive_support"
+                />
+                <span>Einfachere Sprache</span>
+              </label>
+              <label class="toggle-card">
+                <input
+                  type="checkbox"
+                  name="support"
+                  value="scarcity_aware_support"
+                />
+                <span>Schnell wieder einsteigen koennen</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="action-primary" data-action="start-learning">
+            Lernprofil speichern
+          </button>
+          <button class="action-ghost" data-action="back-home">
+            Zurueck
+          </button>
+        </div>
+      </section>
+
+      <section class="screen screen-learning is-hidden" data-screen="learning">
+        <div class="lesson-header">
+          <div>
+            <p class="eyebrow">Aktuelle Lerneinheit</p>
+            <h2 data-role="lesson-goal">Wir bereiten den naechsten Schritt vor.</h2>
+          </div>
+          <div class="lesson-meta">
+            <span data-role="lesson-mode">Mode</span>
+            <span data-role="lesson-block">Block</span>
+          </div>
+        </div>
+
+        <div class="lesson-layout">
+          <article class="lesson-card">
+            <p class="card-kicker">Worauf wir achten</p>
+            <ul class="focus-list" data-role="focus-list"></ul>
+
+            <div class="support-panel">
+              <div>
+                <p class="support-label">So erklaere ich gerade</p>
+                <ul data-role="support-moves"></ul>
+              </div>
+              <div>
+                <p class="support-label">Hilfen im Blick</p>
+                <ul data-role="support-scaffolds"></ul>
+              </div>
+            </div>
+          </article>
+
+          <aside class="visual-board">
+            <p class="board-label">Visueller Einstieg</p>
+            <div class="board-note">
+              <div class="balance-row">
+                <span class="balance-pan">x + 3</span>
+                <span class="balance-link"></span>
+                <span class="balance-pan">7</span>
+              </div>
+              <p data-role="visual-hint">
+                Wir behandeln beide Seiten derselben Gleichung mit der gleichen Ruhe.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <div class="status-strip">
+          <p data-role="status-copy">
+            Noch keine Session geladen. Du kannst jederzeit mit dem letzten Stand weitergehen.
+          </p>
+        </div>
+
+        <div class="actions">
+          <button class="action-secondary" data-action="again">
+            Nochmal ruhiger
+          </button>
+          <button class="action-secondary" data-action="example">
+            Zeig mir ein Beispiel
+          </button>
+          <button class="action-primary" data-action="advance">
+            Ich bin bereit fuer den naechsten Schritt
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="/device-static/device.js" defer></script>
+  </body>
+</html>

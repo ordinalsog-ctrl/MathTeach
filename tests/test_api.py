@@ -31,6 +31,28 @@ def test_health() -> None:
     assert response.json()["status"] == "ok"
 
 
+def test_device_shell_endpoint_serves_local_ui() -> None:
+    response = client.get("/device")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "MathTeach Device" in response.text
+    assert "/device-static/device.css" in response.text
+    assert "/device-static/device.js" in response.text
+
+
+def test_device_static_assets_are_served() -> None:
+    css_response = client.get("/device-static/device.css")
+    js_response = client.get("/device-static/device.js")
+
+    assert css_response.status_code == 200
+    assert "text/css" in css_response.headers["content-type"]
+    assert ".device-shell" in css_response.text
+    assert js_response.status_code == 200
+    assert "javascript" in js_response.headers["content-type"]
+    assert "requestPlan" in js_response.text
+
+
 def test_stack_endpoint() -> None:
     response = client.get("/api/v1/stack")
 

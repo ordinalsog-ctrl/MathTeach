@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from mathteach.config import get_settings
 from mathteach.models import CalibrationOutcomeRequest, SessionRequest
@@ -32,6 +34,8 @@ from mathteach.services.session_store import SessionStore
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0")
+_UI_DIR = Path(__file__).resolve().parent / "ui"
+_UI_STATIC_DIR = _UI_DIR / "static"
 session_store = SessionStore(settings.session_store_dir)
 session_manager = SessionManager(session_store)
 calibration_store = (
@@ -43,6 +47,7 @@ calibration_engine = CalibrationEngine(
     store=calibration_store,
     autosave_threshold=settings.calibration_autosave_threshold,
 )
+app.mount("/device-static", StaticFiles(directory=_UI_STATIC_DIR), name="device-static")
 
 
 def _resolve_calibration_engine(
@@ -59,6 +64,11 @@ def _resolve_calibration_engine(
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok", "service": settings.app_name}
+
+
+@app.get("/device")
+def device_shell() -> FileResponse:
+    return FileResponse(_UI_DIR / "device.html")
 
 
 @app.get("/api/v1/stack")

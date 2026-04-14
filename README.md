@@ -78,6 +78,11 @@ lokalen `RPi Touch Display 2 (7")`-Prototypen angelegt: nicht als
 Marketing-Idee, sondern als belastbarer Arbeitsweg vom Engine-Kern zur
 ersten echten Schuelerinteraktion.
 
+Zusatzlich gibt es jetzt bereits den ersten echten lokalen UI-Slice:
+eine 800x480-Device-Oberflaeche unter `/device`, die als Startpunkt fuer
+den Raspberry-Pi-Prototypen dient und Start-, Onboarding- und
+Lernansicht als lokale Web-UI bereitstellt.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von
@@ -183,7 +188,7 @@ Heute bereits im Code:
 Verifizierter Stand:
 
 - `ruff check --no-cache src tests`
-- `pytest -q` -> `246 passed, 1 warning`
+- `pytest -q` -> `248 passed, 1 warning`
 
 Der naechste groessere technische Schritt innerhalb von `H.9` ist jetzt
 die naechste Ausbaustufe fuer noch feinere Informationsgewinn-Steuerung
@@ -265,6 +270,9 @@ gesnapshotteter Family-Historien.
 - [docs/universal-round-u1-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u1-program.md): Erste universelle Designrunde fuer Motivation, Belonging, Errors, Equity/Scarcity und UDL
 - [docs/rpi-touch-ui-lastenheft.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-ui-lastenheft.md): Forschungsbasiertes UI-Lastenheft fuer den ersten lokalen 800x480-Touch-Prototypen
 - [docs/rpi-touch-device-prototype-plan.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-device-prototype-plan.md): Konkreter Prototyp- und Pilotpfad fuer ein erstes MathTeach-Geraet auf Raspberry Pi 5
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html): Erste lokale Device-Oberflaeche mit Start-, Onboarding- und Lernansicht
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css): 800x480-Styles fuer die lokale Touch-Oberflaeche
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js): Lokale Resume-, Onboarding- und Tutor-API-Anbindung fuer die Device-UI
 - [docs/universal-round-u2-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u2-program.md): Zweite universelle Designrunde fuer Transfer, situiertes Lernen, Zusammenarbeit, ZPD und Adult Learning
 - [docs/universal-round-u3-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u3-program.md): Dritte universelle Designrunde fuer neurodiversitaetsbewusste Kernarchitektur, trauma-informed safety, Lifespan-Sequencing und Guardrails
 - [docs/universal-round-u4-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u4-program.md): Erste support-spezifische Runde fuer ADHD, Dyskalkulie, Dyslexie, Autismusspektrum und sprachsensible Unterstuetzung

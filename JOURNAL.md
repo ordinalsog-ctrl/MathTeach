@@ -2,6 +2,47 @@
 
 Stand: 2026-04-14
 
+## Device-UI-First-Slice 2026-04-14
+
+Die erste echte lokale UI fuer das Raspberry-Pi-Geraet ist jetzt im
+Repo verankert. Statt weiterer reiner Mockup-Diskussion gibt es nun
+eine lauffaehige Device-Weboberflaeche unter `/device`, die direkt auf
+die bestehende FastAPI-/Tutor-API aufsetzt.
+
+Neu dazu:
+
+- lokale 800x480-Startansicht mit Resume-Fokus
+- erstes Onboarding mit natuerlichen, nicht-diagnostischen Fragen
+- erste Lernansicht mit ruhigem Handlungsdreieck:
+  `Nochmal`, `Zeig mir ein Beispiel`, `Ich bin bereit fuer den naechsten Schritt`
+- lokale Browser-Resume-Semantik plus `session_id`-Weiterfuehrung in die
+  bestehende Session-/Plan-Logik
+- statische Device-Assets unter `src/mathteach/ui/`
+
+Wichtigste Konsequenzen:
+
+- der Device-Pfad ist jetzt nicht mehr nur dokumentiert, sondern hat
+  eine erste reale Runtime-Oberflaeche
+- die UI bleibt lokal, leichtgewichtig und ohne Build-Tooling
+- der naechste echte Schritt ist jetzt nicht "ob eine UI noetig ist",
+  sondern wie diese erste UI auf dem Pi im Kiosk-Modus gestartet und
+  mit einem ersten Themenkorridor verbunden wird
+
+Neue Referenzartefakte:
+
+- [src/mathteach/main.py](/Users/jonasweiss/MathTeach/src/mathteach/main.py)
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+Verifikation:
+
+- `ruff`: bestanden
+- API-Zielsuite: `55 passed, 1 warning`
+- Full-Suite: `248 passed, 1 warning`
+
 ## Device-RPi-Touch-Prototyp-Readiness 2026-04-14
 
 Der naechste echte Produktschritt ist jetzt als Device-Spur im Repo

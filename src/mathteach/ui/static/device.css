@@ -1,0 +1,426 @@
+:root {
+  color-scheme: light;
+  --paper: #efe5cf;
+  --paper-deep: #e1d1af;
+  --ink: #2e2419;
+  --ink-soft: #5a4d40;
+  --line: rgba(92, 77, 64, 0.18);
+  --accent: #7b985f;
+  --accent-soft: #dce5d0;
+  --clay: #c5895d;
+  --shadow: rgba(46, 36, 25, 0.12);
+  --button-shadow: rgba(46, 36, 25, 0.08);
+  --surface: rgba(255, 251, 243, 0.74);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.15), transparent 16rem),
+    linear-gradient(135deg, #f4ebd9 0%, var(--paper) 55%, var(--paper-deep) 100%);
+  color: var(--ink);
+}
+
+body {
+  min-width: 800px;
+  min-height: 480px;
+}
+
+.device-shell {
+  width: 800px;
+  min-height: 480px;
+  margin: 0 auto;
+  padding: 22px 24px 20px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 1.8rem / 100% 2rem,
+    transparent;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 438px;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.topline,
+.lesson-header,
+.actions,
+.hero,
+.lesson-layout,
+.onboarding-grid,
+.support-panel,
+.chip-row,
+.toggle-grid {
+  display: flex;
+}
+
+.topline,
+.lesson-header {
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.eyebrow,
+.clock,
+.step-copy,
+.resume-label,
+.card-kicker,
+.board-label,
+.support-label,
+.paper-label {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.73rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.clock,
+.step-copy {
+  font-size: 0.82rem;
+}
+
+.hero {
+  align-items: stretch;
+  gap: 20px;
+  flex: 1;
+}
+
+.hero-copy,
+.resume-card,
+.lesson-card,
+.visual-board,
+.onboarding-grid {
+  background: var(--surface);
+  border: 1px solid rgba(90, 77, 64, 0.12);
+  border-radius: 26px;
+  box-shadow: 0 10px 24px var(--shadow);
+}
+
+.hero-copy {
+  flex: 1.15;
+  padding: 24px;
+}
+
+.visual-note {
+  width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paper-sheet {
+  width: 100%;
+  min-height: 210px;
+  padding: 18px;
+  border-radius: 28px 22px 26px 20px;
+  background:
+    linear-gradient(rgba(90, 77, 64, 0.08) 1px, transparent 1px) 0 1.6rem / 100% 1.9rem,
+    linear-gradient(145deg, #fbf5e9 0%, #efdfbf 100%);
+  box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.08);
+  transform: rotate(-1.2deg);
+}
+
+.welcome {
+  margin: 0 0 0.55rem;
+  font-size: 1.18rem;
+  color: var(--clay);
+}
+
+h1,
+h2 {
+  margin: 0 0 0.8rem;
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: 2.3rem;
+  max-width: 11ch;
+}
+
+h2 {
+  font-size: 1.65rem;
+}
+
+.lead,
+.resume-card p,
+.status-strip p,
+.paper-copy,
+.board-note p {
+  margin: 0;
+  line-height: 1.45;
+  font-size: 1rem;
+}
+
+.equation-line,
+.balance-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 1rem 0 0.75rem;
+}
+
+.equation-pill,
+.balance-pan {
+  min-width: 86px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 10px rgba(90, 77, 64, 0.08);
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.equation-mark {
+  font-size: 1.4rem;
+  color: var(--ink-soft);
+}
+
+.resume-card {
+  padding: 18px 22px;
+}
+
+.actions {
+  gap: 14px;
+  align-items: center;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.action-primary,
+.action-secondary,
+.action-ghost {
+  min-height: 64px;
+  padding: 0 22px;
+  border-radius: 22px;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 1rem;
+}
+
+.action-primary {
+  background: var(--accent);
+  color: #f9f7f0;
+  box-shadow: 0 10px 20px rgba(123, 152, 95, 0.28);
+}
+
+.action-secondary {
+  background: #fbf7ef;
+  color: var(--ink);
+  box-shadow: 0 8px 14px var(--button-shadow);
+}
+
+.action-ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  margin-left: auto;
+}
+
+.onboarding-grid {
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px;
+  align-content: flex-start;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: calc(50% - 8px);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 0.95rem;
+}
+
+.field-wide,
+.choice-group {
+  width: 100%;
+}
+
+.field input,
+.field select {
+  min-height: 52px;
+  padding: 0 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(90, 77, 64, 0.18);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--ink);
+}
+
+.choice-label {
+  margin: 0 0 10px;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.chip-row {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  min-height: 48px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.82);
+  color: var(--ink);
+  border: 1px solid rgba(90, 77, 64, 0.14);
+}
+
+.chip.is-active {
+  background: var(--accent-soft);
+  border-color: rgba(123, 152, 95, 0.36);
+}
+
+.toggle-grid {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toggle-card {
+  min-width: 218px;
+  flex: 1 1 218px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(90, 77, 64, 0.12);
+  background: rgba(255, 250, 240, 0.78);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 0.92rem;
+}
+
+.toggle-card input {
+  width: 20px;
+  height: 20px;
+}
+
+.lesson-header {
+  align-items: flex-start;
+}
+
+.lesson-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lesson-meta span {
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.82);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.lesson-layout {
+  gap: 18px;
+  flex: 1;
+}
+
+.lesson-card {
+  flex: 1.18;
+  padding: 20px;
+}
+
+.focus-list,
+.support-panel ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.focus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 112px;
+}
+
+.support-panel {
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.support-panel > div {
+  flex: 1;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 251, 243, 0.88);
+}
+
+.support-panel ul {
+  margin-top: 10px;
+  line-height: 1.45;
+}
+
+.visual-board {
+  width: 274px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background:
+    linear-gradient(rgba(90, 77, 64, 0.08) 1px, transparent 1px) 0 1.2rem / 100% 1.7rem,
+    rgba(255, 250, 240, 0.72);
+}
+
+.board-note {
+  flex: 1;
+  border-radius: 22px;
+  padding: 18px;
+  background: linear-gradient(155deg, #faf4e7 0%, #eddcbc 100%);
+  box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.08);
+}
+
+.balance-link {
+  width: 52px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--ink-soft);
+  opacity: 0.55;
+}
+
+.status-strip {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 18px;
+  background: rgba(255, 251, 243, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.06);
+}

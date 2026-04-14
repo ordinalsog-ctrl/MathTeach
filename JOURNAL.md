@@ -572,6 +572,34 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-onboarding-screen-sequence-spec.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-screen-sequence-spec.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Onboarding-Wire-Contracts 2026-04-14
+
+Nach der Drei-Schritt-Sequenz sind jetzt auch die einzelnen
+Onboarding-Screens auf Wire-Ebene festgelegt.
+
+Neu dazu:
+
+- [device-onboarding-wire-contract-start-goal.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-start-goal.md)
+- [device-onboarding-wire-contract-presentation-start.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-presentation-start.md)
+- [device-onboarding-wire-contract-start-confirmation.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-start-confirmation.md)
+
+Wichtigste Konsequenzen:
+
+- der kommende Onboarding-Umbau ist jetzt nicht mehr nur ueber eine
+  Flussidee, sondern ueber konkrete Screen-Slots abgesichert
+- jeder der drei Onboarding-Schritte traegt jetzt genau eine kleine
+  Entscheidung
+- Name, Niveau, Schrittgroesse und Support-Checkboxen sind damit fuer
+  die erste echte Onboarding-Implementierung nochmals explizit aus dem
+  fruehen UI ausgeschlossen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-onboarding-wire-contract-start-goal.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-start-goal.md)
+- [docs/device-onboarding-wire-contract-presentation-start.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-presentation-start.md)
+- [docs/device-onboarding-wire-contract-start-confirmation.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-wire-contract-start-confirmation.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

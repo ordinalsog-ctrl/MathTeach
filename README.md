@@ -155,6 +155,12 @@ Sequenz aus `Startgegenstand`, `Darstellungsstart` und `Startfreigabe`.
 Damit ist auch fuer das Onboarding die naechste Umbauphase wieder klar
 an den Contract statt an freie UI-Intuition gebunden.
 
+Darauf aufbauend liegen jetzt auch die drei konkreten Onboarding-
+Wire-Contracts vor. Damit ist fuer jeden spaeteren Onboarding-Screen
+festgelegt, welche Slots er tragen darf, welche einzelne kleine
+Entscheidung dort zulaessig ist und welche Inhalte ausdruecklich nicht
+auf diesen Schritt gehoeren.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

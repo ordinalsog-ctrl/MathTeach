@@ -223,18 +223,23 @@ h2 {
 }
 
 .screen-start .resume-card {
-  padding: 20px 24px;
+  padding: 22px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resume-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 6px;
 }
 
 .actions {
   gap: 14px;
   align-items: center;
-}
-
-.screen-start .actions {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
 }
 
 button,
@@ -274,6 +279,7 @@ button:active {
 
 .screen-start .action-primary {
   min-width: 16rem;
+  padding-inline: 24px;
 }
 
 .action-secondary {
@@ -290,6 +296,7 @@ button:active {
   color: var(--ink-soft);
   box-shadow: none;
   text-align: left;
+  font-size: 0.95rem;
 }
 
 .action-ghost {

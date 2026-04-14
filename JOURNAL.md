@@ -503,6 +503,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Visible-Pass-2 2026-04-14
+
+Der zweite sichtbare Startscreen-Pass ist jetzt ebenfalls umgesetzt,
+weiterhin ohne freien Stilwechsel und weiterhin innerhalb des
+bestehenden Contracts.
+
+Neu dazu:
+
+- Resume-Kern und Handlungszone sind in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  jetzt in einem gemeinsamen Wiedereinstiegsblock zusammengezogen
+- [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  stuetzt diesen Block mit einer kleinen `resume-actions`-Zone statt
+  einer getrennten Startscreen-Handlungsleiste
+- die Zustands-Copy in
+  [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  ist leicht nachgeschaerft, damit sie den Wiedereinstieg expliziter und
+  kleiner rahmt
+
+Wichtigste Konsequenzen:
+
+- der Startscreen folgt jetzt sichtbarer der Blueprint-Regel
+  `ein primaerer Inhaltsblock`
+- Resume-Titel, Resume-Satz, primaerer CTA und schwache Nebenhandlung
+  werden nun als ein gemeinsamer Wiedereinstiegspfad gelesen
+- der Screen entfernt sich weiter von App-/Portal-Anmutung, ohne die
+  bestehende evidenzgebundene Struktur zu verlassen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

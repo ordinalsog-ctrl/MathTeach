@@ -142,6 +142,12 @@ dekorative Startscreen-Notiz ist entfernt und die Handlungszone ist auf
 einen dominanten CTA plus eine deutlich schwächere Nebenhandlung
 reduziert.
 
+Der zweite sichtbare Pass zieht diesen Contract noch konsequenter durch:
+Resume-Kern und Handlungszone sitzen jetzt in einem gemeinsamen
+Wiedereinstiegsblock, sodass der Startscreen weniger wie mehrere kleine
+App-Bereiche und staerker wie genau ein primaerer Wiedereinstiegspunkt
+wirkt.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

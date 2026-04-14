@@ -337,7 +337,7 @@ function buildResumeStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
       : "Wir lernen in deinem Tempo.",
-    support_line: "Du kannst mit einem kleinen Schritt wieder einsteigen.",
+    support_line: "Du kannst genau hier mit einem kleinen Schritt weitermachen.",
     resume_label: "Letzter Stand",
     resume_title:
       block?.goal || state.profile.objective || "Letzte Lerneinheit",
@@ -353,7 +353,7 @@ function buildNoHistoryStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
       : "Wir lernen in deinem Tempo.",
-    support_line: "Wir koennen klein und ruhig anfangen.",
+    support_line: "Wir koennen mit einem kleinen ersten Schritt anfangen.",
     resume_label: "Erster Schritt",
     resume_title: "Wir beginnen mit einem ruhigen Einstieg.",
     resume_summary: "Du musst noch nichts koennen oder vorbereiten.",
@@ -368,7 +368,7 @@ function buildUnsafeHistoryStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir steigen ruhig wieder ein.`
       : "Wir steigen ruhig wieder ein.",
-    support_line: "Wir nehmen nur den letzten stabilen Schritt.",
+    support_line: "Wir nehmen einfach den letzten sicheren Schritt.",
     resume_label: "Sicherer Wiedereinstieg",
     resume_title: "Wir machen beim letzten sicheren Schritt weiter.",
     resume_summary: "Wir setzen an einem stabilen Punkt wieder an.",

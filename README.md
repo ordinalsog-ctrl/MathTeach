@@ -83,6 +83,11 @@ eine 800x480-Device-Oberflaeche unter `/device`, die als Startpunkt fuer
 den Raspberry-Pi-Prototypen dient und Start-, Onboarding- und
 Lernansicht als lokale Web-UI bereitstellt.
 
+Fuer die weitere UI-Arbeit ist jetzt zusaetzlich eine harte
+studiengebundene Regelmatrix im Repo verankert, damit Device-Screens
+nicht aus Designintuition, sondern aus Quellen, Wirkungen und klaren
+Verboten heraus gebaut werden.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von
@@ -269,6 +274,13 @@ gesnapshotteter Family-Historien.
 - [docs/universal-tutor-system-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/universal-tutor-system-review-triage-2026-04-01.md): Prioritaetskorrektur fuer Universalitaet, Inklusion, Neurodiversitaet, Equity und lokale Systemarchitektur
 - [docs/universal-round-u1-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u1-program.md): Erste universelle Designrunde fuer Motivation, Belonging, Errors, Equity/Scarcity und UDL
 - [docs/rpi-touch-ui-lastenheft.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-ui-lastenheft.md): Forschungsbasiertes UI-Lastenheft fuer den ersten lokalen 800x480-Touch-Prototypen
+- [docs/device-ui-evidence-matrix.md](/Users/jonasweiss/MathTeach/docs/device-ui-evidence-matrix.md): Harte Screen-Regeln aus U.1, Support-Matrizen und psychologischen Wirkungen fuer Start, Onboarding und Lernansicht
+- [docs/device-startscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-contract.md): Verbindlicher Contract fuer den Device-Startscreen als Resume- und Wiedereinstiegs-Screen
+- [docs/device-startscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-blueprint.md): Struktureller Bauplan fuer den Startscreen aus dem Contract, noch ohne Design oder Code
+- [docs/device-onboarding-contract.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-contract.md): Verbindlicher Contract fuer ein nicht-diagnostisches, lastarmes Device-Onboarding
+- [docs/device-onboarding-flow-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-flow-blueprint.md): Struktureller Ablauf fuer ein minimales, nicht-formularartiges Device-Onboarding
+- [docs/device-learningscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-contract.md): Verbindlicher Contract fuer die psychologisch und didaktisch gebundene Lernansicht
+- [docs/device-learningscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-blueprint.md): Struktureller Bauplan fuer die Lernansicht aus dem Lernscreen-Contract
 - [docs/rpi-touch-device-prototype-plan.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-device-prototype-plan.md): Konkreter Prototyp- und Pilotpfad fuer ein erstes MathTeach-Geraet auf Raspberry Pi 5
 - [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html): Erste lokale Device-Oberflaeche mit Start-, Onboarding- und Lernansicht
 - [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css): 800x480-Styles fuer die lokale Touch-Oberflaeche

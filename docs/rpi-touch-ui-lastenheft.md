@@ -10,6 +10,11 @@ Anforderungen fuer die erste lokale Geraete-UI auf dem
 
 Es ist bewusst kein Pixel-Styleguide.
 
+Die harte Quelle-fuer-Regel-Uebersetzung fuer einzelne Screens liegt
+zusaetzlich in:
+
+- [device-ui-evidence-matrix.md](/Users/jonasweiss/MathTeach/docs/device-ui-evidence-matrix.md)
+
 Es definiert:
 
 - welche psychologischen und paedagogischen Wirkungen die UI erzeugen

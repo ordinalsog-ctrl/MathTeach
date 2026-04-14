@@ -2,6 +2,210 @@
 
 Stand: 2026-04-14
 
+## Device-UI-Evidence-Matrix 2026-04-14
+
+Nach dem verworfenen freien UI-/Illustrationslauf ist jetzt eine harte
+studiengebundene Screen-Matrix ins Repo gezogen worden.
+
+Neu dazu:
+
+- neues
+  [device-ui-evidence-matrix.md](/Users/jonasweiss/MathTeach/docs/device-ui-evidence-matrix.md)
+  als verbindliche Regelbasis fuer Device-Screens
+- klare Uebersetzung von `U.1`, `ADHD`, `Dyscalculia`, `Dyslexia`,
+  `Autism`, `Scarcity` und der paedagogischen Strategiematrix in
+  konkrete Screen-Regeln
+- harte Verbote gegen Dashboard-Waende, Checkbox-Stapel,
+  dekorative Illustrationen ohne mathematische Funktion und
+  ueberfrachtete 800x480-Screens
+- explizite Screen-Budgets fuer `Startscreen`, `Onboarding` und
+  `Lernscreen`
+
+Wichtigste Konsequenzen:
+
+- weitere UI-Arbeit darf nicht mehr aus Stilideen oder Mockups
+  gestartet werden
+- bevor neue Screens gebaut werden, muessen erst
+  psychologische Aufgabe, Quellen, Screen-Budget und Verbote benannt
+  werden
+- insbesondere das Onboarding ist jetzt klar als
+  `ein kleine Entscheidung pro Screen` festgelegt und nicht mehr als
+  Flaechenstapel interpretierbar
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-ui-evidence-matrix.md](/Users/jonasweiss/MathTeach/docs/device-ui-evidence-matrix.md)
+- [docs/rpi-touch-ui-lastenheft.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-ui-lastenheft.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Startscreen-Contract 2026-04-14
+
+Auf Basis der neuen Evidence-Matrix ist jetzt nur der Startscreen als
+eigener Contract ausgeschnitten worden.
+
+Neu dazu:
+
+- separates Vertragsdokument fuer `Startscreen / Ruhezustand`
+- klare Zustandslogik fuer `kein Verlauf`, `Resume vorhanden`,
+  `letzte Session unvollstaendig`
+- hartes Inhaltsbudget statt gestalterischer Freiheitsform
+- explizite Verbote gegen Dashboard-, Statistik- und CTA-Haeufung
+
+Wichtigste Konsequenzen:
+
+- der Startscreen ist jetzt als Resume- und Wiedereinstiegs-Screen
+  fachlich fixiert
+- eine spaetere Umsetzung darf nicht mehr aus mehreren gleich starken
+  Karten, Themenboxen oder Motivationsflaechen bestehen
+- Illustration ist fuer diesen Screen ausdrucklich optional und dem
+  Resume-Kern untergeordnet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-contract.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Onboarding-Contract 2026-04-14
+
+Das Device-Onboarding ist jetzt ebenfalls als eigener Contract
+festgeschrieben worden, damit dieser Teil nicht wieder in
+Fragenstapel, Profiltest-Logik oder Formularoptik kippt.
+
+Neu dazu:
+
+- separates Vertragsdokument fuer das Device-Onboarding
+- harte Regel `ein Onboarding-Screen = eine kleine Entscheidung`
+- explizite Eingrenzung erlaubter Entscheidungstypen
+- klare Verbote gegen Checkbox-Waende, Diagnose-Sprache und Setup-Wizard-
+  Charakter
+
+Wichtigste Konsequenzen:
+
+- das Onboarding darf kuenftig nicht mehr als eine grosse
+  Mehrfachabfrage interpretiert werden
+- es ist jetzt fachlich festgelegt, dass Onboarding nur ersten
+  didaktischen Start klärt und nicht das ganze Profil "erhebt"
+- die erste Lerninteraktion bleibt priorisiert gegenueber
+  Vollstaendigkeitsdrang
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-onboarding-contract.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-contract.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Onboarding-Flow-Blueprint 2026-04-14
+
+Nach dem Onboarding-Contract ist jetzt auch der Ablauf als Blueprint
+fixiert.
+
+Neu dazu:
+
+- maximale Flusslaenge fuer das fruehe Device-Onboarding
+- feste Reihenfolge der legitimen Onboarding-Schritte
+- explizite Kurzform fuer besonders niedrige Einstiegslast
+- klare Ausschluesse gegen Settings-, Account-, Diagnose- und
+  Supportlisten-Logik
+
+Wichtigste Konsequenzen:
+
+- das Onboarding darf jetzt strukturell nicht mehr zu einem
+  Mehrzweck-Setup ausufern
+- die erste Session bleibt wichtiger als Vollstaendigkeitsdrang
+- jeder spaetere Screen im Onboarding muss sich einem konkreten Schritt
+  im Blueprint zuordnen lassen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-onboarding-flow-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-flow-blueprint.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Learningscreen-Contract 2026-04-14
+
+Mit dem dritten Contract ist jetzt auch die eigentliche Lernansicht als
+fachlich gebundener Screen festgelegt.
+
+Neu dazu:
+
+- separates Vertragsdokument fuer die Lernansicht
+- klare Regel fuer `ein Lernscreen = eine mathematische Idee`
+- harte Rollen fuer `primaerer Traeger`, `Hauptaussage`,
+  `Fokus-Notiz`, `Scaffold-Notiz` und `Handlungen`
+- explizite Verbote gegen Dashboard-Struktur, Meta-Ueberfrachtung,
+  dekorative Illustrationen und wachsende Recovery-Screens
+
+Wichtigste Konsequenzen:
+
+- der spaetere Lernscreen darf nicht mehr aus mehreren gleich starken
+  Panels oder konkurrierenden Karten bestehen
+- Bild, Sprache, Symbolik und Handlung sind jetzt in einer festen
+  Reihenfolge gebunden: Bedeutung, Sprache, Symbolik, Handlung
+- bei Fehlern oder Stockung muss der Screen kleiner und expliziter
+  werden, nicht voller
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-learningscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-contract.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Startscreen-Blueprint 2026-04-14
+
+Nach Contract-Ebene ist der Startscreen jetzt als erster struktureller
+Blueprint ausgeschnitten worden.
+
+Neu dazu:
+
+- definierte Wahrnehmungsreihenfolge fuer den Startscreen
+- klare Zonierung in `Begruessung`, `Resume`, `primaere Handlung` und
+  optionale schwache Neben-Zone
+- explizite Ausschluesse gegen Themenraster, Statistikflaechen,
+  Settings-Zonen und konkurrierende Karten
+- Zustandsblueprint fuer `kein Verlauf`, `Resume vorhanden`,
+  `letzter Stand unsicher`
+
+Wichtigste Konsequenzen:
+
+- der Startscreen ist jetzt nicht nur inhaltlich, sondern auch
+  strukturell gegen Dashboard- oder Portal-Logik abgesichert
+- eine spaetere UI-Umsetzung darf nur noch aus diesem Lesepfad und
+  dieser Zonierung heraus gebaut werden
+- Illustration ist auch auf Blueprint-Ebene dem Resume-Kern
+  untergeordnet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-blueprint.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
+## Device-Learningscreen-Blueprint 2026-04-14
+
+Mit diesem Schritt ist jetzt auch die Lernansicht auf Blueprint-Ebene
+fixiert.
+
+Neu dazu:
+
+- definierte Zonen fuer `Hauptaussage`, `primaerer Traeger`,
+  `Schritt/Uebergang`, `Fokus`, `Scaffold` und `Handlungen`
+- klare Blueprint-Zustaende fuer `Erst-Erklaerung`, `Recovery` und
+  `Uebergang zum naechsten Schritt`
+- harte Ausschluesse gegen Dashboard-Zonen, Statistikflaechen,
+  Themennavigation und konkurrierende Hauptobjekte
+- explizite Regel, dass Recovery-Screens kleiner und nicht groesser
+  werden muessen
+
+Wichtigste Konsequenzen:
+
+- der spaetere Lernscreen ist jetzt strukturell gegen Ueberfrachtung,
+  Metazonen und Doppel-Hauptobjekte abgesichert
+- der primaere Traeger hat nun einen festen Platz in der Screenlogik
+  statt als austauschbares Gestaltungselement zu fungieren
+- Bild, Sprache, Symbolik und Handlung koennen kuenftig nur noch in
+  der festgelegten Reihenfolge zusammenspielen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-learningscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-blueprint.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-UI-First-Slice 2026-04-14
 
 Die erste echte lokale UI fuer das Raspberry-Pi-Geraet ist jetzt im

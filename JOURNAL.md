@@ -229,6 +229,40 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-wire-contract-no-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-no-history.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-State-Mapping-Spec 2026-04-14
+
+Nach den drei einzelnen Wire-Contracts ist jetzt auch ihre gemeinsame
+Runtime-Zuordnung festgelegt.
+
+Neu dazu:
+
+- neue
+  [device-startscreen-state-mapping-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-state-mapping-spec.md)
+  als Uebersetzung zwischen Startscreen-Wire-Contracts und realer
+  Runtime-/Session-Semantik
+- klare Resolver-Reihenfolge fuer `unsafe_history`, `resume` und
+  `no_history`
+- explizite Trennung zwischen heute wirklich sichtbaren Device-Signalen
+  und spaeteren moeglichen Recovery-/Unsafe-Signalen
+- harte Regel, dass `sessionId`, Zeitstempel oder implizite Heuristiken
+  allein nie als Resume-Beleg reichen
+
+Wichtigste Konsequenzen:
+
+- die Startscreen-UI ist jetzt nicht nur strukturell, sondern auch
+  zustandslogisch gegen zu "smarte" oder psychologisch falsche
+  Resume-Annahmen abgesichert
+- `unsafe_history` bleibt fachlich definiert, wird aber erst dann
+  sichtbar benutzt, wenn die Runtime dafuer ein explizites Signal
+  weiterreicht
+- fuer die heutige Device-Shell gilt damit ehrlich:
+  `Resume` nur mit belastbarem letztem Plan, sonst `kein Verlauf`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-state-mapping-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-state-mapping-spec.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

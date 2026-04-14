@@ -88,6 +88,12 @@ studiengebundene Regelmatrix im Repo verankert, damit Device-Screens
 nicht aus Designintuition, sondern aus Quellen, Wirkungen und klaren
 Verboten heraus gebaut werden.
 
+Zusaetzlich ist die Startscreen-Familie jetzt nicht nur in Contracts und
+Blueprints beschrieben, sondern auch ueber eine explizite
+State-Mapping-Spec an die reale Runtime-Semantik gebunden. Damit ist
+festgelegt, wann die Device-UI wirklich `Resume`, `kein Verlauf` oder
+spaeter `unsicherer Verlauf` zeigen darf und wann nicht.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

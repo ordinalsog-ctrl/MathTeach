@@ -538,6 +538,40 @@ Neue oder aktualisierte Referenzartefakte:
 - [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 
+## Device-Onboarding-Screen-Sequence-Spec 2026-04-14
+
+Nach dem vorlaeufig stabilen Startscreen ist jetzt die erste echte
+Ableitung fuer das Onboarding gezogen worden.
+
+Neu dazu:
+
+- neue
+  [device-onboarding-screen-sequence-spec.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-screen-sequence-spec.md)
+  als verbindliche Sequenz fuer die erste Device-Onboarding-Version
+- explizite Festlegung auf die `Kurzform` mit genau drei kleinen
+  Screens:
+  `Startgegenstand`, `Darstellungsstart`, `Startfreigabe`
+- bewusster Ausschluss von:
+  Niveau-Screen, Schrittgroesse-Screen, Support-Checkboxen und
+  Mehrfacherhebungen im fruehen Einstieg
+- klare Gap-Beschreibung zum aktuellen UI-Stand, der heute noch als
+  Ein-Flaechen-Onboarding deutlich zu breit ist
+
+Wichtigste Konsequenzen:
+
+- das Onboarding hat jetzt zum ersten Mal eine konkrete, evidenzgebundene
+  Zielsequenz statt nur allgemeiner Prinzipien
+- der naechste Onboarding-Umbau kann nicht mehr als loses "Aufraeumen"
+  passieren, sondern muss die bestehende Flaeche strukturell in kleine
+  Schritte zerlegen
+- wir vermeiden damit fruehzeitig, dass das Onboarding wieder in
+  Formular-, Profilbogen- oder Supportlisten-Logik kippt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-onboarding-screen-sequence-spec.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-screen-sequence-spec.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

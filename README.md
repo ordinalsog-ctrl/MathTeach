@@ -148,6 +148,13 @@ Wiedereinstiegsblock, sodass der Startscreen weniger wie mehrere kleine
 App-Bereiche und staerker wie genau ein primaerer Wiedereinstiegspunkt
 wirkt.
 
+Parallel dazu ist jetzt der Einstieg ins Onboarding sauber
+neu aufgeschnitten: Nicht mehr das heutige Ein-Flaechen-Onboarding ist
+der Zielzustand, sondern eine kurze evidenzgebundene Drei-Schritt-
+Sequenz aus `Startgegenstand`, `Darstellungsstart` und `Startfreigabe`.
+Damit ist auch fuer das Onboarding die naechste Umbauphase wieder klar
+an den Contract statt an freie UI-Intuition gebunden.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

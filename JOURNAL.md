@@ -437,6 +437,40 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-DOM-Binding 2026-04-14
+
+Nach dem internen Resolver-Refactor ist jetzt auch die bestehende
+Startscreen-DOM-Anbindung enger an den aufgeloesten Zustand gebunden.
+
+Neu dazu:
+
+- [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  traegt jetzt explizite Startscreen-Rollen fuer Support-Zeile, Label
+  und Startscreen-Aktionsslots
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  speist diese Slots jetzt direkt aus `state_kind + slots`
+- die schwache Zweithandlung wird zustandsgebunden gesetzt
+- die fruehere dritte Startscreen-Aktion wird auf diesem Screen
+  ausgeblendet, damit der Startscreen nicht wieder in konkurrierende
+  Handlungen kippt
+
+Wichtigste Konsequenzen:
+
+- der vorhandene Startscreen ist jetzt nicht nur intern resolverbasiert,
+  sondern auch in seiner DOM-Bindung enger an die dokumentierten
+  Wire-Contracts angeschlossen
+- `resume` und `no_history` unterscheiden sich damit sichtbar sauberer,
+  ohne dass ein neues Layout oder neue Designfreiheit eingefuehrt wurde
+- die Startscreen-Oberflaeche bleibt weiter klein und kontrolliert statt
+  wieder mehrere gleich starke Handlungen gleichzeitig zu tragen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

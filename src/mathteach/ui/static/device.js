@@ -337,10 +337,14 @@ function buildResumeStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
       : "Wir lernen in deinem Tempo.",
+    support_line: "Du kannst mit einem kleinen Schritt wieder einsteigen.",
+    resume_label: "Letzter Stand",
     resume_title:
       block?.goal || state.profile.objective || "Letzte Lerneinheit",
     resume_summary: buildResumeSummary(normalized),
     primary_cta_label: "Weiterlernen",
+    secondary_action_label: "Neues Profil einrichten",
+    secondary_action: "onboarding",
   };
 }
 
@@ -349,10 +353,13 @@ function buildNoHistoryStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
       : "Wir lernen in deinem Tempo.",
-    resume_title: "Noch kein Thema vorbereitet",
-    resume_summary:
-      "Wir starten mit einem ruhigen ersten Profil und einem klaren Einstieg.",
+    support_line: "Wir koennen klein und ruhig anfangen.",
+    resume_label: "Erster Schritt",
+    resume_title: "Wir beginnen mit einem ruhigen Einstieg.",
+    resume_summary: "Du musst noch nichts koennen oder vorbereiten.",
     primary_cta_label: "Jetzt anfangen",
+    secondary_action_label: "Profil einrichten",
+    secondary_action: "onboarding",
   };
 }
 
@@ -361,10 +368,13 @@ function buildUnsafeHistoryStartscreenSlots(normalized) {
     welcome_line: normalized.has_name
       ? `${normalized.learnerName}, wir steigen ruhig wieder ein.`
       : "Wir steigen ruhig wieder ein.",
-    resume_title: "Wir nehmen den letzten sicheren Schritt.",
-    resume_summary:
-      "Wir setzen an einem stabilen Punkt wieder an, ohne etwas neu sortieren zu muessen.",
+    support_line: "Wir nehmen nur den letzten stabilen Schritt.",
+    resume_label: "Sicherer Wiedereinstieg",
+    resume_title: "Wir machen beim letzten sicheren Schritt weiter.",
+    resume_summary: "Wir setzen an einem stabilen Punkt wieder an.",
     primary_cta_label: "Sicher weitermachen",
+    secondary_action_label: "Neu beginnen",
+    secondary_action: "reset-session",
   };
 }
 
@@ -379,14 +389,31 @@ function buildResumeSummary(normalized) {
 
 function renderStartscreenResolved(resolved) {
   const startScreen = document.querySelector("[data-screen='start']");
+  const secondaryAction = document.querySelector("[data-role='start-secondary-action']");
+  const tertiaryAction = document.querySelector("[data-role='start-tertiary-action']");
+
   if (startScreen) {
     startScreen.dataset.startscreenState = resolved.state_kind;
   }
 
   text("[data-role='welcome-name']", resolved.slots.welcome_line);
+  text("[data-role='start-support-line']", resolved.slots.support_line);
+  text("[data-role='resume-label']", resolved.slots.resume_label);
   text("[data-role='resume-topic']", resolved.slots.resume_title);
   text("[data-role='resume-summary']", resolved.slots.resume_summary);
-  text("[data-action='continue']", resolved.slots.primary_cta_label);
+  text("[data-role='start-primary-action']", resolved.slots.primary_cta_label);
+
+  if (secondaryAction) {
+    secondaryAction.hidden = !resolved.slots.secondary_action_label;
+    if (!secondaryAction.hidden) {
+      secondaryAction.textContent = resolved.slots.secondary_action_label;
+      secondaryAction.dataset.action = resolved.slots.secondary_action || "onboarding";
+    }
+  }
+
+  if (tertiaryAction) {
+    tertiaryAction.hidden = true;
+  }
 }
 
 function pickStartscreenResumeBlock(plan) {

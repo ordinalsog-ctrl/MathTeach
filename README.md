@@ -127,6 +127,14 @@ Zustandsaufloesung und zustandsgebundenem Slot-Bau. Der sichtbare
 Scope bleibt dabei bewusst gleich klein; es ist eine interne
 Strukturhärtung, kein neues UI-Design.
 
+Darauf aufbauend ist jetzt auch die DOM-Anbindung des vorhandenen
+Startscreens enger an `state_kind + slots` gezogen: Begruessung,
+Support-Zeile, Label, Resume-Kern und die schwache Zweithandlung werden
+jetzt zustandsgebunden gespeist, waehrend die fruehere dritte
+Startscreen-Aktion fuer diesen Screen ausgeblendet bleibt. Das ist
+weiterhin kein neues Layout, sondern eine strengere Bindung des
+bestehenden Screens an die dokumentierte Startscreen-Semantik.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

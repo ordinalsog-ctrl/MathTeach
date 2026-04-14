@@ -99,6 +99,11 @@ body {
   flex: 1;
 }
 
+.screen-start .hero {
+  display: block;
+  flex: 0;
+}
+
 .hero-copy,
 .resume-card,
 .lesson-card,
@@ -113,6 +118,14 @@ body {
 .hero-copy {
   flex: 1.15;
   padding: 24px;
+}
+
+.screen-start .hero-copy {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  max-width: 36rem;
 }
 
 .visual-note {
@@ -140,6 +153,10 @@ body {
   color: var(--clay);
 }
 
+.screen-start .welcome {
+  margin-bottom: 0.35rem;
+}
+
 h1,
 h2 {
   margin: 0 0 0.8rem;
@@ -149,6 +166,12 @@ h2 {
 h1 {
   font-size: 2.3rem;
   max-width: 11ch;
+}
+
+.screen-start h1 {
+  max-width: 14ch;
+  font-size: 1.95rem;
+  margin-bottom: 0.45rem;
 }
 
 h2 {
@@ -163,6 +186,11 @@ h2 {
   margin: 0;
   line-height: 1.45;
   font-size: 1rem;
+}
+
+.screen-start .lead {
+  max-width: 40ch;
+  color: var(--ink-soft);
 }
 
 .equation-line,
@@ -194,9 +222,19 @@ h2 {
   padding: 18px 22px;
 }
 
+.screen-start .resume-card {
+  padding: 20px 24px;
+}
+
 .actions {
   gap: 14px;
   align-items: center;
+}
+
+.screen-start .actions {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 button,
@@ -234,16 +272,34 @@ button:active {
   box-shadow: 0 10px 20px rgba(123, 152, 95, 0.28);
 }
 
+.screen-start .action-primary {
+  min-width: 16rem;
+}
+
 .action-secondary {
   background: #fbf7ef;
   color: var(--ink);
   box-shadow: 0 8px 14px var(--button-shadow);
 }
 
+.screen-start .action-secondary {
+  min-height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  box-shadow: none;
+  text-align: left;
+}
+
 .action-ghost {
   background: transparent;
   color: var(--ink-soft);
   margin-left: auto;
+}
+
+button[hidden] {
+  display: none !important;
 }
 
 .onboarding-grid {

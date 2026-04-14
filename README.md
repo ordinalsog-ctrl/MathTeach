@@ -135,6 +135,13 @@ Startscreen-Aktion fuer diesen Screen ausgeblendet bleibt. Das ist
 weiterhin kein neues Layout, sondern eine strengere Bindung des
 bestehenden Screens an die dokumentierte Startscreen-Semantik.
 
+Der erste sichtbare Startscreen-Pass ist jetzt ebenfalls umgesetzt, aber
+weiter strikt innerhalb des Contracts: Die Begruessungszone ist
+entschlackt, die Resume-Zone bleibt die eigentliche Hauptzone, die
+dekorative Startscreen-Notiz ist entfernt und die Handlungszone ist auf
+einen dominanten CTA plus eine deutlich schwächere Nebenhandlung
+reduziert.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

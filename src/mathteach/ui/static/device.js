@@ -390,7 +390,6 @@ function buildResumeSummary(normalized) {
 function renderStartscreenResolved(resolved) {
   const startScreen = document.querySelector("[data-screen='start']");
   const secondaryAction = document.querySelector("[data-role='start-secondary-action']");
-  const tertiaryAction = document.querySelector("[data-role='start-tertiary-action']");
 
   if (startScreen) {
     startScreen.dataset.startscreenState = resolved.state_kind;
@@ -409,10 +408,6 @@ function renderStartscreenResolved(resolved) {
       secondaryAction.textContent = resolved.slots.secondary_action_label;
       secondaryAction.dataset.action = resolved.slots.secondary_action || "onboarding";
     }
-  }
-
-  if (tertiaryAction) {
-    tertiaryAction.hidden = true;
   }
 }
 

@@ -471,6 +471,38 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Visible-Pass 2026-04-14
+
+Nach Resolver- und DOM-Binding ist jetzt der erste kleine sichtbare
+Startscreen-Pass umgesetzt worden, weiterhin innerhalb des bestehenden
+Contracts und ohne freies Redesign.
+
+Neu dazu:
+
+- [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  traegt auf dem Startscreen keine dritte Handlung mehr
+- die dekorative Startscreen-Notiz wurde entfernt, damit der erste Blick
+  nicht gegen einen zusaetzlichen visuellen Block konkurriert
+- [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  entlastet die Begruessungszone sichtbar, macht die Resume-Zone zur
+  eigentlichen Hauptzone und reduziert die Nebenhandlung auf einen klar
+  schwaecheren Ton
+
+Wichtigste Konsequenzen:
+
+- der Startscreen wirkt jetzt weniger wie eine kleine App-Startseite und
+  naeher an einem echten Wiedereinstiegs-Screen
+- Resume-Kern und primaerer CTA tragen den Screen klarer als zuvor
+- der sichtbare Schritt bleibt klein, kontrolliert und durch die
+  Contracts begrenzt; es ist kein freier Stilwechsel
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

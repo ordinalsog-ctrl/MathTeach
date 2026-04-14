@@ -41,6 +41,8 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert "/device-static/device.js" in response.text
     assert 'data-role="start-support-line"' in response.text
     assert 'data-role="resume-label"' in response.text
+    assert 'data-role="start-secondary-action"' in response.text
+    assert 'data-role="start-tertiary-action"' not in response.text
 
 
 def test_device_static_assets_are_served() -> None:
@@ -57,6 +59,8 @@ def test_device_static_assets_are_served() -> None:
     assert "renderStartscreenResolved" in js_response.text
     assert "buildResumeStartscreenSlots" in js_response.text
     assert "buildNoHistoryStartscreenSlots" in js_response.text
+    assert "button[hidden]" in css_response.text
+    assert ".screen-start .action-secondary" in css_response.text
     assert "describeResumeTopic" not in js_response.text
     assert "describeResumeSummary" not in js_response.text
 

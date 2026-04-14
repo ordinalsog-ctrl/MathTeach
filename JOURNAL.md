@@ -229,6 +229,34 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-wire-contract-no-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-no-history.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
+
+Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene
+festgelegt: letzter Stand unsicher oder unvollstaendig.
+
+Neu dazu:
+
+- exakte Slot-Definition fuer den unsicheren Resume-Fall
+- klare Trennung zwischen ruhigem Wiedereinstieg und technischer
+  Fehlerursache
+- harte Ausschluesse gegen Warnbanner, Fehlercodes,
+  Quarantaenehinweise und Reparaturlogik
+- explizite Entdramatisierungs-Zeile fuer den Sonderzustand
+
+Wichtigste Konsequenzen:
+
+- auch unsichere oder defekte Session-Faelle koennen spaeter nicht in
+  technische oder beschämende Screens kippen
+- die ganze Startscreen-Familie ist jetzt fuer die drei wichtigsten
+  Zustandslagen auf Wire-Ebene abgesichert
+- der naechste Schritt kann nun eine gemeinsame State-Mapping-Spec
+  fuer die Startscreen-Familie sein
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-wire-contract-unsafe-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-unsafe-history.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Learningscreen-Blueprint 2026-04-14
 
 Mit diesem Schritt ist jetzt auch die Lernansicht auf Blueprint-Ebene

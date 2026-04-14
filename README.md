@@ -279,6 +279,7 @@ gesnapshotteter Family-Historien.
 - [docs/device-startscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-blueprint.md): Struktureller Bauplan fuer den Startscreen aus dem Contract, noch ohne Design oder Code
 - [docs/device-startscreen-wire-contract-resume.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-resume.md): Erster konkreter Wire Contract fuer den Startscreen-Zustand `Resume vorhanden`
 - [docs/device-startscreen-wire-contract-no-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-no-history.md): Wire Contract fuer den Startscreen-Zustand `kein Verlauf vorhanden`
+- [docs/device-startscreen-wire-contract-unsafe-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-unsafe-history.md): Wire Contract fuer den Startscreen-Zustand `letzter Stand unsicher`
 - [docs/device-onboarding-contract.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-contract.md): Verbindlicher Contract fuer ein nicht-diagnostisches, lastarmes Device-Onboarding
 - [docs/device-onboarding-flow-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-flow-blueprint.md): Struktureller Ablauf fuer ein minimales, nicht-formularartiges Device-Onboarding
 - [docs/device-learningscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-contract.md): Verbindlicher Contract fuer die psychologisch und didaktisch gebundene Lernansicht

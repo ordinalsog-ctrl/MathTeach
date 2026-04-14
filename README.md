@@ -94,6 +94,12 @@ State-Mapping-Spec an die reale Runtime-Semantik gebunden. Damit ist
 festgelegt, wann die Device-UI wirklich `Resume`, `kein Verlauf` oder
 spaeter `unsicherer Verlauf` zeigen darf und wann nicht.
 
+Darauf aufbauend liegt jetzt auch die kleine technische
+Resolver-Implementierungs-Spec vor: Sie trennt kuenftig sauber zwischen
+Zustandsaufloesung und sichtbarem Startscreen-Rendern, damit die UI
+nicht aus losen Hilfsfunktionen, sondern aus einer expliziten
+zustandsgebundenen Resolver-Schicht heraus entsteht.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

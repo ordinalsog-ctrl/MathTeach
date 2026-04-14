@@ -263,6 +263,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-state-mapping-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-state-mapping-spec.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Resolver-Implementation-Spec 2026-04-14
+
+Nach der State-Mapping-Spec ist jetzt auch die kleinste technische
+Resolver-Schicht beschrieben, die spaeter in die Device-Shell gehen
+muss.
+
+Neu dazu:
+
+- neue
+  [device-startscreen-resolver-implementation-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-implementation-spec.md)
+  als technische Ableitung zwischen Runtime-Feldern und Startscreen-
+  Wire-Contracts
+- klare Trennung zwischen `state_kind` und zustandsgebundenem
+  `slots`-Output
+- feste Resolver-Reihenfolge:
+  normalisieren -> unsafe pruefen -> resume pruefen -> sonst
+  `no_history`
+- explizite Regel, dass die aktuelle direkte Kopplung in
+  [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  spaeter in einen echten Startscreen-Resolver ueberfuehrt werden soll
+
+Wichtigste Konsequenzen:
+
+- der naechste UI-nahe Schritt bleibt weiterhin strikt
+  evidenzgebunden und kippt nicht in freie Renderlogik
+- `resume` und `no_history` koennen spaeter technisch sauber getrennt
+  werden, ohne sofort neue sichtbare Screens zu erfinden
+- `unsafe_history` bleibt strukturell vorbereitet, wird aber erst dann
+  sichtbar benutzt, wenn es dafuer echte Runtime-Signale gibt
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-resolver-implementation-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-implementation-spec.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

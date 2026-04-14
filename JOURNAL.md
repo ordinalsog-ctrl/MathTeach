@@ -368,6 +368,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-resolver-flow-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-flow-spec.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Resolver-Change-Plan 2026-04-14
+
+Nach Flow- und Feldspec ist jetzt auch der konkrete kleine Umbaupfad
+fuer
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+festgelegt.
+
+Neu dazu:
+
+- neue
+  [device-startscreen-resolver-change-plan.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-change-plan.md)
+  mit expliziter Gegenueberstellung von heutiger Startscreen-Hilfslogik
+  und spaeterer Resolver-Kette
+- klare Benennung, welche heutigen Funktionen nur Uebergangslogik sind
+  und spaeter in Builder oder Resolver aufgehen sollen
+- phasierter Umbau in:
+  Resolver-Skelett, Slot-Builder, Renderer-Umstellung und Aufraeumen
+- harte Regel, dass der erste Code-Umbau nur den Startscreen intern
+  reorganisiert und keinen neuen sichtbaren UI-Scope aufmacht
+
+Wichtigste Konsequenzen:
+
+- der naechste eigentliche UI-nahe Code-Schritt ist jetzt klein,
+  rueckbausicher und fachlich eng gefasst
+- wir bleiben weiter auf derselben evidenzgebundenen Spur und gehen
+  nicht in lose Sichtbarkeit oder freie Startscreen-Interpretation
+- die bestehende Shell kann spaeter kontrolliert in eine Resolver-
+  Struktur ueberfuehrt werden, ohne dass Startscreen-Semantik wieder
+  "aus Hilfsfunktionen herauswuchert"
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-resolver-change-plan.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-change-plan.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

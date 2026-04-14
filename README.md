@@ -112,6 +112,12 @@ Normalisierung und Zustandsentscheidung bis zum zustandsgebundenen
 Slot-Bau festlegt, ohne schon in sichtbare UI oder freien
 Textzusammenbau zu kippen.
 
+Direkt davor liegt nun auch ein konkreter Change Plan fuer
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js):
+welche heutige freie Startscreen-Hilfslogik spaeter verschwindet, welche
+kleinen Resolver-Funktionen entstehen und wie der Startscreen kuenftig
+nur noch ueber `state_kind + slots` gerendert werden soll.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

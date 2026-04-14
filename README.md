@@ -100,6 +100,12 @@ Zustandsaufloesung und sichtbarem Startscreen-Rendern, damit die UI
 nicht aus losen Hilfsfunktionen, sondern aus einer expliziten
 zustandsgebundenen Resolver-Schicht heraus entsteht.
 
+Neu dazu kommt jetzt auch die Runtime-Field-Spec fuer den Startscreen:
+Sie legt fest, welche Felder heute bereits sauber fuer `resume` und
+`no_history` genutzt werden duerfen, welche nur Kontext tragen und
+welche expliziten Zusatzfelder spaeter fuer ein echtes
+`unsafe_history`-Signal noetig waeren.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

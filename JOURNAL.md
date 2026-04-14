@@ -298,6 +298,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-resolver-implementation-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-implementation-spec.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Runtime-Field-Spec 2026-04-14
+
+Nach State-Mapping und Resolver-Spec ist jetzt auch die konkrete
+Feldebene fuer den Startscreen-Resolver festgelegt.
+
+Neu dazu:
+
+- neue
+  [device-startscreen-runtime-field-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-runtime-field-spec.md)
+  mit klarer Trennung zwischen heute bereits vorhandenen Device-/Plan-
+  Feldern und spaeteren optionalen Zukunftsfeldern
+- Feldklassifikation in:
+  primaere Zustandsfelder, Personalisierungsfelder und rein technische
+  Identitaetsfelder
+- explizite Regel, dass `sessionId` und `lastUpdatedAt` nie als Resume-
+  Beweis dienen duerfen
+- bevorzugte Zukunftsempfehlung fuer ein explizites Statusfeld statt
+  einer losen Bool-Kombination, wenn `unsafe_history` spaeter wirklich
+  sichtbar werden soll
+
+Wichtigste Konsequenzen:
+
+- der Startscreen-Resolver kann spaeter technisch sauber mit heutigen
+  Feldern beginnen, ohne in lose Heuristiken abzugleiten
+- `resume` und `no_history` sind jetzt nicht nur logisch, sondern auch
+  auf konkreter Feldbasis getrennt
+- `unsafe_history` bleibt ehrlich als spaetere explizite Runtime-
+  Erweiterung markiert und wird nicht aus impliziten Fehlerbildern
+  herbeigedeutet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-runtime-field-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-runtime-field-spec.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

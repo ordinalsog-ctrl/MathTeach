@@ -1,4 +1,5 @@
 const STORAGE_KEY = "mathteach-device-shell";
+const ONBOARDING_STEPS = ["goal", "presentation", "confirmation"];
 
 const defaultState = {
   profile: {
@@ -9,7 +10,10 @@ const defaultState = {
     wantsVisuals: true,
     wantsHistory: false,
     supports: [],
-    objective: "Erklaere mir lineare Gleichungen ruhig und mit Beispiel.",
+    objective: "",
+  },
+  onboarding: {
+    step: "goal",
   },
   sessionId: null,
   lastPlan: null,
@@ -20,10 +24,10 @@ const state = loadState();
 
 document.addEventListener("DOMContentLoaded", () => {
   bindActions();
-  bindPreferenceChips();
+  bindOnboardingInputs();
   updateClock();
   window.setInterval(updateClock, 30_000);
-  hydrateForm();
+  renderOnboarding();
   renderStartScreen();
 
   if (state.lastPlan) {
@@ -43,6 +47,10 @@ function loadState() {
       profile: {
         ...defaultState.profile,
         ...(JSON.parse(raw).profile || {}),
+      },
+      onboarding: {
+        ...defaultState.onboarding,
+        ...(JSON.parse(raw).onboarding || {}),
       },
     };
   } catch {
@@ -64,21 +72,12 @@ function bindActions() {
           renderLearningScreen(state.lastPlan);
           return;
         }
-        if (state.profile.learnerName) {
-          await requestPlan([]);
-          return;
-        }
-        switchScreen("onboarding");
+        openOnboarding("goal");
         return;
       }
 
       if (action === "onboarding") {
-        switchScreen("onboarding");
-        return;
-      }
-
-      if (action === "back-home") {
-        switchScreen("start");
+        openOnboarding("goal");
         return;
       }
 
@@ -86,25 +85,21 @@ function bindActions() {
         state.sessionId = null;
         state.lastPlan = null;
         state.lastUpdatedAt = null;
+        state.onboarding.step = "goal";
         saveState();
+        renderOnboarding();
         renderStartScreen();
         switchScreen("start");
         return;
       }
 
-      if (action === "start-learning") {
-        readFormIntoState();
-        if (!state.profile.learnerName.trim()) {
-          window.alert("Bitte gib zuerst einen Namen ein.");
-          return;
-        }
-        if (!state.profile.objective.trim()) {
-          window.alert("Bitte gib ein Thema oder Ziel ein.");
-          return;
-        }
-        state.sessionId = state.sessionId || buildSessionId();
-        saveState();
-        await requestPlan([]);
+      if (action === "onboarding-next") {
+        await advanceOnboarding();
+        return;
+      }
+
+      if (action === "onboarding-back") {
+        retreatOnboarding();
         return;
       }
 
@@ -125,61 +120,174 @@ function bindActions() {
   });
 }
 
-function bindPreferenceChips() {
-  document.querySelectorAll(".chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const pref = chip.dataset.pref;
-      const value = chip.dataset.value;
-      document
-        .querySelectorAll(`.chip[data-pref="${pref}"]`)
-        .forEach((item) => item.classList.remove("is-active"));
-      chip.classList.add("is-active");
+function bindOnboardingInputs() {
+  const objectiveInput = document.querySelector("[data-role='onboarding-objective']");
 
-      if (pref === "visuals") {
-        state.profile.wantsVisuals = value === "true";
-      } else if (pref === "pace") {
-        state.profile.preferredPace = value;
-      }
+  objectiveInput?.addEventListener("input", (event) => {
+    state.profile.objective = event.target.value;
+    saveState();
+    clearOnboardingValidation();
+    if (normalizeOnboardingStep(state.onboarding?.step) === "confirmation") {
+      renderOnboarding();
+    }
+  });
+
+  document.querySelectorAll("[data-choice='presentation']").forEach((option) => {
+    option.addEventListener("click", () => {
+      state.profile.wantsVisuals = option.dataset.value === "visual";
       saveState();
+      clearOnboardingValidation();
+      renderOnboarding();
     });
   });
 }
 
-function hydrateForm() {
-  const nameInput = document.querySelector('input[name="learnerName"]');
-  const levelSelect = document.querySelector('select[name="mathLevel"]');
-  const objectiveInput = document.querySelector('input[name="objective"]');
+function renderOnboarding() {
+  const step = normalizeOnboardingStep(state.onboarding?.step);
+  const meta = onboardingMeta(step);
+  const objectiveInput = document.querySelector("[data-role='onboarding-objective']");
 
-  nameInput.value = state.profile.learnerName || "";
-  levelSelect.value = state.profile.mathLevel || "middle_school";
-  objectiveInput.value = state.profile.objective || defaultState.profile.objective;
-
-  document
-    .querySelectorAll('.chip[data-pref="visuals"]')
-    .forEach((chip) => chip.classList.toggle("is-active", String(state.profile.wantsVisuals) === chip.dataset.value));
-
-  document
-    .querySelectorAll('.chip[data-pref="pace"]')
-    .forEach((chip) => chip.classList.toggle("is-active", state.profile.preferredPace === chip.dataset.value));
-
-  document.querySelectorAll('input[name="support"]').forEach((checkbox) => {
-    checkbox.checked = state.profile.supports.includes(checkbox.value);
+  document.querySelectorAll("[data-onboarding-step]").forEach((node) => {
+    node.classList.toggle("is-hidden", node.dataset.onboardingStep !== step);
   });
+
+  if (objectiveInput && objectiveInput.value !== state.profile.objective) {
+    objectiveInput.value = state.profile.objective;
+  }
+
+  document.querySelectorAll("[data-choice='presentation']").forEach((option) => {
+    option.classList.toggle(
+      "is-active",
+      (state.profile.wantsVisuals && option.dataset.value === "visual") ||
+        (!state.profile.wantsVisuals && option.dataset.value === "words")
+    );
+  });
+
+  text("[data-role='onboarding-screen-label']", meta.label);
+  text("[data-role='onboarding-step-indicator']", meta.indicator);
+  text("[data-role='onboarding-primary-action']", meta.primaryAction);
+  text("[data-role='onboarding-summary']", buildOnboardingSummary());
+
+  const screen = document.querySelector("[data-screen='onboarding']");
+  if (screen) {
+    screen.dataset.onboardingStep = step;
+  }
 }
 
-function readFormIntoState() {
-  state.profile.learnerName = document.querySelector('input[name="learnerName"]').value.trim();
-  state.profile.mathLevel = document.querySelector('select[name="mathLevel"]').value;
-  state.profile.objective = document.querySelector('input[name="objective"]').value.trim();
-  state.profile.supports = Array.from(
-    document.querySelectorAll('input[name="support"]:checked')
-  ).map((input) => input.value);
+async function advanceOnboarding() {
+  const step = normalizeOnboardingStep(state.onboarding?.step);
+
+  if (step === "goal") {
+    const objective = document
+      .querySelector("[data-role='onboarding-objective']")
+      ?.value.trim();
+
+    if (!objective) {
+      setOnboardingValidation("Schreib nur kurz, womit wir anfangen sollen.");
+      document.querySelector("[data-role='onboarding-objective']")?.focus();
+      return;
+    }
+
+    state.profile.objective = objective;
+    saveState();
+    setOnboardingStep("presentation");
+    return;
+  }
+
+  if (step === "presentation") {
+    setOnboardingStep("confirmation");
+    return;
+  }
+
+  if (step === "confirmation") {
+    clearOnboardingValidation();
+    state.sessionId = state.sessionId || buildSessionId();
+    saveState();
+    await requestPlan([]);
+  }
+}
+
+function retreatOnboarding() {
+  const step = normalizeOnboardingStep(state.onboarding?.step);
+
+  if (step === "goal") {
+    clearOnboardingValidation();
+    switchScreen("start");
+    return;
+  }
+
+  if (step === "presentation") {
+    setOnboardingStep("goal");
+    return;
+  }
+
+  setOnboardingStep("presentation");
+}
+
+function openOnboarding(step = "goal") {
+  setOnboardingStep(step);
+  switchScreen("onboarding");
+}
+
+function setOnboardingStep(step) {
+  state.onboarding.step = normalizeOnboardingStep(step);
   saveState();
+  clearOnboardingValidation();
+  renderOnboarding();
+}
+
+function normalizeOnboardingStep(step) {
+  return ONBOARDING_STEPS.includes(step) ? step : "goal";
+}
+
+function onboardingMeta(step) {
+  if (step === "presentation") {
+    return {
+      label: "Naechster Schritt",
+      indicator: "2 von 3",
+      primaryAction: "Weiter",
+    };
+  }
+
+  if (step === "confirmation") {
+    return {
+      label: "Dann starten wir",
+      indicator: "3 von 3",
+      primaryAction: "Jetzt starten",
+    };
+  }
+
+  return {
+    label: "Erster Schritt",
+    indicator: "1 von 3",
+    primaryAction: "Weiter",
+  };
+}
+
+function buildOnboardingSummary() {
+  const topic = state.profile.objective?.trim() || "Ruhiger Einstieg";
+  const presentation = state.profile.wantsVisuals
+    ? "zuerst mit Bild"
+    : "zuerst mit Worten";
+  return `${topic}, ${presentation}.`;
+}
+
+function setOnboardingValidation(message) {
+  const node = document.querySelector("[data-role='onboarding-validation']");
+  if (!node) {
+    return;
+  }
+  node.hidden = !message;
+  node.textContent = message;
+}
+
+function clearOnboardingValidation() {
+  setOnboardingValidation("");
 }
 
 async function requestPlan(runtimeObservations) {
-  if (!state.profile.learnerName) {
-    switchScreen("onboarding");
+  if (!state.profile.objective?.trim()) {
+    openOnboarding("goal");
     return;
   }
 

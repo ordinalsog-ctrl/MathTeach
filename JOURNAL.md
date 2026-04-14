@@ -2,6 +2,45 @@
 
 Stand: 2026-04-14
 
+## Device-Onboarding-UI-Refactor 2026-04-14
+
+Der erste echte Onboarding-Umbau im Device-UI ist jetzt im Code
+umgesetzt, weiter strikt entlang der gepushten Contracts und Wire-
+Contracts.
+
+Neu dazu:
+
+- die fruehere Ein-Flaechen-Onboarding-Ansicht in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  ist durch eine Drei-Schritt-Sequenz ersetzt worden
+- die drei Schritte folgen jetzt direkt der festgelegten Kurzform:
+  `Startgegenstand`, `Darstellungsstart`, `Startfreigabe`
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  fuehrt das Onboarding jetzt ueber einen kleinen lokalen Schritt-
+  Zustand statt ueber eine grosse Formularauswertung
+- frueh ausgeschlossene Felder und Muster sind aus dem ersten Einstieg
+  entfernt:
+  `Name`, `Niveau`, `Pace`, `Support-Checkboxen`
+
+Wichtigste Konsequenzen:
+
+- das Device-Onboarding ist jetzt nicht mehr nur dokumentiert, sondern
+  strukturell im laufenden UI gegen Formular- und Profilbogen-Logik
+  abgesichert
+- der erste Einstieg verlangt jetzt nur noch einen Lerngegenstand,
+  danach die Wahl `Bild oder Worte`, und fuehrt dann direkt in den
+  ersten Planungsaufruf
+- die fruehe Device-UI bleibt damit enger an der Studienmatrix und der
+  Regel `eine kleine Entscheidung pro Screen`
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-UI-Evidence-Matrix 2026-04-14
 
 Nach dem verworfenen freien UI-/Illustrationslauf ist jetzt eine harte

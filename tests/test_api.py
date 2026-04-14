@@ -44,6 +44,17 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'data-role="start-secondary-action"' in response.text
     assert 'data-role="start-tertiary-action"' not in response.text
     assert 'class="resume-actions"' in response.text
+    assert 'data-role="onboarding-screen-label"' in response.text
+    assert 'data-onboarding-step="goal"' in response.text
+    assert 'data-onboarding-step="presentation"' in response.text
+    assert 'data-onboarding-step="confirmation"' in response.text
+    assert 'data-role="onboarding-objective"' in response.text
+    assert 'data-action="onboarding-next"' in response.text
+    assert 'data-action="onboarding-back"' in response.text
+    assert 'name="learnerName"' not in response.text
+    assert 'name="mathLevel"' not in response.text
+    assert 'name="support"' not in response.text
+    assert 'data-pref="pace"' not in response.text
 
 
 def test_device_static_assets_are_served() -> None:
@@ -63,8 +74,15 @@ def test_device_static_assets_are_served() -> None:
     assert "button[hidden]" in css_response.text
     assert ".screen-start .action-secondary" in css_response.text
     assert ".resume-actions" in css_response.text
+    assert "ONBOARDING_STEPS" in js_response.text
+    assert "renderOnboarding" in js_response.text
+    assert "advanceOnboarding" in js_response.text
+    assert "buildOnboardingSummary" in js_response.text
+    assert ".onboarding-card" in css_response.text
+    assert ".choice-option" in css_response.text
     assert "describeResumeTopic" not in js_response.text
     assert "describeResumeSummary" not in js_response.text
+    assert "Bitte gib zuerst einen Namen ein." not in js_response.text
 
 
 def test_stack_endpoint() -> None:

@@ -161,6 +161,16 @@ festgelegt, welche Slots er tragen darf, welche einzelne kleine
 Entscheidung dort zulaessig ist und welche Inhalte ausdruecklich nicht
 auf diesen Schritt gehoeren.
 
+Der erste echte UI-Umbau auf dieser Basis ist jetzt ebenfalls im Code
+angekommen: Das fruehere Ein-Flaechen-Onboarding in
+[device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+ist in drei kleine Schritte zerlegt worden:
+`Startgegenstand`, `Darstellungsstart` und `Startfreigabe`. Name,
+Niveau, Pace und Support-Checkboxen sind damit aus dem fruehen
+Device-Einstieg entfernt, waehrend
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+die Schrittlogik jetzt lokal zustandsgebunden fuehrt.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

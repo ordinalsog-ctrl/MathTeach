@@ -49,107 +49,76 @@
 
       <section class="screen screen-onboarding is-hidden" data-screen="onboarding">
         <div class="topline">
-          <p class="eyebrow">Erstes Einrichten</p>
-          <p class="step-copy">Kurze Fragen fuer deinen Start</p>
+          <p class="eyebrow" data-role="onboarding-screen-label">Erster Schritt</p>
+          <p class="step-copy" data-role="onboarding-step-indicator">1 von 3</p>
         </div>
 
-        <div class="onboarding-grid">
-          <label class="field">
-            <span>Name</span>
-            <input type="text" name="learnerName" placeholder="Zum Beispiel Alex" />
-          </label>
+        <div class="onboarding-card" data-role="onboarding-card">
+          <div class="onboarding-step" data-onboarding-step="goal">
+            <p class="onboarding-intro">
+              Ich frage nur, womit wir ruhig beginnen sollen.
+            </p>
+            <h2 class="onboarding-question">Was willst du gerade verstehen?</h2>
 
-          <label class="field">
-            <span>Klassenstufe / Niveau</span>
-            <select name="mathLevel">
-              <option value="middle_school">Mittelstufe</option>
-              <option value="high_school">Oberstufe</option>
-              <option value="undergraduate">Studium</option>
-            </select>
-          </label>
+            <label class="field field-full onboarding-field">
+              <span class="sr-only">Was willst du gerade verstehen?</span>
+              <input
+                type="text"
+                name="objective"
+                data-role="onboarding-objective"
+                placeholder="Zum Beispiel lineare Gleichungen"
+              />
+            </label>
+          </div>
 
-          <label class="field field-wide">
-            <span>Womit willst du zuerst arbeiten?</span>
-            <input
-              type="text"
-              name="objective"
-              value="Erklaere mir lineare Gleichungen ruhig und mit Beispiel."
-            />
-          </label>
+          <div class="onboarding-step is-hidden" data-onboarding-step="presentation">
+            <p class="onboarding-intro">
+              Ich richte nur den ersten Zugang fuer dich aus.
+            </p>
+            <h2 class="onboarding-question">
+              Soll ich mit Bild oder mit Worten starten?
+            </h2>
 
-          <div class="choice-group">
-            <p class="choice-label">Wie soll ich erklaeren?</p>
-            <div class="chip-row">
-              <button class="chip is-active" data-pref="visuals" data-value="true">
-                Mit Bild starten
+            <div class="choice-stack">
+              <button
+                class="choice-option is-active"
+                data-choice="presentation"
+                data-value="visual"
+                type="button"
+              >
+                Mit einem Bild
               </button>
-              <button class="chip" data-pref="visuals" data-value="false">
-                Mit Worten starten
+              <button
+                class="choice-option"
+                data-choice="presentation"
+                data-value="words"
+                type="button"
+              >
+                Mit Worten
               </button>
             </div>
           </div>
 
-          <div class="choice-group">
-            <p class="choice-label">Wie gross sollen die Schritte sein?</p>
-            <div class="chip-row">
-              <button class="chip is-active" data-pref="pace" data-value="gentle">
-                Kleine Schritte
-              </button>
-              <button class="chip" data-pref="pace" data-value="balanced">
-                Ausgewogen
-              </button>
-              <button class="chip" data-pref="pace" data-value="intensive">
-                Eher direkt
-              </button>
-            </div>
+          <div class="onboarding-step is-hidden" data-onboarding-step="confirmation">
+            <p class="onboarding-confirmation">Gut, wir beginnen genau so.</p>
+            <p class="onboarding-summary" data-role="onboarding-summary">
+              Lineare Gleichungen, zuerst mit Bild.
+            </p>
+            <p class="onboarding-relief">
+              Wir koennen den Einstieg spaeter jederzeit anpassen.
+            </p>
           </div>
 
-          <div class="choice-group">
-            <p class="choice-label">Was hilft dir oft?</p>
-            <div class="toggle-grid">
-              <label class="toggle-card">
-                <input type="checkbox" name="support" value="adhd_aware_support" />
-                <span>Kurze ruhige Schritte</span>
-              </label>
-              <label class="toggle-card">
-                <input
-                  type="checkbox"
-                  name="support"
-                  value="dyscalculia_aware_support"
-                />
-                <span>Zahlen einzeln sehen</span>
-              </label>
-              <label class="toggle-card">
-                <input type="checkbox" name="support" value="dyslexia_aware_support" />
-                <span>Weniger Text pro Blick</span>
-              </label>
-              <label class="toggle-card">
-                <input
-                  type="checkbox"
-                  name="support"
-                  value="language_sensitive_support"
-                />
-                <span>Einfachere Sprache</span>
-              </label>
-              <label class="toggle-card">
-                <input
-                  type="checkbox"
-                  name="support"
-                  value="scarcity_aware_support"
-                />
-                <span>Schnell wieder einsteigen koennen</span>
-              </label>
-            </div>
-          </div>
-        </div>
+          <p class="onboarding-validation" data-role="onboarding-validation" hidden></p>
 
-        <div class="actions">
-          <button class="action-primary" data-action="start-learning">
-            Lernprofil speichern
+          <div class="actions onboarding-actions">
+          <button class="action-primary" data-action="onboarding-next" data-role="onboarding-primary-action">
+            Weiter
           </button>
-          <button class="action-ghost" data-action="back-home">
+          <button class="action-ghost" data-action="onboarding-back" data-role="onboarding-secondary-action">
             Zurueck
           </button>
+          </div>
         </div>
       </section>
 

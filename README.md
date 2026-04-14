@@ -277,6 +277,7 @@ gesnapshotteter Family-Historien.
 - [docs/device-ui-evidence-matrix.md](/Users/jonasweiss/MathTeach/docs/device-ui-evidence-matrix.md): Harte Screen-Regeln aus U.1, Support-Matrizen und psychologischen Wirkungen fuer Start, Onboarding und Lernansicht
 - [docs/device-startscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-contract.md): Verbindlicher Contract fuer den Device-Startscreen als Resume- und Wiedereinstiegs-Screen
 - [docs/device-startscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-blueprint.md): Struktureller Bauplan fuer den Startscreen aus dem Contract, noch ohne Design oder Code
+- [docs/device-startscreen-wire-contract-resume.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-resume.md): Erster konkreter Wire Contract fuer den Startscreen-Zustand `Resume vorhanden`
 - [docs/device-onboarding-contract.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-contract.md): Verbindlicher Contract fuer ein nicht-diagnostisches, lastarmes Device-Onboarding
 - [docs/device-onboarding-flow-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-onboarding-flow-blueprint.md): Struktureller Ablauf fuer ein minimales, nicht-formularartiges Device-Onboarding
 - [docs/device-learningscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-contract.md): Verbindlicher Contract fuer die psychologisch und didaktisch gebundene Lernansicht

@@ -176,6 +176,33 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-blueprint.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-blueprint.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Wire-Contract-Resume 2026-04-14
+
+Der erste konkrete Screen-Zustand ist jetzt auf Wire-Ebene festgelegt:
+Startscreen mit vorhandenem Resume.
+
+Neu dazu:
+
+- exakte Slot-Definition fuer den Resume-Zustand
+- strikte Lesereihenfolge fuer Begruessung, Resume und CTA
+- Datenmapping-Regeln aus Runtime in sichtbare Slots
+- klare Ausschluesse gegen Statistik-, Profil- und Systemdaten auf
+  diesem Screen
+
+Wichtigste Konsequenzen:
+
+- der erste wirklich konkrete Device-Screen ist jetzt weiterhin
+  evidenzgebunden, aber nicht mehr nur abstrakt
+- `Resume vorhanden` kann spaeter nicht versehentlich zu einem
+  Dashboard oder Verlaufsscreen ausufern
+- Illustration, falls spaeter vorhanden, bleibt auch auf Wire-Ebene
+  untergeordnet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-wire-contract-resume.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-resume.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Learningscreen-Blueprint 2026-04-14
 
 Mit diesem Schritt ist jetzt auch die Lernansicht auf Blueprint-Ebene

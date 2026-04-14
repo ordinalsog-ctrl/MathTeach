@@ -1,6 +1,38 @@
 # MathTeach Journal
 
-Stand: 2026-04-09
+Stand: 2026-04-14
+
+## Device-RPi-Touch-Prototyp-Readiness 2026-04-14
+
+Der naechste echte Produktschritt ist jetzt als Device-Spur im Repo
+verankert: nicht nur weiter Engine-Verfeinerung, sondern ein erster
+lokaler Schueler-Prototyp auf `Raspberry Pi 5` plus
+`RPi Touch Display 2 (7")`.
+
+Neu dazu:
+
+- ein forschungsbasiertes UI-Lastenheft fuer die erste 800x480-
+  Touch-Oberflaeche
+- ein konkreter Prototyp-Plan fuer den Weg von der Engine zum ersten
+  realen Geraetetest
+- klare Abgrenzung gegen Smartphone- und generische Browser-UI-Logik
+- Festhalten, dass Illustration im Lernfluss ein didaktisches
+  Kernelement und kein spaeteres UI-Extra ist
+
+Wichtigste Konsequenzen:
+
+- der naechste Projektengpass liegt nicht nur in H.9-Feinoptimierung,
+  sondern in echter Schuelerinteraktion
+- die bestehende Teacher-Mind- und U.1-Forschung wird jetzt explizit in
+  UI-Anforderungen uebersetzt
+- die erste Zielplattform ist bewusst ein lokales Querformat-Geraet mit
+  800x480 statt Smartphone-Denken
+
+Neue Referenzartefakte:
+
+- [docs/rpi-touch-ui-lastenheft.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-ui-lastenheft.md)
+- [docs/rpi-touch-device-prototype-plan.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-device-prototype-plan.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
 
 ## Phase-H.9.2-Carryover-Bonus-Slots-For-Cross-Family-Probes 2026-04-09
 

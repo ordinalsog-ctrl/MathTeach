@@ -73,6 +73,11 @@ MathTeach ist ein `geschlossenes lokales Tutor-System aus Knowledge Core + Teach
 MathTeach ist aktuell eine belastbare Tutor-Engine-Basis, noch kein
 fertiges Endnutzerprodukt.
 
+Parallel dazu ist jetzt die erste konkrete Device-Spur fuer einen
+lokalen `RPi Touch Display 2 (7")`-Prototypen angelegt: nicht als
+Marketing-Idee, sondern als belastbarer Arbeitsweg vom Engine-Kern zur
+ersten echten Schuelerinteraktion.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von
@@ -258,6 +263,8 @@ gesnapshotteter Family-Historien.
 - [docs/teacher-mind-foundations-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/teacher-mind-foundations-review-triage-2026-04-01.md): Prioritaetskorrektur nach dem ersten umfassenden Review der psychologisch-paedagogischen Grundausbildung
 - [docs/universal-tutor-system-review-triage-2026-04-01.md](/Users/jonasweiss/MathTeach/docs/universal-tutor-system-review-triage-2026-04-01.md): Prioritaetskorrektur fuer Universalitaet, Inklusion, Neurodiversitaet, Equity und lokale Systemarchitektur
 - [docs/universal-round-u1-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u1-program.md): Erste universelle Designrunde fuer Motivation, Belonging, Errors, Equity/Scarcity und UDL
+- [docs/rpi-touch-ui-lastenheft.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-ui-lastenheft.md): Forschungsbasiertes UI-Lastenheft fuer den ersten lokalen 800x480-Touch-Prototypen
+- [docs/rpi-touch-device-prototype-plan.md](/Users/jonasweiss/MathTeach/docs/rpi-touch-device-prototype-plan.md): Konkreter Prototyp- und Pilotpfad fuer ein erstes MathTeach-Geraet auf Raspberry Pi 5
 - [docs/universal-round-u2-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u2-program.md): Zweite universelle Designrunde fuer Transfer, situiertes Lernen, Zusammenarbeit, ZPD und Adult Learning
 - [docs/universal-round-u3-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u3-program.md): Dritte universelle Designrunde fuer neurodiversitaetsbewusste Kernarchitektur, trauma-informed safety, Lifespan-Sequencing und Guardrails
 - [docs/universal-round-u4-program.md](/Users/jonasweiss/MathTeach/docs/universal-round-u4-program.md): Erste support-spezifische Runde fuer ADHD, Dyskalkulie, Dyslexie, Autismusspektrum und sprachsensible Unterstuetzung

@@ -230,15 +230,15 @@ async function requestPlan(runtimeObservations) {
 }
 
 function renderStartScreen() {
-  const name = state.profile.learnerName || "Hier ist Platz fuer deinen eigenen Weg.";
-  const resumeTopic = describeResumeTopic();
-  const resumeSummary = describeResumeSummary();
+  const input = collectStartscreenInput();
+  const normalized = normalizeStartscreenInput(input);
+  const stateKind = resolveStartscreenState(normalized);
+  const slots = buildStartscreenSlots(stateKind, normalized);
 
-  text("[data-role='welcome-name']", state.profile.learnerName
-    ? `${state.profile.learnerName}, wir lernen in deinem Tempo.`
-    : "Wir lernen in deinem Tempo.");
-  text("[data-role='resume-topic']", resumeTopic);
-  text("[data-role='resume-summary']", resumeSummary);
+  renderStartscreenResolved({
+    state_kind: stateKind,
+    slots,
+  });
 }
 
 function renderLearningScreen(plan) {
@@ -277,27 +277,148 @@ function pickActiveBlock(plan) {
   };
 }
 
-function describeResumeTopic() {
-  if (!state.lastPlan) {
-    return "Noch kein Thema vorbereitet";
-  }
-  const block = pickActiveBlock(state.lastPlan);
-  return block.goal || state.profile.objective || "Letzte Lerneinheit";
+function collectStartscreenInput() {
+  return {
+    learnerName: state.profile.learnerName,
+    sessionId: state.sessionId,
+    lastPlan: state.lastPlan,
+    lastUpdatedAt: state.lastUpdatedAt,
+    resumeContext: state.lastPlan?.resume_context ?? null,
+    resumeBlock: pickStartscreenResumeBlock(state.lastPlan),
+  };
 }
 
-function describeResumeSummary() {
-  if (!state.lastPlan) {
-    return "Wir starten mit einem ruhigen ersten Profil und einem klaren Einstieg.";
+function normalizeStartscreenInput(input) {
+  const resumeContext = input.resumeContext;
+  const resumeBlock = input.resumeBlock;
+
+  return {
+    ...input,
+    has_name: Boolean(input.learnerName),
+    has_last_plan: Boolean(input.lastPlan),
+    has_resume_context: Boolean(resumeContext),
+    resume_active: Boolean(resumeContext?.resume_active),
+    resume_source: resumeContext?.resume_source || "fresh_start",
+    has_first_block: Boolean(resumeBlock),
+    has_resume_goal: Boolean(resumeBlock?.goal),
+    has_resume_transition_message: Boolean(resumeBlock?.transition_message),
+    has_explicit_unsafe_signal: hasExplicitUnsafeSignal(input),
+  };
+}
+
+function resolveStartscreenState(normalized) {
+  if (normalized.has_explicit_unsafe_signal) {
+    return "unsafe_history";
   }
-  const updated = state.lastUpdatedAt
-    ? new Date(state.lastUpdatedAt).toLocaleString("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "gerade eben";
+
+  if (
+    normalized.resume_active ||
+    (normalized.has_last_plan && normalized.has_first_block && normalized.has_resume_goal)
+  ) {
+    return "resume";
+  }
+
+  return "no_history";
+}
+
+function buildStartscreenSlots(stateKind, normalized) {
+  if (stateKind === "unsafe_history") {
+    return buildUnsafeHistoryStartscreenSlots(normalized);
+  }
+  if (stateKind === "resume") {
+    return buildResumeStartscreenSlots(normalized);
+  }
+  return buildNoHistoryStartscreenSlots(normalized);
+}
+
+function buildResumeStartscreenSlots(normalized) {
+  const block = normalized.resumeBlock;
+  return {
+    welcome_line: normalized.has_name
+      ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
+      : "Wir lernen in deinem Tempo.",
+    resume_title:
+      block?.goal || state.profile.objective || "Letzte Lerneinheit",
+    resume_summary: buildResumeSummary(normalized),
+    primary_cta_label: "Weiterlernen",
+  };
+}
+
+function buildNoHistoryStartscreenSlots(normalized) {
+  return {
+    welcome_line: normalized.has_name
+      ? `${normalized.learnerName}, wir lernen in deinem Tempo.`
+      : "Wir lernen in deinem Tempo.",
+    resume_title: "Noch kein Thema vorbereitet",
+    resume_summary:
+      "Wir starten mit einem ruhigen ersten Profil und einem klaren Einstieg.",
+    primary_cta_label: "Jetzt anfangen",
+  };
+}
+
+function buildUnsafeHistoryStartscreenSlots(normalized) {
+  return {
+    welcome_line: normalized.has_name
+      ? `${normalized.learnerName}, wir steigen ruhig wieder ein.`
+      : "Wir steigen ruhig wieder ein.",
+    resume_title: "Wir nehmen den letzten sicheren Schritt.",
+    resume_summary:
+      "Wir setzen an einem stabilen Punkt wieder an, ohne etwas neu sortieren zu muessen.",
+    primary_cta_label: "Sicher weitermachen",
+  };
+}
+
+function buildResumeSummary(normalized) {
+  if (normalized.resumeBlock?.transition_message) {
+    return normalized.resumeBlock.transition_message;
+  }
+
+  const updated = formatStartscreenTimestamp(normalized.lastUpdatedAt);
   return `Letzte lokale Session: ${updated}. Du kannst ohne Neuaufsetzen wieder an derselben Stelle anfangen.`;
+}
+
+function renderStartscreenResolved(resolved) {
+  const startScreen = document.querySelector("[data-screen='start']");
+  if (startScreen) {
+    startScreen.dataset.startscreenState = resolved.state_kind;
+  }
+
+  text("[data-role='welcome-name']", resolved.slots.welcome_line);
+  text("[data-role='resume-topic']", resolved.slots.resume_title);
+  text("[data-role='resume-summary']", resolved.slots.resume_summary);
+  text("[data-action='continue']", resolved.slots.primary_cta_label);
+}
+
+function pickStartscreenResumeBlock(plan) {
+  if (!plan || !Array.isArray(plan.planned_blocks) || plan.planned_blocks.length === 0) {
+    return null;
+  }
+  return plan.planned_blocks[0];
+}
+
+function hasExplicitUnsafeSignal(input) {
+  const resumeContext = input.resumeContext;
+  if (!resumeContext) {
+    return false;
+  }
+
+  return (
+    resumeContext.resume_status === "unsafe_history" ||
+    resumeContext.resume_recovery_required === true
+  );
+}
+
+function formatStartscreenTimestamp(timestamp) {
+  if (!timestamp) {
+    return "gerade eben";
+  }
+
+  return new Date(timestamp).toLocaleString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function buildSessionId() {

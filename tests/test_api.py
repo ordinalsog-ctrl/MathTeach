@@ -51,6 +51,11 @@ def test_device_static_assets_are_served() -> None:
     assert js_response.status_code == 200
     assert "javascript" in js_response.headers["content-type"]
     assert "requestPlan" in js_response.text
+    assert "resolveStartscreenState" in js_response.text
+    assert "renderStartscreenResolved" in js_response.text
+    assert "buildResumeStartscreenSlots" in js_response.text
+    assert "describeResumeTopic" not in js_response.text
+    assert "describeResumeSummary" not in js_response.text
 
 
 def test_stack_endpoint() -> None:

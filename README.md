@@ -118,6 +118,15 @@ welche heutige freie Startscreen-Hilfslogik spaeter verschwindet, welche
 kleinen Resolver-Funktionen entstehen und wie der Startscreen kuenftig
 nur noch ueber `state_kind + slots` gerendert werden soll.
 
+Der erste kleine Code-Umbau dafuer ist jetzt auch umgesetzt: Der
+Startscreen in
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+rendert nicht mehr direkt aus freien Resume-Hilfsfunktionen, sondern
+ueber eine kleine Resolver-Kette aus Input-Sammlung, Normalisierung,
+Zustandsaufloesung und zustandsgebundenem Slot-Bau. Der sichtbare
+Scope bleibt dabei bewusst gleich klein; es ist eine interne
+Strukturhärtung, kein neues UI-Design.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

@@ -403,6 +403,40 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-resolver-change-plan.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-change-plan.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Resolver-Refactor 2026-04-14
+
+Der erste kleine echte Code-Umbau fuer den Device-Startscreen ist jetzt
+umgesetzt, weiterhin ohne sichtbaren Zusatz-Scope.
+
+Neu dazu:
+
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  rendert den Startscreen jetzt ueber eine kleine Resolver-Kette statt
+  ueber freie Resume-Hilfsfunktionen
+- neue interne Schritte fuer:
+  Input-Sammlung, Input-Normalisierung, Zustandsauflösung und
+  zustandsgebundenen Slot-Bau
+- der Renderer liest jetzt einen aufgeloesten Startscreen-Zustand plus
+  Slots statt direkter Resume-Heuristik
+- die freie Logik in `describeResumeTopic()` und
+  `describeResumeSummary()` ist in den zustandsgebundenen Resolver-Pfad
+  ueberfuehrt
+
+Wichtigste Konsequenzen:
+
+- der Startscreen ist jetzt intern technisch genauso streng gebaut wie
+  die zuvor dokumentierten Specs es verlangt haben
+- `resume` und `no_history` sind in der Runtime-Struktur sauberer
+  getrennt, ohne dass die UI wieder aus losem Textzusammenbau waechst
+- `unsafe_history` bleibt strukturell vorbereitet, aber weiterhin an ein
+  spaeteres explizites Runtime-Signal gebunden
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

@@ -203,6 +203,32 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-wire-contract-resume.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-resume.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Wire-Contract-No-History 2026-04-14
+
+Der zweite Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene
+festgelegt: kein Verlauf vorhanden.
+
+Neu dazu:
+
+- exakte Slot-Definition fuer den Erststart ohne History
+- klare Trennung gegen Resume-, Statistik- und Setup-Logik
+- festgelegter Start-Kern statt Themenraster oder Produktuebersicht
+- explizite Regel, dass fehlende History nie wie ein Defizit wirken darf
+
+Wichtigste Konsequenzen:
+
+- der Startscreen ist jetzt fuer Erststart und Resume-Fall strukturell
+  abgesichert
+- auch der allererste Einstieg darf spaeter nicht in ein grosses
+  Setup oder Onboarding-Dashboard ausufern
+- die Startscreen-Familie kann jetzt zustandsbasiert implementiert
+  werden, ohne neue freie Designentscheidungen zu erzwingen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-wire-contract-no-history.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-wire-contract-no-history.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Learningscreen-Blueprint 2026-04-14
 
 Mit diesem Schritt ist jetzt auch die Lernansicht auf Blueprint-Ebene

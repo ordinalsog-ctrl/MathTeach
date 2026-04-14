@@ -333,6 +333,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [docs/device-startscreen-runtime-field-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-runtime-field-spec.md)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Startscreen-Resolver-Flow-Spec 2026-04-14
+
+Nach Feld- und Resolver-Spec ist jetzt auch der reine Ablauf des
+Startscreen-Resolvers fixiert.
+
+Neu dazu:
+
+- neue
+  [device-startscreen-resolver-flow-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-flow-spec.md)
+  mit strikter Reihenfolge von Input-Sammlung ueber Normalisierung bis
+  Zustandsentscheidung und Slot-Bau
+- klare harte Reihenfolge:
+  `unsafe_history` pruefen -> `resume` pruefen -> sonst `no_history`
+- explizite Builder-Disziplin, damit der Startscreen spaeter nicht aus
+  Mischtexten oder losem Rendern entsteht
+- Pseudoflow als kleinster technische Ablauf, ohne schon echten UI-Code
+  zu schreiben
+
+Wichtigste Konsequenzen:
+
+- die Startscreen-Logik ist jetzt nicht nur inhaltlich und feldseitig,
+  sondern auch als Ablauf gegen lockere oder psychologisch falsche
+  Abkuerzungen abgesichert
+- spaeterer UI-Code in
+  [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  kann jetzt gezielt an einer vorhandenen Resolver-Kette andocken statt
+  wieder frei zu wachsen
+- wir bleiben weiterhin auf der evidenzgebundenen Schiene und gehen noch
+  nicht in sichtbare Designarbeit zurueck
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/device-startscreen-resolver-flow-spec.md](/Users/jonasweiss/MathTeach/docs/device-startscreen-resolver-flow-spec.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Startscreen-Wire-Contract-Unsafe-History 2026-04-14
 
 Der dritte Startscreen-Zustand ist jetzt ebenfalls auf Wire-Ebene

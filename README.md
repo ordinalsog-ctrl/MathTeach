@@ -106,6 +106,12 @@ Sie legt fest, welche Felder heute bereits sauber fuer `resume` und
 welche expliziten Zusatzfelder spaeter fuer ein echtes
 `unsafe_history`-Signal noetig waeren.
 
+Die naechste darunterliegende Schicht ist jetzt ebenfalls beschrieben:
+eine reine Resolver-Flow-Spec, die den spaeteren Ablauf von Input ueber
+Normalisierung und Zustandsentscheidung bis zum zustandsgebundenen
+Slot-Bau festlegt, ohne schon in sichtbare UI oder freien
+Textzusammenbau zu kippen.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

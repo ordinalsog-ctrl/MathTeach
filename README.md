@@ -171,6 +171,13 @@ Device-Einstieg entfernt, waehrend
 [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
 die Schrittlogik jetzt lokal zustandsgebunden fuehrt.
 
+Der erste sichtbare Pass darauf bleibt bewusst klein, aber wichtig:
+Die Onboarding-Flaeche ist jetzt enger auf genau einen
+Entscheidungsblock fokussiert, die Handlungszone liest sich als
+dominanter Startpfad plus schwache Rueck-Aktion und der
+Bestaetigungsschritt erscheint als kleine Startfreigabe statt als
+ausufernde Abschlussflaeche.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

@@ -51,6 +51,8 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'data-role="onboarding-objective"' in response.text
     assert 'data-action="onboarding-next"' in response.text
     assert 'data-action="onboarding-back"' in response.text
+    assert 'class="onboarding-summary-block"' in response.text
+    assert 'class="choice-stack"' in response.text
     assert 'name="learnerName"' not in response.text
     assert 'name="mathLevel"' not in response.text
     assert 'name="support"' not in response.text
@@ -80,6 +82,8 @@ def test_device_static_assets_are_served() -> None:
     assert "buildOnboardingSummary" in js_response.text
     assert ".onboarding-card" in css_response.text
     assert ".choice-option" in css_response.text
+    assert ".onboarding-summary-block" in css_response.text
+    assert ".screen-onboarding .action-ghost" in css_response.text
     assert "describeResumeTopic" not in js_response.text
     assert "describeResumeSummary" not in js_response.text
     assert "Bitte gib zuerst einen Namen ein." not in js_response.text

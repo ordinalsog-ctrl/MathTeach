@@ -41,6 +41,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Onboarding-Visual-Pass 2026-04-14
+
+Nach dem strukturellen Drei-Schritt-Umbau hat das Onboarding jetzt noch
+einen bewusst kleinen sichtbaren Pass bekommen, ohne neue Fragen oder
+neuen UI-Scope einzufuehren.
+
+Neu dazu:
+
+- die Onboarding-Flaeche ist in
+  [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  enger zentriert und staerker auf einen einzigen Entscheidungsblock
+  fokussiert
+- die Handlungszone ist jetzt klar als dominanter Hauptpfad plus
+  schwache Rueck-Aktion lesbar statt als auseinandergezogene Button-
+  Reihe
+- die `Startfreigabe` hat in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  einen kleinen eigenen Bestätigungsblock statt einer losen Zeilenfolge
+
+Wichtigste Konsequenzen:
+
+- die drei Onboarding-Schritte wirken jetzt sichtbarer wie kleine
+  Einzelentscheidungen und weniger wie ein verbliebener Formularrest
+- der dritte Schritt liest sich ruhiger als Startfreigabe und nicht als
+  Mini-Zusammenfassungsseite
+- der sichtbare Pass bleibt weiterhin strikt innerhalb der bereits
+  gepushten Onboarding-Contracts
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-UI-Evidence-Matrix 2026-04-14
 
 Nach dem verworfenen freien UI-/Illustrationslauf ist jetzt eine harte

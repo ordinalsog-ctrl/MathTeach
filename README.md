@@ -281,6 +281,12 @@ zwischen Modul-, Sprach-, UI- und Illustrationsproblemen, damit wir nach
 dem Test nicht nur Eindruecke, sondern eine belastbare
 Richtungsentscheidung haben.
 
+Direkt daran angeschlossen liegt jetzt auch das
+[pilot-module-linear-equations-test-evaluation-template.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-test-evaluation-template.md):
+eine ausfuellbare Nach-Test-Vorlage, mit der wir Beobachtungen pro
+Station sofort in eine konkrete naechste Entscheidung ueber
+`Modul`, `Sprache`, `UI` oder `Illustration` uebersetzen koennen.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

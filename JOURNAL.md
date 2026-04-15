@@ -2,6 +2,40 @@
 
 Stand: 2026-04-15
 
+## Pilot-Module-Test-Evaluation-Template 2026-04-15
+
+Der Pilotkorridor fuer `lineare Gleichungen` hat jetzt auch den letzten
+kleinen Anschlussbaustein nach dem ersten echten Testlauf.
+
+Neu dazu:
+
+- neues
+  [pilot-module-linear-equations-test-evaluation-template.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-test-evaluation-template.md)
+  als direkt ausfuellbare Nach-Test-Vorlage
+- die Vorlage fuehrt von:
+  - Test-Metadaten
+  - Stationsauswertung
+  - Querschnittsauswertung
+  - Ursachenentscheidung
+  - naechster konkreter Schritt
+- damit ist jetzt festgelegt, wie Beobachtungen aus Test 1 schnell in
+  eine echte Produktentscheidung zuruecklaufen
+
+Wichtigste Konsequenzen:
+
+- nach Test 1 muessen wir nicht erst eine neue Auswertungsform erfinden
+- die Trennung zwischen `Modul`, `Sprache`, `UI`, `Illustration`,
+  `History` und persoenlichem Faktor bleibt auch in der Auswertung
+  erhalten
+- der erste echte Test kann damit nicht nur beobachtet, sondern sofort
+  in einen klaren naechsten Arbeitshebel uebersetzt werden
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/pilot-module-linear-equations-first-live-test-protocol.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-first-live-test-protocol.md)
+- [docs/pilot-module-linear-equations-test-evaluation-template.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-test-evaluation-template.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Pilot-Module-First-Live-Test-Protocol 2026-04-15
 
 Der Pilotkorridor fuer `lineare Gleichungen` ist jetzt bis zum ersten

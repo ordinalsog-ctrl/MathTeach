@@ -126,6 +126,7 @@ def test_device_static_assets_are_served() -> None:
     assert "buildLinearEquationsPilotPlan" in js_response.text
     assert "buildLinearEquationsStage" in js_response.text
     assert "resolveLinearEquationsStage" in js_response.text
+    assert "!plan || !Array.isArray(plan.planned_blocks)" in js_response.text
     assert '"relationship_intro"' in js_response.text
     assert '"equation_form"' in js_response.text
     assert '"same_operation"' in js_response.text

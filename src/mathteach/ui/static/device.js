@@ -604,17 +604,20 @@ function renderLearningCarrierState(carrierTone) {
 }
 
 function pickActiveBlock(plan) {
+  if (!plan || !Array.isArray(plan.planned_blocks) || plan.planned_blocks.length === 0) {
+    return {
+      goal: state.profile.objective,
+      focus: [],
+      support_moves: [],
+      support_scaffolds: [],
+      block_type: null,
+      transition_message: null,
+    };
+  }
+
   if (Array.isArray(plan.planned_blocks) && plan.planned_blocks.length > 0) {
     return plan.planned_blocks[0];
   }
-  return {
-    goal: state.profile.objective,
-    focus: [],
-    support_moves: [],
-    support_scaffolds: [],
-    block_type: null,
-    transition_message: null,
-  };
 }
 
 function buildLessonTransition(block) {

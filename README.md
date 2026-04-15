@@ -215,6 +215,15 @@ Contracts, Resolver-Logik und data-role-Schnittstellen bleiben dabei
 stabil; veraendert wurde nur die sichtbare Flaechen- und
 Blickfuehrungslogik.
 
+Der naechste direkte Schritt darauf ist bereits ebenfalls im Code:
+Das Onboarding liest sich jetzt noch klarer als gefuehrte Seite mit
+einer vertikalen Lesespur fuer `Grund -> Frage -> Antwort -> Weiter`
+statt als weiche Formularflaeche. In diesem Zug wurde auch ein
+Zustandsfehler in
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+behoben, bei dem der Screen beim Wechsel auf Schritt `2 von 3`
+versehentlich mit versteckt wurde.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

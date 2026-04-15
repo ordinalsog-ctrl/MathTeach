@@ -168,7 +168,7 @@ function renderOnboarding({ shouldFocus = false } = {}) {
   const objectiveInput = document.querySelector("[data-role='onboarding-objective']");
   const secondaryAction = document.querySelector("[data-role='onboarding-secondary-action']");
 
-  document.querySelectorAll("[data-onboarding-step]").forEach((node) => {
+  document.querySelectorAll(".onboarding-step[data-onboarding-step]").forEach((node) => {
     node.classList.toggle("is-hidden", node.dataset.onboardingStep !== step);
   });
 

@@ -3563,3 +3563,29 @@ Offen bleibt bewusst:
   wird
 - der Lernscreen kann im naechsten Schritt Recovery direkter im
   primaeren Traeger selbst abbilden
+
+Direkt danach ist der naechste kleine, aber wichtige Pass auf das
+Onboarding gegangen:
+
+- die drei Schritte lesen sich jetzt sichtbar staerker als vertikale
+  Fuehrung statt als weiche Formularflaeche
+- `Grund -> Frage -> Antwort -> Weiter` ist als ruhigere Lesespur
+  organisiert
+- die Auswahlschritte wirken weniger wie App-Controls und mehr wie
+  lokale Entscheidungen innerhalb derselben Seite
+
+Dabei wurde auch ein konkreter Laufzeitfehler in
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+behoben:
+
+- `renderOnboarding()` behandelte versehentlich auch den
+  Screen-Container selbst wie einen Onboarding-Step
+- beim Wechsel von `goal` auf `presentation` konnte der gesamte Screen
+  dadurch als `is-hidden` markiert werden
+- die Step-Umschaltung greift jetzt nur noch auf die echten
+  `.onboarding-step[data-onboarding-step]`-Elemente
+
+Verifiziert:
+
+- `git diff --check`
+- `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`

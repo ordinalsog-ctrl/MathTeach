@@ -319,7 +319,9 @@ button:active {
 
 button[hidden],
 .onboarding-validation[hidden],
-.board-recovery-note[hidden] {
+.board-recovery-note[hidden],
+.board-relationship-scene[hidden],
+.board-math[hidden] {
   display: none !important;
 }
 

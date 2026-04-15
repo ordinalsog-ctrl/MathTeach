@@ -2,6 +2,48 @@
 
 Stand: 2026-04-15
 
+## Pilot-Module-Asset-Mapping-Sheet 2026-04-15
+
+Der Modul-Pivot fuer `lineare Gleichungen` ist jetzt einen Schritt
+operativer geworden: Das Throughplay-Script ist in ein konkretes
+Asset-Mapping uebersetzt.
+
+Neu dazu:
+
+- neues
+  [pilot-module-linear-equations-asset-mapping-sheet.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-asset-mapping-sheet.md)
+  als verbindliche Zuordnung von:
+  - Station
+  - Asset-Familie
+  - Carrier-Zustand
+  - didaktischer Pflicht
+  - Auslagerungsgrenze
+- das Mapping legt erstmals explizit fest, welche Zustaende fuer Pilot
+  1 heute schon von der Device-UI getragen werden und welche noch einen
+  staerkeren Asset-Track brauchen
+- zugleich ist dokumentiert, in welcher Reihenfolge ein spaeterer
+  externer Illustrationstrack gebrieft werden sollte
+
+Wichtigste Konsequenzen:
+
+- wir reden ueber Illustrationen jetzt nicht mehr abstrakt, sondern
+  zustands- und stationsscharf
+- `relationship_intro`, `standard`, `repeat_seed`, `repeat`, `example`
+  und `history_sidecar` sind jetzt als didaktische Carrier-Zustaende
+  benoetigt und voneinander abgegrenzt
+- die aktuelle UI-Grenze ist ehrlich festgehalten:
+  `standard`, `repeat` und `example` tragen schon;
+  `relationship_intro`, `history_sidecar` und ein staerkerer
+  illustrativer Carrier brauchen spaeter einen eigenen Asset-Track
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+- [docs/pilot-module-linear-equations-illustration-brief.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-brief.md)
+- [docs/pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md)
+- [docs/pilot-module-linear-equations-asset-mapping-sheet.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-asset-mapping-sheet.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Pilot-Module-Throughplay-Script 2026-04-15
 
 Der naechste Pivot nach den Device-UI-Paessen ist jetzt nicht mehr

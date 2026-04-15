@@ -259,6 +259,14 @@ entscheiden. Damit pruefen wir die weitere Device-Arbeit ab jetzt nicht
 mehr nur an UI-Teilen, sondern an einem echten fachlich-paedagogischen
 Durchlauf.
 
+Darauf folgt jetzt das konkrete
+[pilot-module-linear-equations-asset-mapping-sheet.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-asset-mapping-sheet.md):
+es ordnet jeder Modulstation ihre Asset-Familie, den Carrier-Zustand,
+die didaktische Pflicht und die Auslagerungsgrenze zu. Damit kann ein
+spaeterer Illustrations-Track sehr klar gebrieft werden, ohne dass
+mathematische Funktion, Recovery-Logik oder historische Gewichtung nach
+aussen abgegeben werden.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

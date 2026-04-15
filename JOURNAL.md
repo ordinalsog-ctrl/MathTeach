@@ -41,6 +41,41 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Learningscreen-Action-and-Recovery-Pass 2026-04-15
+
+Der zweite kleine Lernscreen-Pass bindet jetzt Handlungszone und
+Recovery-Ton enger an die bestehenden Lernscreen-Regeln.
+
+Neu dazu:
+
+- [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  gruppiert die beiden Support-Aktionen jetzt in einer ruhigen
+  Nebenhandlung, waehrend der naechste Schritt klar der primaere Pfad
+  bleibt
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  setzt die Handlungslabels jetzt explizit ueber eine kleine
+  `renderLearningActions`-Schicht statt nur ueber statische HTML-Texte
+- fuer `repeat`, `example` und `advance` gibt es jetzt eigene
+  Laufzeitmeldungen, damit Wiederholung und Recovery nicht mehr mit
+  derselben generischen Planungsnachricht erscheinen
+
+Wichtigste Konsequenzen:
+
+- die Handlungszone liest sich jetzt ruhiger und eindeutiger als
+  `zwei kleine Hilfen + ein primaerer naechster Schritt`
+- Wiederholung und Beispiel tragen sprachlich klarer die aktuelle Idee,
+  statt wie allgemeine Systemaktionen zu wirken
+- Recovery bleibt lokal und wird nicht ueber mehr Interface-Flaechen,
+  sondern ueber kleinere, explizitere Fuehrung geloest
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Onboarding-UI-Refactor 2026-04-14
 
 Der erste echte Onboarding-Umbau im Device-UI ist jetzt im Code

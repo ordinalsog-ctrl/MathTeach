@@ -104,17 +104,26 @@ function bindActions() {
       }
 
       if (action === "again") {
-        await requestPlan([{ evidence: ["repeated_concept_error", "text_overload"] }]);
+        await requestPlan(
+          [{ evidence: ["repeated_concept_error", "text_overload"] }],
+          "repeat"
+        );
         return;
       }
 
       if (action === "example") {
-        await requestPlan([{ evidence: ["repeated_concept_error", "no_progress_two_blocks"] }]);
+        await requestPlan(
+          [{ evidence: ["repeated_concept_error", "no_progress_two_blocks"] }],
+          "example"
+        );
         return;
       }
 
       if (action === "advance") {
-        await requestPlan([{ evidence: ["visible_small_success", "transfer_success"] }]);
+        await requestPlan(
+          [{ evidence: ["visible_small_success", "transfer_success"] }],
+          "advance"
+        );
       }
     });
   });
@@ -349,7 +358,7 @@ function clearOnboardingValidation() {
   setOnboardingValidation("");
 }
 
-async function requestPlan(runtimeObservations) {
+async function requestPlan(runtimeObservations, actionTone = "default") {
   if (!state.profile.objective?.trim()) {
     openOnboarding("goal");
     return;
@@ -373,7 +382,7 @@ async function requestPlan(runtimeObservations) {
 
   state.sessionId = payload.session_id;
   saveState();
-  setStatus("Ich bereite den naechsten Schritt fuer dich vor ...");
+  setStatus(buildLessonRequestMessage(actionTone));
 
   try {
     const response = await window.fetch("/api/v1/tutoring/plan", {
@@ -396,7 +405,7 @@ async function requestPlan(runtimeObservations) {
     renderLearningScreen(plan);
     switchScreen("learning");
   } catch (error) {
-    setStatus("Der lokale Plan konnte gerade nicht geladen werden. Wir koennen es gleich noch einmal versuchen.");
+    setStatus(buildLessonFailureMessage(actionTone));
     console.error(error);
   }
 }
@@ -432,6 +441,7 @@ function renderLearningScreen(plan) {
       )
     )
   );
+  renderLearningActions(activeBlock);
 }
 
 function pickActiveBlock(plan) {
@@ -455,11 +465,66 @@ function buildLessonTransition(block) {
   );
 }
 
+function renderLearningActions(block) {
+  const labels = buildLearningActionLabels(block);
+  text("[data-role='lesson-repeat-action']", labels.repeat);
+  text("[data-role='lesson-example-action']", labels.example);
+  text("[data-role='lesson-advance-action']", labels.advance);
+}
+
+function buildLearningActionLabels(block) {
+  if (block?.block_type === "worked_example") {
+    return {
+      repeat: "Zeig diesen Schritt noch einmal",
+      example: "Zeig mir noch ein Beispiel",
+      advance: "Zum naechsten Schritt",
+    };
+  }
+
+  return {
+    repeat: "Diesen Schritt noch einmal sehen",
+    example: "Zeig mir ein Beispiel",
+    advance: "Zum naechsten Schritt",
+  };
+}
+
 function firstLearningNote(items, fallback) {
   if (Array.isArray(items) && items.length > 0) {
     return prettify(items[0]);
   }
   return fallback;
+}
+
+function buildLessonRequestMessage(actionTone) {
+  if (actionTone === "repeat") {
+    return "Lass uns genau diesen Schritt noch einmal kleiner aufmachen.";
+  }
+
+  if (actionTone === "example") {
+    return "Ich suche jetzt ein Beispiel fuer genau diesen Schritt.";
+  }
+
+  if (actionTone === "advance") {
+    return "Ich bereite den naechsten kleinen Schritt fuer dich vor.";
+  }
+
+  return "Ich bereite den naechsten Schritt fuer dich vor ...";
+}
+
+function buildLessonFailureMessage(actionTone) {
+  if (actionTone === "repeat") {
+    return "Wir konnten genau diesen Schritt gerade nicht noch einmal aufbauen. Wir koennen es gleich wieder versuchen.";
+  }
+
+  if (actionTone === "example") {
+    return "Das Beispiel konnte gerade nicht geladen werden. Wir koennen es gleich noch einmal versuchen.";
+  }
+
+  if (actionTone === "advance") {
+    return "Der naechste kleine Schritt konnte gerade nicht geladen werden. Wir koennen es gleich noch einmal versuchen.";
+  }
+
+  return "Der lokale Plan konnte gerade nicht geladen werden. Wir koennen es gleich noch einmal versuchen.";
 }
 
 function setStatus(message) {

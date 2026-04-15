@@ -58,6 +58,9 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'data-role="lesson-transition"' in response.text
     assert 'data-role="focus-note"' in response.text
     assert 'data-role="scaffold-note"' in response.text
+    assert 'data-role="lesson-repeat-action"' in response.text
+    assert 'data-role="lesson-example-action"' in response.text
+    assert 'data-role="lesson-advance-action"' in response.text
     assert 'data-role="lesson-mode"' not in response.text
     assert 'data-role="lesson-block"' not in response.text
     assert 'data-role="status-copy"' not in response.text
@@ -97,9 +100,16 @@ def test_device_static_assets_are_served() -> None:
     assert ":focus-visible" in css_response.text
     assert "buildLessonTransition" in js_response.text
     assert "firstLearningNote" in js_response.text
+    assert "renderLearningActions" in js_response.text
+    assert "buildLearningActionLabels" in js_response.text
+    assert "buildLessonRequestMessage" in js_response.text
+    assert "buildLessonFailureMessage" in js_response.text
     assert ".lesson-core" in css_response.text
     assert ".lesson-notes" in css_response.text
     assert ".note-card" in css_response.text
+    assert ".lesson-actions" in css_response.text
+    assert ".lesson-support-actions" in css_response.text
+    assert ".screen-learning .action-secondary" in css_response.text
     assert "describeResumeTopic" not in js_response.text
     assert "describeResumeSummary" not in js_response.text
     assert "Bitte gib zuerst einen Namen ein." not in js_response.text

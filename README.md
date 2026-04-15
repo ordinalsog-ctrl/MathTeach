@@ -192,6 +192,12 @@ sind aus der ersten Blickfuehrung verschwunden; stattdessen traegt der
 Screen jetzt eine kurze Uebergangszeile, eine Fokus-Notiz und eine
 Scaffold-Notiz direkt unterhalb des mathematischen Traegers.
 
+Der zweite kleine Lernscreen-Pass bindet jetzt auch die Handlungszone
+enger an den Contract: zwei ruhige Support-Handlungen werden als kleine
+Hilfen zusammengezogen, der naechste Schritt bleibt der primaere Pfad,
+und die Laufzeitmeldungen fuer Wiederholung, Beispiel und Fortschritt
+sprechen jetzt jeweils expliziter und weniger generisch.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

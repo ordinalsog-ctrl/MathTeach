@@ -132,20 +132,32 @@ function bindOnboardingInputs() {
     }
   });
 
+  objectiveInput?.addEventListener("keydown", async (event) => {
+    if (event.key !== "Enter" || event.shiftKey) {
+      return;
+    }
+    if (normalizeOnboardingStep(state.onboarding?.step) !== "goal") {
+      return;
+    }
+    event.preventDefault();
+    await advanceOnboarding();
+  });
+
   document.querySelectorAll("[data-choice='presentation']").forEach((option) => {
     option.addEventListener("click", () => {
       state.profile.wantsVisuals = option.dataset.value === "visual";
       saveState();
       clearOnboardingValidation();
-      renderOnboarding();
+      renderOnboarding({ shouldFocus: false });
     });
   });
 }
 
-function renderOnboarding() {
+function renderOnboarding({ shouldFocus = false } = {}) {
   const step = normalizeOnboardingStep(state.onboarding?.step);
   const meta = onboardingMeta(step);
   const objectiveInput = document.querySelector("[data-role='onboarding-objective']");
+  const secondaryAction = document.querySelector("[data-role='onboarding-secondary-action']");
 
   document.querySelectorAll("[data-onboarding-step]").forEach((node) => {
     node.classList.toggle("is-hidden", node.dataset.onboardingStep !== step);
@@ -166,11 +178,24 @@ function renderOnboarding() {
   text("[data-role='onboarding-screen-label']", meta.label);
   text("[data-role='onboarding-step-indicator']", meta.indicator);
   text("[data-role='onboarding-primary-action']", meta.primaryAction);
+  text("[data-role='onboarding-secondary-action']", meta.secondaryAction);
   text("[data-role='onboarding-summary']", buildOnboardingSummary());
+
+  if (secondaryAction) {
+    secondaryAction.hidden = Boolean(meta.hideSecondaryAction);
+  }
 
   const screen = document.querySelector("[data-screen='onboarding']");
   if (screen) {
     screen.dataset.onboardingStep = step;
+  }
+
+  if (step !== "goal") {
+    clearOnboardingValidation();
+  }
+
+  if (shouldFocus) {
+    window.requestAnimationFrame(() => applyOnboardingFocus(step));
   }
 }
 
@@ -225,15 +250,18 @@ function retreatOnboarding() {
 }
 
 function openOnboarding(step = "goal") {
-  setOnboardingStep(step);
+  state.onboarding.step = normalizeOnboardingStep(step);
+  saveState();
+  clearOnboardingValidation();
   switchScreen("onboarding");
+  renderOnboarding({ shouldFocus: true });
 }
 
 function setOnboardingStep(step) {
   state.onboarding.step = normalizeOnboardingStep(step);
   saveState();
   clearOnboardingValidation();
-  renderOnboarding();
+  renderOnboarding({ shouldFocus: true });
 }
 
 function normalizeOnboardingStep(step) {
@@ -246,6 +274,7 @@ function onboardingMeta(step) {
       label: "Naechster Schritt",
       indicator: "2 von 3",
       primaryAction: "Weiter",
+      secondaryAction: "Zurueck",
     };
   }
 
@@ -254,6 +283,7 @@ function onboardingMeta(step) {
       label: "Dann starten wir",
       indicator: "3 von 3",
       primaryAction: "Jetzt starten",
+      secondaryAction: "Zurueck",
     };
   }
 
@@ -261,15 +291,49 @@ function onboardingMeta(step) {
     label: "Erster Schritt",
     indicator: "1 von 3",
     primaryAction: "Weiter",
+    secondaryAction: "Zurueck zum Start",
   };
 }
 
 function buildOnboardingSummary() {
-  const topic = state.profile.objective?.trim() || "Ruhiger Einstieg";
+  const topic = compactOnboardingTopic(state.profile.objective) || "Ruhiger Einstieg";
   const presentation = state.profile.wantsVisuals
     ? "zuerst mit Bild"
     : "zuerst mit Worten";
   return `${topic}, ${presentation}.`;
+}
+
+function compactOnboardingTopic(value) {
+  const normalized = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[.!?]+$/g, "");
+
+  if (!normalized) {
+    return "";
+  }
+
+  if (normalized.length <= 44) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 41).trimEnd()}...`;
+}
+
+function applyOnboardingFocus(step) {
+  if (step === "goal") {
+    document.querySelector("[data-role='onboarding-objective']")?.focus();
+    return;
+  }
+
+  if (step === "presentation") {
+    document
+      .querySelector("[data-choice='presentation'].is-active")
+      ?.focus();
+    return;
+  }
+
+  document.querySelector("[data-role='onboarding-primary-action']")?.focus();
 }
 
 function setOnboardingValidation(message) {

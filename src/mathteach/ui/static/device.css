@@ -372,6 +372,14 @@ button[hidden],
   font-size: 1.05rem;
 }
 
+.onboarding-field input:focus-visible,
+.choice-option:focus-visible,
+.screen-onboarding .action-primary:focus-visible,
+.screen-onboarding .action-ghost:focus-visible {
+  outline: 3px solid rgba(123, 152, 95, 0.24);
+  outline-offset: 3px;
+}
+
 .choice-stack {
   display: flex;
   flex-direction: column;

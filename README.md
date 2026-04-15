@@ -178,6 +178,12 @@ dominanter Startpfad plus schwache Rueck-Aktion und der
 Bestaetigungsschritt erscheint als kleine Startfreigabe statt als
 ausufernde Abschlussflaeche.
 
+Der letzte kleine Onboarding-Pass koppelt diese drei Schritte jetzt
+noch enger an ihren Contract: Schrittlabels und CTA-Ton sind
+zustandsgebunden, die Mini-Zusammenfassung fuer die Startfreigabe bleibt
+bewusst kurz, und die Fokusfuehrung springt pro Schritt direkt auf das
+primaere Eingabeelement oder den naechsten Handlungsanker.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

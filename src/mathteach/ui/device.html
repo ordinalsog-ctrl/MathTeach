@@ -67,6 +67,7 @@
                 name="objective"
                 data-role="onboarding-objective"
                 placeholder="Zum Beispiel lineare Gleichungen"
+                enterkeyhint="weiter"
               />
             </label>
           </div>
@@ -111,7 +112,12 @@
             </div>
           </div>
 
-          <p class="onboarding-validation" data-role="onboarding-validation" hidden></p>
+          <p
+            class="onboarding-validation"
+            data-role="onboarding-validation"
+            aria-live="polite"
+            hidden
+          ></p>
 
           <div class="actions onboarding-actions">
             <button class="action-primary" data-action="onboarding-next" data-role="onboarding-primary-action">

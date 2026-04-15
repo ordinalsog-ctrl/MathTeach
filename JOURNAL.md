@@ -76,6 +76,43 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Onboarding-Tone-and-Focus-Pass 2026-04-15
+
+Der letzte kleine Onboarding-Pass bindet jetzt nicht mehr die Struktur,
+sondern Ton, CTA-Sprache und Fokusfuehrung enger an die bestehenden
+Contracts.
+
+Neu dazu:
+
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  fuehrt jetzt zustandsgebundene sekundäre CTA-Texte fuer die drei
+  Onboarding-Schritte
+- die Mini-Zusammenfassung der `Startfreigabe` wird bewusst kompakt
+  gehalten, damit dieser Screen klein und nicht formularartig bleibt
+- die Fokusfuehrung springt pro Schritt direkt auf das primaere
+  Eingabeelement, die aktive Darstellungswahl oder den finalen Start-CTA
+- [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  traegt dazu `enterkeyhint="weiter"` fuer den Startgegenstand und ein
+  ruhiges Live-Region-Feedback fuer Validierung
+
+Wichtigste Konsequenzen:
+
+- die drei Onboarding-Schritte sind jetzt nicht nur strukturell,
+  sondern auch in Ton und Interaktionsfuehrung enger an ihre Wire-
+  Contracts gebunden
+- die `Startfreigabe` bleibt kurz und wirkt weniger wie eine zweite
+  Zusammenfassungsseite
+- die Device-UI fuehrt Blick und Interaktion jetzt kontrollierter zum
+  naechsten erlaubten Schritt statt ueber lose Standard-Formularlogik
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-UI-Evidence-Matrix 2026-04-14
 
 Nach dem verworfenen freien UI-/Illustrationslauf ist jetzt eine harte

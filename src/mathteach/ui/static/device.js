@@ -416,23 +416,22 @@ function renderStartScreen() {
 function renderLearningScreen(plan) {
   const activeBlock = pickActiveBlock(plan);
   text("[data-role='lesson-goal']", activeBlock.goal || state.profile.objective);
-  text("[data-role='lesson-mode']", friendlyMode(plan.lesson_mode));
-  text("[data-role='lesson-block']", friendlyBlock(activeBlock.block_type));
+  text("[data-role='lesson-transition']", buildLessonTransition(activeBlock));
   text("[data-role='visual-hint']", buildVisualHint(activeBlock));
-  setStatus(
-    activeBlock.transition_message ||
-      "Du kannst dir denselben Gedanken noch einmal zeigen lassen oder ruhig zum naechsten Schritt gehen."
+  text(
+    "[data-role='focus-note']",
+    firstLearningNote(activeBlock.focus, "Wir halten nur den naechsten Gedanken auf dem Bildschirm.")
   );
-
-  fillList("[data-role='focus-list']", activeBlock.focus, [
-    "Wir halten nur den naechsten Gedanken auf dem Bildschirm.",
-  ]);
-  fillList("[data-role='support-moves']", activeBlock.support_moves, [
-    "Ich halte die Erklaerung knapp und gut lesbar.",
-  ]);
-  fillList("[data-role='support-scaffolds']", activeBlock.support_scaffolds, [
-    "Bei Bedarf gehe ich noch einen Schritt kleiner.",
-  ]);
+  text(
+    "[data-role='scaffold-note']",
+    firstLearningNote(
+      activeBlock.support_scaffolds,
+      firstLearningNote(
+        activeBlock.support_moves,
+        "Bei Bedarf gehe ich noch einen Schritt kleiner."
+      )
+    )
+  );
 }
 
 function pickActiveBlock(plan) {
@@ -447,6 +446,30 @@ function pickActiveBlock(plan) {
     block_type: null,
     transition_message: null,
   };
+}
+
+function buildLessonTransition(block) {
+  return (
+    block.transition_message ||
+    "Wir schauen auf genau einen kleinen Schritt und koennen danach ruhig weitergehen."
+  );
+}
+
+function firstLearningNote(items, fallback) {
+  if (Array.isArray(items) && items.length > 0) {
+    return prettify(items[0]);
+  }
+  return fallback;
+}
+
+function setStatus(message) {
+  const onboardingScreen = document.querySelector("[data-screen='onboarding']");
+  if (onboardingScreen && !onboardingScreen.classList.contains("is-hidden")) {
+    setOnboardingValidation(message);
+    return;
+  }
+
+  text("[data-role='lesson-transition']", message);
 }
 
 function collectStartscreenInput() {
@@ -628,21 +651,6 @@ function switchScreen(screenName) {
   });
 }
 
-function setStatus(message) {
-  text("[data-role='status-copy']", message);
-}
-
-function fillList(selector, items, fallback) {
-  const node = document.querySelector(selector);
-  node.innerHTML = "";
-  const values = Array.isArray(items) && items.length > 0 ? items : fallback;
-  values.forEach((item) => {
-    const li = document.createElement("li");
-    li.textContent = prettify(item);
-    node.appendChild(li);
-  });
-}
-
 function text(selector, value) {
   const node = document.querySelector(selector);
   if (node) {
@@ -656,20 +664,6 @@ function updateClock() {
     "[data-role='clock']",
     now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })
   );
-}
-
-function friendlyMode(mode) {
-  if (!mode) {
-    return "Ruhiger Start";
-  }
-  return prettify(mode);
-}
-
-function friendlyBlock(blockType) {
-  if (!blockType) {
-    return "Naechster Schritt";
-  }
-  return prettify(blockType);
 }
 
 function buildVisualHint(block) {

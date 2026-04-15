@@ -1,6 +1,45 @@
 # MathTeach Journal
 
-Stand: 2026-04-14
+Stand: 2026-04-15
+
+## Device-Learningscreen-First-Pass 2026-04-15
+
+Der erste kleine Lernscreen-Pass schneidet jetzt den groessten
+fachlichen Bruch zwischen aktuellem Device-UI und
+[device-learningscreen-contract.md](/Users/jonasweiss/MathTeach/docs/device-learningscreen-contract.md).
+
+Neu dazu:
+
+- die fruehere Lernansicht in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  ist von mehreren gleich starken Zonen auf einen primaeren
+  mathematischen Traeger plus zwei kleine Notizen reduziert worden
+- Modus- und Block-Pills sowie die separate Statusleiste sind aus der
+  ersten Blickfuehrung entfernt
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  leitet jetzt aus `planned_blocks[0]` eine kurze Uebergangszeile,
+  genau eine Fokus-Notiz und genau eine Scaffold-Notiz ab
+- [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  fuehrt die Lernansicht jetzt ueber `lesson-intro`, `lesson-core`,
+  `visual-board` und `lesson-notes` statt ueber konkurrierende Haupt-
+  und Hilfsflaechen
+
+Wichtigste Konsequenzen:
+
+- der Lernscreen ist jetzt deutlich naeher an der Regel
+  `eine mathematische Idee pro Screen`
+- die Mathematik und ihr primaerer Traeger stehen vor Meta-Information
+  und Systemzustand
+- Fokus- und Scaffold-Hilfen sind sichtbar vorhanden, aber klar
+  untergeordnet
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
 
 ## Device-Onboarding-UI-Refactor 2026-04-14
 

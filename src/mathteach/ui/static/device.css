@@ -63,9 +63,7 @@ body {
 .topline,
 .lesson-header,
 .actions,
-.hero,
-.lesson-layout,
-.support-panel {
+.hero {
   display: flex;
 }
 
@@ -109,7 +107,6 @@ body {
 
 .hero-copy,
 .resume-card,
-.lesson-card,
 .visual-board,
 .onboarding-card {
   background: var(--surface);
@@ -183,7 +180,6 @@ h2 {
 
 .lead,
 .resume-card p,
-.status-strip p,
 .paper-copy,
 .board-note p {
   margin: 0;
@@ -478,65 +474,30 @@ button[hidden],
   align-items: flex-start;
 }
 
-.lesson-meta {
+.lesson-intro {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 36rem;
 }
 
-.lesson-meta span {
-  padding: 10px 12px;
-  border-radius: 999px;
-  background: rgba(255, 250, 240, 0.82);
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  font-size: 0.84rem;
+.lesson-transition {
+  margin: 0;
+  max-width: 42ch;
+  line-height: 1.45;
   color: var(--ink-soft);
 }
 
-.lesson-layout {
-  gap: 18px;
-  flex: 1;
-}
-
-.lesson-card {
-  flex: 1.18;
-  padding: 20px;
-}
-
-.focus-list,
-.support-panel ul {
-  margin: 0;
-  padding-left: 1.2rem;
-}
-
-.focus-list {
+.lesson-core {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-height: 112px;
-}
-
-.support-panel {
-  gap: 18px;
-  margin-top: 18px;
-}
-
-.support-panel > div {
+  gap: 16px;
   flex: 1;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(255, 251, 243, 0.88);
-}
-
-.support-panel ul {
-  margin-top: 10px;
-  line-height: 1.45;
 }
 
 .visual-board {
-  width: 274px;
-  padding: 18px;
+  width: 100%;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -561,12 +522,21 @@ button[hidden],
   opacity: 0.55;
 }
 
-.status-strip {
-  min-height: 56px;
+.lesson-notes {
   display: flex;
-  align-items: center;
-  padding: 0 16px;
+  gap: 12px;
+}
+
+.note-card {
+  flex: 1;
+  min-height: 84px;
+  padding: 14px 16px;
   border-radius: 18px;
-  background: rgba(255, 251, 243, 0.74);
-  box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.06);
+  background: rgba(255, 251, 243, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.08);
+}
+
+.note-card p:last-child {
+  margin: 10px 0 0;
+  line-height: 1.45;
 }

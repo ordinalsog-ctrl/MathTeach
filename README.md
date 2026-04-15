@@ -184,6 +184,14 @@ zustandsgebunden, die Mini-Zusammenfassung fuer die Startfreigabe bleibt
 bewusst kurz, und die Fokusfuehrung springt pro Schritt direkt auf das
 primaere Eingabeelement oder den naechsten Handlungsanker.
 
+Der erste kleine Lernscreen-Pass schneidet jetzt den groessten
+Contract-Bruch: Die Lernansicht liest sich nicht mehr als mehrere gleich
+starke Meta- und Hilfszonen, sondern als `eine Hauptidee`, `ein
+primaerer Traeger` und `zwei kleine Notizen`. Modus- und Block-Pillen
+sind aus der ersten Blickfuehrung verschwunden; stattdessen traegt der
+Screen jetzt eine kurze Uebergangszeile, eine Fokus-Notiz und eine
+Scaffold-Notiz direkt unterhalb des mathematischen Traegers.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

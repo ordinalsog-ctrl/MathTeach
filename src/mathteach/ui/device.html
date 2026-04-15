@@ -132,34 +132,17 @@
 
       <section class="screen screen-learning is-hidden" data-screen="learning">
         <div class="lesson-header">
-          <div>
+          <div class="lesson-intro">
             <p class="eyebrow">Aktuelle Lerneinheit</p>
             <h2 data-role="lesson-goal">Wir bereiten den naechsten Schritt vor.</h2>
-          </div>
-          <div class="lesson-meta">
-            <span data-role="lesson-mode">Mode</span>
-            <span data-role="lesson-block">Block</span>
+            <p class="lesson-transition" data-role="lesson-transition">
+              Wir schauen auf genau einen kleinen Schritt.
+            </p>
           </div>
         </div>
 
-        <div class="lesson-layout">
-          <article class="lesson-card">
-            <p class="card-kicker">Worauf wir achten</p>
-            <ul class="focus-list" data-role="focus-list"></ul>
-
-            <div class="support-panel">
-              <div>
-                <p class="support-label">So erklaere ich gerade</p>
-                <ul data-role="support-moves"></ul>
-              </div>
-              <div>
-                <p class="support-label">Hilfen im Blick</p>
-                <ul data-role="support-scaffolds"></ul>
-              </div>
-            </div>
-          </article>
-
-          <aside class="visual-board">
+        <div class="lesson-core">
+          <article class="visual-board">
             <p class="board-label">Visueller Einstieg</p>
             <div class="board-note">
               <div class="balance-row">
@@ -171,13 +154,22 @@
                 Wir behandeln beide Seiten derselben Gleichung mit der gleichen Ruhe.
               </p>
             </div>
-          </aside>
-        </div>
+          </article>
 
-        <div class="status-strip">
-          <p data-role="status-copy">
-            Noch keine Session geladen. Du kannst jederzeit mit dem letzten Stand weitergehen.
-          </p>
+          <div class="lesson-notes">
+            <div class="note-card">
+              <p class="support-label">Worauf wir jetzt achten</p>
+              <p data-role="focus-note">
+                Wir halten nur den naechsten Gedanken auf dem Bildschirm.
+              </p>
+            </div>
+            <div class="note-card">
+              <p class="support-label">Welche Hilfe gerade aktiv ist</p>
+              <p data-role="scaffold-note">
+                Bei Bedarf gehe ich noch einen Schritt kleiner.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div class="actions">

@@ -55,6 +55,12 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'class="choice-stack"' in response.text
     assert 'enterkeyhint="weiter"' in response.text
     assert 'aria-live="polite"' in response.text
+    assert 'data-role="lesson-transition"' in response.text
+    assert 'data-role="focus-note"' in response.text
+    assert 'data-role="scaffold-note"' in response.text
+    assert 'data-role="lesson-mode"' not in response.text
+    assert 'data-role="lesson-block"' not in response.text
+    assert 'data-role="status-copy"' not in response.text
     assert 'name="learnerName"' not in response.text
     assert 'name="mathLevel"' not in response.text
     assert 'name="support"' not in response.text
@@ -89,9 +95,16 @@ def test_device_static_assets_are_served() -> None:
     assert ".onboarding-summary-block" in css_response.text
     assert ".screen-onboarding .action-ghost" in css_response.text
     assert ":focus-visible" in css_response.text
+    assert "buildLessonTransition" in js_response.text
+    assert "firstLearningNote" in js_response.text
+    assert ".lesson-core" in css_response.text
+    assert ".lesson-notes" in css_response.text
+    assert ".note-card" in css_response.text
     assert "describeResumeTopic" not in js_response.text
     assert "describeResumeSummary" not in js_response.text
     assert "Bitte gib zuerst einen Namen ein." not in js_response.text
+    assert "friendlyMode" not in js_response.text
+    assert "friendlyBlock" not in js_response.text
 
 
 def test_stack_endpoint() -> None:

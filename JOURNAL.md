@@ -3510,3 +3510,56 @@ Direkt vorbereitete naechste Arbeitsartefakte:
 5. [profile-conflict-resolution.md](/Users/jonasweiss/MathTeach/docs/profile-conflict-resolution.md)
 6. [mixed-profile-scenarios.md](/Users/jonasweiss/MathTeach/docs/mixed-profile-scenarios.md)
 7. [support-response-matrix-implementation-plan.md](/Users/jonasweiss/MathTeach/docs/support-response-matrix-implementation-plan.md)
+
+## Device UI Morphology Reset
+
+Der letzte Device-UI-Schritt war bewusst kein weiterer Contract- oder
+Resolver-Block, sondern ein sichtbarer Reset der Flaechenlogik fuer
+den `RPi Touch Display 2 (7")`-Prototypen.
+
+Ausloeser war ein berechtigter Kritikpunkt:
+
+- die Informationsarchitektur war sauberer geworden
+- die Runtime-/Resolver-Logik war sauberer geworden
+- die sichtbare UI las sich aber weiter zu stark wie generische
+  Karten- und Boxen-UI
+
+Deshalb wurde die Device-Oberflaeche in
+[device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+und
+[device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+sichtbar umgestellt, ohne die bestehende Evidenz- und Runtime-Linie zu
+brechen.
+
+Was sich geaendert hat:
+
+- Startscreen, Onboarding und Lernansicht teilen nicht mehr dieselbe
+  wiederholte Card-Komponente als visuelle Grundsprache
+- Resume-, Onboarding- und Lernflaechen sind jetzt offener,
+  seitenhafter und weniger als einzelne UI-Bloecke begrenzt
+- Wahlflaechen im Onboarding lesen sich ruhiger und weniger wie
+  Formular-/App-Controls
+- der primaere Traeger der Lernansicht ist sichtbar staerker als
+  Arbeitsflaeche und weniger als neutrales Content-Panel gerahmt
+
+Wichtig:
+
+- Die studiengebundene Contracts-/Blueprint-/Wire-Kette bleibt die
+  Quelle der sichtbaren Entscheidungen.
+- Die Resolver-Struktur in
+  [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  bleibt bestehen.
+- Die `data-role`-Hooks und die API-Tests bleiben stabil.
+
+Verifiziert:
+
+- `git diff --check`
+- `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
+
+Offen bleibt bewusst:
+
+- das Onboarding braucht noch eine noch eigenstaendigere visuelle
+  Fuehrung, damit es nicht als bloess weichere Formularflaeche gelesen
+  wird
+- der Lernscreen kann im naechsten Schritt Recovery direkter im
+  primaeren Traeger selbst abbilden

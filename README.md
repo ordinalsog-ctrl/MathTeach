@@ -205,6 +205,16 @@ Damit ist der Haupttraeger naeher an der Contract-Reihenfolge
 `Bedeutung -> Symbolik -> Handlung` und weniger nur eine nackte
 Symbolzeile mit Begleittext.
 
+Darauf aufbauend liegt jetzt auch der erste sichtbare
+Morphologie-Reset der Device-UI im Code: Start-, Onboarding- und
+Lernansicht verwenden nicht mehr dieselbe wiederholte Karten-
+Komponente als Grundgrammatik, sondern ruhigere, zusammenhaengende
+Seitenflaechen mit offenen Arbeitszonen, weicheren Hintergrundfeldern
+und weniger komponentenhaften Trennungen. Wichtig daran ist: Die
+Contracts, Resolver-Logik und data-role-Schnittstellen bleiben dabei
+stabil; veraendert wurde nur die sichtbare Flaechen- und
+Blickfuehrungslogik.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

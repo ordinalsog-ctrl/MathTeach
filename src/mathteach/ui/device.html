@@ -17,32 +17,34 @@
           <p class="clock" data-role="clock">--:--</p>
         </div>
 
-        <div class="hero">
-          <div class="hero-copy">
-            <p class="welcome">Schoen, dass du da bist.</p>
-            <h1 data-role="welcome-name">Wir lernen in deinem Tempo.</h1>
-            <p class="lead" data-role="start-support-line">
-              Dieses Geraet merkt sich deinen letzten Stand und fuehrt dich
-              ohne Druck Schritt fuer Schritt weiter.
-            </p>
+        <div class="start-stage">
+          <div class="hero">
+            <div class="hero-copy">
+              <p class="welcome">Schoen, dass du da bist.</p>
+              <h1 data-role="welcome-name">Wir lernen in deinem Tempo.</h1>
+              <p class="lead" data-role="start-support-line">
+                Dieses Geraet merkt sich deinen letzten Stand und fuehrt dich
+                ohne Druck Schritt fuer Schritt weiter.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="resume-card">
-          <p class="resume-label" data-role="resume-label">Letzter Stand</p>
-          <h2 data-role="resume-topic">Noch kein Thema vorbereitet</h2>
-          <p data-role="resume-summary">
-            Wir starten mit einem ruhigen ersten Profil und einem klaren
-            Einstieg.
-          </p>
+          <div class="resume-card">
+            <p class="resume-label" data-role="resume-label">Letzter Stand</p>
+            <h2 data-role="resume-topic">Noch kein Thema vorbereitet</h2>
+            <p data-role="resume-summary">
+              Wir starten mit einem ruhigen ersten Profil und einem klaren
+              Einstieg.
+            </p>
 
-          <div class="resume-actions">
-            <button class="action-primary" data-action="continue" data-role="start-primary-action">
-              Weiterlernen
-            </button>
-            <button class="action-secondary" data-action="onboarding" data-role="start-secondary-action">
-              Neues Profil einrichten
-            </button>
+            <div class="resume-actions">
+              <button class="action-primary" data-action="continue" data-role="start-primary-action">
+                Weiterlernen
+              </button>
+              <button class="action-secondary" data-action="onboarding" data-role="start-secondary-action">
+                Neues Profil einrichten
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -53,143 +55,147 @@
           <p class="step-copy" data-role="onboarding-step-indicator">1 von 3</p>
         </div>
 
-        <div class="onboarding-card" data-role="onboarding-card">
-          <div class="onboarding-step" data-onboarding-step="goal">
-            <p class="onboarding-intro">
-              Ich frage nur, womit wir ruhig beginnen sollen.
-            </p>
-            <h2 class="onboarding-question">Was willst du gerade verstehen?</h2>
+        <div class="onboarding-stage">
+          <div class="onboarding-card" data-role="onboarding-card">
+            <div class="onboarding-step" data-onboarding-step="goal">
+              <p class="onboarding-intro">
+                Ich frage nur, womit wir ruhig beginnen sollen.
+              </p>
+              <h2 class="onboarding-question">Was willst du gerade verstehen?</h2>
 
-            <label class="field field-full onboarding-field">
-              <span class="sr-only">Was willst du gerade verstehen?</span>
-              <input
-                type="text"
-                name="objective"
-                data-role="onboarding-objective"
-                placeholder="Zum Beispiel lineare Gleichungen"
-                enterkeyhint="weiter"
-              />
-            </label>
-          </div>
+              <label class="field field-full onboarding-field">
+                <span class="sr-only">Was willst du gerade verstehen?</span>
+                <input
+                  type="text"
+                  name="objective"
+                  data-role="onboarding-objective"
+                  placeholder="Zum Beispiel lineare Gleichungen"
+                  enterkeyhint="weiter"
+                />
+              </label>
+            </div>
 
-          <div class="onboarding-step is-hidden" data-onboarding-step="presentation">
-            <p class="onboarding-intro">
-              Ich richte nur den ersten Zugang fuer dich aus.
-            </p>
-            <h2 class="onboarding-question">
-              Soll ich mit Bild oder mit Worten starten?
-            </h2>
+            <div class="onboarding-step is-hidden" data-onboarding-step="presentation">
+              <p class="onboarding-intro">
+                Ich richte nur den ersten Zugang fuer dich aus.
+              </p>
+              <h2 class="onboarding-question">
+                Soll ich mit Bild oder mit Worten starten?
+              </h2>
 
-            <div class="choice-stack">
-              <button
-                class="choice-option is-active"
-                data-choice="presentation"
-                data-value="visual"
-                type="button"
-              >
-                Mit einem Bild
+              <div class="choice-stack">
+                <button
+                  class="choice-option is-active"
+                  data-choice="presentation"
+                  data-value="visual"
+                  type="button"
+                >
+                  Mit einem Bild
+                </button>
+                <button
+                  class="choice-option"
+                  data-choice="presentation"
+                  data-value="words"
+                  type="button"
+                >
+                  Mit Worten
+                </button>
+              </div>
+            </div>
+
+            <div class="onboarding-step is-hidden" data-onboarding-step="confirmation">
+              <p class="onboarding-confirmation">Gut, wir beginnen genau so.</p>
+              <div class="onboarding-summary-block">
+                <p class="onboarding-summary" data-role="onboarding-summary">
+                  Lineare Gleichungen, zuerst mit Bild.
+                </p>
+                <p class="onboarding-relief">
+                  Wir koennen den Einstieg spaeter jederzeit anpassen.
+                </p>
+              </div>
+            </div>
+
+            <p
+              class="onboarding-validation"
+              data-role="onboarding-validation"
+              aria-live="polite"
+              hidden
+            ></p>
+
+            <div class="actions onboarding-actions">
+              <button class="action-primary" data-action="onboarding-next" data-role="onboarding-primary-action">
+                Weiter
               </button>
-              <button
-                class="choice-option"
-                data-choice="presentation"
-                data-value="words"
-                type="button"
-              >
-                Mit Worten
+              <button class="action-ghost" data-action="onboarding-back" data-role="onboarding-secondary-action">
+                Zurueck
               </button>
             </div>
-          </div>
-
-          <div class="onboarding-step is-hidden" data-onboarding-step="confirmation">
-            <p class="onboarding-confirmation">Gut, wir beginnen genau so.</p>
-            <div class="onboarding-summary-block">
-              <p class="onboarding-summary" data-role="onboarding-summary">
-                Lineare Gleichungen, zuerst mit Bild.
-              </p>
-              <p class="onboarding-relief">
-                Wir koennen den Einstieg spaeter jederzeit anpassen.
-              </p>
-            </div>
-          </div>
-
-          <p
-            class="onboarding-validation"
-            data-role="onboarding-validation"
-            aria-live="polite"
-            hidden
-          ></p>
-
-          <div class="actions onboarding-actions">
-            <button class="action-primary" data-action="onboarding-next" data-role="onboarding-primary-action">
-              Weiter
-            </button>
-            <button class="action-ghost" data-action="onboarding-back" data-role="onboarding-secondary-action">
-              Zurueck
-            </button>
           </div>
         </div>
       </section>
 
       <section class="screen screen-learning is-hidden" data-screen="learning">
-        <div class="lesson-header">
-          <div class="lesson-intro">
-            <p class="eyebrow">Aktuelle Lerneinheit</p>
-            <h2 data-role="lesson-goal">Wir bereiten den naechsten Schritt vor.</h2>
-            <p class="lesson-transition" data-role="lesson-transition">
-              Wir schauen auf genau einen kleinen Schritt.
-            </p>
-          </div>
-        </div>
-
-        <div class="lesson-core">
-          <article class="visual-board">
-            <p class="board-label">Visueller Einstieg</p>
-            <div class="board-note">
-              <p class="board-meaning" data-role="board-meaning">
-                Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben.
+        <div class="lesson-stage">
+          <div class="lesson-header">
+            <div class="lesson-intro">
+              <p class="eyebrow">Aktuelle Lerneinheit</p>
+              <h2 data-role="lesson-goal">Wir bereiten den naechsten Schritt vor.</h2>
+              <p class="lesson-transition" data-role="lesson-transition">
+                Wir schauen auf genau einen kleinen Schritt.
               </p>
-              <div class="balance-row">
-                <span class="balance-pan">x + 3</span>
-                <span class="balance-link"></span>
-                <span class="balance-pan">7</span>
+            </div>
+          </div>
+
+          <div class="lesson-core">
+            <article class="visual-board">
+              <p class="board-label">Visueller Einstieg</p>
+              <div class="board-note">
+                <p class="board-meaning" data-role="board-meaning">
+                  Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben.
+                </p>
+                <div class="balance-row">
+                  <span class="balance-pan">x + 3</span>
+                  <span class="balance-link"></span>
+                  <span class="balance-pan">7</span>
+                </div>
+                <p class="board-action-cue" data-role="board-action-cue">
+                  Darum machen wir denselben kleinen Zug links und rechts.
+                </p>
+                <p class="board-hint" data-role="visual-hint">
+                  Wir behandeln beide Seiten derselben Gleichung mit der gleichen Ruhe.
+                </p>
               </div>
-              <p class="board-action-cue" data-role="board-action-cue">
-                Darum machen wir denselben kleinen Zug links und rechts.
-              </p>
-              <p class="board-hint" data-role="visual-hint">
-                Wir behandeln beide Seiten derselben Gleichung mit der gleichen Ruhe.
-              </p>
-            </div>
-          </article>
+            </article>
 
-          <div class="lesson-notes">
-            <div class="note-card">
-              <p class="support-label">Worauf wir jetzt achten</p>
-              <p data-role="focus-note">
-                Wir halten nur den naechsten Gedanken auf dem Bildschirm.
-              </p>
-            </div>
-            <div class="note-card">
-              <p class="support-label">Welche Hilfe gerade aktiv ist</p>
-              <p data-role="scaffold-note">
-                Bei Bedarf gehe ich noch einen Schritt kleiner.
-              </p>
+            <div class="lesson-notes">
+              <div class="note-card">
+                <p class="support-label">Worauf wir jetzt achten</p>
+                <p data-role="focus-note">
+                  Wir halten nur den naechsten Gedanken auf dem Bildschirm.
+                </p>
+              </div>
+              <div class="note-card">
+                <p class="support-label">Welche Hilfe gerade aktiv ist</p>
+                <p data-role="scaffold-note">
+                  Bei Bedarf gehe ich noch einen Schritt kleiner.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="lesson-actions">
-          <div class="lesson-support-actions">
-            <button class="action-secondary" data-action="again" data-role="lesson-repeat-action">
-              Diesen Schritt noch einmal sehen
-            </button>
-            <button class="action-secondary" data-action="example" data-role="lesson-example-action">
-              Zeig mir ein Beispiel
+          <div class="lesson-actions">
+            <div class="lesson-support-actions">
+              <button class="action-secondary" data-action="again" data-role="lesson-repeat-action">
+                Diesen Schritt noch einmal sehen
+              </button>
+              <button class="action-secondary" data-action="example" data-role="lesson-example-action">
+                Zeig mir ein Beispiel
+              </button>
+            </div>
+            <button class="action-primary" data-action="advance" data-role="lesson-advance-action">
+              Zum naechsten Schritt
             </button>
           </div>
-          <button class="action-primary" data-action="advance" data-role="lesson-advance-action">
-            Zum naechsten Schritt
-          </button>
         </div>
       </section>
     </main>

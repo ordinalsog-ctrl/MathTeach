@@ -3584,6 +3584,37 @@ Verifiziert:
 - `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
 - `PYTHONPATH=src ./.venv/bin/pytest -q` -> `248 passed, 1 warning`
 
+Im direkt folgenden Pass wurde dieser Carrier noch mathematischer
+geschärft:
+
+- der Standardzustand bleibt bei einer einzelnen Gleichungszeile
+- `repeat` zeigt jetzt zusaetzlich eine explizite Operationszeile
+  `- 3 / - 3` und eine Resultatzeile `x = 4`
+- `example` nutzt dieselbe Struktur an einer aehnlichen Gleichung
+  `5 + 2 = 7`, ebenfalls mit Operations- und Resultatzeile
+
+Damit ist der Unterschied zwischen `Standard`, `Nochmal` und
+`Beispiel` nicht mehr nur Tonalitaet oder Hintergrundfarbe, sondern
+direkt als mathematische Struktur im primaeren Traeger sichtbar.
+
+Technisch neu:
+
+- neue Board-Rollen in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  fuer primäre Gleichungszeile, Operationszeile und Resultatzeile
+- neue Carrier-Builder in
+  [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js):
+  `renderBoardMath()` und `buildBoardStructure()`
+- neue Stilbausteine in
+  [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  fuer Operations- und Resultatdarstellung
+
+Verifiziert:
+
+- `git diff --check`
+- `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
+- `PYTHONPATH=src ./.venv/bin/pytest -q` -> `248 passed, 1 warning`
+
 Offen bleibt bewusst:
 
 - das Onboarding braucht noch eine noch eigenstaendigere visuelle

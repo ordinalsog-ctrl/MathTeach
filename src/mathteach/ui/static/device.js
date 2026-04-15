@@ -429,6 +429,7 @@ function renderLearningScreen(plan, actionTone = "default") {
   text("[data-role='lesson-transition']", buildLessonTransition(activeBlock));
   text("[data-role='board-label']", buildBoardLabel(activeBlock, carrierTone));
   text("[data-role='board-meaning']", buildBoardMeaning(activeBlock, carrierTone));
+  renderBoardMath(activeBlock, carrierTone);
   text("[data-role='board-action-cue']", buildBoardActionCue(activeBlock, carrierTone));
   text("[data-role='visual-hint']", buildVisualHint(activeBlock, carrierTone));
   renderBoardRecoveryNote(activeBlock, carrierTone);
@@ -476,6 +477,66 @@ function buildBoardLabel(block, carrierTone) {
   return "Visueller Einstieg";
 }
 
+function renderBoardMath(block, carrierTone) {
+  const structure = buildBoardStructure(block, carrierTone);
+  text("[data-role='board-left']", structure.primary_left);
+  text("[data-role='board-right']", structure.primary_right);
+  text("[data-role='board-left-operation']", structure.operation_left);
+  text("[data-role='board-right-operation']", structure.operation_right);
+  text("[data-role='board-left-result']", structure.result_left);
+  text("[data-role='board-right-result']", structure.result_right);
+
+  const operationRow = document.querySelector("[data-role='board-operation-row']");
+  const resultRow = document.querySelector("[data-role='board-result-row']");
+
+  if (operationRow) {
+    operationRow.hidden = !structure.show_operation;
+  }
+
+  if (resultRow) {
+    resultRow.hidden = !structure.show_result;
+  }
+}
+
+function buildBoardStructure(block, carrierTone) {
+  if (carrierTone === "repeat") {
+    return {
+      primary_left: "x + 3",
+      primary_right: "7",
+      operation_left: "- 3",
+      operation_right: "- 3",
+      result_left: "x",
+      result_right: "4",
+      show_operation: true,
+      show_result: true,
+    };
+  }
+
+  if (carrierTone === "example") {
+    return {
+      primary_left: "5 + 2",
+      primary_right: "7",
+      operation_left: "- 2",
+      operation_right: "- 2",
+      result_left: "5",
+      result_right: "5",
+      show_operation: true,
+      show_result: true,
+    };
+  }
+
+  return {
+    primary_left: "x + 3",
+    primary_right: "7",
+    operation_left: "",
+    operation_right: "",
+    result_left: "",
+    result_right: "",
+    show_operation: false,
+    show_result: false,
+  };
+}
+
 function renderBoardRecoveryNote(block, carrierTone) {
   const node = document.querySelector("[data-role='board-recovery-note']");
   if (!node) {
@@ -505,6 +566,11 @@ function renderLearningCarrierState(carrierTone) {
   const board = document.querySelector("[data-role='visual-board']");
   if (board) {
     board.dataset.learningTone = carrierTone;
+  }
+
+  const math = document.querySelector("[data-role='board-math']");
+  if (math) {
+    math.dataset.learningTone = carrierTone;
   }
 }
 

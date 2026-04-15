@@ -59,6 +59,15 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'data-role="visual-board"' in response.text
     assert 'data-role="board-label"' in response.text
     assert 'data-role="board-recovery-note"' in response.text
+    assert 'data-role="board-math"' in response.text
+    assert 'data-role="board-left"' in response.text
+    assert 'data-role="board-right"' in response.text
+    assert 'data-role="board-operation-row"' in response.text
+    assert 'data-role="board-left-operation"' in response.text
+    assert 'data-role="board-right-operation"' in response.text
+    assert 'data-role="board-result-row"' in response.text
+    assert 'data-role="board-left-result"' in response.text
+    assert 'data-role="board-right-result"' in response.text
     assert 'data-role="board-meaning"' in response.text
     assert 'data-role="board-action-cue"' in response.text
     assert 'data-role="focus-note"' in response.text
@@ -106,6 +115,8 @@ def test_device_static_assets_are_served() -> None:
     assert "buildLessonTransition" in js_response.text
     assert "resolveLearningCarrierTone" in js_response.text
     assert "buildBoardLabel" in js_response.text
+    assert "renderBoardMath" in js_response.text
+    assert "buildBoardStructure" in js_response.text
     assert "renderBoardRecoveryNote" in js_response.text
     assert "buildBoardRecoveryNote" in js_response.text
     assert "renderLearningCarrierState" in js_response.text
@@ -120,6 +131,10 @@ def test_device_static_assets_are_served() -> None:
     assert ".lesson-notes" in css_response.text
     assert ".note-card" in css_response.text
     assert ".board-recovery-note" in css_response.text
+    assert ".board-math" in css_response.text
+    assert ".board-operation-row" in css_response.text
+    assert ".board-result-row" in css_response.text
+    assert ".operation-pan" in css_response.text
     assert ".board-meaning" in css_response.text
     assert ".board-action-cue" in css_response.text
     assert 'data-learning-tone="repeat"' in css_response.text

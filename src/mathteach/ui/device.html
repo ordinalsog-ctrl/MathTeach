@@ -154,10 +154,22 @@
                 <p class="board-meaning" data-role="board-meaning">
                   Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben.
                 </p>
-                <div class="balance-row">
-                  <span class="balance-pan">x + 3</span>
-                  <span class="balance-link"></span>
-                  <span class="balance-pan">7</span>
+                <div class="board-math" data-role="board-math">
+                  <div class="balance-row" data-role="board-primary-row">
+                    <span class="balance-pan" data-role="board-left">x + 3</span>
+                    <span class="balance-link"></span>
+                    <span class="balance-pan" data-role="board-right">7</span>
+                  </div>
+                  <div class="board-operation-row" data-role="board-operation-row" hidden>
+                    <span class="operation-pan" data-role="board-left-operation"></span>
+                    <span class="operation-link"></span>
+                    <span class="operation-pan" data-role="board-right-operation"></span>
+                  </div>
+                  <div class="board-result-row" data-role="board-result-row" hidden>
+                    <span class="balance-pan balance-pan-result" data-role="board-left-result"></span>
+                    <span class="balance-link balance-link-result"></span>
+                    <span class="balance-pan balance-pan-result" data-role="board-right-result"></span>
+                  </div>
                 </div>
                 <p class="board-action-cue" data-role="board-action-cue">
                   Darum machen wir denselben kleinen Zug links und rechts.

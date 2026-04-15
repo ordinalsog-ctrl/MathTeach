@@ -657,12 +657,27 @@ button[hidden],
   color: var(--ink-soft);
 }
 
+.board-math {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 .balance-row {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
   gap: 16px;
   margin: 2px 0 0;
+}
+
+.board-operation-row,
+.board-result-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 16px;
 }
 
 .balance-pan {
@@ -677,12 +692,47 @@ button[hidden],
   line-height: 1.1;
 }
 
+.balance-pan-result {
+  font-size: 1.62rem;
+}
+
 .balance-link {
   width: 92px;
   height: 2px;
   margin-bottom: 0.3rem;
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(102, 86, 70, 0.08), rgba(102, 86, 70, 0.62), rgba(102, 86, 70, 0.08));
+}
+
+.balance-link-result {
+  opacity: 0.55;
+}
+
+.operation-pan {
+  min-width: 80px;
+  padding-left: 0.42rem;
+  color: var(--ink-soft);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.operation-link {
+  width: 92px;
+  height: 1px;
+  margin-bottom: 0.18rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(102, 86, 70, 0.04), rgba(102, 86, 70, 0.26), rgba(102, 86, 70, 0.04));
+}
+
+.board-math[data-learning-tone="repeat"] .board-operation-row,
+.board-math[data-learning-tone="repeat"] .board-result-row {
+  color: var(--ink);
+}
+
+.board-math[data-learning-tone="example"] .balance-pan {
+  background:
+    linear-gradient(180deg, transparent 58%, rgba(185, 121, 79, 0.16) 58% 90%, transparent 90%);
 }
 
 .lesson-notes {

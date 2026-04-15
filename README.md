@@ -231,6 +231,13 @@ nur die Laufzeitmeldung oder die Aktionszone zu veraendern. Damit
 wandert die Recovery-Regel `verkleinern statt vergroessern` erstmals
 sichtbar in den Kern der Lernflaeche.
 
+Der naechste Pass darauf geht noch einen Schritt tiefer in die
+mathematische Struktur des Traegers: `Nochmal` zeigt jetzt einen echten
+Zwischenschritt mit `-3 / -3` und Resultatzeile, waehrend `Beispiel`
+eine aehnliche, aber andere Gleichung mit eigenem Zwischenschritt
+traegt. Recovery ist damit nicht nur sprachlich, sondern direkt in der
+gezeigten mathematischen Form unterscheidbar.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

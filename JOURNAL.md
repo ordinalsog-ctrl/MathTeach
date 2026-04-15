@@ -2,6 +2,50 @@
 
 Stand: 2026-04-15
 
+## Pilot-Module-First-Live-Test-Protocol 2026-04-15
+
+Der Pilotkorridor fuer `lineare Gleichungen` ist jetzt bis zum ersten
+echten Lerntest operationalisiert.
+
+Neu dazu:
+
+- neues
+  [pilot-module-linear-equations-first-live-test-protocol.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-first-live-test-protocol.md)
+  als Beobachtungs- und Auswertungsraster fuer Test 1
+- das Protokoll trennt pro Station zwischen:
+  - Verstehen
+  - Blick / Aufmerksamkeit
+  - Sprachreaktion
+  - Carrier-Wirkung
+  - Stoerquelle
+- zusaetzlich gibt es jetzt ein klares Ursache-Raster:
+  - `M` Modulstruktur
+  - `T` Tutor-Sprache
+  - `U` UI
+  - `I` Illustration / Carrier
+  - `H` History
+  - `P` persoenlicher Faktor
+
+Wichtigste Konsequenzen:
+
+- der erste echte Modultest wird nicht mehr nur gefuehlt, sondern
+  stationsscharf ausgewertet
+- wir koennen nach Test 1 gezielt entscheiden, ob der naechste Hebel
+  `Illustrations-Track`, `UI-Rework`, `Sprach-Rework` oder
+  `Modul-Rework` ist
+- damit ist der Pilotkorridor jetzt fachlich, illustrativ, sprachlich
+  und testmethodisch vollstaendig genug, um einen echten ersten Lauf
+  sinnvoll zu machen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+- [docs/pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md)
+- [docs/pilot-module-linear-equations-asset-mapping-sheet.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-asset-mapping-sheet.md)
+- [docs/pilot-module-linear-equations-tutor-utterance-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-tutor-utterance-pack.md)
+- [docs/pilot-module-linear-equations-first-live-test-protocol.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-first-live-test-protocol.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Pilot-Module-Tutor-Utterance-Pack 2026-04-15
 
 Der Pilotkorridor fuer `lineare Gleichungen` ist jetzt nicht nur

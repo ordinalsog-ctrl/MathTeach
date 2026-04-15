@@ -274,6 +274,13 @@ festgelegt, welche Tutor-Saetze erlaubt sind, wie Recovery sprachlich
 kleiner gemacht wird und welche Test-, Defizit- oder Standard-Schulsatz-
 muster explizit verboten sind.
 
+Damit ist jetzt auch das operative
+[pilot-module-linear-equations-first-live-test-protocol.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-first-live-test-protocol.md)
+im Repo: Es trennt fuer den ersten echten Lerndurchlauf explizit
+zwischen Modul-, Sprach-, UI- und Illustrationsproblemen, damit wir nach
+dem Test nicht nur Eindruecke, sondern eine belastbare
+Richtungsentscheidung haben.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

@@ -198,6 +198,13 @@ Hilfen zusammengezogen, der naechste Schritt bleibt der primaere Pfad,
 und die Laufzeitmeldungen fuer Wiederholung, Beispiel und Fortschritt
 sprechen jetzt jeweils expliziter und weniger generisch.
 
+Der dritte kleine Lernscreen-Pass schneidet jetzt direkt den
+primaeren Traeger: Im `visual-board` kommt jetzt zuerst eine kurze
+Bedeutungsfassung, dann die Symbolstruktur und danach der lokale Zug.
+Damit ist der Haupttraeger naeher an der Contract-Reihenfolge
+`Bedeutung -> Symbolik -> Handlung` und weniger nur eine nackte
+Symbolzeile mit Begleittext.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

@@ -426,6 +426,8 @@ function renderLearningScreen(plan) {
   const activeBlock = pickActiveBlock(plan);
   text("[data-role='lesson-goal']", activeBlock.goal || state.profile.objective);
   text("[data-role='lesson-transition']", buildLessonTransition(activeBlock));
+  text("[data-role='board-meaning']", buildBoardMeaning(activeBlock));
+  text("[data-role='board-action-cue']", buildBoardActionCue(activeBlock));
   text("[data-role='visual-hint']", buildVisualHint(activeBlock));
   text(
     "[data-role='focus-note']",
@@ -463,6 +465,22 @@ function buildLessonTransition(block) {
     block.transition_message ||
     "Wir schauen auf genau einen kleinen Schritt und koennen danach ruhig weitergehen."
   );
+}
+
+function buildBoardMeaning(block) {
+  if (Array.isArray(block.focus) && block.focus.length > 0) {
+    return "Wir halten die zugrunde liegende Beziehung zuerst sichtbar, bevor wir nur auf Symbole schauen.";
+  }
+
+  return "Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben.";
+}
+
+function buildBoardActionCue(block) {
+  if (Array.isArray(block.support_scaffolds) && block.support_scaffolds.length > 0) {
+    return "Wir machen denselben kleinen Zug links und rechts, damit die Beziehung stabil bleibt.";
+  }
+
+  return "Darum machen wir denselben kleinen Zug links und rechts.";
 }
 
 function renderLearningActions(block) {

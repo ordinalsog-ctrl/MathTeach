@@ -76,6 +76,43 @@ Neue oder aktualisierte Referenzartefakte:
 - [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
 - [README.md](/Users/jonasweiss/MathTeach/README.md)
 
+## Device-Learningscreen-Primary-Carrier-Pass 2026-04-15
+
+Der dritte kleine Lernscreen-Pass schneidet jetzt direkt den
+primaeren mathematischen Traeger, statt weitere Nebenflaechen zu
+verfeinern.
+
+Neu dazu:
+
+- [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  traegt im `visual-board` jetzt drei klar getrennte Ebenen:
+  Bedeutungsfassung, Symbolstruktur und lokalen Handlungs-Cue
+- [device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  befuellt diese Ebenen jetzt explizit ueber `buildBoardMeaning` und
+  `buildBoardActionCue`
+- [device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  gibt der Board-Flaeche dafuer eine ruhigere interne Reihenfolge, statt
+  nur eine einzelne Balance-Zeile mit einem generischen Begleittext zu
+  tragen
+
+Wichtigste Konsequenzen:
+
+- der primaere Traeger ist jetzt naeher an der Contract-Reihenfolge
+  `Bedeutung -> kontrollierte Symbolik -> naechste Handlung`
+- die Symbolzeile steht nicht mehr allein fuer sich, sondern wird durch
+  eine vorherige Bedeutungsfassung und einen lokalen Zug expliziter
+  gerahmt
+- der Lernscreen bleibt weiter bei einer Hauptidee, macht diese aber im
+  Zentrum selbst lesbarer
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Onboarding-UI-Refactor 2026-04-14
 
 Der erste echte Onboarding-Umbau im Device-UI ist jetzt im Code

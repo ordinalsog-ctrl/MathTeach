@@ -508,10 +508,29 @@ button[hidden],
 
 .board-note {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   border-radius: 22px;
   padding: 18px;
   background: linear-gradient(155deg, #faf4e7 0%, #eddcbc 100%);
   box-shadow: inset 0 0 0 1px rgba(90, 77, 64, 0.08);
+}
+
+.board-meaning,
+.board-action-cue,
+.board-hint {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.board-meaning {
+  max-width: 34ch;
+}
+
+.board-action-cue,
+.board-hint {
+  color: var(--ink-soft);
 }
 
 .balance-link {

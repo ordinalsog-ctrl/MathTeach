@@ -56,6 +56,8 @@ def test_device_shell_endpoint_serves_local_ui() -> None:
     assert 'enterkeyhint="weiter"' in response.text
     assert 'aria-live="polite"' in response.text
     assert 'data-role="lesson-transition"' in response.text
+    assert 'data-role="board-meaning"' in response.text
+    assert 'data-role="board-action-cue"' in response.text
     assert 'data-role="focus-note"' in response.text
     assert 'data-role="scaffold-note"' in response.text
     assert 'data-role="lesson-repeat-action"' in response.text
@@ -99,6 +101,8 @@ def test_device_static_assets_are_served() -> None:
     assert ".screen-onboarding .action-ghost" in css_response.text
     assert ":focus-visible" in css_response.text
     assert "buildLessonTransition" in js_response.text
+    assert "buildBoardMeaning" in js_response.text
+    assert "buildBoardActionCue" in js_response.text
     assert "firstLearningNote" in js_response.text
     assert "renderLearningActions" in js_response.text
     assert "buildLearningActionLabels" in js_response.text
@@ -107,6 +111,8 @@ def test_device_static_assets_are_served() -> None:
     assert ".lesson-core" in css_response.text
     assert ".lesson-notes" in css_response.text
     assert ".note-card" in css_response.text
+    assert ".board-meaning" in css_response.text
+    assert ".board-action-cue" in css_response.text
     assert ".lesson-actions" in css_response.text
     assert ".lesson-support-actions" in css_response.text
     assert ".screen-learning .action-secondary" in css_response.text

@@ -448,7 +448,7 @@ function renderLearningScreen(plan, actionTone = "default") {
   text("[data-role='lesson-transition']", buildLessonTransition(activeBlock));
   text("[data-role='board-label']", buildBoardLabel(activeBlock, carrierTone));
   text("[data-role='board-meaning']", buildBoardMeaning(activeBlock, carrierTone));
-  renderBoardMath(activeBlock, carrierTone);
+  renderPrimaryCarrier(activeBlock, carrierTone);
   text("[data-role='board-action-cue']", buildBoardActionCue(activeBlock, carrierTone));
   text("[data-role='visual-hint']", buildVisualHint(activeBlock, carrierTone));
   renderBoardRecoveryNote(activeBlock, carrierTone);
@@ -498,7 +498,24 @@ function buildBoardLabel(block, carrierTone) {
   return "Visueller Einstieg";
 }
 
-function renderBoardMath(block, carrierTone) {
+function renderPrimaryCarrier(block, carrierTone) {
+  const carrierMode = resolveBoardCarrierMode(block);
+  const relationshipScene = document.querySelector("[data-role='board-relationship-scene']");
+  const boardMath = document.querySelector("[data-role='board-math']");
+
+  if (relationshipScene) {
+    relationshipScene.hidden = carrierMode !== "relationship";
+  }
+
+  if (boardMath) {
+    boardMath.hidden = carrierMode === "relationship";
+  }
+
+  if (carrierMode === "relationship") {
+    renderRelationshipScene(block);
+    return;
+  }
+
   const structure = buildBoardStructure(block, carrierTone);
   text("[data-role='board-left']", structure.primary_left);
   text("[data-role='board-right']", structure.primary_right);
@@ -516,6 +533,39 @@ function renderBoardMath(block, carrierTone) {
 
   if (resultRow) {
     resultRow.hidden = !structure.show_result;
+  }
+}
+
+function resolveBoardCarrierMode(block) {
+  if (isLinearEquationsPilotBlock(block)) {
+    return block.device_board_carrier || "equation";
+  }
+
+  return "equation";
+}
+
+function renderRelationshipScene(block) {
+  const scene = block?.device_relationship_scene || {};
+  text("[data-role='relationship-part-label']", scene.part_label || "ein Teil");
+  text("[data-role='relationship-left-caption']", scene.left_caption || "plus drei");
+  text("[data-role='relationship-right-caption']", scene.right_caption || "zusammen sieben");
+  renderRelationshipTokens("[data-role='relationship-left-units']", scene.left_units || 0);
+  renderRelationshipTokens("[data-role='relationship-right-units']", scene.right_units || 0);
+}
+
+function renderRelationshipTokens(selector, count) {
+  const node = document.querySelector(selector);
+  if (!node) {
+    return;
+  }
+
+  node.replaceChildren();
+
+  for (let index = 0; index < count; index += 1) {
+    const token = document.createElement("span");
+    token.className = "relationship-token";
+    token.setAttribute("aria-hidden", "true");
+    node.append(token);
   }
 }
 
@@ -1010,8 +1060,14 @@ function isLinearEquationsPilotBlock(block) {
 }
 
 function buildLinearEquationsPilotPlan(actionTone = "default") {
-  const currentStage = getCurrentLinearEquationsStage();
-  const nextStage = resolveLinearEquationsStage(currentStage, actionTone);
+  const currentBlock = pickActiveBlock(state.lastPlan);
+  const hasPilotHistory = isLinearEquationsPilotBlock(currentBlock);
+  const currentStage = hasPilotHistory
+    ? currentBlock.device_stage || "relationship_intro"
+    : "relationship_intro";
+  const nextStage = hasPilotHistory
+    ? resolveLinearEquationsStage(currentStage, actionTone)
+    : "relationship_intro";
   const variant = resolveLinearEquationsVariant(nextStage, actionTone);
   const stageConfig = buildLinearEquationsStage(nextStage, variant);
   const sessionId = state.sessionId || buildSessionId();
@@ -1035,10 +1091,12 @@ function buildLinearEquationsPilotPlan(actionTone = "default") {
         device_focus_note: stageConfig.focus_note,
         device_scaffold_note: stageConfig.scaffold_note,
         device_board_label: stageConfig.board_label,
+        device_board_carrier: stageConfig.board_carrier,
         device_board_meaning: stageConfig.board_meaning,
         device_board_action_cue: stageConfig.board_action_cue,
         device_board_recovery_note: stageConfig.board_recovery_note,
         device_board_structure: stageConfig.board_structure,
+        device_relationship_scene: stageConfig.relationship_scene,
         device_visual_hint: stageConfig.visual_hint,
         device_action_labels: stageConfig.action_labels,
       },
@@ -1048,14 +1106,6 @@ function buildLinearEquationsPilotPlan(actionTone = "default") {
       resume_active: Boolean(state.lastPlan),
     },
   };
-}
-
-function getCurrentLinearEquationsStage() {
-  const block = pickActiveBlock(state.lastPlan);
-  if (!isLinearEquationsPilotBlock(block)) {
-    return "relationship_intro";
-  }
-  return block.device_stage || "relationship_intro";
 }
 
 function resolveLinearEquationsStage(currentStage, actionTone) {
@@ -1245,9 +1295,9 @@ function buildLinearEquationsStage(stage, variant) {
 
   return {
     block_type: "concept_intro",
-    goal: "Wir sehen lineare Gleichungen zuerst als Beziehung.",
+    goal: "Wir sehen zuerst nur, wie die Teile zusammengehoeren.",
     transition_message:
-      "Wir schauen zuerst nur darauf, dass beide Seiten zusammengehoeren.",
+      "Noch keine Gleichung. Erst sehen wir: ein Teil und drei zusammen ergeben sieben.",
     focus: ["relationship_before_symbol"],
     support_moves: ["reduce_pressure_before_symbolic_step"],
     support_scaffolds: ["visual_relationship_first"],
@@ -1255,10 +1305,18 @@ function buildLinearEquationsStage(stage, variant) {
     scaffold_note: "Wir halten den Einstieg ruhig und fuehren noch keinen Rechenschritt ein.",
     board_label: "Beziehung zuerst",
     board_meaning:
-      "Beide Seiten gehoeren zusammen, noch bevor wir sie als Gleichung schreiben.",
+      "Links ist ein Teil, den wir noch nicht kennen. Drei kommen dazu. Zusammen wird daraus dieselbe Menge wie rechts.",
     board_action_cue:
       "Wenn diese Beziehung klar ist, koennen wir sie als x + 3 = 7 aufschreiben.",
     board_recovery_note: "",
+    board_carrier: "relationship",
+    relationship_scene: {
+      part_label: "ein Teil",
+      left_caption: "plus drei",
+      right_caption: "zusammen sieben",
+      left_units: 3,
+      right_units: 7,
+    },
     board_structure: {
       primary_left: "ein Teil + 3",
       primary_right: "7",

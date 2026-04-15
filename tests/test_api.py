@@ -115,7 +115,7 @@ def test_device_static_assets_are_served() -> None:
     assert "buildLessonTransition" in js_response.text
     assert "resolveLearningCarrierTone" in js_response.text
     assert "buildBoardLabel" in js_response.text
-    assert "renderBoardMath" in js_response.text
+    assert "renderPrimaryCarrier" in js_response.text
     assert "buildBoardStructure" in js_response.text
     assert "renderBoardRecoveryNote" in js_response.text
     assert "buildBoardRecoveryNote" in js_response.text
@@ -127,6 +127,9 @@ def test_device_static_assets_are_served() -> None:
     assert "buildLinearEquationsStage" in js_response.text
     assert "resolveLinearEquationsStage" in js_response.text
     assert "!plan || !Array.isArray(plan.planned_blocks)" in js_response.text
+    assert "board-relationship-scene" in js_response.text
+    assert "device_board_carrier" in js_response.text
+    assert "device_relationship_scene" in js_response.text
     assert '"relationship_intro"' in js_response.text
     assert '"equation_form"' in js_response.text
     assert '"same_operation"' in js_response.text
@@ -134,6 +137,7 @@ def test_device_static_assets_are_served() -> None:
     assert '"x + 3"' in js_response.text
     assert '"5 + 2"' in js_response.text
     assert '"ein Teil + 3"' in js_response.text
+    assert '"Noch keine Gleichung. Erst sehen wir: ein Teil und drei zusammen ergeben sieben."' in js_response.text
     assert "firstLearningNote" in js_response.text
     assert "renderLearningActions" in js_response.text
     assert "buildLearningActionLabels" in js_response.text

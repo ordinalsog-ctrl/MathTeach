@@ -664,6 +664,93 @@ button[hidden],
   gap: 8px;
 }
 
+.board-relationship-scene {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 6px 0 2px;
+}
+
+.relationship-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.relationship-side-left {
+  min-width: 17rem;
+}
+
+.relationship-side-right {
+  min-width: 14rem;
+}
+
+.relationship-part,
+.relationship-total {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.relationship-part-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 18px 1px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(255, 247, 233, 0.82)),
+    linear-gradient(180deg, rgba(118, 143, 88, 0.12), rgba(118, 143, 88, 0));
+  box-shadow:
+    inset 0 0 0 1px rgba(102, 86, 70, 0.1),
+    0 8px 18px rgba(48, 36, 25, 0.05);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 1.05rem;
+}
+
+.relationship-side-caption {
+  color: var(--ink-soft);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 0.95rem;
+}
+
+.relationship-unit-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 34px;
+}
+
+.relationship-token {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 252, 246, 0.92) 0 18%, transparent 22%),
+    linear-gradient(180deg, rgba(118, 143, 88, 0.88), rgba(118, 143, 88, 0.56));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 251, 244, 0.56),
+    0 4px 8px rgba(48, 36, 25, 0.06);
+}
+
+.relationship-side-right .relationship-token {
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 252, 246, 0.92) 0 18%, transparent 22%),
+    linear-gradient(180deg, rgba(185, 121, 79, 0.82), rgba(185, 121, 79, 0.54));
+}
+
+.relationship-link {
+  flex: 0 0 86px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(102, 86, 70, 0.08),
+    rgba(102, 86, 70, 0.58),
+    rgba(102, 86, 70, 0.08)
+  );
+}
+
 .balance-row {
   display: flex;
   align-items: flex-end;

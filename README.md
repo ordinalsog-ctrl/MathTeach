@@ -292,14 +292,16 @@ Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der
 Lernscreen fuehrt damit konkret ueber:
 
-- Beziehungsstart
+- einen vorsymbolischen Beziehungsstart
 - `x + 3 = 7`
 - denselben Zug `-3 / -3`
 - `x = 4`
 - ein aehnliches Beispiel `5 + 2 = 7 -> 5 = 5`
 
 Damit ist das erste Modul nicht nur beschrieben, sondern im Device
-erstmals als testfaehiger Beispielpfad sichtbar.
+erstmals als testfaehiger Beispielpfad sichtbar. Der erste Carrier
+springt dabei nicht mehr direkt in die kleine Gleichung, sondern zeigt
+zuerst `ein Teil + drei -> zusammen sieben` als eigene Beziehungsflaeche.
 
 Heute bereits im Code:
 

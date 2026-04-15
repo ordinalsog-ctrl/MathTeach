@@ -2,6 +2,30 @@
 
 Stand: 2026-04-15
 
+## Device-Linear-Equations-Relationship-Carrier 2026-04-15
+
+Der lokale Pilotkorridor fuer `lineare Gleichungen` startet jetzt nicht
+mehr direkt mit `x + 3 = 7`.
+
+Neu dazu:
+
+- [src/mathteach/ui/device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  hat jetzt im primaeren Lerntraeger einen eigenen
+  `board-relationship-scene`
+- [src/mathteach/ui/static/device.css](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.css)
+  traegt diesen ersten Carrier als vorsymbolische Beziehungsflaeche statt
+  als weitere Gleichungszeile
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  loest den ersten lokalen Modulaufruf jetzt sauber auf
+  `relationship_intro` statt sofort auf `equation_form`
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+  pinnt den neuen Carrier und die Stage-Daten jetzt ueber die
+  Device-Assets mit
+
+Das ist fuer den Pilot wichtig, weil damit der erste Schritt endlich
+die Beziehung `ein Teil + drei = zusammen sieben` traegt, bevor die
+kleine Gleichung erscheint.
+
 ## Device-Linear-Equations-Pilot-Flow 2026-04-15
 
 Nach der vorbereiteten Testkette ist jetzt der erste echte Modul-Slice

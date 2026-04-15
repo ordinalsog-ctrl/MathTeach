@@ -2,6 +2,47 @@
 
 Stand: 2026-04-15
 
+## Pilot-Module-Tutor-Utterance-Pack 2026-04-15
+
+Der Pilotkorridor fuer `lineare Gleichungen` ist jetzt nicht nur
+strukturell und asset-seitig festgelegt, sondern auch sprachlich.
+
+Neu dazu:
+
+- neues
+  [pilot-module-linear-equations-tutor-utterance-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-tutor-utterance-pack.md)
+  als operative Tutor-Sprechschicht fuer Pilot 1
+- das Dokument definiert:
+  - Standardsaetze pro Station
+  - `Nochmal`-Saetze
+  - `Beispiel`-Saetze
+  - History-Sidecar-Saetze
+  - Mini-Bestaetigungen
+  - globale Sprachverbote
+- damit ist jetzt explizit festgelegt, wie die Tutor-Stimme fuer diesen
+  Pilot `guiding`, `stabilizing` und `school_scaffolded` klingen muss,
+  ohne in Testton, Defizitsprache oder Schul-Standardfloskeln zu
+  kippen
+
+Wichtigste Konsequenzen:
+
+- die fachliche Moduldramaturgie ist jetzt auch sprachlich gebunden und
+  nicht mehr spaeter von ad-hoc Copy abhaengig
+- `Nochmal` wird nicht nur visuell, sondern auch sprachlich kleiner
+  gemacht
+- `Beispiel` ist jetzt klar als Strukturtransfer sprachlich definiert
+  und nicht als Themenwechsel
+- wir koennen den ersten echten Moduldurchlauf jetzt fast schon komplett
+  intern simulieren, bevor externe Illustration produziert wird
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+- [docs/pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md)
+- [docs/pilot-module-linear-equations-asset-mapping-sheet.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-asset-mapping-sheet.md)
+- [docs/pilot-module-linear-equations-tutor-utterance-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-tutor-utterance-pack.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Pilot-Module-Asset-Mapping-Sheet 2026-04-15
 
 Der Modul-Pivot fuer `lineare Gleichungen` ist jetzt einen Schritt

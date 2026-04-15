@@ -267,6 +267,13 @@ spaeterer Illustrations-Track sehr klar gebrieft werden, ohne dass
 mathematische Funktion, Recovery-Logik oder historische Gewichtung nach
 aussen abgegeben werden.
 
+Als naechste innere Schicht liegt jetzt auch das
+[pilot-module-linear-equations-tutor-utterance-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-tutor-utterance-pack.md)
+vor: pro Station, `Nochmal`, `Beispiel` und `History-Sidecar` ist
+festgelegt, welche Tutor-Saetze erlaubt sind, wie Recovery sprachlich
+kleiner gemacht wird und welche Test-, Defizit- oder Standard-Schulsatz-
+muster explizit verboten sind.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

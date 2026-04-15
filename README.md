@@ -238,6 +238,18 @@ eine aehnliche, aber andere Gleichung mit eigenem Zwischenschritt
 traegt. Recovery ist damit nicht nur sprachlich, sondern direkt in der
 gezeigten mathematischen Form unterscheidbar.
 
+Parallel dazu liegt jetzt auch der erste echte Modul-Testpfad im Repo:
+ein vollstaendiger Pilotkorridor fuer `lineare Gleichungen`, bewusst
+nicht als UI-Spielerei, sondern als Entscheidungsinstrument fuer die
+weitere Produktarbeit. Der Modul-Blueprint
+[pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+trennt fachliche, paedagogische, psychologische und historische Rollen
+des Themas. Der separate
+[pilot-module-linear-equations-illustration-brief.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-brief.md)
+legt dazu fest, was an der Illustration didaktisch intern entschieden
+bleiben muss und was in der zeichnerischen Ausfuehrung sauber extern
+produziert werden kann.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

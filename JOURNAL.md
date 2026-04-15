@@ -3615,6 +3615,32 @@ Verifiziert:
 - `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
 - `PYTHONPATH=src ./.venv/bin/pytest -q` -> `248 passed, 1 warning`
 
+Der naechste bewusst andere Schritt war dann kein weiterer UI-Pass,
+sondern ein echter Modultest-Pivot:
+
+- statt weiterer Oberflaechenoptimierung wurde ein erster vollstaendiger
+  Pilotkorridor fuer `lineare Gleichungen` angelegt
+- Ziel ist nicht ein weiteres Mockup, sondern ein belastbarer
+  Entscheidungstest fuer die Frage, was bei MathTeach intern bleiben
+  muss und was in der Illustration ausgelagert werden kann
+
+Neu dazu:
+
+- [pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+  als fachlich-paedagogisch-psychologischer Modul-Blueprint mit
+  Screenfolge, Historieneinsatz und klarer Rollentrennung
+- [pilot-module-linear-equations-illustration-brief.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-brief.md)
+  als operativer Asset- und Auslagerungsbrief fuer den illustrierten
+  Lerntraeger
+
+Wichtige Repo-Entscheidung dabei:
+
+- Illustration wird fuer dieses Modul explizit als didaktischer Kern
+  behandelt
+- auslagerbar ist die zeichnerische Produktion
+- nicht auslagerbar sind mathematische Funktion, psychologische Wirkung
+  und Sequenzlogik der Illustration
+
 Offen bleibt bewusst:
 
 - das Onboarding braucht noch eine noch eigenstaendigere visuelle

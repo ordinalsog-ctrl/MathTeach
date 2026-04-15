@@ -2,6 +2,45 @@
 
 Stand: 2026-04-15
 
+## Pilot-Module-Throughplay-Script 2026-04-15
+
+Der naechste Pivot nach den Device-UI-Paessen ist jetzt nicht mehr
+freie Oberflaechenarbeit, sondern ein echter Modul-Durchspielpfad fuer
+`lineare Gleichungen`.
+
+Neu dazu:
+
+- neues
+  [pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md)
+  als operative Durchspielsequenz fuer das erste reale Testmodul
+- das Script bindet jetzt Station fuer Station zusammen:
+  - Tutor-Sprache
+  - Screen-Funktion
+  - Illustrationspflicht
+  - erwartete Lernreaktion
+  - Warnsignale
+  - interne Entscheidungstore
+- damit ist jetzt explizit festgelegt, an welchen Punkten wir spaeter
+  ueber `UI traegt schon`, `Asset-Track reicht noch nicht` oder
+  `Illustrationsproduktion parallelisieren` entscheiden
+
+Wichtigste Konsequenzen:
+
+- Illustrationen werden operativ als didaktischer Kern behandelt und
+  nicht mehr nur abstrakt als “wichtig” beschrieben
+- die weitere Produktentscheidung wird ab jetzt an einem echten
+  Modulfluss statt an isolierten UI-Screens geprueft
+- die Auslagerungsgrenze ist klarer: externe Produktion kann Stil und
+  Asset-Ausarbeitung liefern, aber nicht die mathematische Funktion,
+  Recovery-Logik oder historische Gewichtung verschieben
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [docs/pilot-module-linear-equations.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations.md)
+- [docs/pilot-module-linear-equations-illustration-brief.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-brief.md)
+- [docs/pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Device-Learningscreen-First-Pass 2026-04-15
 
 Der erste kleine Lernscreen-Pass schneidet jetzt den groessten

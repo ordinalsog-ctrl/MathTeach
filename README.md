@@ -250,6 +250,15 @@ legt dazu fest, was an der Illustration didaktisch intern entschieden
 bleiben muss und was in der zeichnerischen Ausfuehrung sauber extern
 produziert werden kann.
 
+Neu dazu kommt jetzt das operative
+[pilot-module-linear-equations-throughplay-script.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-throughplay-script.md):
+es beschreibt Station fuer Station, was der Tutor sagt, was der Screen
+zeigen muss, welche Illustration fachlich tragen muss und an welchen
+Punkten wir ueber UI-Richtung, Asset-Produktion und Auslagerung
+entscheiden. Damit pruefen wir die weitere Device-Arbeit ab jetzt nicht
+mehr nur an UI-Teilen, sondern an einem echten fachlich-paedagogischen
+Durchlauf.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

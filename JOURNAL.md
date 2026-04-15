@@ -3556,6 +3556,34 @@ Verifiziert:
 - `git diff --check`
 - `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
 
+Der naechste Device-UI-Schritt ging dann auf die Lernansicht selbst:
+
+- Recovery ist nicht mehr nur ueber Buttons und Laufzeittext sichtbar
+- der primaere Traeger in
+  [device.html](/Users/jonasweiss/MathTeach/src/mathteach/ui/device.html)
+  traegt jetzt eigene lokale Recovery-Zustaende fuer `repeat` und
+  `example`
+- diese Zustaende schalten Label, Carrier-Ton, lokale Recovery-Notiz
+  und die Formulierung von `Bedeutung -> Handlung` sichtbar um
+
+Technisch ist das in
+[device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+jetzt ueber eine kleine Carrier-Tone-Schicht geloest:
+
+- `resolveLearningCarrierTone()`
+- `buildBoardLabel()`
+- `buildBoardRecoveryNote()`
+- `renderLearningCarrierState()`
+
+Damit reagiert der Lernscreen jetzt bei `Nochmal` und `Beispiel` direkt
+im mathematischen Haupttraeger, statt nur am Rand des Screens.
+
+Verifiziert:
+
+- `git diff --check`
+- `PYTHONPATH=src ./.venv/bin/pytest tests/test_api.py -q` -> `55 passed, 1 warning`
+- `PYTHONPATH=src ./.venv/bin/pytest -q` -> `248 passed, 1 warning`
+
 Offen bleibt bewusst:
 
 - das Onboarding braucht noch eine noch eigenstaendigere visuelle

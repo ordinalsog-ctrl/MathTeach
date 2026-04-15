@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderStartScreen();
 
   if (state.lastPlan) {
-    renderLearningScreen(state.lastPlan);
+    renderLearningScreen(state.lastPlan, "default");
   }
 });
 
@@ -69,7 +69,7 @@ function bindActions() {
       if (action === "continue") {
         if (state.lastPlan) {
           switchScreen("learning");
-          renderLearningScreen(state.lastPlan);
+          renderLearningScreen(state.lastPlan, "default");
           return;
         }
         openOnboarding("goal");
@@ -402,7 +402,7 @@ async function requestPlan(runtimeObservations, actionTone = "default") {
     state.lastUpdatedAt = new Date().toISOString();
     saveState();
     renderStartScreen();
-    renderLearningScreen(plan);
+    renderLearningScreen(plan, actionTone);
     switchScreen("learning");
   } catch (error) {
     setStatus(buildLessonFailureMessage(actionTone));
@@ -422,13 +422,17 @@ function renderStartScreen() {
   });
 }
 
-function renderLearningScreen(plan) {
+function renderLearningScreen(plan, actionTone = "default") {
   const activeBlock = pickActiveBlock(plan);
+  const carrierTone = resolveLearningCarrierTone(activeBlock, actionTone);
   text("[data-role='lesson-goal']", activeBlock.goal || state.profile.objective);
   text("[data-role='lesson-transition']", buildLessonTransition(activeBlock));
-  text("[data-role='board-meaning']", buildBoardMeaning(activeBlock));
-  text("[data-role='board-action-cue']", buildBoardActionCue(activeBlock));
-  text("[data-role='visual-hint']", buildVisualHint(activeBlock));
+  text("[data-role='board-label']", buildBoardLabel(activeBlock, carrierTone));
+  text("[data-role='board-meaning']", buildBoardMeaning(activeBlock, carrierTone));
+  text("[data-role='board-action-cue']", buildBoardActionCue(activeBlock, carrierTone));
+  text("[data-role='visual-hint']", buildVisualHint(activeBlock, carrierTone));
+  renderBoardRecoveryNote(activeBlock, carrierTone);
+  renderLearningCarrierState(carrierTone);
   text(
     "[data-role='focus-note']",
     firstLearningNote(activeBlock.focus, "Wir halten nur den naechsten Gedanken auf dem Bildschirm.")
@@ -444,6 +448,64 @@ function renderLearningScreen(plan) {
     )
   );
   renderLearningActions(activeBlock);
+}
+
+function resolveLearningCarrierTone(block, actionTone) {
+  if (actionTone === "repeat") {
+    return "repeat";
+  }
+
+  if (actionTone === "example" || block?.block_type === "worked_example") {
+    return "example";
+  }
+
+  return "default";
+}
+
+function buildBoardLabel(block, carrierTone) {
+  if (carrierTone === "repeat") {
+    return "Noch kleinerer Schritt";
+  }
+
+  if (carrierTone === "example") {
+    return block?.block_type === "worked_example"
+      ? "Aehnliches Beispiel"
+      : "Aehnlicher Schritt";
+  }
+
+  return "Visueller Einstieg";
+}
+
+function renderBoardRecoveryNote(block, carrierTone) {
+  const node = document.querySelector("[data-role='board-recovery-note']");
+  if (!node) {
+    return;
+  }
+
+  const note = buildBoardRecoveryNote(block, carrierTone);
+  node.hidden = !note;
+  node.textContent = note;
+}
+
+function buildBoardRecoveryNote(block, carrierTone) {
+  if (carrierTone === "repeat") {
+    return "Wir verkleinern nur diesen einen Zug.";
+  }
+
+  if (carrierTone === "example") {
+    return block?.block_type === "worked_example"
+      ? "Wir halten dieselbe Regel erst an einem nahen Beispiel fest."
+      : "Wir sehen dieselbe Struktur erst an einem aehnlichen Schritt.";
+  }
+
+  return "";
+}
+
+function renderLearningCarrierState(carrierTone) {
+  const board = document.querySelector("[data-role='visual-board']");
+  if (board) {
+    board.dataset.learningTone = carrierTone;
+  }
 }
 
 function pickActiveBlock(plan) {
@@ -467,7 +529,15 @@ function buildLessonTransition(block) {
   );
 }
 
-function buildBoardMeaning(block) {
+function buildBoardMeaning(block, carrierTone = "default") {
+  if (carrierTone === "repeat") {
+    return "Wir schauen nur auf eine Sache: Was wir links tun, tun wir auch rechts.";
+  }
+
+  if (carrierTone === "example") {
+    return "Wir halten dieselbe Beziehung erst klein und klar fest, bevor wir wieder zum eigentlichen Schritt gehen.";
+  }
+
   if (Array.isArray(block.focus) && block.focus.length > 0) {
     return "Wir halten die zugrunde liegende Beziehung zuerst sichtbar, bevor wir nur auf Symbole schauen.";
   }
@@ -475,7 +545,15 @@ function buildBoardMeaning(block) {
   return "Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben.";
 }
 
-function buildBoardActionCue(block) {
+function buildBoardActionCue(block, carrierTone = "default") {
+  if (carrierTone === "repeat") {
+    return "Noch kleiner: erst beide Seiten sehen, dann denselben Zug links und rechts machen.";
+  }
+
+  if (carrierTone === "example") {
+    return "Wir nehmen dieselbe Regel in einen aehnlichen Zug mit, damit der naechste Schritt leichter lesbar wird.";
+  }
+
   if (Array.isArray(block.support_scaffolds) && block.support_scaffolds.length > 0) {
     return "Wir machen denselben kleinen Zug links und rechts, damit die Beziehung stabil bleibt.";
   }
@@ -749,7 +827,15 @@ function updateClock() {
   );
 }
 
-function buildVisualHint(block) {
+function buildVisualHint(block, carrierTone = "default") {
+  if (carrierTone === "repeat") {
+    return "Wenn es stockt, machen wir den Schritt kleiner statt die Flaeche groesser.";
+  }
+
+  if (carrierTone === "example") {
+    return "Das Beispiel soll nur dieselbe Struktur zeigen, nicht ein neues Thema aufmachen.";
+  }
+
   if (Array.isArray(block.focus) && block.focus.length > 0) {
     return `Wir schauen jetzt besonders auf: ${prettify(block.focus[0])}.`;
   }

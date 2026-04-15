@@ -224,6 +224,13 @@ Zustandsfehler in
 behoben, bei dem der Screen beim Wechsel auf Schritt `2 von 3`
 versehentlich mit versteckt wurde.
 
+Auch der Lernscreen traegt Recovery jetzt direkter im primaeren
+mathematischen Traeger selbst: `Nochmal` und `Beispiel` schalten den
+Board-Ton lokal auf kleinere, explizitere Carrier-Zustaende um, statt
+nur die Laufzeitmeldung oder die Aktionszone zu veraendern. Damit
+wandert die Recovery-Regel `verkleinern statt vergroessern` erstmals
+sichtbar in den Kern der Lernflaeche.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

@@ -122,6 +122,17 @@ def test_device_static_assets_are_served() -> None:
     assert "renderLearningCarrierState" in js_response.text
     assert "buildBoardMeaning" in js_response.text
     assert "buildBoardActionCue" in js_response.text
+    assert "matchesLinearEquationsPilot" in js_response.text
+    assert "buildLinearEquationsPilotPlan" in js_response.text
+    assert "buildLinearEquationsStage" in js_response.text
+    assert "resolveLinearEquationsStage" in js_response.text
+    assert '"relationship_intro"' in js_response.text
+    assert '"equation_form"' in js_response.text
+    assert '"same_operation"' in js_response.text
+    assert '"similar_example"' in js_response.text
+    assert '"x + 3"' in js_response.text
+    assert '"5 + 2"' in js_response.text
+    assert '"ein Teil + 3"' in js_response.text
     assert "firstLearningNote" in js_response.text
     assert "renderLearningActions" in js_response.text
     assert "buildLearningActionLabels" in js_response.text

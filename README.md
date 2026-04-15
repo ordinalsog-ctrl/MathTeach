@@ -287,6 +287,20 @@ eine ausfuellbare Nach-Test-Vorlage, mit der wir Beobachtungen pro
 Station sofort in eine konkrete naechste Entscheidung ueber
 `Modul`, `Sprache`, `UI` oder `Illustration` uebersetzen koennen.
 
+Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
+`lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
+kleinen Pilotkorridor statt nur generische Planplatzhalter. Der
+Lernscreen fuehrt damit konkret ueber:
+
+- Beziehungsstart
+- `x + 3 = 7`
+- denselben Zug `-3 / -3`
+- `x = 4`
+- ein aehnliches Beispiel `5 + 2 = 7 -> 5 = 5`
+
+Damit ist das erste Modul nicht nur beschrieben, sondern im Device
+erstmals als testfaehiger Beispielpfad sichtbar.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

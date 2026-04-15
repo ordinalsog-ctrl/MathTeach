@@ -2,6 +2,50 @@
 
 Stand: 2026-04-15
 
+## Device-Linear-Equations-Pilot-Flow 2026-04-15
+
+Nach der vorbereiteten Testkette ist jetzt der erste echte Modul-Slice
+im laufenden Device-Code angekommen.
+
+Neu dazu:
+
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  erkennt jetzt `lineare Gleichungen` als lokalen Pilotpfad
+- statt nur generischer Plan-Placeholders baut die Device-UI jetzt fuer
+  dieses Thema einen echten kleinen Stationskorridor auf:
+  - `relationship_intro`
+  - `equation_form`
+  - `same_operation`
+  - `result`
+  - `similar_example`
+- damit werden konkret getragen:
+  - `ein Teil + 3`
+  - `x + 3 = 7`
+  - `-3 / -3`
+  - `x = 4`
+  - `5 + 2 = 7`
+  - `-2 / -2`
+  - `5 = 5`
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+  pinnt diese lokale Modulspur ueber die Device-JS-Assets jetzt explizit
+  mit
+
+Wichtigste Konsequenzen:
+
+- das erste Modul ist jetzt nicht mehr nur dokumentiert, sondern im
+  Device wirklich testfaehig als Beispielpfad vorhanden
+- `Nochmal`, `Beispiel` und `Weiter` greifen fuer dieses Thema jetzt auf
+  einen echten kleinen Modulzustand statt auf bloß generische
+  Anzeigevariation
+- wir koennen den ersten Lerndurchlauf damit erstmals am realen
+  Modulfluss statt nur an vorbereitenden Dokumenten pruefen
+
+Neue oder aktualisierte Referenzartefakte:
+
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+- [README.md](/Users/jonasweiss/MathTeach/README.md)
+
 ## Pilot-Module-Test-Evaluation-Template 2026-04-15
 
 Der Pilotkorridor fuer `lineare Gleichungen` hat jetzt auch den letzten

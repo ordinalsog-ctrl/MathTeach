@@ -1,5 +1,12 @@
 const STORAGE_KEY = "mathteach-device-shell";
 const ONBOARDING_STEPS = ["goal", "presentation", "confirmation"];
+const LINEAR_EQUATIONS_STATIONS = [
+  "relationship_intro",
+  "equation_form",
+  "same_operation",
+  "result",
+  "similar_example",
+];
 
 const defaultState = {
   profile: {
@@ -364,6 +371,18 @@ async function requestPlan(runtimeObservations, actionTone = "default") {
     return;
   }
 
+  if (matchesLinearEquationsPilot(state.profile.objective)) {
+    const localPlan = buildLinearEquationsPilotPlan(actionTone);
+    state.sessionId = state.sessionId || buildSessionId();
+    state.lastPlan = localPlan;
+    state.lastUpdatedAt = new Date().toISOString();
+    saveState();
+    renderStartScreen();
+    renderLearningScreen(localPlan, actionTone);
+    switchScreen("learning");
+    return;
+  }
+
   const payload = {
     objective: state.profile.objective,
     session_id: state.sessionId || buildSessionId(),
@@ -436,22 +455,20 @@ function renderLearningScreen(plan, actionTone = "default") {
   renderLearningCarrierState(carrierTone);
   text(
     "[data-role='focus-note']",
-    firstLearningNote(activeBlock.focus, "Wir halten nur den naechsten Gedanken auf dem Bildschirm.")
+    buildFocusNote(activeBlock)
   );
   text(
     "[data-role='scaffold-note']",
-    firstLearningNote(
-      activeBlock.support_scaffolds,
-      firstLearningNote(
-        activeBlock.support_moves,
-        "Bei Bedarf gehe ich noch einen Schritt kleiner."
-      )
-    )
+    buildScaffoldNote(activeBlock)
   );
   renderLearningActions(activeBlock);
 }
 
 function resolveLearningCarrierTone(block, actionTone) {
+  if (isLinearEquationsPilotBlock(block)) {
+    return block.device_variant || "default";
+  }
+
   if (actionTone === "repeat") {
     return "repeat";
   }
@@ -464,6 +481,10 @@ function resolveLearningCarrierTone(block, actionTone) {
 }
 
 function buildBoardLabel(block, carrierTone) {
+  if (isLinearEquationsPilotBlock(block)) {
+    return block.device_board_label || "Visueller Einstieg";
+  }
+
   if (carrierTone === "repeat") {
     return "Noch kleinerer Schritt";
   }
@@ -499,6 +520,10 @@ function renderBoardMath(block, carrierTone) {
 }
 
 function buildBoardStructure(block, carrierTone) {
+  if (isLinearEquationsPilotBlock(block) && block.device_board_structure) {
+    return block.device_board_structure;
+  }
+
   if (carrierTone === "repeat") {
     return {
       primary_left: "x + 3",
@@ -549,6 +574,10 @@ function renderBoardRecoveryNote(block, carrierTone) {
 }
 
 function buildBoardRecoveryNote(block, carrierTone) {
+  if (isLinearEquationsPilotBlock(block)) {
+    return block.device_board_recovery_note || "";
+  }
+
   if (carrierTone === "repeat") {
     return "Wir verkleinern nur diesen einen Zug.";
   }
@@ -596,6 +625,13 @@ function buildLessonTransition(block) {
 }
 
 function buildBoardMeaning(block, carrierTone = "default") {
+  if (isLinearEquationsPilotBlock(block)) {
+    return (
+      block.device_board_meaning ||
+      "Beide Seiten gehoeren zusammen und muessen im Gleichgewicht bleiben."
+    );
+  }
+
   if (carrierTone === "repeat") {
     return "Wir schauen nur auf eine Sache: Was wir links tun, tun wir auch rechts.";
   }
@@ -612,6 +648,13 @@ function buildBoardMeaning(block, carrierTone = "default") {
 }
 
 function buildBoardActionCue(block, carrierTone = "default") {
+  if (isLinearEquationsPilotBlock(block)) {
+    return (
+      block.device_board_action_cue ||
+      "Darum machen wir denselben kleinen Zug links und rechts."
+    );
+  }
+
   if (carrierTone === "repeat") {
     return "Noch kleiner: erst beide Seiten sehen, dann denselben Zug links und rechts machen.";
   }
@@ -635,6 +678,10 @@ function renderLearningActions(block) {
 }
 
 function buildLearningActionLabels(block) {
+  if (isLinearEquationsPilotBlock(block) && block.device_action_labels) {
+    return block.device_action_labels;
+  }
+
   if (block?.block_type === "worked_example") {
     return {
       repeat: "Zeig diesen Schritt noch einmal",
@@ -894,6 +941,13 @@ function updateClock() {
 }
 
 function buildVisualHint(block, carrierTone = "default") {
+  if (isLinearEquationsPilotBlock(block)) {
+    return (
+      block.device_visual_hint ||
+      "Wir behandeln beide Seiten derselben Gleichung mit der gleichen Ruhe."
+    );
+  }
+
   if (carrierTone === "repeat") {
     return "Wenn es stockt, machen wir den Schritt kleiner statt die Flaeche groesser.";
   }
@@ -912,4 +966,312 @@ function prettify(value) {
   return String(value)
     .replaceAll("_", " ")
     .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function buildFocusNote(block) {
+  if (isLinearEquationsPilotBlock(block) && block.device_focus_note) {
+    return block.device_focus_note;
+  }
+
+  return firstLearningNote(
+    block.focus,
+    "Wir halten nur den naechsten Gedanken auf dem Bildschirm."
+  );
+}
+
+function buildScaffoldNote(block) {
+  if (isLinearEquationsPilotBlock(block) && block.device_scaffold_note) {
+    return block.device_scaffold_note;
+  }
+
+  return firstLearningNote(
+    block.support_scaffolds,
+    firstLearningNote(
+      block.support_moves,
+      "Bei Bedarf gehe ich noch einen Schritt kleiner."
+    )
+  );
+}
+
+function matchesLinearEquationsPilot(objective) {
+  const normalized = String(objective || "").toLowerCase();
+  return (
+    normalized.includes("lineare gleichung") ||
+    normalized.includes("lineare gleichungen") ||
+    normalized.includes("x + 3 = 7")
+  );
+}
+
+function isLinearEquationsPilotBlock(block) {
+  return block?.device_module_slug === "linear_equations_pilot";
+}
+
+function buildLinearEquationsPilotPlan(actionTone = "default") {
+  const currentStage = getCurrentLinearEquationsStage();
+  const nextStage = resolveLinearEquationsStage(currentStage, actionTone);
+  const variant = resolveLinearEquationsVariant(nextStage, actionTone);
+  const stageConfig = buildLinearEquationsStage(nextStage, variant);
+  const sessionId = state.sessionId || buildSessionId();
+
+  return {
+    session_id: sessionId,
+    lesson_mode: "device_linear_equations_pilot",
+    audience_mode: "teen",
+    planned_blocks: [
+      {
+        mode: "device_linear_equations_pilot",
+        block_type: stageConfig.block_type,
+        goal: stageConfig.goal,
+        transition_message: stageConfig.transition_message,
+        focus: stageConfig.focus,
+        support_moves: stageConfig.support_moves,
+        support_scaffolds: stageConfig.support_scaffolds,
+        device_module_slug: "linear_equations_pilot",
+        device_stage: nextStage,
+        device_variant: variant,
+        device_focus_note: stageConfig.focus_note,
+        device_scaffold_note: stageConfig.scaffold_note,
+        device_board_label: stageConfig.board_label,
+        device_board_meaning: stageConfig.board_meaning,
+        device_board_action_cue: stageConfig.board_action_cue,
+        device_board_recovery_note: stageConfig.board_recovery_note,
+        device_board_structure: stageConfig.board_structure,
+        device_visual_hint: stageConfig.visual_hint,
+        device_action_labels: stageConfig.action_labels,
+      },
+    ],
+    resume_context: {
+      resume_source: state.lastPlan ? "local_module_resume" : "fresh_start",
+      resume_active: Boolean(state.lastPlan),
+    },
+  };
+}
+
+function getCurrentLinearEquationsStage() {
+  const block = pickActiveBlock(state.lastPlan);
+  if (!isLinearEquationsPilotBlock(block)) {
+    return "relationship_intro";
+  }
+  return block.device_stage || "relationship_intro";
+}
+
+function resolveLinearEquationsStage(currentStage, actionTone) {
+  if (actionTone === "example") {
+    return currentStage === "relationship_intro" ? "equation_form" : "similar_example";
+  }
+
+  if (actionTone === "repeat") {
+    return currentStage;
+  }
+
+  const currentIndex = LINEAR_EQUATIONS_STATIONS.indexOf(currentStage);
+  if (currentIndex === -1) {
+    return "relationship_intro";
+  }
+
+  return LINEAR_EQUATIONS_STATIONS[Math.min(currentIndex + 1, LINEAR_EQUATIONS_STATIONS.length - 1)];
+}
+
+function resolveLinearEquationsVariant(stage, actionTone) {
+  if (stage === "similar_example") {
+    return "example";
+  }
+
+  if (actionTone === "repeat" && stage !== "relationship_intro") {
+    return "repeat";
+  }
+
+  return "default";
+}
+
+function buildLinearEquationsStage(stage, variant) {
+  if (stage === "equation_form") {
+    return {
+      block_type: "worked_example",
+      goal: "Wir sehen dieselbe Beziehung jetzt als kleine Gleichung.",
+      transition_message: "Jetzt sehen wir dieselbe Beziehung als x + 3 = 7.",
+      focus: ["meaning_before_symbol"],
+      support_moves: ["bind_symbol_back_to_relationship"],
+      support_scaffolds: ["single_equation_only"],
+      focus_note: "Wir binden x + 3 = 7 direkt an dieselbe sichtbare Beziehung zurueck.",
+      scaffold_note: "Nur eine Gleichung, noch kein neuer Rechenschritt.",
+      board_label: "Dieselbe Beziehung als Gleichung",
+      board_meaning:
+        "x steht fuer den Teil, den wir noch nicht kennen. Die drei kommen links dazu. Rechts steht sieben gegenueber.",
+      board_action_cue: "Wenn die Beziehung klar ist, koennen wir spaeter den gleichen Zug auf beiden Seiten sehen.",
+      board_recovery_note:
+        variant === "repeat" ? "Wir bleiben bei derselben Gleichung und schauen nur ruhiger hin." : "",
+      board_structure: {
+        primary_left: "x + 3",
+        primary_right: "7",
+        operation_left: "",
+        operation_right: "",
+        result_left: "",
+        result_right: "",
+        show_operation: false,
+        show_result: false,
+      },
+      visual_hint:
+        "Noch kein Trick. Erst dieselbe Beziehung als lesbare Gleichung.",
+      action_labels: {
+        repeat: "Diesen Schritt noch einmal sehen",
+        example: "Zeig die gleiche Idee noch einmal",
+        advance: "Den gleichen Zug auf beiden Seiten sehen",
+      },
+    };
+  }
+
+  if (stage === "same_operation") {
+    return {
+      block_type: "worked_example",
+      goal: "Wir machen denselben kleinen Zug auf beiden Seiten.",
+      transition_message:
+        "Wenn die Beziehung gleich bleiben soll, braucht es links und rechts denselben Zug.",
+      focus: ["same_operation_both_sides"],
+      support_moves: ["keep_relationship_stable"],
+      support_scaffolds: ["single_operation_row"],
+      focus_note: "Nur dieser eine Gedanke zaehlt jetzt: links und rechts derselbe Zug.",
+      scaffold_note: "Wir fuehren genau eine Operationsspur ein, nicht mehr.",
+      board_label:
+        variant === "repeat" ? "Derselbe Zug noch kleiner" : "Derselbe Zug auf beiden Seiten",
+      board_meaning:
+        "Wir nehmen nicht irgendwo etwas weg. Wir halten die Beziehung im Gleichgewicht.",
+      board_action_cue:
+        variant === "repeat"
+          ? "Noch kleiner: links minus drei und rechts auch minus drei."
+          : "Darum ziehen wir auf beiden Seiten drei ab.",
+      board_recovery_note:
+        variant === "repeat" ? "Wir machen nur diesen einen Zug deutlicher." : "",
+      board_structure: {
+        primary_left: "x + 3",
+        primary_right: "7",
+        operation_left: "- 3",
+        operation_right: "- 3",
+        result_left: "",
+        result_right: "",
+        show_operation: true,
+        show_result: false,
+      },
+      visual_hint:
+        "Der wichtige Punkt ist nicht das Wegnehmen, sondern dass der Zug links und rechts derselbe bleibt.",
+      action_labels: {
+        repeat: "Diesen Zug noch kleiner sehen",
+        example: "Zeig mir ein aehnliches Beispiel",
+        advance: "Zeig das Ergebnis dieses Zugs",
+      },
+    };
+  }
+
+  if (stage === "result") {
+    return {
+      block_type: "worked_example",
+      goal: "Wir sehen, was nach demselben Zug uebrig bleibt.",
+      transition_message:
+        "Jetzt sehen wir, was nach diesem einen Zug uebrig bleibt.",
+      focus: ["result_from_same_structure"],
+      support_moves: ["link_result_back_to_operation"],
+      support_scaffolds: ["show_result_in_same_carrier"],
+      focus_note: "Das Ergebnis soll aus demselben Schritt kommen, nicht wie ein Sprung wirken.",
+      scaffold_note: "Wir halten Gleichung, Zug und Ergebnis im selben Traeger zusammen.",
+      board_label:
+        variant === "repeat" ? "Derselbe Weg noch kleiner" : "Ergebnis aus demselben Schritt",
+      board_meaning:
+        "Nach demselben Zug auf beiden Seiten bleibt links nur noch x und rechts vier.",
+      board_action_cue:
+        variant === "repeat"
+          ? "Wir schauen denselben Weg noch einmal in klein an."
+          : "So wird aus derselben Beziehung sichtbar: x ist gleich vier.",
+      board_recovery_note:
+        variant === "repeat" ? "Wir gehen nicht zurueck. Wir machen nur den Weg klarer." : "",
+      board_structure: {
+        primary_left: "x + 3",
+        primary_right: "7",
+        operation_left: "- 3",
+        operation_right: "- 3",
+        result_left: "x",
+        result_right: "4",
+        show_operation: true,
+        show_result: true,
+      },
+      visual_hint:
+        "Das Ergebnis soll hergeleitet wirken, nicht ploetzlich erscheinen.",
+      action_labels: {
+        repeat: "Zeig den Weg noch einmal",
+        example: "Zeig mir ein aehnliches Beispiel",
+        advance: "Dieselbe Idee an einem Beispiel sehen",
+      },
+    };
+  }
+
+  if (stage === "similar_example") {
+    return {
+      block_type: "worked_example",
+      goal: "Wir sichern dieselbe Struktur jetzt an einem aehnlichen Beispiel.",
+      transition_message:
+        "Jetzt sehen wir dieselbe Regel mit anderen Zahlen.",
+      focus: ["same_structure_other_numbers"],
+      support_moves: ["make_transfer_visible"],
+      support_scaffolds: ["near_example_only"],
+      focus_note: "Die Zahlen wechseln, die Struktur bleibt dieselbe.",
+      scaffold_note: "Das Beispiel soll den Transfer sichern, kein neues Thema oeffnen.",
+      board_label: "Aehnliches Beispiel",
+      board_meaning:
+        "Hier sind die Zahlen anders. Der Gedanke bleibt derselbe.",
+      board_action_cue:
+        "Wir machen wieder denselben Zug auf beiden Seiten, nur jetzt mit minus zwei.",
+      board_recovery_note: "",
+      board_structure: {
+        primary_left: "5 + 2",
+        primary_right: "7",
+        operation_left: "- 2",
+        operation_right: "- 2",
+        result_left: "5",
+        result_right: "5",
+        show_operation: true,
+        show_result: true,
+      },
+      visual_hint:
+        "Das Beispiel soll zeigen: gleiche Struktur, andere Zahlen.",
+      action_labels: {
+        repeat: "Dieses Beispiel noch einmal sehen",
+        example: "Bleib bei diesem Beispiel",
+        advance: "Beim Beispiel bleiben",
+      },
+    };
+  }
+
+  return {
+    block_type: "concept_intro",
+    goal: "Wir sehen lineare Gleichungen zuerst als Beziehung.",
+    transition_message:
+      "Wir schauen zuerst nur darauf, dass beide Seiten zusammengehoeren.",
+    focus: ["relationship_before_symbol"],
+    support_moves: ["reduce_pressure_before_symbolic_step"],
+    support_scaffolds: ["visual_relationship_first"],
+    focus_note: "Noch keine Regel. Noch keine Umformung. Erst die Beziehung.",
+    scaffold_note: "Wir halten den Einstieg ruhig und fuehren noch keinen Rechenschritt ein.",
+    board_label: "Beziehung zuerst",
+    board_meaning:
+      "Beide Seiten gehoeren zusammen, noch bevor wir sie als Gleichung schreiben.",
+    board_action_cue:
+      "Wenn diese Beziehung klar ist, koennen wir sie als x + 3 = 7 aufschreiben.",
+    board_recovery_note: "",
+    board_structure: {
+      primary_left: "ein Teil + 3",
+      primary_right: "7",
+      operation_left: "",
+      operation_right: "",
+      result_left: "",
+      result_right: "",
+      show_operation: false,
+      show_result: false,
+    },
+    visual_hint:
+      "Noch kein Rechentrick. Erst sehen, dass beide Seiten zusammengehoeren.",
+    action_labels: {
+      repeat: "Diesen Blick noch einmal sehen",
+      example: "Zeig die Gleichung dazu",
+      advance: "Jetzt als Gleichung sehen",
+    },
+  };
 }

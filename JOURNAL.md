@@ -2,6 +2,31 @@
 
 Stand: 2026-04-15
 
+## Device-Linear-Equations-Demo-Boot 2026-04-15
+
+Der lokale Pilotpfad fuer `lineare Gleichungen` kann jetzt direkt ueber
+die Device-URL gestartet werden.
+
+Neu dazu:
+
+- [src/mathteach/ui/static/device.js](/Users/jonasweiss/MathTeach/src/mathteach/ui/static/device.js)
+  liest jetzt `demo`- und `stage`-Query-Parameter
+- der Device-Flow kann damit direkt auf
+  `/device?demo=linear-equations` booten
+- optional koennen einzelne Stationen direkt angesprungen werden:
+  - `relationship`
+  - `equation`
+  - `same_operation`
+  - `result`
+  - `example`
+- [tests/test_api.py](/Users/jonasweiss/MathTeach/tests/test_api.py)
+  pinnt den neuen Demo-Boot-Pfad ueber die ausgelieferten JS-Assets
+
+Das ist kein freier Demo-Modus fuer beliebige Themen, sondern ein
+gezielter Testhebel fuer den ersten echten Modulpfad. Damit koennen wir
+jetzt schneller echte Durchlaeufe fahren und spaeter pro Station Assets
+oder Illustrationen pruefen.
+
 ## Device-Linear-Equations-Relationship-Carrier 2026-04-15
 
 Der lokale Pilotkorridor fuer `lineare Gleichungen` startet jetzt nicht

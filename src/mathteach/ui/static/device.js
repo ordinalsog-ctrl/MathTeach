@@ -7,6 +7,18 @@ const LINEAR_EQUATIONS_STATIONS = [
   "result",
   "similar_example",
 ];
+const LINEAR_EQUATIONS_STAGE_ALIASES = {
+  relationship: "relationship_intro",
+  relationship_intro: "relationship_intro",
+  equation: "equation_form",
+  equation_form: "equation_form",
+  same_operation: "same_operation",
+  sameoperation: "same_operation",
+  operation: "same_operation",
+  result: "result",
+  example: "similar_example",
+  similar_example: "similar_example",
+};
 
 const defaultState = {
   profile: {
@@ -36,6 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setInterval(updateClock, 30_000);
   renderOnboarding();
   renderStartScreen();
+
+  if (bootstrapDeviceDemoFromQuery()) {
+    return;
+  }
 
   if (state.lastPlan) {
     renderLearningScreen(state.lastPlan, "default");
@@ -67,6 +83,83 @@ function loadState() {
 
 function saveState() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function bootstrapDeviceDemoFromQuery() {
+  const demo = readDeviceDemoFromQuery();
+  if (!demo) {
+    return false;
+  }
+
+  if (demo.slug === "linear_equations_pilot") {
+    state.profile.objective = "lineare Gleichungen";
+    state.profile.wantsVisuals = true;
+    state.sessionId = state.sessionId || buildSessionId();
+    state.lastPlan = buildLinearEquationsPlanForStage(
+      demo.stage,
+      demo.variant,
+      {
+        sessionId: state.sessionId,
+        resumeSource: "query_demo",
+        resumeActive: false,
+      }
+    );
+    state.lastUpdatedAt = new Date().toISOString();
+    renderStartScreen();
+    renderLearningScreen(state.lastPlan, demo.variant);
+    switchScreen("learning");
+    return true;
+  }
+
+  return false;
+}
+
+function readDeviceDemoFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const demoValue = String(params.get("demo") || "")
+    .trim()
+    .toLowerCase();
+
+  if (
+    demoValue !== "linear-equations" &&
+    demoValue !== "lineare-gleichungen" &&
+    demoValue !== "linear_equations"
+  ) {
+    return null;
+  }
+
+  const stage = normalizeLinearEquationsStageParam(params.get("stage"));
+  const variant = normalizeLinearEquationsVariantParam(params.get("variant"), stage);
+
+  return {
+    slug: "linear_equations_pilot",
+    stage,
+    variant,
+  };
+}
+
+function normalizeLinearEquationsStageParam(stage) {
+  const normalized = String(stage || "")
+    .trim()
+    .toLowerCase();
+
+  return LINEAR_EQUATIONS_STAGE_ALIASES[normalized] || "relationship_intro";
+}
+
+function normalizeLinearEquationsVariantParam(variant, stage) {
+  const normalized = String(variant || "")
+    .trim()
+    .toLowerCase();
+
+  if (stage === "similar_example") {
+    return "example";
+  }
+
+  if (normalized === "repeat" && stage !== "relationship_intro") {
+    return "repeat";
+  }
+
+  return "default";
 }
 
 function bindActions() {
@@ -1069,11 +1162,29 @@ function buildLinearEquationsPilotPlan(actionTone = "default") {
     ? resolveLinearEquationsStage(currentStage, actionTone)
     : "relationship_intro";
   const variant = resolveLinearEquationsVariant(nextStage, actionTone);
-  const stageConfig = buildLinearEquationsStage(nextStage, variant);
   const sessionId = state.sessionId || buildSessionId();
 
+  return buildLinearEquationsPlanForStage(nextStage, variant, {
+    sessionId,
+    resumeSource: state.lastPlan ? "local_module_resume" : "fresh_start",
+    resumeActive: Boolean(state.lastPlan),
+  });
+}
+
+function buildLinearEquationsPlanForStage(
+  stage,
+  variant,
+  {
+    sessionId,
+    resumeSource = "fresh_start",
+    resumeActive = false,
+  } = {}
+) {
+  const stageConfig = buildLinearEquationsStage(stage, variant);
+  const resolvedSessionId = sessionId || state.sessionId || buildSessionId();
+
   return {
-    session_id: sessionId,
+    session_id: resolvedSessionId,
     lesson_mode: "device_linear_equations_pilot",
     audience_mode: "teen",
     planned_blocks: [
@@ -1086,7 +1197,7 @@ function buildLinearEquationsPilotPlan(actionTone = "default") {
         support_moves: stageConfig.support_moves,
         support_scaffolds: stageConfig.support_scaffolds,
         device_module_slug: "linear_equations_pilot",
-        device_stage: nextStage,
+        device_stage: stage,
         device_variant: variant,
         device_focus_note: stageConfig.focus_note,
         device_scaffold_note: stageConfig.scaffold_note,
@@ -1102,8 +1213,8 @@ function buildLinearEquationsPilotPlan(actionTone = "default") {
       },
     ],
     resume_context: {
-      resume_source: state.lastPlan ? "local_module_resume" : "fresh_start",
-      resume_active: Boolean(state.lastPlan),
+      resume_source: resumeSource,
+      resume_active: resumeActive,
     },
   };
 }

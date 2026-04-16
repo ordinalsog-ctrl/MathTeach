@@ -303,6 +303,16 @@ erstmals als testfaehiger Beispielpfad sichtbar. Der erste Carrier
 springt dabei nicht mehr direkt in die kleine Gleichung, sondern zeigt
 zuerst `ein Teil + drei -> zusammen sieben` als eigene Beziehungsflaeche.
 
+Fuer echte schnelle Testlaeufe gibt es jetzt auch einen direkten
+Device-Demo-Startpfad ohne manuelles Onboarding:
+
+- `/device?demo=linear-equations`
+- optional mit `stage=relationship|equation|same_operation|result|example`
+
+Damit koennen wir denselben Modulpfad gezielt pro Station pruefen oder
+spaeter pro Station mit einem eigenen Illustrations-Track bestuecken,
+ohne jedes Mal den kompletten Einstieg neu durchklicken zu muessen.
+
 Heute bereits im Code:
 
 - lokale, regelbasierte Tutorplanung mit klarer Trennung von

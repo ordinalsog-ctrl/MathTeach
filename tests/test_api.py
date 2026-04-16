@@ -107,6 +107,11 @@ def test_device_static_assets_are_served() -> None:
     assert "buildOnboardingSummary" in js_response.text
     assert "compactOnboardingTopic" in js_response.text
     assert "applyOnboardingFocus" in js_response.text
+    assert "URLSearchParams" in js_response.text
+    assert "bootstrapDeviceDemoFromQuery" in js_response.text
+    assert "readDeviceDemoFromQuery" in js_response.text
+    assert "buildLinearEquationsPlanForStage" in js_response.text
+    assert '"query_demo"' in js_response.text
     assert ".onboarding-card" in css_response.text
     assert ".choice-option" in css_response.text
     assert ".onboarding-summary-block" in css_response.text

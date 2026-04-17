@@ -34,6 +34,37 @@ Damit haben wir jetzt erstmals eine direkte Uebersetzungsstruktur von
 dem, was MathTeach intern weiss, in einen brauchbaren Text-Input fuer
 ein externes Illustrationsprogramm.
 
+## Illustration-First-Integration-Inputs 2026-04-17
+
+Auf Basis dieser neuen Struktur gibt es jetzt auch die ersten drei
+voll ausgefuellten Integrationsinputs.
+
+Neu dazu:
+
+- [docs/illustration-program-first-integration-inputs.md](/Users/jonasweiss/MathTeach/docs/illustration-program-first-integration-inputs.md)
+
+Enthalten sind drei sofort nutzbare Produktionsinputs fuer:
+
+- `linear equations - relationship_intro`
+- `Antiquity - pythagorean relationship`
+- `Medieval - place value and zero`
+
+Wichtig daran:
+
+- das sind keine allgemeinen Bildideen
+- sondern direkte, carriergebundene Produktionsauftraege
+- mit fester Trennung zwischen:
+  - didaktischer Rolle
+  - psychologischem Vertrag
+  - mathematischen Muss-Elementen
+  - freien Overlay-Zonen
+  - epochaler Einfaerbung
+  - Verboten
+  - Output-Paket
+
+Damit ist jetzt der erste echte Uebergang von MathTeach-Logik zu
+externer Grafikproduktion operativ vorbereitet.
+
 ## Early-Modern-Visual-Production-Slice 2026-04-17
 
 Die dritte visuelle Epochen-Uebersetzung ist jetzt im Repo angelegt.

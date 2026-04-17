@@ -383,6 +383,18 @@ grafischer Track liefern darf (`Base Surface`, `Primary Carrier`,
 Illustrationsprogramme gebrieft werden, ohne dass die mathematische,
 paedagogische und psychologische Logik nach aussen abgegeben wird.
 
+Darauf aufbauend gibt es jetzt auch die ersten drei **voll ausgefuellten
+Integrationsinputs** fuer einen externen Grafiktrack:
+[illustration-program-first-integration-inputs.md](/Users/jonasweiss/MathTeach/docs/illustration-program-first-integration-inputs.md).
+Sie decken:
+
+- `linear equations - relationship_intro`
+- `Antiquity - pythagorean relationship`
+- `Medieval - place value and zero`
+
+ab und sind genau fuer den ersten realen Carrier-Test zwischen
+MathTeach-Gehirn und externer Grafikproduktion gedacht.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

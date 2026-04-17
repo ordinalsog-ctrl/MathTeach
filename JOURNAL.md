@@ -1,6 +1,34 @@
 # MathTeach Journal
 
-Stand: 2026-04-15
+Stand: 2026-04-17
+
+## Medieval-Visual-Production-Slice 2026-04-17
+
+Die zweite visuelle Epochen-Uebersetzung ist jetzt im Repo angelegt.
+
+Neu dazu:
+
+- [docs/epoch-medieval-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-visual-brief.md)
+- [docs/epoch-medieval-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-asset-family-sheet.md)
+- [docs/epoch-medieval-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-explanation-prompt-pack.md)
+- [docs/epoch-medieval-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-learning-content-priority-list.md)
+
+Damit ist `Medieval Transmission and Synthesis` jetzt nicht mehr nur
+als historische Epoche, sondern als visuelle Produktionsschicht
+beschrieben:
+
+- welche Carrier dominieren
+- welche Verfahrens- und Uebertragungslogik sichtbar werden muss
+- welche Fehlwege ausgeschlossen sind
+- welche Lerninhalte zuerst visualisiert werden sollen
+- mit welchen Prompt-Bloecken ein externer Track spaeter arbeiten kann
+
+Der wichtige methodische Punkt dabei:
+
+- Mittelalter wird nicht als Kulisse oder Exotik behandelt
+- sondern als Uebersetzung von Stellenwert, Null, Verfahren,
+  algebraischer Sprachbildung und Transmission
+- genau diese Logik soll spaeter in Assets und UI tragfaehig werden
 
 ## Antiquity-Visual-Production-Slice 2026-04-15
 

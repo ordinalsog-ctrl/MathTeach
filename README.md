@@ -330,6 +330,28 @@ sondern als erste visuelle Produktionsschicht:
 - Prompts
 - Prioritaetsreihenfolge der Lerninhalte
 
+Direkt daran angeschlossen liegt jetzt auch die zweite Epochen-
+Produktionsschicht fuer `Medieval Transmission and Synthesis` vor:
+
+- [epoch-medieval-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-visual-brief.md)
+- [epoch-medieval-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-asset-family-sheet.md)
+- [epoch-medieval-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-explanation-prompt-pack.md)
+- [epoch-medieval-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-medieval-learning-content-priority-list.md)
+
+Damit ist jetzt auch die mittelalterliche Linie nicht mehr nur als
+Korpusepoche vorhanden, sondern als visuelle Uebersetzung von:
+
+- Uebertragung
+- Verfahren
+- Stellenwert und Null
+- algebraischer Sprachwerdung
+- fruehen Analysis-Bruecken
+
+Wichtig ist daran: Wir bauen damit nicht "historische Optik", sondern
+eine zweite echte grafische Produktionsschicht, die dieselbe
+mathematische, paedagogische und psychologische Tutor-Intelligenz
+traegt wie der Rest des Systems.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

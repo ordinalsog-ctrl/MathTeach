@@ -2,6 +2,35 @@
 
 Stand: 2026-04-15
 
+## Device-Linear-Equations-Illustration-Prompt-Pack 2026-04-15
+
+Fuer den ersten echten Modulpfad gibt es jetzt nicht mehr nur
+Illustrationsbrief und Asset-Mapping, sondern einen operativen
+Prompt-Pack fuer externe Grafik- oder Illustrationsprogramme.
+
+Neu dazu:
+
+- [docs/pilot-module-linear-equations-illustration-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-prompt-pack.md)
+  uebersetzt die vorhandenen didaktischen und psychologischen
+  Verpflichtungen in produktive Prompt-Bloecke
+- enthalten sind:
+  - ein `Locked instruction block`
+  - ein gemeinsamer `Negative block`
+  - eigene Stage-Prompts fuer:
+    - `relationship_intro`
+    - `equation_form`
+    - `same_operation`
+    - `result`
+    - `repeat`
+    - `example`
+    - `history_sidecar`
+  - zusaetzliche Produktionsprompts fuer `asset family sheet` und
+    `state variant sheet`
+
+Das ist wichtig, weil wir damit die fachliche, paedagogische und
+psychologische Logik nicht an einen externen Visual-Track abgeben,
+sondern in kontrollierbare Produktionsanweisungen uebersetzen.
+
 ## Device-Linear-Equations-Demo-Boot 2026-04-15
 
 Der lokale Pilotpfad fuer `lineare Gleichungen` kann jetzt direkt ueber

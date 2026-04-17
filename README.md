@@ -287,6 +287,16 @@ eine ausfuellbare Nach-Test-Vorlage, mit der wir Beobachtungen pro
 Station sofort in eine konkrete naechste Entscheidung ueber
 `Modul`, `Sprache`, `UI` oder `Illustration` uebersetzen koennen.
 
+Neu dazu kommt jetzt der eigentliche Produktionsuebergang fuer einen
+externen Illustrations- oder Asset-Track:
+[pilot-module-linear-equations-illustration-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/pilot-module-linear-equations-illustration-prompt-pack.md).
+Er uebersetzt die vorhandenen Modul-, UI- und Illustrationsvertraege in
+konkrete Prompts fuer `relationship_intro`, `equation_form`,
+`same_operation`, `result`, `repeat`, `example` und das optionale
+`history_sidecar`. Damit bleibt die didaktische Funktion intern
+kontrolliert, waehrend die zeichnerische Produktion extern sauber
+angestossen werden kann.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

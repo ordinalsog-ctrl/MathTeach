@@ -2,6 +2,34 @@
 
 Stand: 2026-04-17
 
+## Early-Modern-Visual-Production-Slice 2026-04-17
+
+Die dritte visuelle Epochen-Uebersetzung ist jetzt im Repo angelegt.
+
+Neu dazu:
+
+- [docs/epoch-early-modern-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-visual-brief.md)
+- [docs/epoch-early-modern-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-asset-family-sheet.md)
+- [docs/epoch-early-modern-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-explanation-prompt-pack.md)
+- [docs/epoch-early-modern-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-learning-content-priority-list.md)
+
+Damit ist `Early Modern Analysis and Chance` jetzt nicht mehr nur als
+historische Epoche, sondern als visuelle Produktionsschicht
+beschrieben:
+
+- welche Carrier dominieren
+- wie Veraenderung, Flaeche und Chance sichtbar werden muessen
+- welche Fehlwege ausgeschlossen sind
+- welche Lerninhalte zuerst visualisiert werden sollen
+- mit welchen Prompt-Bloecken ein externer Track spaeter arbeiten kann
+
+Der wichtige methodische Punkt dabei:
+
+- Fruehe Neuzeit wird nicht als Forscher- oder Naturmythos behandelt
+- sondern als Uebersetzung von Prozess, Grenznaehe, neuer Notation und
+  strukturierter Unsicherheit
+- genau diese Logik soll spaeter in Assets und UI tragfaehig werden
+
 ## Medieval-Visual-Production-Slice 2026-04-17
 
 Die zweite visuelle Epochen-Uebersetzung ist jetzt im Repo angelegt.

@@ -352,6 +352,27 @@ eine zweite echte grafische Produktionsschicht, die dieselbe
 mathematische, paedagogische und psychologische Tutor-Intelligenz
 traegt wie der Rest des Systems.
 
+Darauf aufbauend ist jetzt auch die dritte Epochen-Produktionsschicht
+fuer `Early Modern Analysis and Chance` angelegt:
+
+- [epoch-early-modern-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-visual-brief.md)
+- [epoch-early-modern-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-asset-family-sheet.md)
+- [epoch-early-modern-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-explanation-prompt-pack.md)
+- [epoch-early-modern-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-early-modern-learning-content-priority-list.md)
+
+Damit ist jetzt auch die fruehneuzeitliche Linie nicht mehr nur als
+Korpusepoche, sondern als visuelle Uebersetzung von:
+
+- Veraenderung und Prozess
+- Tangente und Aenderungsrate
+- Flaeche und Summierung
+- neuer Notation
+- frueher Wahrscheinlichkeit
+
+modelliert. Auch hier bleibt die Hauptregel gleich: keine
+Forscher-Mythologie, kein Naturspektakel, sondern mathematischer
+Carrier vor Ikonografie.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

@@ -297,6 +297,23 @@ konkrete Prompts fuer `relationship_intro`, `equation_form`,
 kontrolliert, waehrend die zeichnerische Produktion extern sauber
 angestossen werden kann.
 
+Wichtiger noch ist jetzt aber die Schicht direkt darueber:
+
+- [visual-tutor-infrastructure.md](/Users/jonasweiss/MathTeach/docs/visual-tutor-infrastructure.md)
+- [epoch-visual-translation-program.md](/Users/jonasweiss/MathTeach/docs/epoch-visual-translation-program.md)
+
+Diese beiden Dokumente verschieben den Fokus weg von `einzelnen Bildern`
+hin zu einer echten visuellen Tutor-Architektur:
+
+- zuerst die globale Carrier-Grammatik
+- dann die historische Epochen-Uebersetzung
+- dann erst Modul und Asset-Produktion
+
+Damit ist jetzt festgehalten, dass MathTeach nicht nur modulweise,
+sondern auch `Epoche fuer Epoche` visuell aufgebaut werden soll, damit
+Erklaerungen, Lerninhalte und historische Wuerdeebene aus demselben
+System kommen.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

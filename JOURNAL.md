@@ -2,6 +2,39 @@
 
 Stand: 2026-04-15
 
+## Visual-Tutor-Infrastructure-and-Epoch-Program 2026-04-15
+
+Die Arbeit am Illustrationspfad ist jetzt bewusst von `einzelnen
+Prompts` auf eine eigentliche visuelle Tutor-Architektur erweitert
+worden.
+
+Neu dazu:
+
+- [docs/visual-tutor-infrastructure.md](/Users/jonasweiss/MathTeach/docs/visual-tutor-infrastructure.md)
+  definiert die allgemeine grafische Grundgrammatik von MathTeach:
+  - psychologische Invarianten
+  - visuelle Carrier
+  - Carrier-Zustaende
+  - Produktionsschnitt intern vs. extern
+- [docs/epoch-visual-translation-program.md](/Users/jonasweiss/MathTeach/docs/epoch-visual-translation-program.md)
+  legt fest, dass die visuelle Produktionslogik ab jetzt auch
+  `Epoche fuer Epoche` aufgebaut wird:
+  - `Antiquity`
+  - `Medieval Transmission and Synthesis`
+  - `Early Modern Analysis and Chance`
+  - `Modern Mathematics`
+
+Wichtig daran:
+
+- der Prompt-Pack bleibt ein nützliches Produktionsblatt
+- ist aber nicht mehr die Hauptstrategie
+- die Hauptstrategie ist jetzt:
+  `Tutor brain -> visuelle Semantik -> Epoche -> Modul -> Asset`
+
+Damit ist die visuelle Seite des Projekts erstmals auf derselben Ebene
+modelliert wie das mathematische, paedagogische und psychologische
+Tutorwissen.
+
 ## Device-Linear-Equations-Illustration-Prompt-Pack 2026-04-15
 
 Fuer den ersten echten Modulpfad gibt es jetzt nicht mehr nur

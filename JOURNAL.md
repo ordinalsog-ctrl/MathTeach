@@ -2,6 +2,33 @@
 
 Stand: 2026-04-15
 
+## Antiquity-Visual-Production-Slice 2026-04-15
+
+Die neue visuelle Tutor-Infrastruktur ist jetzt erstmals auf eine
+konkrete Epoche heruntergebrochen worden.
+
+Neu dazu:
+
+- [docs/epoch-antiquity-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-visual-brief.md)
+- [docs/epoch-antiquity-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-asset-family-sheet.md)
+- [docs/epoch-antiquity-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-explanation-prompt-pack.md)
+- [docs/epoch-antiquity-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-learning-content-priority-list.md)
+
+Damit ist `Antiquity` jetzt erstmals nicht nur als historische Epoche,
+sondern als visuelle Produktionsschicht beschrieben:
+
+- welche Carrier dominieren
+- welche Darstellungsformen erlaubt sind
+- welche Fehlwege ausgeschlossen sind
+- welche Lerninhalte zuerst visualisiert werden sollen
+- mit welchen Prompt-Bloecken ein externer Track spaeter arbeiten kann
+
+Der wichtige methodische Punkt dabei:
+
+- Epoche wird nicht als Kulisse behandelt
+- sondern als eigene Uebersetzung von Problemform, Denkweise,
+  Beweisordnung und Notationslage
+
 ## Visual-Tutor-Infrastructure-and-Epoch-Program 2026-04-15
 
 Die Arbeit am Illustrationspfad ist jetzt bewusst von `einzelnen

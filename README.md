@@ -314,6 +314,22 @@ sondern auch `Epoche fuer Epoche` visuell aufgebaut werden soll, damit
 Erklaerungen, Lerninhalte und historische Wuerdeebene aus demselben
 System kommen.
 
+Der erste echte Epochen-Slice daraus liegt jetzt fuer `Antiquity` vor:
+
+- [epoch-antiquity-visual-brief.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-visual-brief.md)
+- [epoch-antiquity-asset-family-sheet.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-asset-family-sheet.md)
+- [epoch-antiquity-explanation-prompt-pack.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-explanation-prompt-pack.md)
+- [epoch-antiquity-learning-content-priority-list.md](/Users/jonasweiss/MathTeach/docs/epoch-antiquity-learning-content-priority-list.md)
+
+Damit ist Antiquity jetzt nicht mehr nur als Korpusepoche beschrieben,
+sondern als erste visuelle Produktionsschicht:
+
+- Carrier-Auswahl
+- visuelle Erklaerungsformen
+- Asset-Familien
+- Prompts
+- Prioritaetsreihenfolge der Lerninhalte
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der

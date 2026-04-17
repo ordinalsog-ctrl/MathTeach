@@ -2,6 +2,38 @@
 
 Stand: 2026-04-17
 
+## Illustration-Program-Input-Structure 2026-04-17
+
+Fuer die externe grafische Produktion gibt es jetzt eine direkte,
+verwendbare Textstruktur.
+
+Neu dazu:
+
+- [docs/illustration-program-input-structure.md](/Users/jonasweiss/MathTeach/docs/illustration-program-input-structure.md)
+
+Wichtig daran:
+
+- Text, Formel, Tutor-Sprache und Schrittlogik bleiben in MathTeach
+- das Grafikprogramm wird nur fuer die visuelle Huelle und den Carrier
+  gebrieft
+- die Struktur trennt:
+  - `Base Surface`
+  - `Primary Carrier`
+  - `Sidecar`
+  - `State Variants`
+- dazu kommen feste Bloecke fuer:
+  - didaktische Rolle
+  - psychologischen Vertrag
+  - mathematische Muss-Elemente
+  - freie Overlay-Zonen
+  - epochale Einfaerbung
+  - Verbote
+  - Output-Paket
+
+Damit haben wir jetzt erstmals eine direkte Uebersetzungsstruktur von
+dem, was MathTeach intern weiss, in einen brauchbaren Text-Input fuer
+ein externes Illustrationsprogramm.
+
 ## Early-Modern-Visual-Production-Slice 2026-04-17
 
 Die dritte visuelle Epochen-Uebersetzung ist jetzt im Repo angelegt.

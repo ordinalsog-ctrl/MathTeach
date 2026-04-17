@@ -373,6 +373,16 @@ modelliert. Auch hier bleibt die Hauptregel gleich: keine
 Forscher-Mythologie, kein Naturspektakel, sondern mathematischer
 Carrier vor Ikonografie.
 
+Neu dazu kommt jetzt auch eine direkte Produktionsstruktur fuer externe
+Illustrationsprogramme:
+[illustration-program-input-structure.md](/Users/jonasweiss/MathTeach/docs/illustration-program-input-structure.md).
+Sie trennt sauber zwischen dem, was MathTeach selbst liefert
+(`Text`, `Formel`, `Schrittlogik`, `Tutor-Sprache`) und dem, was ein
+grafischer Track liefern darf (`Base Surface`, `Primary Carrier`,
+`Sidecar`, `State Variants`). Damit koennen externe Grafiktools oder
+Illustrationsprogramme gebrieft werden, ohne dass die mathematische,
+paedagogische und psychologische Logik nach aussen abgegeben wird.
+
 Wichtig neu im laufenden Device-Flow: Wenn der Startgegenstand
 `lineare Gleichungen` ist, nutzt die lokale UI jetzt einen echten
 kleinen Pilotkorridor statt nur generische Planplatzhalter. Der
